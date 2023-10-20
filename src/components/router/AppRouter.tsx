@@ -60,6 +60,9 @@ const ReactSimpleMaps = React.lazy(() => import('@app/pages/maps/ReactSimpleMaps
 const PigeonsMaps = React.lazy(() => import('@app/pages/maps/PigeonsMapsPage/PigeonsMapsPage'));
 const Logout = React.lazy(() => import('./Logout'));
 
+const ConnectionRequestsPage = React.lazy(() => import('@app/pages/ConnectionRequestsPage'));
+const DatabaseSourcesPage = React.lazy(() => import('@app/pages/DatabaseSourcesPage'));
+
 export const NFT_DASHBOARD_PATH = '/';
 export const MEDICAL_DASHBOARD_PATH = '/medical-dashboard';
 
@@ -100,6 +103,9 @@ const Skeletons = withLoading(SkeletonsPage);
 const DataTables = withLoading(DataTablesPage);
 const Charts = withLoading(ChartsPage);
 
+const ConnectionRequests = withLoading(ConnectionRequestsPage);
+const DatabaseSources = withLoading(DatabaseSourcesPage);
+
 // Maps
 const Google = withLoading(GoogleMaps);
 const Leaflet = withLoading(LeafletMaps);
@@ -137,6 +143,8 @@ export const AppRouter: React.FC = () => {
           <Route path="forms">
             <Route path="advanced-forms" element={<AdvancedForm />} />
           </Route>
+          <Route path="connection-requests" element={<ConnectionRequests />} />
+          <Route path="database-sources" element={<DatabaseSources />} />
           <Route path="data-tables" element={<DataTables />} />
           <Route path="charts" element={<Charts />} />
           <Route path="maps">

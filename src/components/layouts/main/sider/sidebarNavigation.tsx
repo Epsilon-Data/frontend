@@ -6,7 +6,7 @@ import {
   // HomeOutlined,
   // LayoutOutlined,
   // LineChartOutlined,
-  TableOutlined,
+  // TableOutlined,
   // UserOutlined,
   BlockOutlined,
 } from '@ant-design/icons';
@@ -29,10 +29,9 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
   //   icon: <NftIcon />,
   // },
   {
-    title: 'common.medical-dashboard',
+    title: 'breadcrumbs.home',
     key: 'medical-dashboard',
     url: '/medical-dashboard',
-    icon: <DashboardOutlined />,
   },
   // {
   //   title: 'common.apps',
@@ -96,10 +95,14 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
   //   ],
   // },
   {
-    title: 'common.dataTables',
-    key: 'dataTables',
-    url: '/data-tables',
-    icon: <TableOutlined />,
+    title: 'connectionRequests.title',
+    key: 'connectionRequests',
+    url: '/connection-requests',
+  },
+  {
+    title: 'databaseSources.title',
+    key: 'databaseSources',
+    url: '/database-sources',
   },
   // {
   //   title: 'common.charts',

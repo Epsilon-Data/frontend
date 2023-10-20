@@ -822,7 +822,8 @@
     "editableTable": "Editable Table",
     "invite": "Invite",
     "inviteMessage": "{{name}} invited successfully",
-    "treeTable": "Tree Table"
+    "treeTable": "Tree Table",
+    "status": "Status"
   },
   "tabs": {
     "basic": "Basic tabs",
@@ -868,5 +869,21 @@
     "trendingCollections": "Trending Collections",
     "recentlyAddedNFTs": "Recently Added NFTs",
     "trendingCreators": "Trending Creators"
+  },
+  "connectionRequests" : {
+    "title": "Connection Requests",
+    "date": "Request Date",
+    "id": "Request ID",
+    "projectName": "Project Name",
+    "requestList" : "Request List"
+  },
+  "databaseSources" : {
+    "title": "Database Sources",
+    "id": "Source ID",
+    "projectName": "Project Name",
+    "dbName": "Database Name",
+    "date": "Connect Date",
+    "provider": "Provider",
+    "sourceList"  : "Source List"
   }
 }

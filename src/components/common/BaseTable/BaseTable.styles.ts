@@ -3,6 +3,10 @@ import { Table as AntdTable } from 'antd';
 import { FONT_SIZE } from '@app/styles/themes/constants';
 
 export const Table = styled(AntdTable)`
+  .ant-table-content {
+    border-radius: 1.5rem;
+  }
+
   & thead .ant-table-cell {
     color: var(--primary-color);
     font-size: ${FONT_SIZE.xs};
@@ -42,13 +46,7 @@ export const Table = styled(AntdTable)`
     min-width: 2.0625rem;
     height: 2.0625rem;
     line-height: 2.0625rem;
-    border-radius: 0;
     font-size: ${FONT_SIZE.xs};
-  }
-
-  & .ant-pagination-prev .ant-pagination-item-link,
-  .ant-pagination-next .ant-pagination-item-link {
-    border-radius: 0;
   }
 
   & .ant-checkbox-inner {

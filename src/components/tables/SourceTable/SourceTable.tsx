@@ -17,7 +17,7 @@ const initialPagination: Pagination = {
   pageSize: 5,
 };
 
-export const ConnectionTable: React.FC = () => {
+export const SourceTable: React.FC = () => {
   const [tableData, setTableData] = useState<{ data: BasicTableRow[]; pagination: Pagination; loading: boolean }>({
     data: [],
     pagination: initialPagination,
@@ -59,64 +59,28 @@ export const ConnectionTable: React.FC = () => {
 
   const columns: ColumnsType<BasicTableRow> = [
     {
-      title: t('connectionRequests.projectName'),
-      dataIndex: 'name',
-      render: (text: string) => <span>{text}</span>,
-      filterMode: 'tree',
-      filterSearch: true,
-      filters: [
-        {
-          text: t('common.firstName'),
-          value: 'firstName',
-          children: [
-            {
-              text: 'Joe',
-              value: 'Joe',
-            },
-            {
-              text: 'Pavel',
-              value: 'Pavel',
-            },
-            {
-              text: 'Jim',
-              value: 'Jim',
-            },
-            {
-              text: 'Josh',
-              value: 'Josh',
-            },
-          ],
-        },
-        {
-          text: t('common.lastName'),
-          value: 'lastName',
-          children: [
-            {
-              text: 'Green',
-              value: 'Green',
-            },
-            {
-              text: 'Black',
-              value: 'Black',
-            },
-            {
-              text: 'Brown',
-              value: 'Brown',
-            },
-          ],
-        },
-      ],
-      onFilter: (value: string | number | boolean, record: BasicTableRow) => record.name.includes(value.toString()),
-    },
-    {
-      title: t('connectionRequests.id'),
+      title: t('databaseSources.id'),
       dataIndex: 'age',
       sorter: (a: BasicTableRow, b: BasicTableRow) => a.age - b.age,
       showSorterTooltip: false,
     },
     {
-      title: t('connectionRequests.date'),
+      title: t('databaseSources.dbName'),
+      dataIndex: 'name',
+      render: (text: string) => <span>{text}</span>,
+    },
+    {
+      title: t('databaseSources.projectName'),
       dataIndex: 'address',
+    },
+    {
+      title: t('databaseSources.date'),
+      dataIndex: 'address',
+    },
+    {
+      title: t('databaseSources.provider'),
+      dataIndex: 'name',
+      render: (text: string) => <span>{text}</span>,
     },
     {
       title: t('tables.status'),

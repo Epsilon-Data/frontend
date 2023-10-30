@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   // CompassOutlined,
-  DashboardOutlined,
+  // DashboardOutlined,
   // FormOutlined,
   // HomeOutlined,
   // LayoutOutlined,
@@ -31,7 +31,7 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
   {
     title: 'breadcrumbs.home',
     key: 'medical-dashboard',
-    url: '/medical-dashboard',
+    url: '/',
   },
   // {
   //   title: 'common.apps',

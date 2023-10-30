@@ -872,9 +872,11 @@
   },
   "connectionRequests" : {
     "title": "Connection Requests",
-    "date": "Request Date",
+    
     "id": "Request ID",
     "projectName": "Project Name",
+    "date": "Request Date",
+    "requestor": "Requestor",
     "requestList" : "Request List"
   },
   "databaseSources" : {

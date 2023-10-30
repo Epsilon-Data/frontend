@@ -43,13 +43,13 @@ export const CollapseButton = styled(BaseButton)<{ $isCollapsed: boolean }>`
 
   &:hover {
     color: var(--text-secondary-color);
-    background: var(--primary-color);
+    background: var(--text-sider-primary-color);
     border: 1px solid var(--border-color);
   }
 
   &:focus {
     color: var(--text-secondary-color);
-    background: var(--primary-color);
+    background: var(--collapse-background-color);
     border: 1px solid var(--border-color);
   }
 `;
@@ -90,4 +90,10 @@ export const BrandSpan = styled.span`
   font-weight: 700;
   font-size: 1.125rem;
   color: var(--white);
+`;
+
+export const HorizontalDivider = styled.hr`
+  height: 2px;
+  margin-left: 20px;
+  margin-right: 20px;
 `;

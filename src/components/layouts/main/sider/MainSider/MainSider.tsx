@@ -28,6 +28,7 @@ const MainSider: React.FC<MainSiderProps> = ({ isCollapsed, setCollapsed, ...pro
         {...props}
       >
         <SiderLogo isSiderCollapsed={isCollapsed} toggleSider={toggleSider} />
+        <S.HorizontalDivider />
         <S.SiderContent>
           <SiderMenu setCollapsed={setCollapsed} />
         </S.SiderContent>

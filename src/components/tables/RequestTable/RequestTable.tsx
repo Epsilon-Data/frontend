@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { BasicTableRow, getBasicTableData, Pagination, Tag } from 'api/table.api';
+import { RequestTableRow, getRequestTableData, Pagination, Tag } from 'api/table.api';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { ColumnsType } from 'antd/es/table';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
@@ -18,7 +18,7 @@ const initialPagination: Pagination = {
 };
 
 export const RequestTable: React.FC = () => {
-  const [tableData, setTableData] = useState<{ data: BasicTableRow[]; pagination: Pagination; loading: boolean }>({
+  const [tableData, setTableData] = useState<{ data: RequestTableRow[]; pagination: Pagination; loading: boolean }>({
     data: [],
     pagination: initialPagination,
     loading: false,
@@ -29,7 +29,7 @@ export const RequestTable: React.FC = () => {
   const fetch = useCallback(
     (pagination: Pagination) => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
-      getBasicTableData(pagination).then((res) => {
+      getRequestTableData(pagination).then((res) => {
         if (isMounted.current) {
           setTableData({ data: res.data, pagination: res.pagination, loading: false });
         }
@@ -46,47 +46,39 @@ export const RequestTable: React.FC = () => {
     fetch(pagination);
   };
 
-  const handleDeleteRow = (rowId: number) => {
-    setTableData({
-      ...tableData,
-      data: tableData.data.filter((item) => item.key !== rowId),
-      pagination: {
-        ...tableData.pagination,
-        total: tableData.pagination.total ? tableData.pagination.total - 1 : tableData.pagination.total,
-      },
-    });
-  };
-
-  const columns: ColumnsType<BasicTableRow> = [
+  const columns: ColumnsType<RequestTableRow> = [
     {
       title: t('connectionRequests.id'),
-      dataIndex: 'age',
-      sorter: (a: BasicTableRow, b: BasicTableRow) => a.age - b.age,
-      showSorterTooltip: false,
+      dataIndex: 'id',
+      key: 'id',
     },
     {
       title: t('connectionRequests.projectName'),
-      dataIndex: 'name',
+      dataIndex: 'projectName',
+      key: 'projectName',
       render: (text: string) => <span>{text}</span>,
     },
     {
       title: t('connectionRequests.requestor'),
-      dataIndex: 'name',
+      dataIndex: 'requestor',
+      key: 'requestor',
       render: (text: string) => <span>{text}</span>,
     },
     {
       title: t('connectionRequests.date'),
-      dataIndex: 'address',
+      dataIndex: 'requestDate',
+      key: 'requestDate',
+      render: (date: Date) => <span>{new Intl.DateTimeFormat('en-GB').format(date)}</span>,
     },
     {
       title: t('tables.status'),
-      key: 'tags',
-      dataIndex: 'tags',
+      dataIndex: 'requestStatus',
+      key: 'requestStatus',
       render: (tags: Tag[]) => (
         <BaseRow gutter={[10, 10]}>
           {tags.map((tag: Tag) => {
             return (
-              <BaseCol key={tag.value}>
+              <BaseCol key={tag.value} style={{ flex: 1 }}>
                 <Status color={defineColorByPriority(tag.priority)} text={tag.value.toUpperCase()} />
               </BaseCol>
             );
@@ -98,19 +90,16 @@ export const RequestTable: React.FC = () => {
       title: t('tables.actions'),
       dataIndex: 'actions',
       width: '15%',
-      render: (text: string, record: { name: string; key: number }) => {
+      render: (text: string, record: { projectName: string; id: number }) => {
         return (
           <BaseSpace>
             <BaseButton
               type="ghost"
               onClick={() => {
-                notificationController.info({ message: t('tables.inviteMessage', { name: record.name }) });
+                notificationController.info({ message: t('tables.viewMessage', { name: record.projectName }) });
               }}
             >
-              {t('tables.invite')}
-            </BaseButton>
-            <BaseButton type="default" danger onClick={() => handleDeleteRow(record.key)}>
-              {t('tables.delete')}
+              {t('tables.view')}
             </BaseButton>
           </BaseSpace>
         );
@@ -126,7 +115,6 @@ export const RequestTable: React.FC = () => {
       loading={tableData.loading}
       onChange={handleTableChange}
       scroll={{ x: 800 }}
-      bordered
     />
   );
 };

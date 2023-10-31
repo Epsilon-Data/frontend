@@ -130,7 +130,6 @@ export const SourceTable: React.FC = () => {
       loading={tableData.loading}
       onChange={handleTableChange}
       scroll={{ x: 800 }}
-      bordered
     />
   );
 };

@@ -4,14 +4,24 @@ import { FONT_SIZE } from '@app/styles/themes/constants';
 
 export const Table = styled(AntdTable)`
   .ant-table-content {
-    border-radius: 1.5rem;
+    border-radius: 1rem;
+    border: 2px solid var(--border-color);
+  }
+
+  .ant-table-thead > tr > th:first-child,
+  .ant-table-tbody > tr > td:first-child {
+    border-left: none;
+  }
+
+  .ant-table-tbody > tr:last-child > td {
+    border-bottom: none;
   }
 
   & thead .ant-table-cell {
     color: var(--primary-color);
     font-size: ${FONT_SIZE.xs};
-    line-height: 1.25rem;
-
+    border-bottom: 2px solid var(--primary-color);
+    border-left: 2px solid var(--border-color);
     & .anticon {
       color: var(--primary-color);
     }
@@ -21,6 +31,7 @@ export const Table = styled(AntdTable)`
     color: var(--text-main-color);
     font-size: ${FONT_SIZE.xs};
     line-height: 1.25rem;
+    border-left: 2px solid var(--border-color);
   }
 
   & tbody .ant-table-row-expand-icon {
@@ -35,7 +46,7 @@ export const Table = styled(AntdTable)`
     .ant-table-thead
     > tr
     > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
-    background-color: var(--primary-color);
+    background-color: transparent;
   }
 
   & .ant-pagination-prev,

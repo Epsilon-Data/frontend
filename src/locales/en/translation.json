@@ -823,7 +823,9 @@
     "invite": "Invite",
     "inviteMessage": "{{name}} invited successfully",
     "treeTable": "Tree Table",
-    "status": "Status"
+    "status": "Status",
+    "view": "View",
+    "viewMessage": "{{name}} view button clicked"
   },
   "tabs": {
     "basic": "Basic tabs",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { RequestTableRow, getRequestTableData, Pagination, Tag } from 'api/table.api';
+import { RequestTableRow, getRequestTableData, Pagination, Tag } from 'api/connectionRequests.api';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { ColumnsType } from 'antd/es/table';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
@@ -68,21 +68,17 @@ export const RequestTable: React.FC = () => {
       title: t('connectionRequests.date'),
       dataIndex: 'requestDate',
       key: 'requestDate',
-      render: (date: Date) => <span>{new Intl.DateTimeFormat('en-GB').format(date)}</span>,
+      render: (date: Date) => <span>{date.toLocaleDateString('en-GB')}</span>,
     },
     {
       title: t('tables.status'),
       dataIndex: 'requestStatus',
       key: 'requestStatus',
-      render: (tags: Tag[]) => (
+      render: (tag: Tag) => (
         <BaseRow gutter={[10, 10]}>
-          {tags.map((tag: Tag) => {
-            return (
-              <BaseCol key={tag.value} style={{ flex: 1 }}>
-                <Status color={defineColorByPriority(tag.priority)} text={tag.value.toUpperCase()} />
-              </BaseCol>
-            );
-          })}
+          <BaseCol key={tag.value} style={{ flex: 0.8 }}>
+            <Status color={defineColorByPriority(tag.priority)} text={tag.value.toUpperCase()} />
+          </BaseCol>
         </BaseRow>
       ),
     },

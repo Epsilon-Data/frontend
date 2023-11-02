@@ -888,6 +888,7 @@
     "dbName": "Database Name",
     "date": "Connect Date",
     "provider": "Provider",
-    "sourceList"  : "Source List"
+    "sourceList"  : "Source List",
+    "manage" : "Manage"
   }
 }

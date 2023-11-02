@@ -5,14 +5,6 @@ export interface Tag {
   priority: Priority;
 }
 
-export interface RequestTableRow {
-  id: number;
-  projectName: string;
-  requestor: string;
-  requestDate: Date;
-  requestStatus?: Tag[];
-}
-
 export interface BasicTableRow {
   key: number;
   name: string;
@@ -25,11 +17,6 @@ export interface Pagination {
   current?: number;
   pageSize?: number;
   total?: number;
-}
-
-export interface RequestTableData {
-  data: RequestTableRow[];
-  pagination: Pagination;
 }
 
 export interface BasicTableData {
@@ -48,39 +35,6 @@ export interface TreeTableData extends BasicTableData {
 export interface EditableTableData extends BasicTableData {
   data: BasicTableRow[];
 }
-
-export const getRequestTableData = (pagination: Pagination): Promise<RequestTableData> => {
-  return new Promise((res) => {
-    setTimeout(() => {
-      res({
-        data: [
-          {
-            id: 1,
-            projectName: 'Project 1',
-            requestor: 'Researcher 1',
-            requestDate: new Date(2023, 3, 12),
-            requestStatus: [{ value: 'Pending', priority: Priority.INFO }],
-          },
-          {
-            id: 2,
-            projectName: 'Project 2',
-            requestor: 'Researcher 2',
-            requestDate: new Date(2023, 5, 6),
-            requestStatus: [{ value: 'Requires Revision', priority: Priority.HIGH }],
-          },
-          {
-            id: 3,
-            projectName: 'Project 3',
-            requestor: 'Researcher 3',
-            requestDate: new Date(2023, 7, 22),
-            requestStatus: [{ value: 'Approved', priority: Priority.LOW }],
-          },
-        ],
-        pagination: { ...pagination, total: 20 },
-      });
-    }, 1000);
-  });
-};
 
 export const getBasicTableData = (pagination: Pagination): Promise<BasicTableData> => {
   return new Promise((res) => {

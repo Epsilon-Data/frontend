@@ -10,7 +10,7 @@ const ConnectionRequestsPage: React.FC = () => {
     <>
       <PageTitle>{t('connectionRequests.title')}</PageTitle>
       <S.TablesWrapper>
-        <S.Card id="basic-table" title={t('connectionRequests.requestList')} padding="1.25rem 1.25rem 0">
+        <S.Card id="request-table" title={t('connectionRequests.requestList')} padding="1.25rem 1.25rem 0">
           <RequestTable />
         </S.Card>
       </S.TablesWrapper>

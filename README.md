@@ -5,7 +5,11 @@
 - [yarn](https://yarnpkg.com/)
 - [git](https://git-scm.com/)
 
-#### To go with the latest version please copy and paste in your terminal the following steps
+#### To go with the latest version please copy and past in your terminal the following steps
+
+```
+git clone https://github.com/altence/lightence-ant-design-react-template.git my-awesome-project && cd my-awesome-project
+```
 
 Development mode
 ```

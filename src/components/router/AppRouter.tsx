@@ -59,8 +59,10 @@ const ReactSimpleMaps = React.lazy(() => import('@app/pages/maps/ReactSimpleMaps
 const PigeonsMaps = React.lazy(() => import('@app/pages/maps/PigeonsMapsPage/PigeonsMapsPage'));
 const Logout = React.lazy(() => import('./Logout'));
 
-const ConnectionRequestsPage = React.lazy(() => import('@app/pages/ConnectionRequestsPage'));
-const DatabaseSourcesPage = React.lazy(() => import('@app/pages/DatabaseSourcesPage'));
+const OAConnectionRequestsPage = React.lazy(() => import('@app/pages/orgAdmin/ConnectionRequestsPage'));
+const RConnectionRequestsPage = React.lazy(() => import('@app/pages/researcher/ConnectionRequestsPage'));
+
+const DatabaseSourcesPage = React.lazy(() => import('@app/pages/researcher/DatabaseSourcesPage'));
 
 export const MEDICAL_DASHBOARD_PATH = '/';
 export const NFT_DASHBOARD_PATH = '/nft-dashboard';
@@ -101,7 +103,9 @@ const Skeletons = withLoading(SkeletonsPage);
 const DataTables = withLoading(DataTablesPage);
 const Charts = withLoading(ChartsPage);
 
-const ConnectionRequests = withLoading(ConnectionRequestsPage);
+const OAConnectionRequests = withLoading(OAConnectionRequestsPage);
+const RConnectionRequests = withLoading(RConnectionRequestsPage);
+
 const DatabaseSources = withLoading(DatabaseSourcesPage);
 
 // Maps
@@ -140,7 +144,8 @@ export const AppRouter: React.FC = () => {
           <Route path="forms">
             <Route path="advanced-forms" element={<AdvancedForm />} />
           </Route>
-          <Route path="connection-requests" element={<ConnectionRequests />} />
+          <Route path="oa-connection-requests" element={<OAConnectionRequests />} />
+          <Route path="r-connection-requests" element={<RConnectionRequests />} />
           <Route path="database-sources" element={<DatabaseSources />} />
           <Route path="data-tables" element={<DataTables />} />
           <Route path="charts" element={<Charts />} />

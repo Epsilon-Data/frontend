@@ -95,9 +95,14 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
   //   ],
   // },
   {
-    title: 'connectionRequests.title',
-    key: 'connectionRequests',
-    url: '/connection-requests',
+    title: 'connectionRequests.oaTitle',
+    key: 'oaConnectionRequests',
+    url: '/oa-connection-requests',
+  },
+  {
+    title: 'connectionRequests.rTitle',
+    key: 'rConnectionRequests',
+    url: '/r-connection-requests',
   },
   {
     title: 'databaseSources.title',

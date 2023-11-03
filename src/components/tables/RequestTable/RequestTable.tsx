@@ -11,13 +11,14 @@ import { useMounted } from '@app/hooks/useMounted';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
+import { Priority } from '@app/constants/enums/priorities';
 
 const initialPagination: Pagination = {
   current: 1,
   pageSize: 5,
 };
 
-export const RequestTable: React.FC = () => {
+export const RequestTable: React.FC<{ user: string }> = ({ user }) => {
   const [tableData, setTableData] = useState<{ data: RequestTableRow[]; pagination: Pagination; loading: boolean }>({
     data: [],
     pagination: initialPagination,
@@ -29,13 +30,13 @@ export const RequestTable: React.FC = () => {
   const fetch = useCallback(
     (pagination: Pagination) => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
-      getRequestTableData(pagination).then((res) => {
+      getRequestTableData(pagination, user).then((res) => {
         if (isMounted.current) {
           setTableData({ data: res.data, pagination: res.pagination, loading: false });
         }
       });
     },
-    [isMounted],
+    [isMounted, user],
   );
 
   useEffect(() => {
@@ -44,6 +45,17 @@ export const RequestTable: React.FC = () => {
 
   const handleTableChange = (pagination: Pagination) => {
     fetch(pagination);
+  };
+
+  const handleDeleteRow = (rowId: number) => {
+    setTableData({
+      ...tableData,
+      data: tableData.data.filter((item) => item.id !== rowId),
+      pagination: {
+        ...tableData.pagination,
+        total: tableData.pagination.total ? tableData.pagination.total - 1 : tableData.pagination.total,
+      },
+    });
   };
 
   const columns: ColumnsType<RequestTableRow> = [
@@ -58,12 +70,18 @@ export const RequestTable: React.FC = () => {
       key: 'projectName',
       render: (text: string) => <span>{text}</span>,
     },
-    {
-      title: t('connectionRequests.requestor'),
-      dataIndex: 'requestor',
-      key: 'requestor',
-      render: (text: string) => <span>{text}</span>,
-    },
+    ...(user === 'orgAdmin'
+      ? [
+          {
+            title: t('connectionRequests.requestor'),
+            dataIndex: 'requestor',
+            key: 'requestor',
+            render: (text: string) => <span>{text}</span>,
+          },
+        ]
+      : user === 'researcher'
+      ? []
+      : []),
     {
       title: t('connectionRequests.date'),
       dataIndex: 'requestDate',
@@ -82,25 +100,87 @@ export const RequestTable: React.FC = () => {
         </BaseRow>
       ),
     },
-    {
-      title: t('tables.actions'),
-      dataIndex: 'actions',
-      width: '15%',
-      render: (text: string, record: { projectName: string; id: number }) => {
-        return (
-          <BaseSpace>
-            <BaseButton
-              type="ghost"
-              onClick={() => {
-                notificationController.info({ message: t('tables.viewMessage', { name: record.projectName }) });
-              }}
-            >
-              {t('tables.view')}
-            </BaseButton>
-          </BaseSpace>
-        );
-      },
-    },
+    ...(user === 'orgAdmin'
+      ? [
+          {
+            title: t('tables.actions'),
+            dataIndex: 'actions',
+            width: '15%',
+            render: (text: string, record: { projectName: string; id: number }) => {
+              return (
+                <BaseSpace>
+                  <BaseButton
+                    type="primary"
+                    onClick={() => {
+                      notificationController.info({ message: t('tables.viewMessage', { name: record.projectName }) });
+                    }}
+                  >
+                    {t('tables.view')}
+                  </BaseButton>
+                </BaseSpace>
+              );
+            },
+          },
+        ]
+      : user === 'researcher'
+      ? [
+          {
+            title: t('tables.actions'),
+            dataIndex: 'actions',
+            width: '15%',
+            render: (
+              text: string,
+              record: { projectName: string; id: number; requestStatus: { priority: Priority } },
+            ) => {
+              const { priority } = record.requestStatus;
+              return (
+                <BaseSpace>
+                  <BaseButton
+                    type="primary"
+                    onClick={() => {
+                      notificationController.info({ message: t('tables.viewMessage', { name: record.projectName }) });
+                    }}
+                  >
+                    {t('tables.view')}
+                  </BaseButton>
+                  {priority === Priority.LOW && (
+                    <BaseButton
+                      type="primary"
+                      onClick={() => {
+                        notificationController.info({ message: t('tables.viewMessage', { name: record.projectName }) });
+                      }}
+                    >
+                      {t('connectionRequests.viewSource')}
+                    </BaseButton>
+                  )}
+                  {priority === Priority.HIGH && (
+                    <>
+                      <BaseButton
+                        type="primary"
+                        onClick={() => {
+                          notificationController.info({
+                            message: t('tables.viewMessage', { name: record.projectName }),
+                          });
+                        }}
+                      >
+                        {t('common.edit')}
+                      </BaseButton>
+                      <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>
+                        {t('tables.delete')}
+                      </BaseButton>
+                    </>
+                  )}
+                  {priority === Priority.INFO && (
+                    <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>
+                      {t('tables.delete')}
+                    </BaseButton>
+                  )}
+                </BaseSpace>
+              );
+            },
+          },
+        ]
+      : []),
   ];
 
   return (

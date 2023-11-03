@@ -873,13 +873,15 @@
     "trendingCreators": "Trending Creators"
   },
   "connectionRequests" : {
+    "rTitle": "Connection Requests - R",
+    "oaTitle": "Connection Requests - OA",
     "title": "Connection Requests",
-    
     "id": "Request ID",
     "projectName": "Project Name",
     "date": "Request Date",
     "requestor": "Requestor",
-    "requestList" : "Request List"
+    "requestList" : "Request List",
+    "viewSource": "View Source"
   },
   "databaseSources" : {
     "title": "Database Sources",

@@ -52,7 +52,7 @@ export const CardList: React.FC = () => {
       dataSource={listData.data}
       renderItem={(item) => (
         <BaseList.Item>
-          <S.ListCard>
+          <S.CardItem>
             <Meta
               style={{ lineHeight: '1.1rem' }}
               title={item.projectName}
@@ -84,7 +84,7 @@ export const CardList: React.FC = () => {
             <BaseButton style={{ marginTop: '1rem', float: 'right' }} type="primary">
               {t('databaseSources.manage')}
             </BaseButton>
-          </S.ListCard>
+          </S.CardItem>
         </BaseList.Item>
       )}
     />

@@ -20,6 +20,7 @@ export const Table = styled(AntdTable)`
   & thead .ant-table-cell {
     color: var(--primary-color);
     font-size: ${FONT_SIZE.xs};
+    border-top: 0;
     border-bottom: 2px solid var(--primary-color);
     border-left: 2px solid var(--border-color);
     & .anticon {

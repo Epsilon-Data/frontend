@@ -12,6 +12,7 @@ import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { Priority } from '@app/constants/enums/priorities';
+// import { useNavigate } from 'react-router-dom';
 
 const initialPagination: Pagination = {
   current: 1,
@@ -26,6 +27,7 @@ export const RequestTable: React.FC<{ user: string }> = ({ user }) => {
   });
   const { t } = useTranslation();
   const { isMounted } = useMounted();
+  // const navigate = useNavigate();
 
   const fetch = useCallback(
     (pagination: Pagination) => {

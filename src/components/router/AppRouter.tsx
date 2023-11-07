@@ -61,8 +61,9 @@ const Logout = React.lazy(() => import('./Logout'));
 
 const OAConnectionRequestsPage = React.lazy(() => import('@app/pages/orgAdmin/ConnectionRequestsPage'));
 const RConnectionRequestsPage = React.lazy(() => import('@app/pages/researcher/ConnectionRequestsPage'));
+const CreateRequestPage = React.lazy(() => import('@app/pages/researcher/CreateRequestPage'));
 
-const DatabaseSourcesPage = React.lazy(() => import('@app/pages/researcher/DatabaseSourcesPage'));
+const SourceListPage = React.lazy(() => import('@app/pages/researcher/SourceListPage'));
 
 export const MEDICAL_DASHBOARD_PATH = '/';
 export const NFT_DASHBOARD_PATH = '/nft-dashboard';
@@ -105,8 +106,9 @@ const Charts = withLoading(ChartsPage);
 
 const OAConnectionRequests = withLoading(OAConnectionRequestsPage);
 const RConnectionRequests = withLoading(RConnectionRequestsPage);
+const CreateRequest = withLoading(CreateRequestPage);
 
-const DatabaseSources = withLoading(DatabaseSourcesPage);
+const SourceList = withLoading(SourceListPage);
 
 // Maps
 const Google = withLoading(GoogleMaps);
@@ -146,7 +148,10 @@ export const AppRouter: React.FC = () => {
           </Route>
           <Route path="oa-connection-requests" element={<OAConnectionRequests />} />
           <Route path="r-connection-requests" element={<RConnectionRequests />} />
-          <Route path="database-sources" element={<DatabaseSources />} />
+          <Route path="r-connection-requests/create" element={<CreateRequest />} />
+          <Route path="database-sources">
+            <Route path="list" element={<SourceList />} />
+          </Route>
           <Route path="data-tables" element={<DataTables />} />
           <Route path="charts" element={<Charts />} />
           <Route path="maps">

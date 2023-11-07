@@ -96,18 +96,18 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
   // },
   {
     title: 'connectionRequests.oaTitle',
-    key: 'oaConnectionRequests',
+    key: 'oa-connection-requests',
     url: '/oa-connection-requests',
   },
   {
     title: 'connectionRequests.rTitle',
-    key: 'rConnectionRequests',
+    key: 'r-connection-requests',
     url: '/r-connection-requests',
   },
   {
     title: 'databaseSources.title',
-    key: 'databaseSources',
-    url: '/database-sources',
+    key: 'database-sources',
+    children: [{ title: 'databaseSources.sourceList', key: 'list', url: '/database-sources/list' }],
   },
   // {
   //   title: 'common.charts',

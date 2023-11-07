@@ -44,3 +44,36 @@ export interface PaymentCard {
   background: string;
   isEdit: boolean;
 }
+
+export interface ConnectionRequest {
+  projectName: string;
+  projectStartDate: Date | null;
+  projectEndDate: Date | null;
+  projectLead: string;
+  projectTeamMembers: string[];
+  university: string;
+  faculty: string;
+  ethicsApprovalId: string;
+  projectDescription: string;
+  isOwnData: boolean | null;
+  orgAdminEmail?: string;
+  databaseInfo?: DatabaseInfo;
+  dataInfo: DataInfo;
+  additionalInfo?: string;
+}
+
+interface DatabaseInfo {
+  name: string;
+  type: string;
+  url: string;
+  username: string;
+  password: string;
+}
+
+interface DataInfo {
+  collectionStartDate: Date;
+  collectionEndDate: Date;
+  participantsNumber: number | null;
+  description: string;
+  keywords: string[];
+}

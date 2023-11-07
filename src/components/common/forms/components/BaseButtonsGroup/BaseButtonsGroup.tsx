@@ -8,21 +8,28 @@ interface BaseButtonsGroupProps extends BaseButtonProps {
   className?: string;
   onCancel: () => void;
   loading?: boolean;
+  buttonText?: string;
 }
 
-export const BaseButtonsGroup: React.FC<BaseButtonsGroupProps> = ({ className, onCancel, loading, ...props }) => {
+export const BaseButtonsGroup: React.FC<BaseButtonsGroupProps> = ({
+  className,
+  onCancel,
+  loading,
+  buttonText,
+  ...props
+}) => {
   const { t } = useTranslation();
 
   return (
     <BaseRow className={className} gutter={[10, 10]} wrap={false}>
-      <BaseCol span={12}>
-        <BaseButton block type="ghost" onClick={onCancel} {...props}>
-          {t('common.cancel')}
+      <BaseCol span={12} style={{ paddingRight: '1rem' }}>
+        <BaseButton block type="primary" loading={loading} htmlType="submit" {...props}>
+          {buttonText || t('common.save')}
         </BaseButton>
       </BaseCol>
-      <BaseCol span={12}>
-        <BaseButton block type="primary" loading={loading} htmlType="submit" {...props}>
-          {t('common.save')}
+      <BaseCol span={12} style={{ paddingLeft: '1rem' }}>
+        <BaseButton block type="ghost" onClick={onCancel} {...props}>
+          {t('common.cancel')}
         </BaseButton>
       </BaseCol>
     </BaseRow>

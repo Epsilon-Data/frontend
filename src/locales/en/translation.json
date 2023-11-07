@@ -881,7 +881,48 @@
     "date": "Request Date",
     "requestor": "Requestor",
     "requestList" : "Request List",
-    "viewSource": "View Source"
+    "viewSource": "View Source",
+    "createNewRequest": "Create New Request",
+    "requestId": "Request ID",
+    "create": {
+      "projectInfo": {
+        "title": "Project Information",
+        "name": "Project Name",
+        "duration": "Project Duration",
+        "lead": "Project Lead",
+        "teamMembers": "Project Team Members",
+        "university": "University",
+        "faculty": "Faculty",
+        "ethicsApprovalId": "Ethics Approval ID",
+        "description": "Project Description",
+        "isOwnData": "Do you have access to your own data?",
+        "continue": "Continue"
+      },
+      "databaseInfo": {
+        "title": "Database Information",
+        "name": "Database Name",
+        "selectType": "Select Database Type",
+        "url": "Connection URL",
+        "username": "Database Username",
+        "password": "Database Password"
+      },
+      "dataInfo": {
+        "title": "Data Information",
+        "collectionStartDate": "Data Collection Start Date",
+        "collectionEndDate": "Data Collection End Date",
+        "participantsNumber": "Number of Participants",
+        "description": "Data Description",
+        "keywords": "Dataset Keywords"
+      },
+      "orgAdminInfo": {
+        "title": "Organisation Admin Information",
+        "email": "Organisation Admin Email ID"
+      },
+      "addInfo": {
+        "title": "Additional Information",
+        "prompt": "Additional notes related to request"
+      }
+    }
   },
   "databaseSources" : {
     "title": "Database Sources",

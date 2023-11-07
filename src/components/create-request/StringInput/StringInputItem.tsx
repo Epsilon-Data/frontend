@@ -1,0 +1,11 @@
+import React from 'react';
+import { BaseInput } from '@app/components/common/inputs/BaseInput/BaseInput';
+import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
+
+export const StringInputItem: React.FC<{ name: string; label: string }> = ({ name, label }) => {
+  return (
+    <BaseButtonsForm.Item name={name} label={label}>
+      <BaseInput />
+    </BaseButtonsForm.Item>
+  );
+};

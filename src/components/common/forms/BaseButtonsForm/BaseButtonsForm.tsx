@@ -10,6 +10,7 @@ export interface BaseButtonsFormProps extends BaseFormProps {
   setFieldsChanged?: (state: boolean) => void;
   footer?: React.ReactElement;
   loading?: boolean;
+  buttonText?: string;
 }
 
 export const BaseButtonsForm: BaseFormInterface<BaseButtonsFormProps> = ({
@@ -17,6 +18,7 @@ export const BaseButtonsForm: BaseFormInterface<BaseButtonsFormProps> = ({
   isFieldsChanged,
   setFieldsChanged,
   footer,
+  buttonText,
   loading = false,
   children,
   ...props
@@ -29,10 +31,16 @@ export const BaseButtonsForm: BaseFormInterface<BaseButtonsFormProps> = ({
     setFieldsChanged && setFieldsChanged(false);
   };
 
+  const buttonsGroup = buttonText ? (
+    <BaseButtonsGroup buttonText={buttonText} loading={loading} onCancel={onCancel} />
+  ) : (
+    <BaseButtonsGroup loading={loading} onCancel={onCancel} />
+  );
+
   return (
     <BaseForm form={currentForm} {...props}>
       {children}
-      {isFieldsChanged && (footer || <BaseButtonsGroup loading={loading} onCancel={onCancel} />)}
+      {isFieldsChanged && (footer || buttonsGroup)}
     </BaseForm>
   );
 };

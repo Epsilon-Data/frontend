@@ -475,4 +475,11 @@ export const components: Component[] = [
     categories: ['data tables'],
     keywords: ['upload', 'data tables'],
   },
+  {
+    name: 'Create New Request',
+    title: 'connectionRequests.createNewRequest',
+    url: `/r-connection-requests/create`,
+    categories: ['forms'],
+    keywords: ['create', 'connection requests'],
+  },
 ];

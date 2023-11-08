@@ -882,15 +882,17 @@
     "requestor": "Requestor",
     "requestList" : "Request List",
     "viewSource": "View Source",
-    "createNewRequest": "Create New Request",
     "requestId": "Request ID",
     "create": {
+      "title": "Create New Request",
+      "altTitle": "Create Request", 
       "projectInfo": {
         "title": "Project Information",
         "name": "Project Name",
         "duration": "Project Duration",
         "lead": "Project Lead",
-        "teamMembers": "Project Team Members",
+        "teamMembers": "Project Team Members/Affiliations",
+        "addTeamMembers": "Add Member/Affiliate",
         "university": "University",
         "faculty": "Faculty",
         "ethicsApprovalId": "Ethics Approval ID",
@@ -901,18 +903,22 @@
       "databaseInfo": {
         "title": "Database Information",
         "name": "Database Name",
-        "selectType": "Select Database Type",
+        "type": "Database Type",
+        "typePrompt": "Select Database Type",
         "url": "Connection URL",
         "username": "Database Username",
-        "password": "Database Password"
+        "password": "Database Password",
+        "postgres": "PostgreSQL",
+        "mysql": "MySQL",
+        "mongo": "MongoDB"
       },
       "dataInfo": {
         "title": "Data Information",
-        "collectionStartDate": "Data Collection Start Date",
-        "collectionEndDate": "Data Collection End Date",
+        "collectionDuration": "Data Collection Duration",
         "participantsNumber": "Number of Participants",
         "description": "Data Description",
-        "keywords": "Dataset Keywords"
+        "keywords": "Dataset Keywords",
+        "addKeywords": "Add Keywords"
       },
       "orgAdminInfo": {
         "title": "Organisation Admin Information",

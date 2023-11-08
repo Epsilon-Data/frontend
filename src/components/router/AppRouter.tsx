@@ -61,7 +61,7 @@ const Logout = React.lazy(() => import('./Logout'));
 
 const OAConnectionRequestsPage = React.lazy(() => import('@app/pages/orgAdmin/ConnectionRequestsPage'));
 const RConnectionRequestsPage = React.lazy(() => import('@app/pages/researcher/ConnectionRequestsPage'));
-const CreateRequestPage = React.lazy(() => import('@app/pages/researcher/CreateRequestPage'));
+const CreateRequestPage = React.lazy(() => import('@app/pages/researcher/CreateRequestPage/CreateRequestPage'));
 
 const SourceListPage = React.lazy(() => import('@app/pages/researcher/SourceListPage'));
 
@@ -148,7 +148,7 @@ export const AppRouter: React.FC = () => {
           </Route>
           <Route path="oa-connection-requests" element={<OAConnectionRequests />} />
           <Route path="r-connection-requests" element={<RConnectionRequests />} />
-          <Route path="r-connection-requests/create" element={<CreateRequest />} />
+          <Route path="r-connection-requests/create/:page" element={<CreateRequest />} />
           <Route path="database-sources">
             <Route path="list" element={<SourceList />} />
           </Route>
@@ -161,7 +161,7 @@ export const AppRouter: React.FC = () => {
             <Route path="pigeon-maps" element={<Pigeons />} />
           </Route>
           <Route path="server-error" element={<ServerError />} />
-          <Route path="404" element={<Error404 />} />
+          <Route path="*" element={<Error404 />} />
           <Route path="profile" element={<ProfileLayout />}>
             <Route path="personal-info" element={<PersonalInfo />} />
             <Route path="security-settings" element={<SecuritySettings />} />

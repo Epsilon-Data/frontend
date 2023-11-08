@@ -11,10 +11,10 @@ import { DateRangeInputItem } from './DateRangeInput/DateRangeInputItem';
 import { TagInputItem } from './TagInput/TagInputItem';
 import { RadioInputItem } from './RadioInput/RadioInputItem';
 
-export const RequestProjectInfo: React.FC<{
+export const RequestOrgAdminInfo: React.FC<{
   formValue: ConnectionRequest;
   setFormValue: (value: ConnectionRequest) => void;
-}> = ({ formValue, setFormValue }) => {
+}> = (input) => {
   const [isFieldsChanged, setFieldsChanged] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export const RequestProjectInfo: React.FC<{
   const onFinish = useCallback(
     (values: ConnectionRequest) => {
       setLoading(true);
-      setFormValue(values);
+      input.setFormValue(values);
       setTimeout(() => {
         setLoading(false);
         setFieldsChanged(false);
@@ -38,7 +38,7 @@ export const RequestProjectInfo: React.FC<{
         console.log(values);
       }, 1000);
     },
-    [navigate, setFormValue],
+    [input, navigate],
   );
 
   return (
@@ -46,7 +46,7 @@ export const RequestProjectInfo: React.FC<{
       form={form}
       name="info"
       loading={isLoading}
-      initialValues={formValue}
+      initialValues={input.formValue}
       isFieldsChanged={isFieldsChanged}
       setFieldsChanged={setFieldsChanged}
       onFieldsChange={() => setFieldsChanged(true)}
@@ -64,7 +64,7 @@ export const RequestProjectInfo: React.FC<{
           <StringInputItem name="projectName" label={t('connectionRequests.create.projectInfo.name')} />
         </BaseCol>
 
-        <BaseCol span={20}>
+        <BaseCol span={20} style={{ paddingBottom: '1rem' }}>
           <DateRangeInputItem name="projectDuration" label={t('connectionRequests.create.projectInfo.duration')} />
         </BaseCol>
 
@@ -76,7 +76,7 @@ export const RequestProjectInfo: React.FC<{
           <TagInputItem
             name="projectTeamMembers"
             label={t('connectionRequests.create.projectInfo.teamMembers')}
-            initialTags={formValue.projectTeamMembers}
+            initialTags={input.formValue.projectTeamMembers}
             prompt={t('connectionRequests.create.projectInfo.addTeamMembers')}
           />
         </BaseCol>

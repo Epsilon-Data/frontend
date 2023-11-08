@@ -23,9 +23,9 @@ const ConnectionRequestsPage: React.FC = () => {
               icon={<PlusOutlined />}
               type="primary"
               style={{ background: 'var(--black)', border: 'none' }}
-              onClick={() => navigate('/r-connection-requests/create')}
+              onClick={() => navigate('/r-connection-requests/create/project-info')}
             >
-              {t('connectionRequests.createNewRequest')}
+              {t('connectionRequests.create.title')}
             </BaseButton>
           }
           padding="1.25rem 1.25rem 0"

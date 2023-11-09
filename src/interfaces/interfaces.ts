@@ -56,22 +56,18 @@ export interface ConnectionRequest {
   projectDescription: string;
   isOwnData: boolean | null;
   orgAdminEmail?: string;
-  databaseInfo?: DatabaseInfo;
-  dataInfo: DataInfo;
+  databaseInfo?: {
+    name: string;
+    type: string;
+    url: string;
+    username: string;
+    password: string;
+  };
+  dataInfo: {
+    collectionDuration: string;
+    participantsNumber: number | null;
+    description: string;
+    keywords: string[];
+  };
   additionalInfo?: string;
-}
-
-export interface DatabaseInfo {
-  name: string;
-  type: string;
-  url: string;
-  username: string;
-  password: string;
-}
-
-interface DataInfo {
-  collectionDuration: string;
-  participantsNumber: number | null;
-  description: string;
-  keywords: string[];
 }

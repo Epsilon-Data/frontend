@@ -908,6 +908,7 @@
         "url": "Connection URL",
         "username": "Database Username",
         "password": "Database Password",
+        "passwordPrompt": "Input Password",
         "postgres": "PostgreSQL",
         "mysql": "MySQL",
         "mongo": "MongoDB"
@@ -926,7 +927,7 @@
       },
       "addInfo": {
         "title": "Additional Information",
-        "prompt": "Additional notes related to request"
+        "placeholder": "Additional notes related to request"
       }
     }
   },

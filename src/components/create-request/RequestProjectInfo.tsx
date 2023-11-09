@@ -52,6 +52,7 @@ export const RequestProjectInfo: React.FC<{
       onFieldsChange={() => setFieldsChanged(true)}
       onFinish={onFinish}
       buttonText={t('connectionRequests.create.projectInfo.continue')}
+      style={{ width: '80%' }}
     >
       <BaseRow gutter={{ xs: 10, md: 15, xl: 30 }} style={{ paddingBottom: '2rem' }}>
         <BaseCol span={24}>
@@ -60,19 +61,19 @@ export const RequestProjectInfo: React.FC<{
           </BaseButtonsForm.Item>
         </BaseCol>
 
-        <BaseCol span={20}>
+        <BaseCol span={24}>
           <StringInputItem name="projectName" label={t('connectionRequests.create.projectInfo.name')} />
         </BaseCol>
 
-        <BaseCol span={20}>
+        <BaseCol span={24}>
           <DateRangeInputItem name="projectDuration" label={t('connectionRequests.create.projectInfo.duration')} />
         </BaseCol>
 
-        <BaseCol span={20}>
+        <BaseCol span={24}>
           <StringInputItem name="projectLead" label={t('connectionRequests.create.projectInfo.lead')} />
         </BaseCol>
 
-        <BaseCol span={20}>
+        <BaseCol span={24}>
           <TagInputItem
             name="projectTeamMembers"
             label={t('connectionRequests.create.projectInfo.teamMembers')}
@@ -81,29 +82,29 @@ export const RequestProjectInfo: React.FC<{
           />
         </BaseCol>
 
-        <BaseCol span={20}>
+        <BaseCol span={24}>
           <StringInputItem name="university" label={t('connectionRequests.create.projectInfo.university')} />
         </BaseCol>
 
-        <BaseCol span={20}>
+        <BaseCol span={24}>
           <StringInputItem name="faculty" label={t('connectionRequests.create.projectInfo.faculty')} />
         </BaseCol>
 
-        <BaseCol span={20}>
+        <BaseCol span={24}>
           <StringInputItem
             name="ethicsApprovalId"
             label={t('connectionRequests.create.projectInfo.ethicsApprovalId')}
           />
         </BaseCol>
 
-        <BaseCol span={20}>
+        <BaseCol span={24}>
           <StringTextAreaItem
             name="projectDescription"
             label={t('connectionRequests.create.projectInfo.description')}
           />
         </BaseCol>
 
-        <BaseCol span={20}>
+        <BaseCol span={24}>
           <RadioInputItem name="isOwnData" label={t('connectionRequests.create.projectInfo.isOwnData')} />
         </BaseCol>
       </BaseRow>

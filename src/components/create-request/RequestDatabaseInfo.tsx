@@ -3,13 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import { ConnectionRequest, DatabaseInfo } from '@app/interfaces/interfaces';
+import { ConnectionRequest } from '@app/interfaces/interfaces';
 import { StringInputItem } from './StringInput/StringInputItem';
 import { useNavigate } from 'react-router-dom';
 import { DropdownInputItem } from './DropdownInput/DropdownInputItem';
-import { DateRangeInputItem } from './DateRangeInput/DateRangeInputItem';
-import { StringTextAreaItem } from './StringInput/StringTextAreaItem';
-import { TagInputItem } from './TagInput/TagInputItem';
+import { PasswordInputItem } from './PasswordInput/PasswordInputItem';
+import { RequestDataInfo } from './RequestDataInfo';
 
 export const RequestDatabaseInfo: React.FC<{
   formValue: ConnectionRequest;
@@ -23,7 +22,7 @@ export const RequestDatabaseInfo: React.FC<{
 
   const { t } = useTranslation();
 
-  const databaseInfo = formValue.databaseInfo
+  const ownDataInfo = formValue.databaseInfo
     ? formValue.databaseInfo
     : { name: '', type: '', url: '', username: '', password: '' };
 
@@ -43,16 +42,15 @@ export const RequestDatabaseInfo: React.FC<{
   ];
 
   const onFinish = useCallback(
-    (values: DatabaseInfo) => {
+    (values: ConnectionRequest) => {
       setLoading(true);
-      formValue.databaseInfo = values;
-      setFormValue(formValue);
+      setFormValue(values);
       //TODO: add request to database
       setTimeout(() => {
         setLoading(false);
         setFieldsChanged(false);
         navigate('/r-connection-requests');
-        console.log(values);
+        console.log(formValue);
       }, 1000);
     },
     [formValue, navigate, setFormValue],
@@ -63,12 +61,13 @@ export const RequestDatabaseInfo: React.FC<{
       form={form}
       name="info"
       loading={isLoading}
-      initialValues={databaseInfo}
+      initialValues={ownDataInfo}
       isFieldsChanged={isFieldsChanged}
       setFieldsChanged={setFieldsChanged}
       onFieldsChange={() => setFieldsChanged(true)}
       onFinish={onFinish}
       buttonText={t('connectionRequests.create.altTitle')}
+      style={{ width: '80%' }}
     >
       <BaseRow gutter={{ xs: 10, md: 15, xl: 30 }} style={{ paddingBottom: '2rem' }}>
         <BaseCol span={24}>
@@ -77,50 +76,34 @@ export const RequestDatabaseInfo: React.FC<{
           </BaseButtonsForm.Item>
         </BaseCol>
 
-        <BaseCol span={20}>
-          <StringInputItem name="name" label={t('connectionRequests.create.databaseInfo.name')} />
+        <BaseCol span={24}>
+          <StringInputItem name="databaseInfo.name" label={t('connectionRequests.create.databaseInfo.name')} />
         </BaseCol>
 
-        <BaseCol span={20}>
+        <BaseCol span={24}>
           <DropdownInputItem
-            name="type"
+            name="databaseInfo.type"
             label={t('connectionRequests.create.databaseInfo.type')}
             positionItems={dropdownItems}
             prompt={t('connectionRequests.create.databaseInfo.typePrompt')}
           />
         </BaseCol>
 
-        <BaseCol span={20}>
-          <StringInputItem name="url" label={t('connectionRequests.create.databaseInfo.url')} />
+        <BaseCol span={24}>
+          <StringInputItem name="databaseInfo.url" label={t('connectionRequests.create.databaseInfo.url')} />
         </BaseCol>
 
-        <BaseCol span={20}>
-          <StringInputItem name="username" label={t('connectionRequests.create.databaseInfo.username')} />
+        <BaseCol span={24}>
+          <StringInputItem name="databaseInfo.username" label={t('connectionRequests.create.databaseInfo.username')} />
         </BaseCol>
 
-        <BaseCol span={20}>
-          <BaseButtonsForm.Title>{t('connectionRequests.create.dataInfo.title')}</BaseButtonsForm.Title>
-        </BaseCol>
-
-        <BaseCol span={20}>
-          <DateRangeInputItem
-            name="collectionDuration"
-            label={t('connectionRequests.create.dataInfo.collectionDuration')}
+        <BaseCol span={24}>
+          <PasswordInputItem
+            name="databaseInfo.password"
+            label={t('connectionRequests.create.databaseInfo.password')}
           />
         </BaseCol>
-
-        <BaseCol span={20}>
-          <StringTextAreaItem name="description" label={t('connectionRequests.create.dataInfo.description')} />
-        </BaseCol>
-
-        <BaseCol span={20}>
-          <TagInputItem
-            name="keywords"
-            label={t('connectionRequests.create.dataInfo.keywords')}
-            initialTags={formValue.dataInfo.keywords ? formValue.dataInfo.keywords : []}
-            prompt={t('connectionRequests.create.dataInfo.addKeywords')}
-          />
-        </BaseCol>
+        <RequestDataInfo formValue={formValue} />
       </BaseRow>
     </BaseButtonsForm>
   );

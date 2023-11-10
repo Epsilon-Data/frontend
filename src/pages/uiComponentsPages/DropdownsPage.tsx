@@ -28,7 +28,7 @@ const DropdownsPage: React.FC = () => {
     {
       key: '2',
       label: `${t('dropdowns.secondItem')} ${t('dropdowns.disabled')}`,
-      icon: <DownOutlined />,
+      icon: <DownOutlined rev={undefined} />,
       disabled: true,
     },
     {
@@ -65,7 +65,7 @@ const DropdownsPage: React.FC = () => {
         <S.Card title={t('dropdowns.basic')}>
           <BaseDropdown menu={{ items: basicItems }}>
             <BaseButton onClick={(e) => e.preventDefault()}>
-              {t('dropdowns.hoverMe')} <DownOutlined />
+              {t('dropdowns.hoverMe')} <DownOutlined rev={undefined} />
             </BaseButton>
           </BaseDropdown>
         </S.Card>
@@ -94,7 +94,7 @@ const DropdownsPage: React.FC = () => {
         <S.Card title={t('dropdowns.clickable')}>
           <BaseDropdown menu={{ items: positionItems }} trigger={['click']}>
             <BaseButton onClick={(e) => e.preventDefault()}>
-              {t('dropdowns.clickMe')} <DownOutlined />
+              {t('dropdowns.clickMe')} <DownOutlined rev={undefined} />
             </BaseButton>
           </BaseDropdown>
         </S.Card>

@@ -31,7 +31,7 @@ export const Legend: React.FC<LegendProps> = ({ legendItems, activeItemIndex }) 
             </S.LegendDescription>
             <S.Values>{item.value}</S.Values>
             <BasePopover content={<S.PopoverContent>{item.description}</S.PopoverContent>} trigger="hover">
-              <S.InfoStyled />
+              <S.InfoStyled rev={undefined} />
             </BasePopover>
           </S.LegendInfo>
         </S.LegendWrapper>

@@ -19,7 +19,7 @@ export const SearchInput = React.forwardRef<BaseInputRef, SearchInputProps>(({ l
   return (
     <S.SearchInput
       ref={ref}
-      prefix={<SearchOutlined />}
+      prefix={<SearchOutlined rev={undefined} />}
       {...(filter && {
         suffix: (
           <S.Space align="center">

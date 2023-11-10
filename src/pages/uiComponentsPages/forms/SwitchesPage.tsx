@@ -43,7 +43,11 @@ const SwitchesPage: React.FC = () => {
           <BaseSpace direction="vertical" size={10}>
             <BaseSwitch checkedChildren={t('switches.yes')} unCheckedChildren={t('switches.no')} defaultChecked />
             <BaseSwitch checkedChildren="1" unCheckedChildren="0" />
-            <BaseSwitch checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />} defaultChecked />
+            <BaseSwitch
+              checkedChildren={<CheckOutlined rev={undefined} />}
+              unCheckedChildren={<CloseOutlined rev={undefined} />}
+              defaultChecked
+            />
           </BaseSpace>
         </S.Card>
       </BaseCol>

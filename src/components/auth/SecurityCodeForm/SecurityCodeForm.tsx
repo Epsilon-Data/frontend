@@ -45,7 +45,7 @@ export const SecurityCodeForm: React.FC<SecurityCodeFormProps> = ({ onBack, onFi
     <Auth.FormWrapper>
       <BaseForm layout="vertical" requiredMark="optional">
         <Auth.BackWrapper onClick={onBack || navigateBack}>
-          <Auth.BackIcon />
+          <Auth.BackIcon rev={undefined} />
           {t('common.back')}
         </Auth.BackWrapper>
         <S.ContentWrapper>

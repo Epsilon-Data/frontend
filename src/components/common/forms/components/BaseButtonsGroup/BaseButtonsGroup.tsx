@@ -28,7 +28,7 @@ export const BaseButtonsGroup: React.FC<BaseButtonsGroupProps> = ({
         </BaseButton>
       </BaseCol>
       <BaseCol span={12} style={{ paddingLeft: '1rem' }}>
-        <BaseButton block type="ghost" onClick={onCancel} {...props}>
+        <BaseButton block type="default" onClick={onCancel} {...props}>
           {t('common.cancel')}
         </BaseButton>
       </BaseCol>

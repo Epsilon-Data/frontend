@@ -22,10 +22,6 @@ export const RequestDatabaseInfo: React.FC<{
 
   const { t } = useTranslation();
 
-  const ownDataInfo = formValue.databaseInfo
-    ? formValue.databaseInfo
-    : { name: '', type: '', url: '', username: '', password: '' };
-
   const dropdownItems = [
     {
       key: 'postgres',
@@ -44,7 +40,23 @@ export const RequestDatabaseInfo: React.FC<{
   const onFinish = useCallback(
     (values: ConnectionRequest) => {
       setLoading(true);
-      setFormValue(values);
+      const updatedRequest = {
+        ...formValue,
+        databaseInfo: {
+          name: values.databaseInfo?.name || '',
+          type: values.databaseInfo?.type || '',
+          url: values.databaseInfo?.url || '',
+          username: values.databaseInfo?.username || '',
+          password: values.databaseInfo?.password || '',
+        },
+        dataInfo: {
+          collectionDuration: values.dataInfo.collectionDuration,
+          participantsNumber: values.dataInfo.participantsNumber,
+          description: values.dataInfo.description,
+          keywords: values.dataInfo.keywords,
+        },
+      };
+      setFormValue(updatedRequest);
       //TODO: add request to database
       setTimeout(() => {
         setLoading(false);
@@ -61,7 +73,7 @@ export const RequestDatabaseInfo: React.FC<{
       form={form}
       name="info"
       loading={isLoading}
-      initialValues={ownDataInfo}
+      initialValues={formValue}
       isFieldsChanged={isFieldsChanged}
       setFieldsChanged={setFieldsChanged}
       onFieldsChange={() => setFieldsChanged(true)}
@@ -77,7 +89,7 @@ export const RequestDatabaseInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="databaseInfo.name" label={t('connectionRequests.create.databaseInfo.name')} />
+          <StringInputItem name="databaseInfo.name" label={t('connectionRequests.create.databaseInfo.name')} required />
         </BaseCol>
 
         <BaseCol span={24}>
@@ -86,21 +98,27 @@ export const RequestDatabaseInfo: React.FC<{
             label={t('connectionRequests.create.databaseInfo.type')}
             positionItems={dropdownItems}
             prompt={t('connectionRequests.create.databaseInfo.typePrompt')}
+            required
           />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="databaseInfo.url" label={t('connectionRequests.create.databaseInfo.url')} />
+          <StringInputItem name="databaseInfo.url" label={t('connectionRequests.create.databaseInfo.url')} required />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="databaseInfo.username" label={t('connectionRequests.create.databaseInfo.username')} />
+          <StringInputItem
+            name="databaseInfo.username"
+            label={t('connectionRequests.create.databaseInfo.username')}
+            required
+          />
         </BaseCol>
 
         <BaseCol span={24}>
           <PasswordInputItem
             name="databaseInfo.password"
             label={t('connectionRequests.create.databaseInfo.password')}
+            required
           />
         </BaseCol>
         <RequestDataInfo formValue={formValue} />

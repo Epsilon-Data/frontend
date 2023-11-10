@@ -45,8 +45,8 @@ export const HeaderSearch: React.FC = () => {
       {mobileOnly && (
         <>
           <BaseButton
-            type={isModalOpen ? 'ghost' : 'text'}
-            icon={<S.SearchIcon onClick={() => setModalOpen(true)} />}
+            type={isModalOpen ? 'default' : 'text'}
+            icon={<S.SearchIcon onClick={() => setModalOpen(true)} rev={undefined} />}
           />
           <S.SearchModal
             open={isModalOpen}

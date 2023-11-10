@@ -61,19 +61,19 @@ const StepsPage: React.FC = () => {
             items={[
               {
                 title: t('steps.login'),
-                icon: <UserOutlined />,
+                icon: <UserOutlined rev={undefined} />,
               },
               {
                 title: t('steps.verification'),
-                icon: <SolutionOutlined />,
+                icon: <SolutionOutlined rev={undefined} />,
               },
               {
                 title: t('steps.pay'),
-                icon: <LoadingOutlined />,
+                icon: <LoadingOutlined rev={undefined} />,
               },
               {
                 title: t('steps.done'),
-                icon: <SmileOutlined />,
+                icon: <SmileOutlined rev={undefined} />,
               },
             ]}
           />

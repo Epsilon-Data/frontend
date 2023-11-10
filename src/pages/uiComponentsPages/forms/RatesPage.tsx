@@ -9,11 +9,11 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 const RatesPage: React.FC = () => {
   const { t } = useTranslation();
   const customIcons = [
-    <FrownOutlined key={1} />,
-    <FrownOutlined key={2} />,
-    <MehOutlined key={3} />,
-    <SmileOutlined key={4} />,
-    <SmileOutlined key={5} />,
+    <FrownOutlined key={1} rev={undefined} />,
+    <FrownOutlined key={2} rev={undefined} />,
+    <MehOutlined key={3} rev={undefined} />,
+    <SmileOutlined key={4} rev={undefined} />,
+    <SmileOutlined key={5} rev={undefined} />,
   ];
 
   return (

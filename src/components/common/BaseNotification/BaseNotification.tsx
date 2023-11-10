@@ -22,10 +22,10 @@ interface BaseNotificationProps {
 
 export const BaseNotification: React.FC<BaseNotificationProps> = ({ type, mentionIconSrc, title, description }) => {
   const icons: Icons = {
-    info: <InfoCircleFilled />,
-    success: <CheckCircleFilled />,
-    warning: <ExclamationCircleFilled />,
-    error: <WarningFilled />,
+    info: <InfoCircleFilled rev={undefined} />,
+    success: <CheckCircleFilled rev={undefined} />,
+    warning: <ExclamationCircleFilled rev={undefined} />,
+    error: <WarningFilled rev={undefined} />,
     mention: mentionIconSrc,
   };
 

@@ -15,7 +15,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ onRemove }) => {
   return (
     <S.BtnWrapper>
       <BasePopconfirm title={t('common.deleteQuestion')} onConfirm={onRemove}>
-        <BaseButton type="link" icon={<DeleteOutlined />} />
+        <BaseButton type="link" icon={<DeleteOutlined rev={undefined} />} />
       </BasePopconfirm>
     </S.BtnWrapper>
   );

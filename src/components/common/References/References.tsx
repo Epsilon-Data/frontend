@@ -17,16 +17,16 @@ export const References: React.FC = () => {
       </S.Text>
       <S.Icons>
         <a href="https://github.com/altence/lightence-admin" target="_blank" rel="noreferrer">
-          <GithubOutlined />
+          <GithubOutlined rev={undefined} />
         </a>
         <a href="https://twitter.com/altence_team" target="_blank" rel="noreferrer">
-          <TwitterOutlined />
+          <TwitterOutlined rev={undefined} />
         </a>
         <a href="https://www.facebook.com/groups/altence" target="_blank" rel="noreferrer">
-          <FacebookOutlined />
+          <FacebookOutlined rev={undefined} />
         </a>
         <a href="https://linkedin.com/company/altence" target="_blank" rel="noreferrer">
-          <LinkedinOutlined />
+          <LinkedinOutlined rev={undefined} />
         </a>
       </S.Icons>
     </S.ReferencesWrapper>

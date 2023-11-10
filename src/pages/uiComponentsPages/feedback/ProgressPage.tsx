@@ -55,8 +55,8 @@ const ProgressPage: React.FC = () => {
             <BaseProgress percent={percent} type="circle" strokeColor={dynamicSuccessColor} />
             <BaseProgress percent={percent} strokeColor={dynamicSuccessColor} />
             <ButtonGroup>
-              <BaseButton onClick={decrease} icon={<MinusOutlined />} />
-              <BaseButton onClick={increase} icon={<PlusOutlined />} />
+              <BaseButton onClick={decrease} icon={<MinusOutlined rev={undefined} />} />
+              <BaseButton onClick={increase} icon={<PlusOutlined rev={undefined} />} />
             </ButtonGroup>
           </div>
         </S.Card>

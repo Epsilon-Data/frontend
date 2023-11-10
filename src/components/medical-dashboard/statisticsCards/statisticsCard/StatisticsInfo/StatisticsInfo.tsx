@@ -17,7 +17,10 @@ export const StatisticsInfo: React.FC<StatisticsInfoProps> = ({ name, value, pre
 
       {prevValue && (
         <S.Text>
-          <S.IconWrapper> {value > prevValue ? <CaretUpOutlined /> : <CaretDownOutlined />}</S.IconWrapper>
+          <S.IconWrapper>
+            {' '}
+            {value > prevValue ? <CaretUpOutlined rev={undefined} /> : <CaretDownOutlined rev={undefined} />}
+          </S.IconWrapper>
           {getDifference(value, prevValue)}
         </S.Text>
       )}

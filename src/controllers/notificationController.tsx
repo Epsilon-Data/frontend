@@ -24,7 +24,7 @@ const openSuccessNotification = (config: NotificationProps): void => {
     ...config,
     icon: (
       <IconWrapper $isOnlyTitle={!config.description}>
-        <CheckCircleFilled className="success-icon" />
+        <CheckCircleFilled className="success-icon" rev={undefined} />
       </IconWrapper>
     ),
     message: <div className={`title ${!config.description && `title-only`}`}>{config.message}</div>,
@@ -38,7 +38,7 @@ const openInfoNotification = (config: NotificationProps): void => {
     ...config,
     icon: (
       <IconWrapper $isOnlyTitle={!config.description}>
-        <InfoCircleFilled className="info-icon" />
+        <InfoCircleFilled className="info-icon" rev={undefined} />
       </IconWrapper>
     ),
     message: <div className={`title ${!config.description && `title-only`}`}>{config.message}</div>,
@@ -52,7 +52,7 @@ const openWarningNotification = (config: NotificationProps): void => {
     ...config,
     icon: (
       <IconWrapper $isOnlyTitle={!config.description}>
-        <ExclamationCircleFilled className="warning-icon" />
+        <ExclamationCircleFilled className="warning-icon" rev={undefined} />
       </IconWrapper>
     ),
     message: <div className={`title ${!config.description && `title-only`}`}>{config.message}</div>,
@@ -66,7 +66,7 @@ const openErrorNotification = (config: NotificationProps): void => {
     ...config,
     icon: (
       <IconWrapper $isOnlyTitle={!config.description}>
-        <StopFilled className="error-icon" />
+        <StopFilled className="error-icon" rev={undefined} />
       </IconWrapper>
     ),
     message: <div className={`title ${!config.description && `title-only`}`}>{config.message}</div>,

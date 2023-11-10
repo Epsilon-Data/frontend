@@ -27,7 +27,7 @@ export const OpenURLInput: React.FC<OpenURLInputProps> = ({ href, target = '_bla
             target={target}
             disabled={!isMatch}
             type="text"
-            icon={<FileTextOutlined />}
+            icon={<FileTextOutlined rev={undefined} />}
           />
         </BaseTooltip>
       }

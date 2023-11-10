@@ -50,7 +50,7 @@ export const DesktopScreenings: React.FC<DesktopScreeningsProps> = ({ screenings
 
           {isDesktop && (
             <BaseCol>
-              <LeftOutlined onClick={handleClick} rotate={isMenuOpen ? 0 : 180} />
+              <LeftOutlined onClick={handleClick} rotate={isMenuOpen ? 0 : 180} rev={undefined} />
             </BaseCol>
           )}
         </BaseRow>

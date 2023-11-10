@@ -11,9 +11,9 @@ import { BaseSwitch } from '@app/components/common/BaseSwitch/BaseSwitch';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 
-const antIcon1 = <LoadingOutlined style={{ fontSize: 24 }} spin />;
-const antIcon2 = <RedoOutlined style={{ fontSize: 24 }} spin />;
-const antIcon3 = <ChromeOutlined style={{ fontSize: 24 }} spin />;
+const antIcon1 = <LoadingOutlined rev={undefined} style={{ fontSize: 24 }} spin />;
+const antIcon2 = <RedoOutlined rev={undefined} style={{ fontSize: 24 }} spin />;
+const antIcon3 = <ChromeOutlined rev={undefined} style={{ fontSize: 24 }} spin />;
 
 const SpinnersPage: React.FC = () => {
   const { t } = useTranslation();

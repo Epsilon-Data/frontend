@@ -47,7 +47,7 @@ export interface PaymentCard {
 
 export interface ConnectionRequest {
   projectName: string;
-  projectDuration: string;
+  projectDuration: Date[];
   projectLead: string;
   projectTeamMembers: string[];
   university: string;
@@ -64,7 +64,7 @@ export interface ConnectionRequest {
     password: string;
   };
   dataInfo: {
-    collectionDuration: string;
+    collectionDuration: Date[];
     participantsNumber: number | null;
     description: string;
     keywords: string[];

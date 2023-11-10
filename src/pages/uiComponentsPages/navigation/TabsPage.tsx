@@ -56,7 +56,7 @@ const TabsPage: React.FC = () => {
                 key: '1',
                 label: (
                   <span>
-                    <AppleOutlined />
+                    <AppleOutlined rev={undefined} />
                     {t('tabs.tab')} 1
                   </span>
                 ),
@@ -66,7 +66,7 @@ const TabsPage: React.FC = () => {
                 key: '2',
                 label: (
                   <span>
-                    <AndroidOutlined />
+                    <AndroidOutlined rev={undefined} />
                     {t('tabs.tab')} 2
                   </span>
                 ),

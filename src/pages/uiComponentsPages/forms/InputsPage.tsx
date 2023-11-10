@@ -52,16 +52,16 @@ const InputsPage: React.FC = () => {
         </S.Card>
         <S.Card title={t('inputs.sizes')}>
           <S.InputsWrapper>
-            <BaseInput size="small" placeholder={t('inputs.small')} prefix={<UserOutlined />} />
-            <BaseInput placeholder={t('inputs.default')} prefix={<UserOutlined />} />
-            <BaseInput size="large" placeholder={t('inputs.large')} prefix={<UserOutlined />} />
+            <BaseInput size="small" placeholder={t('inputs.small')} prefix={<UserOutlined rev={undefined} />} />
+            <BaseInput placeholder={t('inputs.default')} prefix={<UserOutlined rev={undefined} />} />
+            <BaseInput size="large" placeholder={t('inputs.large')} prefix={<UserOutlined rev={undefined} />} />
           </S.InputsWrapper>
         </S.Card>
         <S.Card title={t('inputs.prePost')}>
           <S.InputsWrapper>
             <BaseInput addonBefore="http://" addonAfter=".com" defaultValue="mysite" />
             <BaseInput addonBefore={selectBefore} addonAfter={selectAfter} defaultValue="mysite" />
-            <BaseInput addonAfter={<SettingOutlined />} defaultValue="mysite" />
+            <BaseInput addonAfter={<SettingOutlined rev={undefined} />} defaultValue="mysite" />
             <BaseInput addonBefore="http://" suffix=".com" defaultValue="mysite" />
             <BaseInput addonBefore={<BaseCascader placeholder="cascader" />} defaultValue="mysite" />
           </S.InputsWrapper>
@@ -70,10 +70,10 @@ const InputsPage: React.FC = () => {
           <S.InputsWrapper>
             <BaseInput
               placeholder={t('inputs.enterName')}
-              prefix={<UserOutlined />}
+              prefix={<UserOutlined rev={undefined} />}
               suffix={
                 <BaseTooltip title={t('inputs.extra')}>
-                  <InfoCircleOutlined />
+                  <InfoCircleOutlined rev={undefined} />
                 </BaseTooltip>
               }
             />
@@ -89,7 +89,7 @@ const InputsPage: React.FC = () => {
               placeholder={t('inputs.searchText')}
               enterButton="Search"
               size="large"
-              suffix={<AudioOutlined />}
+              suffix={<AudioOutlined rev={undefined} />}
             />
           </S.InputsWrapper>
         </S.Card>
@@ -97,7 +97,9 @@ const InputsPage: React.FC = () => {
           <S.InputsWrapper>
             <InputPassword
               placeholder={t('inputs.passwordText')}
-              iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone rev={undefined} /> : <EyeInvisibleOutlined rev={undefined} />
+              }
             />
           </S.InputsWrapper>
         </S.Card>

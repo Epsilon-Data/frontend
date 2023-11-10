@@ -8,6 +8,8 @@ import { StringInputItem } from './StringInput/StringInputItem';
 import { useNavigate } from 'react-router-dom';
 import { RequestDataInfo } from './RequestDataInfo';
 import { StringTextAreaItem } from './StringInput/StringTextAreaItem';
+import { BaseTooltip } from '../common/BaseTooltip/BaseTooltip';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 export const RequestOrgAdminInfo: React.FC<{
   formValue: ConnectionRequest;
@@ -21,14 +23,21 @@ export const RequestOrgAdminInfo: React.FC<{
 
   const { t } = useTranslation();
 
-  const ownDataInfo = formValue.databaseInfo
-    ? formValue.databaseInfo
-    : { name: '', type: '', url: '', username: '', password: '' };
-
   const onFinish = useCallback(
     (values: ConnectionRequest) => {
       setLoading(true);
-      setFormValue(values);
+      const updatedRequest = {
+        ...formValue,
+        orgAdminEmail: values.orgAdminEmail || '',
+        dataInfo: {
+          collectionDuration: values.dataInfo.collectionDuration,
+          participantsNumber: values.dataInfo.participantsNumber,
+          description: values.dataInfo.description,
+          keywords: values.dataInfo.keywords,
+        },
+        additionalInfo: values.additionalInfo || '',
+      };
+      setFormValue(updatedRequest);
       //TODO: add request to database
       setTimeout(() => {
         setLoading(false);
@@ -45,7 +54,7 @@ export const RequestOrgAdminInfo: React.FC<{
       form={form}
       name="info"
       loading={isLoading}
-      initialValues={ownDataInfo}
+      initialValues={formValue}
       isFieldsChanged={isFieldsChanged}
       setFieldsChanged={setFieldsChanged}
       onFieldsChange={() => setFieldsChanged(true)}
@@ -61,7 +70,15 @@ export const RequestOrgAdminInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="orgAdminEmail" label={t('connectionRequests.create.orgAdminInfo.email')} />
+          <StringInputItem
+            name="orgAdminEmail"
+            label={t('connectionRequests.create.orgAdminInfo.email')}
+            suffix={
+              <BaseTooltip title={t('connectionRequests.create.orgAdminInfo.tooltip')}>
+                <InfoCircleOutlined rev={undefined} />
+              </BaseTooltip>
+            }
+          />
         </BaseCol>
 
         <RequestDataInfo formValue={formValue} />

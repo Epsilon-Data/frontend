@@ -5,12 +5,13 @@ import { Space, Tag, Tooltip } from 'antd';
 import * as S from './TagInputItem.styles';
 import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
 
-export const TagInputItem: React.FC<{ initialTags: string[]; prompt: string; name: string; label: string }> = ({
-  initialTags,
-  prompt,
-  name,
-  label,
-}) => {
+export const TagInputItem: React.FC<{
+  initialTags: string[];
+  prompt: string;
+  name: string;
+  label: string;
+  required?: boolean;
+}> = ({ initialTags, prompt, name, label, required }) => {
   const [tags, setTags] = useState(initialTags);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -64,7 +65,7 @@ export const TagInputItem: React.FC<{ initialTags: string[]; prompt: string; nam
   };
 
   return (
-    <BaseButtonsForm.Item name={name} label={label}>
+    <BaseButtonsForm.Item name={name} label={label} rules={[{ required: required }]}>
       <Space size={[0, 8]} wrap>
         {tags &&
           tags.map((tag, index) => {
@@ -116,7 +117,7 @@ export const TagInputItem: React.FC<{ initialTags: string[]; prompt: string; nam
             onPressEnter={handleInputConfirm}
           />
         ) : (
-          <S.TagPlus icon={<PlusOutlined />} onClick={showInput}>
+          <S.TagPlus icon={<PlusOutlined rev={undefined} />} onClick={showInput}>
             {prompt}
           </S.TagPlus>
         )}

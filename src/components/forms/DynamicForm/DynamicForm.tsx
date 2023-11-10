@@ -103,7 +103,7 @@ export const DynamicForm: React.FC = () => {
                   >
                     <S.Wrapper>
                       <BaseInput />
-                      <S.RemoveBtn onClick={() => remove(field.name)} />
+                      <S.RemoveBtn onClick={() => remove(field.name)} rev={undefined} />
                     </S.Wrapper>
                   </BaseButtonsForm.Item>
                 </BaseCol>
@@ -111,7 +111,7 @@ export const DynamicForm: React.FC = () => {
             ))}
 
             <BaseButtonsForm.Item>
-              <BaseButton type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+              <BaseButton type="dashed" onClick={() => add()} block icon={<PlusOutlined rev={undefined} />}>
                 {t('forms.dynamicFormLabels.addSights')}
               </BaseButton>
             </BaseButtonsForm.Item>

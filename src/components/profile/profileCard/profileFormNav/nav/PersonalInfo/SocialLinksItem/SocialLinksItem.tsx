@@ -24,7 +24,7 @@ export const SocialLinksItem: React.FC = () => {
               return (
                 <label>
                   <BaseButtonsForm.Item name="twitter">
-                    <ClipboardInput valueToCopy={twitter} addonBefore={<TwitterOutlined />} />
+                    <ClipboardInput valueToCopy={twitter} addonBefore={<TwitterOutlined rev={undefined} />} />
                   </BaseButtonsForm.Item>
                 </label>
               );

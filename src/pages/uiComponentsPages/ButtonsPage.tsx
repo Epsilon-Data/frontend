@@ -41,7 +41,6 @@ const ButtonsPage: React.FC = () => {
         <S.Card title={t('buttons.types')}>
           <BaseButton type="primary">{t('buttons.primary')}</BaseButton>
           <BaseButton type="default">{t('buttons.default')}</BaseButton>
-          <BaseButton type="ghost">{t('buttons.ghost')}</BaseButton>
           <BaseButton type="dashed">{t('buttons.dashed')}</BaseButton>
           <BaseButton type="text">{t('buttons.text')}</BaseButton>
           <BaseButton type="link">{t('buttons.link')}</BaseButton>
@@ -53,13 +52,13 @@ const ButtonsPage: React.FC = () => {
           <BaseButton severity="error">{t('common.error')}</BaseButton>
         </S.Card>
         <S.Card title={t('buttons.sizes')}>
-          <BaseButton type="ghost" size="small">
+          <BaseButton type="default" size="small">
             {t('buttons.small')}
           </BaseButton>
-          <BaseButton type="ghost" size="middle">
+          <BaseButton type="default" size="middle">
             {t('buttons.default')}
           </BaseButton>
-          <BaseButton type="ghost" size="large">
+          <BaseButton type="default" size="large">
             {t('buttons.large')}
           </BaseButton>
         </S.Card>
@@ -70,17 +69,22 @@ const ButtonsPage: React.FC = () => {
           <BaseButton type="primary" loading>
             {t('buttons.loading')}
           </BaseButton>
-          <BaseButton type="primary" icon={<PoweroffOutlined />} loading />
+          <BaseButton type="primary" icon={<PoweroffOutlined rev={undefined} />} loading />
 
           <BaseButton type="primary" loading={loadings[0]} onClick={() => enterLoading(0)}>
             {t('buttons.click')}
           </BaseButton>
-          <BaseButton type="primary" icon={<PoweroffOutlined />} loading={loadings[1]} onClick={() => enterLoading(1)}>
+          <BaseButton
+            type="primary"
+            icon={<PoweroffOutlined rev={undefined} />}
+            loading={loadings[1]}
+            onClick={() => enterLoading(1)}
+          >
             {t('buttons.click')}
           </BaseButton>
           <BaseButton
             type="primary"
-            icon={<PoweroffOutlined />}
+            icon={<PoweroffOutlined rev={undefined} />}
             loading={loadings[2]}
             onClick={() => enterLoading(2)}
           />
@@ -109,9 +113,6 @@ const ButtonsPage: React.FC = () => {
           <BaseButton type="default" disabled>
             {t('buttons.default')}
           </BaseButton>
-          <BaseButton type="ghost" disabled>
-            {t('buttons.ghost')}
-          </BaseButton>
           <BaseButton type="dashed" disabled>
             {t('buttons.dashed')}
           </BaseButton>
@@ -124,7 +125,7 @@ const ButtonsPage: React.FC = () => {
         </S.Card>
         <S.Card title={t('buttons.icons')}>
           <BaseTooltip title={t('buttons.search')}>
-            <BaseButton type="primary" shape="circle" icon={<SearchOutlined />} />
+            <BaseButton type="primary" shape="circle" icon={<SearchOutlined rev={undefined} />} />
           </BaseTooltip>
           <BaseTooltip title={t('buttons.search')}>
             <BaseButton type="primary" shape="circle">
@@ -132,21 +133,21 @@ const ButtonsPage: React.FC = () => {
             </BaseButton>
           </BaseTooltip>
           <BaseTooltip title={t('buttons.search')}>
-            <BaseButton type="primary" icon={<SearchOutlined />}>
+            <BaseButton type="primary" icon={<SearchOutlined rev={undefined} />}>
               {t('buttons.search')}
             </BaseButton>
           </BaseTooltip>
 
           <BaseTooltip title={t('buttons.search')}>
-            <BaseButton type="dashed" shape="circle" icon={<SearchOutlined />} size="large" />
+            <BaseButton type="dashed" shape="circle" icon={<SearchOutlined rev={undefined} />} size="large" />
           </BaseTooltip>
           <BaseTooltip title={t('buttons.search')}>
-            <BaseButton type="dashed" icon={<SearchOutlined />} size="large">
+            <BaseButton type="dashed" icon={<SearchOutlined rev={undefined} />} size="large">
               {t('buttons.search')}
             </BaseButton>
           </BaseTooltip>
           <BaseTooltip title={t('buttons.search')}>
-            <BaseButton type="ghost" icon={<SearchOutlined />} size="large" />
+            <BaseButton type="default" icon={<SearchOutlined rev={undefined} />} size="large" />
           </BaseTooltip>
         </S.Card>
       </BaseCol>

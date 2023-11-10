@@ -46,7 +46,7 @@ export const TotalEarning: React.FC = () => {
 
             <BaseCol>
               <S.ValueText $color={isIncreased ? 'success' : 'error'}>
-                {isIncreased ? <CaretUpOutlined /> : <CaretDownOutlined />}{' '}
+                {isIncreased ? <CaretUpOutlined rev={undefined} /> : <CaretDownOutlined rev={undefined} />}{' '}
                 {totalEarning && getDifference(totalEarning?.total, totalEarning?.prevTotal)}
               </S.ValueText>
             </BaseCol>

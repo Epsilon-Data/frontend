@@ -13,12 +13,12 @@ export const MobileScreenings: React.FC<ScreeningsProps> = ({ screeningsItems })
       arrows
       prevArrow={
         <CarouselArrow>
-          <ArrowLeftOutlined />
+          <ArrowLeftOutlined rev={undefined} />
         </CarouselArrow>
       }
       nextArrow={
         <CarouselArrow>
-          <ArrowRightOutlined />
+          <ArrowRightOutlined rev={undefined} />
         </CarouselArrow>
       }
       slidesToShow={6}

@@ -20,7 +20,7 @@ const ConnectionRequestsPage: React.FC = () => {
           title={t('connectionRequests.requestList')}
           extra={
             <BaseButton
-              icon={<PlusOutlined />}
+              icon={<PlusOutlined rev={undefined} />}
               type="primary"
               style={{ background: 'var(--black)', border: 'none' }}
               onClick={() => navigate('/r-connection-requests/create/project-info')}

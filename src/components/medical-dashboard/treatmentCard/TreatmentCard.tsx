@@ -71,7 +71,11 @@ export const TreatmentCard: React.FC = () => {
         ) : isDateClicked && calendar.some((event) => Dates.getDate(event.date).isSame(selectedDate, 'date')) ? (
           <BackButtonWrapper span={24}>
             {panelItem}
-            <BackButton type="text" icon={<ArrowLeftOutlined />} onClick={() => setDateClicked(false)} />
+            <BackButton
+              type="text"
+              icon={<ArrowLeftOutlined rev={undefined} />}
+              onClick={() => setDateClicked(false)}
+            />
           </BackButtonWrapper>
         ) : (
           <BaseCol span={24}>{calendarItem}</BaseCol>

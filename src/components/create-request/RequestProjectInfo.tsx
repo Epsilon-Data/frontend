@@ -26,7 +26,20 @@ export const RequestProjectInfo: React.FC<{
   const onFinish = useCallback(
     (values: ConnectionRequest) => {
       setLoading(true);
-      setFormValue(values);
+      const updatedRequest = {
+        ...formValue,
+        projectName: values.projectName,
+        projectDuration: values.projectDuration,
+        projectLead: values.projectLead,
+        projectTeamMembers: values.projectTeamMembers,
+        university: values.university,
+        faculty: values.faculty,
+        ethicsApprovalId: values.ethicsApprovalId,
+        projectDescription: values.projectDescription,
+        isOwnData: values.isOwnData,
+      };
+      setFormValue(updatedRequest);
+      //TODO: add request to database
       setTimeout(() => {
         setLoading(false);
         setFieldsChanged(false);
@@ -38,7 +51,7 @@ export const RequestProjectInfo: React.FC<{
         console.log(values);
       }, 1000);
     },
-    [navigate, setFormValue],
+    [formValue, navigate, setFormValue],
   );
 
   return (
@@ -62,15 +75,19 @@ export const RequestProjectInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="projectName" label={t('connectionRequests.create.projectInfo.name')} />
+          <StringInputItem name="projectName" label={t('connectionRequests.create.projectInfo.name')} required />
         </BaseCol>
 
         <BaseCol span={24}>
-          <DateRangeInputItem name="projectDuration" label={t('connectionRequests.create.projectInfo.duration')} />
+          <DateRangeInputItem
+            name="projectDuration"
+            label={t('connectionRequests.create.projectInfo.duration')}
+            required
+          />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="projectLead" label={t('connectionRequests.create.projectInfo.lead')} />
+          <StringInputItem name="projectLead" label={t('connectionRequests.create.projectInfo.lead')} required />
         </BaseCol>
 
         <BaseCol span={24}>
@@ -83,17 +100,18 @@ export const RequestProjectInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="university" label={t('connectionRequests.create.projectInfo.university')} />
+          <StringInputItem name="university" label={t('connectionRequests.create.projectInfo.university')} required />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="faculty" label={t('connectionRequests.create.projectInfo.faculty')} />
+          <StringInputItem name="faculty" label={t('connectionRequests.create.projectInfo.faculty')} required />
         </BaseCol>
 
         <BaseCol span={24}>
           <StringInputItem
             name="ethicsApprovalId"
             label={t('connectionRequests.create.projectInfo.ethicsApprovalId')}
+            required
           />
         </BaseCol>
 
@@ -105,7 +123,7 @@ export const RequestProjectInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <RadioInputItem name="isOwnData" label={t('connectionRequests.create.projectInfo.isOwnData')} />
+          <RadioInputItem name="isOwnData" label={t('connectionRequests.create.projectInfo.isOwnData')} required />
         </BaseCol>
       </BaseRow>
     </BaseButtonsForm>

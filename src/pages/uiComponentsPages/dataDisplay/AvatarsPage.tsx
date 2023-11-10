@@ -16,14 +16,14 @@ const AvatarsPage: React.FC = () => {
       <PageTitle>{t('common.avatar')}</PageTitle>
       <BaseCol>
         <S.Card title={t('dataDisplay.avatars.sizes')}>
-          <BaseAvatar size="small" icon={<UserOutlined />} />
-          <BaseAvatar icon={<UserOutlined />} />
-          <BaseAvatar size="large" icon={<UserOutlined />} />
-          <BaseAvatar size={64} icon={<UserOutlined />} />
+          <BaseAvatar size="small" icon={<UserOutlined rev={undefined} />} />
+          <BaseAvatar icon={<UserOutlined rev={undefined} />} />
+          <BaseAvatar size="large" icon={<UserOutlined rev={undefined} />} />
+          <BaseAvatar size={64} icon={<UserOutlined rev={undefined} />} />
         </S.Card>
         <S.Card title={t('dataDisplay.avatars.shapes')}>
-          <BaseAvatar size={45} icon={<UserOutlined />} />
-          <BaseAvatar size={45} shape="square" icon={<UserOutlined />} />
+          <BaseAvatar size={45} icon={<UserOutlined rev={undefined} />} />
+          <BaseAvatar size={45} shape="square" icon={<UserOutlined rev={undefined} />} />
         </S.Card>
         <S.Card title={t('dataDisplay.avatars.groups')}>
           <BaseAvatar.Group
@@ -36,17 +36,25 @@ const AvatarsPage: React.FC = () => {
               K
             </BaseAvatar>
             <BaseTooltip title={t('dataDisplay.avatars.user')} placement="top">
-              <BaseAvatar size={45} style={{ backgroundColor: BASE_COLORS.green }} icon={<UserOutlined />} />
+              <BaseAvatar
+                size={45}
+                style={{ backgroundColor: BASE_COLORS.green }}
+                icon={<UserOutlined rev={undefined} />}
+              />
             </BaseTooltip>
-            <BaseAvatar size={45} style={{ backgroundColor: BASE_COLORS.blue }} icon={<AntDesignOutlined />} />
+            <BaseAvatar
+              size={45}
+              style={{ backgroundColor: BASE_COLORS.blue }}
+              icon={<AntDesignOutlined rev={undefined} />}
+            />
           </BaseAvatar.Group>
         </S.Card>
         <S.Card title={t('dataDisplay.avatars.badge')}>
           <BaseBadge count={1}>
-            <BaseAvatar size={45} shape="square" icon={<UserOutlined />} />
+            <BaseAvatar size={45} shape="square" icon={<UserOutlined rev={undefined} />} />
           </BaseBadge>
           <BaseBadge dot>
-            <BaseAvatar size={45} shape="square" icon={<UserOutlined />} />
+            <BaseAvatar size={45} shape="square" icon={<UserOutlined rev={undefined} />} />
           </BaseBadge>
         </S.Card>
       </BaseCol>

@@ -19,7 +19,13 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ avatar, name, spec
 
   return (
     <S.Profile>
-      <BaseAvatar size="large" src={avatar} icon={<UserOutlined />} alt="Doctor avatar" shape="square" />
+      <BaseAvatar
+        size="large"
+        src={avatar}
+        icon={<UserOutlined rev={undefined} />}
+        alt="Doctor avatar"
+        shape="square"
+      />
       <div>
         <S.Info>
           <S.Title>{t('common.doctor')}</S.Title>

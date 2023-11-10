@@ -923,7 +923,8 @@
       },
       "orgAdminInfo": {
         "title": "Organisation Admin Information",
-        "email": "Organisation Admin Email ID"
+        "email": "Organisation Admin Email ID",
+        "tooltip": "Provide email address of organisation admin that has access to the database"
       },
       "addInfo": {
         "title": "Additional Information",

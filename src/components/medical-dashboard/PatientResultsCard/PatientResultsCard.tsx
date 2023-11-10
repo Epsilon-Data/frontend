@@ -8,7 +8,11 @@ import { patientResultStatus } from '@app/constants/patientResultStatus';
 import { DashboardCard } from '@app/components/medical-dashboard/DashboardCard/DashboardCard';
 import * as S from './PatientResultsCard.styles';
 
-const icons = [<CheckOutlined key={0} />, <BarChartOutlined key={1} />, <FileTextOutlined key={2} />];
+const icons = [
+  <CheckOutlined key={0} rev={undefined} />,
+  <BarChartOutlined key={1} rev={undefined} />,
+  <FileTextOutlined key={2} rev={undefined} />,
+];
 
 export const PatientResultsCard: React.FC = () => {
   const { t } = useTranslation();
@@ -29,7 +33,7 @@ export const PatientResultsCard: React.FC = () => {
             description: (
               <S.InfoWrapper>
                 <S.DateWrapper>
-                  <S.CalendarIcon />
+                  <S.CalendarIcon rev={undefined} />
                   <S.Text>{Dates.format(patientResult?.date, 'D MMMM YYYY')}</S.Text>
                 </S.DateWrapper>
                 <S.Description>{t(status.desc)}</S.Description>

@@ -13,13 +13,13 @@ export const SexItem: React.FC = () => {
       <BaseSelect>
         <Option value="male">
           <BaseSpace align="center">
-            <ManOutlined />
+            <ManOutlined rev={undefined} />
             {t('profile.nav.personalInfo.male')}
           </BaseSpace>
         </Option>
         <Option value="female">
           <BaseSpace align="center">
-            <WomanOutlined />
+            <WomanOutlined rev={undefined} />
             {t('profile.nav.personalInfo.female')}
           </BaseSpace>
         </Option>

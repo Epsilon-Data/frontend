@@ -63,7 +63,7 @@ const AutoCompletesPage: React.FC = () => {
       <CategoryWrapper>
         {title}
         <span>
-          <UserOutlined /> {count}
+          <UserOutlined rev={undefined} /> {count}
         </span>
       </CategoryWrapper>
     ),

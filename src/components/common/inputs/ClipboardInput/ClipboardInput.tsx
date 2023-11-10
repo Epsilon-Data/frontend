@@ -27,7 +27,13 @@ export const ClipboardInput: React.FC<ClipboardInputProps> = ({ valueToCopy, ...
     <SuffixInput
       suffix={
         <BaseTooltip title={t('common.copy')}>
-          <BaseButton size="small" disabled={!valueToCopy} type="text" icon={<CopyOutlined />} onClick={handleCopy} />
+          <BaseButton
+            size="small"
+            disabled={!valueToCopy}
+            type="text"
+            icon={<CopyOutlined rev={undefined} />}
+            onClick={handleCopy}
+          />
         </BaseTooltip>
       }
       {...props}

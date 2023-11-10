@@ -10,7 +10,7 @@ import { RequestOrgAdminInfo } from '@app/components/create-request/RequestOrgAd
 
 const initialRequestFormValues: ConnectionRequest = {
   projectName: '',
-  projectDuration: '',
+  projectDuration: [],
   projectLead: '',
   projectTeamMembers: [],
   university: '',
@@ -19,7 +19,7 @@ const initialRequestFormValues: ConnectionRequest = {
   projectDescription: '',
   isOwnData: null,
   dataInfo: {
-    collectionDuration: '',
+    collectionDuration: [],
     participantsNumber: null,
     description: '',
     keywords: [],

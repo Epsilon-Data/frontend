@@ -77,7 +77,7 @@ const Filter: React.FC<Filter> = ({
       {!mobileOnly && <S.FilterTitle>{t('newsFeed.filter')}</S.FilterTitle>}
 
       <S.InputWrapper>
-        <S.SearchIcon />
+        <S.SearchIcon rev={undefined} />
         <S.Input
           placeholder={t('newsFeed.authorSearch')}
           value={author}
@@ -86,7 +86,7 @@ const Filter: React.FC<Filter> = ({
       </S.InputWrapper>
 
       <S.InputWrapper>
-        <S.SearchIcon />
+        <S.SearchIcon rev={undefined} />
         <S.Input
           placeholder={t('newsFeed.titleSearch')}
           value={title}
@@ -96,7 +96,7 @@ const Filter: React.FC<Filter> = ({
 
       <BaseDropdown placement="bottom" trigger={['click']} menu={{ items }}>
         <S.AddTagWrapper>
-          <S.PlusIcon />
+          <S.PlusIcon rev={undefined} />
           <S.AddTagText>{t('newsFeed.tag')}</S.AddTagText>
         </S.AddTagWrapper>
       </BaseDropdown>

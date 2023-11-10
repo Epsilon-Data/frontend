@@ -13,7 +13,8 @@ export const DropdownInputItem: React.FC<{
     label: string;
   }[];
   prompt: string;
-}> = ({ name, label, positionItems, prompt }) => {
+  required?: boolean;
+}> = ({ name, label, positionItems, prompt, required }) => {
   const [selectedItem, setSelectedItem] = useState('');
   const handleMenuClick: MenuProps['onClick'] = (e) => {
     const selected = positionItems.find((obj) => obj.key === e.key);
@@ -23,14 +24,14 @@ export const DropdownInputItem: React.FC<{
   };
 
   return (
-    <BaseButtonsForm.Item name={name} label={label}>
+    <BaseButtonsForm.Item name={name} label={label} rules={[{ required: required }]}>
       <BaseDropdown menu={{ items: positionItems, onClick: handleMenuClick }} trigger={['click']}>
         <BaseButton
           onClick={(e) => {
             e.preventDefault();
           }}
         >
-          {selectedItem ? selectedItem : prompt} <DownOutlined />
+          {selectedItem ? selectedItem : prompt} <DownOutlined rev={undefined} />
         </BaseButton>
       </BaseDropdown>
     </BaseButtonsForm.Item>

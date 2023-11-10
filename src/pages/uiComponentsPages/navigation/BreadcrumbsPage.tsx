@@ -43,11 +43,11 @@ const BreadcrumbsPage: React.FC = () => {
         <S.Card title={t('breadcrumbs.withIcon')}>
           <BaseBreadcrumb>
             <BaseBreadcrumb.Item href={pathname}>
-              <HomeOutlined />
+              <HomeOutlined rev={undefined} />
             </BaseBreadcrumb.Item>
             <BaseBreadcrumb.Item href={pathname}>
               <BaseSpace>
-                <UserOutlined />
+                <UserOutlined rev={undefined} />
                 <span>{t('breadcrumbs.applicationList')}</span>
               </BaseSpace>
             </BaseBreadcrumb.Item>

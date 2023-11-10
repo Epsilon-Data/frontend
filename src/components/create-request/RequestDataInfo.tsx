@@ -24,11 +24,16 @@ export const RequestDataInfo: React.FC<{
         <DateRangeInputItem
           name="dataInfo.collectionDuration"
           label={t('connectionRequests.create.dataInfo.collectionDuration')}
+          required
         />
       </BaseCol>
 
       <BaseCol span={24}>
-        <StringTextAreaItem name="dataInfo.description" label={t('connectionRequests.create.dataInfo.description')} />
+        <StringTextAreaItem
+          name="dataInfo.description"
+          label={t('connectionRequests.create.dataInfo.description')}
+          required
+        />
       </BaseCol>
 
       <BaseCol span={24}>
@@ -37,6 +42,7 @@ export const RequestDataInfo: React.FC<{
           label={t('connectionRequests.create.dataInfo.keywords')}
           initialTags={formValue.dataInfo.keywords}
           prompt={t('connectionRequests.create.dataInfo.addKeywords')}
+          required
         />
       </BaseCol>
     </>

@@ -8,7 +8,7 @@ export const TopUpBalanceButton: React.FC<{ onClick: () => void }> = ({ onClick 
   const { theme } = useAppSelector((state) => state.theme);
 
   return (
-    <S.TopUpButton type={theme === 'dark' ? 'ghost' : 'primary'} block onClick={onClick}>
+    <S.TopUpButton type={theme === 'dark' ? 'default' : 'primary'} block onClick={onClick}>
       {t('nft.topUpBalance')}
     </S.TopUpButton>
   );

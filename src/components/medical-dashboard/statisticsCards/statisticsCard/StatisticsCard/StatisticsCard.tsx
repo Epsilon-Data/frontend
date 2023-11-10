@@ -30,7 +30,7 @@ export const StatisticsCard: React.FC<StatisticsCardProps> = ({ name, value, pre
       <BaseRow wrap={false} gutter={[isTabletOrHigher ? 10 : 5, 0]}>
         <BaseCol>
           <S.IconWrapper>
-            <S.Icon component={Icon} />
+            <S.Icon component={Icon} rev={undefined} />
           </S.IconWrapper>
         </BaseCol>
 

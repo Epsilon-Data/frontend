@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 
 export const TopUpButton = styled(BaseButton)`
   ${(props) =>
-    props.type === 'ghost' &&
+    props.type === 'default' &&
     css`
       color: var(--text-secondary-color);
     `};

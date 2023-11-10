@@ -89,7 +89,7 @@ export const ControlForm: React.FC = () => {
               <S.List>
                 {users.map((user, index) => (
                   <S.ListItem key={index}>
-                    <BaseAvatar icon={<UserOutlined />} />
+                    <BaseAvatar icon={<UserOutlined rev={undefined} />} />
                     <S.User>
                       {user.name} - {user.age}
                     </S.User>
@@ -98,7 +98,7 @@ export const ControlForm: React.FC = () => {
               </S.List>
             ) : (
               <S.Text>
-                ( <SmileOutlined /> {t('forms.controlFormLabels.noUser')} )
+                ( <SmileOutlined rev={undefined} /> {t('forms.controlFormLabels.noUser')} )
               </S.Text>
             );
           }}

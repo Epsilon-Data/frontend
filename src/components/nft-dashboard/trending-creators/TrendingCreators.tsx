@@ -40,13 +40,13 @@ export const TrendingCreators: React.FC = () => {
             <>
               <BaseCol>
                 <S.ArrowBtn type="text" size="small" onClick={() => sliderRef.current && sliderRef.current.slickPrev()}>
-                  <LeftOutlined />
+                  <LeftOutlined rev={undefined} />
                 </S.ArrowBtn>
               </BaseCol>
 
               <BaseCol>
                 <S.ArrowBtn type="text" size="small" onClick={() => sliderRef.current && sliderRef.current.slickNext()}>
-                  <RightOutlined />
+                  <RightOutlined rev={undefined} />
                 </S.ArrowBtn>
               </BaseCol>
             </>

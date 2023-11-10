@@ -167,7 +167,7 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
   {
     title: 'common.ui',
     key: 'ui',
-    icon: <BlockOutlined />,
+    icon: <BlockOutlined rev={undefined} />,
     children: [
       {
         title: 'common.alert',

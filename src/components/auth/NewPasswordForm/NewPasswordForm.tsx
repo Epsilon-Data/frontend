@@ -45,7 +45,7 @@ export const NewPasswordForm: React.FC = () => {
     <Auth.FormWrapper>
       <BaseForm layout="vertical" onFinish={handleSubmit} requiredMark="optional" initialValues={initStates}>
         <Auth.BackWrapper onClick={() => navigate(-1)}>
-          <Auth.BackIcon />
+          <Auth.BackIcon rev={undefined} />
           {t('common.back')}
         </Auth.BackWrapper>
         <Auth.FormTitle>{t('newPassword.title')}</Auth.FormTitle>

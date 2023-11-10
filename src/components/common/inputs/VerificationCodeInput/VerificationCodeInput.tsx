@@ -14,7 +14,6 @@ interface VerificationCodeInputProps {
 export const VerificationCodeInput: React.FC<VerificationCodeInputProps> = (props) => {
   return (
     <S.CodeInput
-      removeDefaultStyles
       classNames={{
         container: 'container',
         character: 'character',

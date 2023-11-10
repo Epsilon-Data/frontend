@@ -11,7 +11,7 @@ export const SettingsDropdown: React.FC = () => {
   return (
     <BasePopover content={<SettingsOverlay />} trigger="click" onOpenChange={setOpened}>
       <HeaderActionWrapper>
-        <BaseButton type={isOpened ? 'ghost' : 'text'} icon={<SettingOutlined />} />
+        <BaseButton type={isOpened ? 'default' : 'text'} icon={<SettingOutlined rev={undefined} />} />
       </HeaderActionWrapper>
     </BasePopover>
   );

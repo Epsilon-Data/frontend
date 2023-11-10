@@ -171,7 +171,7 @@ export const ValidationForm: React.FC = () => {
         getValueFromEvent={normFile}
       >
         <BaseUpload name="logo" action="/upload.do" listType="picture">
-          <BaseButton type="default" icon={<UploadOutlined />}>
+          <BaseButton type="default" icon={<UploadOutlined rev={undefined} />}>
             {t('forms.validationFormLabels.clickToUpload')}
           </BaseButton>
         </BaseUpload>
@@ -181,7 +181,7 @@ export const ValidationForm: React.FC = () => {
         <BaseButtonsForm.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
           <BaseUpload.Dragger name="files" action="/upload.do">
             <p>
-              <InboxOutlined />
+              <InboxOutlined rev={undefined} />
             </p>
             <p>{t('forms.validationFormLabels.clickToDrag')}</p>
             <p>{t('forms.validationFormLabels.supportSingle')}</p>

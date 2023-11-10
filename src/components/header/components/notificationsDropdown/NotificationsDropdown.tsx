@@ -19,10 +19,10 @@ export const NotificationsDropdown: React.FC = () => {
     >
       <HeaderActionWrapper>
         <BaseButton
-          type={isOpened ? 'ghost' : 'text'}
+          type={isOpened ? 'default' : 'text'}
           icon={
             <BaseBadge dot>
-              <BellOutlined />
+              <BellOutlined rev={undefined} />
             </BaseBadge>
           }
         />

@@ -19,13 +19,13 @@ export const CalendarSwitch: React.FC<CalendarSwitchProps> = ({ dateFormatted, o
       <S.Text>{dateFormatted}</S.Text>
       <S.ButtonGroup>
         <BaseButton type="text" onClick={onDecrease} size="small">
-          <LeftOutlined />
+          <LeftOutlined rev={undefined} />
         </BaseButton>
         <BaseButton type="text" onClick={onToday} size="small">
           {t('common.today').toUpperCase()}
         </BaseButton>
         <BaseButton type="text" onClick={onIncrease} size="small">
-          <RightOutlined />
+          <RightOutlined rev={undefined} />
         </BaseButton>
       </S.ButtonGroup>
     </S.CalendarSwitch>

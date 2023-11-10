@@ -52,12 +52,6 @@ export const MobileBurger = styled(BurgerIcon)`
   height: 1.75rem;
   margin-right: -0.5rem;
   color: var(--text-main-color);
-
-  ${(props) =>
-    props.isCross &&
-    css`
-      color: var(--text-secondary-color);
-    `};
 `;
 
 export const SearchColumn = styled(BaseCol)`

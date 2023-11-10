@@ -66,7 +66,7 @@ export const ScreeningsFriend: React.FC<ScreeningsFriendProps> = ({
         <BaseCol>
           <S.Percentage $isDowngrade={isDowngrade}>
             <BaseSpace size={0}>
-              {isDowngrade ? <CaretDownOutlined /> : <CaretUpOutlined />}
+              {isDowngrade ? <CaretDownOutlined rev={undefined} /> : <CaretUpOutlined rev={undefined} />}
               <S.Percentage $isDowngrade={isDowngrade}>{getDifference(value, prevValue)}</S.Percentage>
             </BaseSpace>
           </S.Percentage>

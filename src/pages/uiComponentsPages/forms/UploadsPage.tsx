@@ -49,18 +49,18 @@ const UploadsPage: React.FC = () => {
       <BaseCol>
         <S.Card title={t('uploads.basic')}>
           <BaseUpload {...uploadProps}>
-            <BaseButton icon={<UploadOutlined />}>{t('uploads.clickToUpload')}</BaseButton>
+            <BaseButton icon={<UploadOutlined rev={undefined} />}>{t('uploads.clickToUpload')}</BaseButton>
           </BaseUpload>
         </S.Card>
         <S.Card title={t('uploads.directory')}>
           <BaseUpload action="https://www.mocky.io/v2/5cc8019d300000980a055e76" directory>
-            <BaseButton icon={<UploadOutlined />}>{t('uploads.directory')}</BaseButton>
+            <BaseButton icon={<UploadOutlined rev={undefined} />}>{t('uploads.directory')}</BaseButton>
           </BaseUpload>
         </S.Card>
         <S.Card title={t('uploads.dragger')}>
           <BaseUpload.Dragger {...uploadProps}>
             <DraggerIconWrapper>
-              <InboxOutlined />
+              <InboxOutlined rev={undefined} />
             </DraggerIconWrapper>
             <DraggerTitle>{t('uploads.dragUpload')}</DraggerTitle>
             <DraggerDescription>{t('uploads.bulkUpload')}</DraggerDescription>

@@ -29,7 +29,7 @@ export const BaseHashTag: React.FC<BaseHashTagProps> = ({ title, color, bgColor,
             e.stopPropagation();
           }}
         >
-          <S.RemoveTagIcon />
+          <S.RemoveTagIcon rev={undefined} />
         </S.RemoveTagWrapper>
       )}
     </S.TagWrapper>

@@ -75,7 +75,7 @@
     "lint": "eslint \"*/**/*.{js,ts,tsx}\" --fix",
     "lint:styles": "stylelint '*/**/*.{js,ts,tsx}'",
     "prepare": "husky install",
-    "buildThemes": "cp node_modules/antd/dist/reset.css public/themes/main.css"
+    "buildThemes": "cp src/styles/themes/main.css public/themes/main.css"
   },
   "browserslist": [
     ">0.2%",

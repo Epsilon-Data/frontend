@@ -43,7 +43,9 @@ export const BackgroundWrapper = styled(InnerWrapper)`
 `;
 
 export const ShadowWrapper = styled(InnerWrapper)`
-  box-shadow: 0px -4px 16px rgba(1, 80, 154, 0.1), 0px 4px 16px rgba(1, 80, 154, 0.1);
+  box-shadow:
+    0px -4px 16px rgba(1, 80, 154, 0.1),
+    0px 4px 16px rgba(1, 80, 154, 0.1);
   z-index: 2; // To make it under slider
 `;
 

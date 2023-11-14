@@ -21,8 +21,8 @@ const SiderMenu: React.FC<SiderContentProps> = ({ setCollapsed }) => {
   const currentMenuItem = sidebarNavFlat.find(({ url }) => url === location.pathname);
   const defaultSelectedKeys = currentMenuItem ? [currentMenuItem.key] : [];
 
-  const openedSubmenu = sidebarNavigation.find(({ children }) =>
-    children?.some(({ url }) => url === location.pathname),
+  const openedSubmenu = sidebarNavigation.find(
+    ({ children }) => children?.some(({ url }) => url === location.pathname),
   );
   const defaultOpenKeys = openedSubmenu ? [openedSubmenu.key] : [];
 

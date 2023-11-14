@@ -31,9 +31,8 @@ export const Button = styled(AntButton)<BtnProps>`
   ${(props) =>
     !props.danger &&
     css`
-      ${
-        props.$severity &&
-        css`
+      ${props.$severity &&
+      css`
         box-shadow: none;
         text-shadow: none;
         background: rgba(${defineColorBySeverity(props.$severity, true)}, 0.2);
@@ -57,20 +56,16 @@ export const Button = styled(AntButton)<BtnProps>`
 
           color: rgba(${defineColorBySeverity(props.$severity, true)}, 0.9);
         }
-      `
-      }
-      ${
-        props.type === 'text' &&
-        css`
+      `}
+      ${props.type === 'text' &&
+      css`
         &:hover {
           background: transparent;
           color: var(--secondary-color);
         }
-      `
-      }
-      ${
-        props.type === 'primary' &&
-        css`
+      `}
+      ${props.type === 'primary' &&
+      css`
         background: var(--primary-color);
 
         &:hover {
@@ -78,16 +73,13 @@ export const Button = styled(AntButton)<BtnProps>`
 
           border-color: var(--secondary-color);
         }
-      `
-      }
-      ${
-        props.type === 'link' &&
-        css`
+      `}
+      ${props.type === 'link' &&
+      css`
         & span,
         a {
           text-decoration: underline;
         }
-      `
-      };
+      `};
     `}
 `;

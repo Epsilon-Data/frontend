@@ -29,7 +29,7 @@ const App: React.FC = () => {
       <meta name="theme-color" content={themeObject[theme].primary} />
       <GlobalStyle />
       <HelmetProvider>
-        <ConfigProvider locale={language === 'en' ? enUS : deDe}>
+        <ConfigProvider locale={language === 'en' ? enUS : deDe} theme={undefined}>
           <AppRouter />
         </ConfigProvider>
       </HelmetProvider>

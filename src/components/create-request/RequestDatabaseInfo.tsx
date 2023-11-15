@@ -6,9 +6,10 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { ConnectionRequest } from '@app/interfaces/interfaces';
 import { StringInputItem } from './StringInput/StringInputItem';
 import { useNavigate } from 'react-router-dom';
-import { DropdownInputItem } from './DropdownInput/DropdownInputItem';
+import { SelectInputItem } from './SelectInput/SelectInputItem';
 import { PasswordInputItem } from './PasswordInput/PasswordInputItem';
 import { RequestDataInfo } from './RequestDataInfo';
+import { TestConnectionGroup } from './TestConnectionGroup/TestConnectionGroup';
 
 export const RequestDatabaseInfo: React.FC<{
   formValue: ConnectionRequest;
@@ -16,23 +17,25 @@ export const RequestDatabaseInfo: React.FC<{
 }> = ({ formValue, setFormValue }) => {
   const [isFieldsChanged, setFieldsChanged] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [isConnected, setConnected] = useState(false);
+  const [testMessage, setTestMessage] = useState('');
   const navigate = useNavigate();
 
   const [form] = BaseButtonsForm.useForm();
 
   const { t } = useTranslation();
 
-  const dropdownItems = [
+  const selectItems = [
     {
-      key: 'postgres',
+      value: 'postgres',
       label: t('connectionRequests.create.databaseInfo.postgres'),
     },
     {
-      key: 'mysql',
+      value: 'mysql',
       label: t('connectionRequests.create.databaseInfo.mysql'),
     },
     {
-      key: 'mongo',
+      value: 'mongo',
       label: t('connectionRequests.create.databaseInfo.mongo'),
     },
   ];
@@ -40,24 +43,26 @@ export const RequestDatabaseInfo: React.FC<{
   const onFinish = useCallback(
     (values: ConnectionRequest) => {
       setLoading(true);
-      const updatedRequest = {
-        ...formValue,
-        databaseInfo: {
-          name: values.databaseInfo?.name || '',
-          type: values.databaseInfo?.type || '',
-          url: values.databaseInfo?.url || '',
-          username: values.databaseInfo?.username || '',
-          password: values.databaseInfo?.password || '',
-        },
-        dataInfo: {
-          collectionDuration: values.dataInfo.collectionDuration,
-          participantsNumber: values.dataInfo.participantsNumber,
-          description: values.dataInfo.description,
-          keywords: values.dataInfo.keywords,
-        },
-      };
-      setFormValue(updatedRequest);
-      //TODO: add request to database
+      if (isConnected) {
+        const updatedRequest = {
+          ...formValue,
+          databaseInfo: {
+            name: values.databaseInfo?.name || '',
+            type: values.databaseInfo?.type || '',
+            url: values.databaseInfo?.url || '',
+            username: values.databaseInfo?.username || '',
+            password: values.databaseInfo?.password || '',
+          },
+          dataInfo: {
+            collectionDuration: values.dataInfo?.collectionDuration,
+            participantsNumber: values.dataInfo?.participantsNumber,
+            description: values.dataInfo?.description,
+            keywords: values.dataInfo?.keywords,
+          },
+        };
+        setFormValue(updatedRequest);
+        //TODO: add request to database
+      }
       setTimeout(() => {
         setLoading(false);
         setFieldsChanged(false);
@@ -65,8 +70,14 @@ export const RequestDatabaseInfo: React.FC<{
         console.log(formValue);
       }, 1000);
     },
-    [formValue, navigate, setFormValue],
+    [formValue, isConnected, navigate, setFormValue],
   );
+
+  const onTestConnection = () => {
+    //TODO: test connection
+    setConnected(true);
+    setTestMessage(t('connectionRequests.create.databaseInfo.testSuccess'));
+  };
 
   return (
     <BaseButtonsForm
@@ -80,6 +91,7 @@ export const RequestDatabaseInfo: React.FC<{
       onFinish={onFinish}
       buttonText={t('connectionRequests.create.altTitle')}
       style={{ width: '80%' }}
+      disabled={!isConnected}
     >
       <BaseRow gutter={{ xs: 10, md: 15, xl: 30 }} style={{ paddingBottom: '2rem' }}>
         <BaseCol span={24}>
@@ -93,10 +105,10 @@ export const RequestDatabaseInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <DropdownInputItem
+          <SelectInputItem
             name="databaseInfo.type"
             label={t('connectionRequests.create.databaseInfo.type')}
-            positionItems={dropdownItems}
+            optionItems={selectItems}
             prompt={t('connectionRequests.create.databaseInfo.typePrompt')}
             required
           />
@@ -121,6 +133,11 @@ export const RequestDatabaseInfo: React.FC<{
             required
           />
         </BaseCol>
+
+        <BaseCol span={24}>
+          <TestConnectionGroup onClick={onTestConnection} message={testMessage} />
+        </BaseCol>
+
         <RequestDataInfo formValue={formValue} />
       </BaseRow>
     </BaseButtonsForm>

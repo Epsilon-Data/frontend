@@ -30,10 +30,10 @@ export const RequestOrgAdminInfo: React.FC<{
         ...formValue,
         orgAdminEmail: values.orgAdminEmail || '',
         dataInfo: {
-          collectionDuration: values.dataInfo.collectionDuration,
-          participantsNumber: values.dataInfo.participantsNumber,
-          description: values.dataInfo.description,
-          keywords: values.dataInfo.keywords,
+          collectionDuration: values.dataInfo?.collectionDuration,
+          participantsNumber: values.dataInfo?.participantsNumber,
+          description: values.dataInfo?.description,
+          keywords: values.dataInfo?.keywords,
         },
         additionalInfo: values.additionalInfo || '',
       };

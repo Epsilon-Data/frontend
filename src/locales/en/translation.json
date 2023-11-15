@@ -911,7 +911,11 @@
         "passwordPrompt": "Input Password",
         "postgres": "PostgreSQL",
         "mysql": "MySQL",
-        "mongo": "MongoDB"
+        "mongo": "MongoDB",
+        "testConnection": "Test Connection",
+        "testConnectionTip": "** Please test your database connection before proceeding.",
+        "testSuccess": "Database connection successful! Please proceed.",
+        "testFailed": "Unable to connect to database. Please check your inputs and try again."
       },
       "dataInfo": {
         "title": "Data Information",

@@ -9,6 +9,7 @@ interface BaseButtonsGroupProps extends BaseButtonProps {
   onCancel: () => void;
   loading?: boolean;
   buttonText?: string;
+  mainDisabled?: boolean;
 }
 
 export const BaseButtonsGroup: React.FC<BaseButtonsGroupProps> = ({
@@ -16,6 +17,7 @@ export const BaseButtonsGroup: React.FC<BaseButtonsGroupProps> = ({
   onCancel,
   loading,
   buttonText,
+  mainDisabled,
   ...props
 }) => {
   const { t } = useTranslation();
@@ -23,7 +25,7 @@ export const BaseButtonsGroup: React.FC<BaseButtonsGroupProps> = ({
   return (
     <BaseRow className={className} gutter={[10, 10]} wrap={false}>
       <BaseCol span={12} style={{ paddingRight: '1rem' }}>
-        <BaseButton block type="primary" loading={loading} htmlType="submit" {...props}>
+        <BaseButton block type="primary" loading={loading} htmlType="submit" {...props} disabled={mainDisabled}>
           {buttonText || t('common.save')}
         </BaseButton>
       </BaseCol>

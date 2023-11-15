@@ -29,7 +29,9 @@ export const Select = styled(AntSelect)<InternalSelectProps>`
   }
 
   .ant-select-arrow {
-    color: var(--text-main-color);
+    color: var(--icon-color);
+    margin-top: 0.1875rem;
+    margin-right: 0.1875em;
   }
 
   &.ant-select-multiple.ant-select-sm .ant-select-selection-item {

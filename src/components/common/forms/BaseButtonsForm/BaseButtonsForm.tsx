@@ -11,6 +11,7 @@ export interface BaseButtonsFormProps extends BaseFormProps {
   footer?: React.ReactElement;
   loading?: boolean;
   buttonText?: string;
+  disabled?: boolean;
 }
 
 export const BaseButtonsForm: BaseFormInterface<BaseButtonsFormProps> = ({
@@ -19,6 +20,7 @@ export const BaseButtonsForm: BaseFormInterface<BaseButtonsFormProps> = ({
   setFieldsChanged,
   footer,
   buttonText,
+  disabled,
   loading = false,
   children,
   ...props
@@ -32,7 +34,7 @@ export const BaseButtonsForm: BaseFormInterface<BaseButtonsFormProps> = ({
   };
 
   const buttonsGroup = buttonText ? (
-    <BaseButtonsGroup buttonText={buttonText} loading={loading} onCancel={onCancel} />
+    <BaseButtonsGroup buttonText={buttonText} loading={loading} onCancel={onCancel} mainDisabled={disabled} />
   ) : (
     <BaseButtonsGroup loading={loading} onCancel={onCancel} />
   );

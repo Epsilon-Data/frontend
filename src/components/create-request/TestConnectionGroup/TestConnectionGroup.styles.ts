@@ -20,5 +20,4 @@ export const TestMessage = styled(BaseTypography)`
   font-size: ${FONT_SIZE.xs};
   color: var(--success-color);
   line-height: 1.25rem;
-  margin-bottom: 1rem;
 `;

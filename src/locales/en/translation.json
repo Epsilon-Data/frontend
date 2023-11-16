@@ -933,6 +933,12 @@
       "addInfo": {
         "title": "Additional Information",
         "placeholder": "Additional notes related to request"
+      },
+      "openAccessForm": {
+        "title": "Data Open Access Form",
+        "confirmDataOwner": "I confirm that I am the data owner and have the rights to make this data available on the platform.",
+        "confirmInLine": "I confirm that the data collection has been done in line with relevant local, national and institutional regulations and legislation.",
+        "confirmConsent": "I confirm that the study participants have consented their data to be made accessible on the platform."
       }
     }
   },

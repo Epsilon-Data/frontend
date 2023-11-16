@@ -5,11 +5,11 @@ import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { ConnectionRequest } from '@app/interfaces/interfaces';
 import { StringInputItem } from './StringInput/StringInputItem';
-import { useNavigate } from 'react-router-dom';
 import { SelectInputItem } from './SelectInput/SelectInputItem';
 import { PasswordInputItem } from './PasswordInput/PasswordInputItem';
 import { RequestDataInfo } from './RequestDataInfo';
 import { TestConnectionGroup } from './TestConnectionGroup/TestConnectionGroup';
+import { FormModal } from './FormModal/FormModal';
 
 export const RequestDatabaseInfo: React.FC<{
   formValue: ConnectionRequest;
@@ -18,8 +18,8 @@ export const RequestDatabaseInfo: React.FC<{
   const [isFieldsChanged, setFieldsChanged] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isConnected, setConnected] = useState(false);
-  const [testMessage, setTestMessage] = useState('');
-  const navigate = useNavigate();
+  const [showMessage, setShowMessage] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState<boolean>(false);
 
   const [form] = BaseButtonsForm.useForm();
 
@@ -66,17 +66,17 @@ export const RequestDatabaseInfo: React.FC<{
       setTimeout(() => {
         setLoading(false);
         setFieldsChanged(false);
-        navigate('/r-connection-requests');
+        setIsFormModalOpen(true);
         console.log(formValue);
       }, 1000);
     },
-    [formValue, isConnected, navigate, setFormValue],
+    [formValue, isConnected, setFormValue],
   );
 
   const onTestConnection = () => {
     //TODO: test connection
     setConnected(true);
-    setTestMessage(t('connectionRequests.create.databaseInfo.testSuccess'));
+    setShowMessage(true);
   };
 
   return (
@@ -135,10 +135,11 @@ export const RequestDatabaseInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <TestConnectionGroup onClick={onTestConnection} message={testMessage} />
+          <TestConnectionGroup onClick={onTestConnection} connected={isConnected} show={showMessage} />
         </BaseCol>
 
         <RequestDataInfo formValue={formValue} />
+        <FormModal isFormModalOpen={isFormModalOpen} setIsFormModalOpen={setIsFormModalOpen} />
       </BaseRow>
     </BaseButtonsForm>
   );

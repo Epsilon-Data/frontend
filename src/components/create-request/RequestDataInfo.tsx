@@ -15,7 +15,7 @@ export const RequestDataInfo: React.FC<{
   return (
     <>
       <BaseCol span={24}>
-        <BaseButtonsForm.Item>
+        <BaseButtonsForm.Item style={{ marginTop: '1rem' }}>
           <BaseButtonsForm.Title>{t('connectionRequests.create.dataInfo.title')}</BaseButtonsForm.Title>
         </BaseButtonsForm.Item>
       </BaseCol>

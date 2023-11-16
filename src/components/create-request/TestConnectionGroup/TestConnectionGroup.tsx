@@ -4,8 +4,9 @@ import * as S from './TestConnectionGroup.styles';
 
 export const TestConnectionGroup: React.FC<{
   onClick?: React.MouseEventHandler<HTMLElement> | undefined;
-  message: string;
-}> = ({ onClick, message }) => {
+  connected: boolean;
+  show: boolean;
+}> = ({ onClick, connected, show }) => {
   const { t } = useTranslation();
   return (
     <>
@@ -13,7 +14,13 @@ export const TestConnectionGroup: React.FC<{
         {t('connectionRequests.create.databaseInfo.testConnection')}
       </S.ConnectionButton>
       <S.ButtonTip>{t('connectionRequests.create.databaseInfo.testConnectionTip')}</S.ButtonTip>
-      <S.TestMessage>{message}</S.TestMessage>
+      {connected ? (
+        <S.TestMessage>{t('connectionRequests.create.databaseInfo.testSuccess')}</S.TestMessage>
+      ) : show ? (
+        <S.TestMessage style={{ color: 'var(--error-color)' }}>
+          {t('connectionRequests.create.databaseInfo.testFailed')}
+        </S.TestMessage>
+      ) : null}
     </>
   );
 };

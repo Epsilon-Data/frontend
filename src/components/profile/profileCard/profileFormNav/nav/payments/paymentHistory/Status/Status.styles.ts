@@ -8,7 +8,7 @@ export const StatusTag = styled(BaseTag)`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0;
+  font-size: 0.8vw;
 
   @media only screen and ${media.md} {
     min-width: 6.5rem;

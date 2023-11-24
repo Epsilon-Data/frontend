@@ -45,7 +45,7 @@ export interface PaymentCard {
   isEdit: boolean;
 }
 
-export interface ConnectionRequest {
+export interface RequestDetails {
   projectName: string;
   projectDuration: Date[];
   projectLead: string;

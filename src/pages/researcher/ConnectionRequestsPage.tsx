@@ -25,12 +25,12 @@ const ConnectionRequestsPage: React.FC = () => {
               style={{ background: 'var(--black)', border: 'none' }}
               onClick={() => navigate('/r-connection-requests/create/project-info')}
             >
-              {t('connectionRequests.create.title')}
+              {t('connectionRequests.create')}
             </BaseButton>
           }
           padding="1.25rem 1.25rem 0"
         >
-          <RequestTable user="researcher" />
+          <RequestTable userType="researcher" />
         </S.Card>
       </S.TablesWrapper>
     </>

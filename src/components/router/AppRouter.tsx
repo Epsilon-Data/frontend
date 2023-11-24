@@ -61,7 +61,8 @@ const Logout = React.lazy(() => import('./Logout'));
 
 const OAConnectionRequestsPage = React.lazy(() => import('@app/pages/orgAdmin/ConnectionRequestsPage'));
 const RConnectionRequestsPage = React.lazy(() => import('@app/pages/researcher/ConnectionRequestsPage'));
-const CreateRequestPage = React.lazy(() => import('@app/pages/researcher/CreateRequestPage/CreateRequestPage'));
+const CreateRequestPage = React.lazy(() => import('@app/pages/CreateRequestPage/CreateRequestPage'));
+const ViewRequestPage = React.lazy(() => import('@app/pages/researcher/ViewRequestPage/ViewRequestPage'));
 
 const SourceListPage = React.lazy(() => import('@app/pages/researcher/SourceListPage'));
 
@@ -107,6 +108,7 @@ const Charts = withLoading(ChartsPage);
 const OAConnectionRequests = withLoading(OAConnectionRequestsPage);
 const RConnectionRequests = withLoading(RConnectionRequestsPage);
 const CreateRequest = withLoading(CreateRequestPage);
+const ViewRequest = withLoading(ViewRequestPage);
 
 const SourceList = withLoading(SourceListPage);
 
@@ -149,6 +151,7 @@ export const AppRouter: React.FC = () => {
           <Route path="oa-connection-requests" element={<OAConnectionRequests />} />
           <Route path="r-connection-requests" element={<RConnectionRequests />} />
           <Route path="r-connection-requests/create/:page" element={<CreateRequest />} />
+          <Route path="r-connection-requests/view/:id" element={<ViewRequest />} />
           <Route path="database-sources">
             <Route path="list" element={<SourceList />} />
           </Route>

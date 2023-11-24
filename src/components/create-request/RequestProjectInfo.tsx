@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import { ConnectionRequest } from '@app/interfaces/interfaces';
+import { RequestDetails } from '@app/interfaces/interfaces';
 import { StringInputItem } from './StringInput/StringInputItem';
 import { StringTextAreaItem } from './StringInput/StringTextAreaItem';
 import { useNavigate } from 'react-router-dom';
@@ -12,8 +12,8 @@ import { TagInputItem } from './TagInput/TagInputItem';
 import { RadioInputItem } from './RadioInput/RadioInputItem';
 
 export const RequestProjectInfo: React.FC<{
-  formValue: ConnectionRequest;
-  setFormValue: (value: ConnectionRequest) => void;
+  formValue: RequestDetails;
+  setFormValue: (value: RequestDetails) => void;
 }> = ({ formValue, setFormValue }) => {
   const [isFieldsChanged, setFieldsChanged] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ export const RequestProjectInfo: React.FC<{
   const { t } = useTranslation();
 
   const onFinish = useCallback(
-    (values: ConnectionRequest) => {
+    (values: RequestDetails) => {
       setLoading(true);
       const updatedRequest = {
         ...formValue,
@@ -64,53 +64,53 @@ export const RequestProjectInfo: React.FC<{
       setFieldsChanged={setFieldsChanged}
       onFieldsChange={() => setFieldsChanged(true)}
       onFinish={onFinish}
-      buttonText={t('connectionRequests.create.projectInfo.continue')}
+      buttonText={t('connectionRequests.details.projectInfo.continue')}
       style={{ width: '80%' }}
     >
       <BaseRow gutter={{ xs: 10, md: 15, xl: 30 }} style={{ paddingBottom: '2rem' }}>
         <BaseCol span={24}>
           <BaseButtonsForm.Item>
-            <BaseButtonsForm.Title>{t('connectionRequests.create.projectInfo.title')}</BaseButtonsForm.Title>
+            <BaseButtonsForm.Title>{t('connectionRequests.details.projectInfo.title')}</BaseButtonsForm.Title>
           </BaseButtonsForm.Item>
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="projectName" label={t('connectionRequests.create.projectInfo.name')} required />
+          <StringInputItem name="projectName" label={t('connectionRequests.details.projectInfo.name')} required />
         </BaseCol>
 
         <BaseCol span={24}>
           <DateRangeInputItem
             name="projectDuration"
-            label={t('connectionRequests.create.projectInfo.duration')}
+            label={t('connectionRequests.details.projectInfo.duration')}
             required
           />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="projectLead" label={t('connectionRequests.create.projectInfo.lead')} required />
+          <StringInputItem name="projectLead" label={t('connectionRequests.details.projectInfo.lead')} required />
         </BaseCol>
 
         <BaseCol span={24}>
           <TagInputItem
             name="projectTeamMembers"
-            label={t('connectionRequests.create.projectInfo.teamMembers')}
+            label={t('connectionRequests.details.projectInfo.teamMembers')}
             initialTags={formValue.projectTeamMembers}
-            prompt={t('connectionRequests.create.projectInfo.addTeamMembers')}
+            prompt={t('connectionRequests.details.projectInfo.addTeamMembers')}
           />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="university" label={t('connectionRequests.create.projectInfo.university')} required />
+          <StringInputItem name="university" label={t('connectionRequests.details.projectInfo.university')} required />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="faculty" label={t('connectionRequests.create.projectInfo.faculty')} required />
+          <StringInputItem name="faculty" label={t('connectionRequests.details.projectInfo.faculty')} required />
         </BaseCol>
 
         <BaseCol span={24}>
           <StringInputItem
             name="ethicsApprovalId"
-            label={t('connectionRequests.create.projectInfo.ethicsApprovalId')}
+            label={t('connectionRequests.details.projectInfo.ethicsApprovalId')}
             required
           />
         </BaseCol>
@@ -118,12 +118,12 @@ export const RequestProjectInfo: React.FC<{
         <BaseCol span={24}>
           <StringTextAreaItem
             name="projectDescription"
-            label={t('connectionRequests.create.projectInfo.description')}
+            label={t('connectionRequests.details.projectInfo.description')}
           />
         </BaseCol>
 
         <BaseCol span={24}>
-          <RadioInputItem name="isOwnData" label={t('connectionRequests.create.projectInfo.isOwnData')} required />
+          <RadioInputItem name="isOwnData" label={t('connectionRequests.details.projectInfo.isOwnData')} required />
         </BaseCol>
       </BaseRow>
     </BaseButtonsForm>

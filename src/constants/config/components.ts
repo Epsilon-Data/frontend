@@ -477,7 +477,7 @@ export const components: Component[] = [
   },
   {
     name: 'Create New Request',
-    title: 'connectionRequests.create.title',
+    title: 'connectionRequests.create',
     url: `/r-connection-requests/create`,
     categories: ['forms'],
     keywords: ['create', 'connection requests'],

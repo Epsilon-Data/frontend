@@ -14,7 +14,7 @@ export const PasswordInputItem: React.FC<{ name: string; label: string; required
   return (
     <BaseButtonsForm.Item name={name} label={label} rules={[{ required: required }]}>
       <InputPassword
-        placeholder={t('connectionRequests.create.databaseInfo.passwordPrompt')}
+        placeholder={t('connectionRequests.details.databaseInfo.passwordPrompt')}
         iconRender={(visible) => (visible ? <EyeTwoTone rev={undefined} /> : <EyeInvisibleOutlined rev={undefined} />)}
       />
     </BaseButtonsForm.Item>

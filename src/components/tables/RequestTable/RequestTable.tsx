@@ -12,6 +12,7 @@ import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { Priority } from '@app/constants/enums/priorities';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 // import { useNavigate } from 'react-router-dom';
 
 const initialPagination: Pagination = {
@@ -19,7 +20,7 @@ const initialPagination: Pagination = {
   pageSize: 5,
 };
 
-export const RequestTable: React.FC<{ user: string }> = ({ user }) => {
+export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
   const [tableData, setTableData] = useState<{ data: RequestTableRow[]; pagination: Pagination; loading: boolean }>({
     data: [],
     pagination: initialPagination,
@@ -27,18 +28,18 @@ export const RequestTable: React.FC<{ user: string }> = ({ user }) => {
   });
   const { t } = useTranslation();
   const { isMounted } = useMounted();
-  // const navigate = useNavigate();
+  const user = useAppSelector((state) => state.user.user);
 
   const fetch = useCallback(
     (pagination: Pagination) => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
-      getRequestTableData(pagination, user).then((res) => {
+      getRequestTableData(pagination, userType, user?.id).then((res) => {
         if (isMounted.current) {
           setTableData({ data: res.data, pagination: res.pagination, loading: false });
         }
       });
     },
-    [isMounted, user],
+    [isMounted, user?.id, userType],
   );
 
   useEffect(() => {
@@ -72,7 +73,7 @@ export const RequestTable: React.FC<{ user: string }> = ({ user }) => {
       key: 'projectName',
       render: (text: string) => <span>{text}</span>,
     },
-    ...(user === 'orgAdmin'
+    ...(userType === 'orgAdmin'
       ? [
           {
             title: t('connectionRequests.requestor'),
@@ -81,14 +82,14 @@ export const RequestTable: React.FC<{ user: string }> = ({ user }) => {
             render: (text: string) => <span>{text}</span>,
           },
         ]
-      : user === 'researcher'
+      : userType === 'researcher'
       ? []
       : []),
     {
       title: t('connectionRequests.date'),
       dataIndex: 'requestDate',
       key: 'requestDate',
-      render: (date: Date) => <span>{date.toLocaleDateString('en-GB')}</span>,
+      render: (text: string) => <span>{text}</span>,
     },
     {
       title: t('tables.status'),
@@ -96,13 +97,13 @@ export const RequestTable: React.FC<{ user: string }> = ({ user }) => {
       key: 'requestStatus',
       render: (tag: Tag) => (
         <BaseRow gutter={[10, 10]}>
-          <BaseCol key={tag.value} style={{ flex: 0.8 }}>
+          <BaseCol key={tag.value}>
             <Status color={defineColorByPriority(tag.priority)} text={tag.value.toUpperCase()} />
           </BaseCol>
         </BaseRow>
       ),
     },
-    ...(user === 'orgAdmin'
+    ...(userType === 'orgAdmin'
       ? [
           {
             title: t('tables.actions'),
@@ -124,7 +125,7 @@ export const RequestTable: React.FC<{ user: string }> = ({ user }) => {
             },
           },
         ]
-      : user === 'researcher'
+      : userType === 'researcher'
       ? [
           {
             title: t('tables.actions'),

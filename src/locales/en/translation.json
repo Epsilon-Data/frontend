@@ -882,10 +882,7 @@
     "requestor": "Requestor",
     "requestList" : "Request List",
     "viewSource": "View Source",
-    "requestId": "Request ID",
-    "create": {
-      "title": "Create New Request",
-      "altTitle": "Create Request", 
+    "details": {
       "projectInfo": {
         "title": "Project Information",
         "name": "Project Name",
@@ -940,7 +937,10 @@
         "confirmInLine": "I confirm that the data collection has been done in line with relevant local, national and institutional regulations and legislation.",
         "confirmConsent": "I confirm that the study participants have consented their data to be made accessible on the platform."
       }
-    }
+    },
+    "create": "Create New Request",
+    "altCreate": "Create Request",
+    "view": "View Request"
   },
   "databaseSources" : {
     "title": "Database Sources",

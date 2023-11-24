@@ -22,13 +22,13 @@ export const FormModal: React.FC<{
   };
 
   const groupOptions = [
-    t('connectionRequests.create.openAccessForm.confirmDataOwner'),
-    t('connectionRequests.create.openAccessForm.confirmInLine'),
-    t('connectionRequests.create.openAccessForm.confirmConsent'),
+    t('connectionRequests.details.openAccessForm.confirmDataOwner'),
+    t('connectionRequests.details.openAccessForm.confirmInLine'),
+    t('connectionRequests.details.openAccessForm.confirmConsent'),
   ];
   return (
     <S.Modal
-      title={t('connectionRequests.create.openAccessForm.title')}
+      title={t('connectionRequests.details.openAccessForm.title')}
       centered
       open={isFormModalOpen}
       onCancel={() => setIsFormModalOpen(false)}

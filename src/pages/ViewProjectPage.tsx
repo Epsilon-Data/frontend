@@ -6,7 +6,7 @@ const ViewProjectPage: React.FC = () => {
   const { t } = useTranslation();
   return (
     <>
-      <PageTitle>{t('connectionRequests.requestId') + ' '}</PageTitle>
+      <PageTitle>{t('connectionRequests.id') + ' '}</PageTitle>
     </>
   );
 };

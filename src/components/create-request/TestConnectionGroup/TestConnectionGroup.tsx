@@ -11,14 +11,14 @@ export const TestConnectionGroup: React.FC<{
   return (
     <>
       <S.ConnectionButton type="primary" onClick={onClick}>
-        {t('connectionRequests.create.databaseInfo.testConnection')}
+        {t('connectionRequests.details.databaseInfo.testConnection')}
       </S.ConnectionButton>
-      <S.ButtonTip>{t('connectionRequests.create.databaseInfo.testConnectionTip')}</S.ButtonTip>
+      <S.ButtonTip>{t('connectionRequests.details.databaseInfo.testConnectionTip')}</S.ButtonTip>
       {connected ? (
-        <S.TestMessage>{t('connectionRequests.create.databaseInfo.testSuccess')}</S.TestMessage>
+        <S.TestMessage>{t('connectionRequests.details.databaseInfo.testSuccess')}</S.TestMessage>
       ) : show ? (
         <S.TestMessage style={{ color: 'var(--error-color)' }}>
-          {t('connectionRequests.create.databaseInfo.testFailed')}
+          {t('connectionRequests.details.databaseInfo.testFailed')}
         </S.TestMessage>
       ) : null}
     </>

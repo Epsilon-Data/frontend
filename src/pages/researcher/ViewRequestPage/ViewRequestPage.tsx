@@ -1,0 +1,172 @@
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
+import * as S from './ViewRequestPage.styles';
+import { useNavigate, useParams } from 'react-router-dom';
+import { RequestDetails } from '@app/interfaces/interfaces';
+import { ConnectionRequestStatus, getRequestDetails } from 'api/connectionRequests.api';
+import { useMounted } from '@app/hooks/useMounted';
+import { InfoItem } from '@app/components/view-request/Info/InfoItem';
+import { InfoSectionHeader } from '@app/components/view-request/Info/InfoSectionHeader';
+
+const initialRequestFormValues: RequestDetails = {
+  projectName: '',
+  projectDuration: [],
+  projectLead: '',
+  projectTeamMembers: [],
+  university: '',
+  faculty: '',
+  ethicsApprovalId: '',
+  projectDescription: '',
+  isOwnData: null,
+  dataInfo: {
+    collectionDuration: [],
+    participantsNumber: null,
+    description: '',
+    keywords: [],
+  },
+};
+
+const ViewRequestPage: React.FC = () => {
+  const { id } = useParams();
+  const { t } = useTranslation();
+  const { isMounted } = useMounted();
+  const navigate = useNavigate();
+  const [request, setRequest] = useState<RequestDetails>(initialRequestFormValues);
+
+  const fetch = useCallback(
+    (id: string | undefined) => {
+      getRequestDetails(id).then((res) => {
+        if (isMounted.current) {
+          setRequest(res);
+        }
+      });
+    },
+    [setRequest, isMounted],
+  );
+
+  useEffect(() => {
+    fetch(id);
+  }, [fetch, id]);
+
+  const actionButtons = (status: number | undefined) => {
+    const handleBackClick = () => {
+      navigate(-1);
+    };
+
+    switch (status) {
+      case ConnectionRequestStatus.PENDING:
+        return React.Children.toArray([
+          <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+            {t('common.back')}
+          </S.ActionButton>,
+        ]);
+      case ConnectionRequestStatus.REVISION:
+        return React.Children.toArray([
+          <S.ActionButton type="primary" key="edit">
+            {t('common.edit')}
+          </S.ActionButton>,
+          <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+            {t('common.back')}
+          </S.ActionButton>,
+        ]);
+      case ConnectionRequestStatus.APPROVED:
+        return React.Children.toArray([
+          <S.ActionButton type="primary" key="source">
+            {t('connectionRequests.viewSource')}
+          </S.ActionButton>,
+          <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+            {t('common.back')}
+          </S.ActionButton>,
+        ]);
+    }
+  };
+
+  return (
+    <>
+      <PageTitle>{t('connectionRequests.view')}</PageTitle>
+      <S.ViewWrapper>
+        <S.Card
+          id="view-request"
+          title={`${t('connectionRequests.view')} ID ${id}`}
+          padding="1.25rem 1.25rem 0"
+          actions={actionButtons(request.status)}
+        >
+          <S.InfoWrapper>
+            <S.InfoHeader>
+              <S.Title>{request.projectName}</S.Title>
+            </S.InfoHeader>
+            <S.InfoArea>
+              <InfoSectionHeader text={t('connectionRequests.details.projectInfo.title')} />
+              {request.projectDuration.length > 0 && (
+                <InfoItem
+                  label={t('connectionRequests.details.projectInfo.duration')}
+                  text={`${request.projectDuration[0].toLocaleDateString(
+                    'en-GB',
+                  )} - ${request.projectDuration[1].toLocaleDateString('en-GB')}`}
+                />
+              )}
+              <InfoItem label={t('connectionRequests.details.projectInfo.lead')} text={request.projectLead} />
+              <InfoItem
+                label={t('connectionRequests.details.projectInfo.teamMembers')}
+                text={request.projectTeamMembers.join(', ')}
+              />
+              <InfoItem label={t('connectionRequests.details.projectInfo.university')} text={request.university} />
+              <InfoItem label={t('connectionRequests.details.projectInfo.faculty')} text={request.faculty} />
+              <InfoItem
+                label={t('connectionRequests.details.projectInfo.ethicsApprovalId')}
+                text={request.ethicsApprovalId}
+              />
+              <InfoItem
+                label={t('connectionRequests.details.projectInfo.description')}
+                text={request.projectDescription}
+              />
+              {request.databaseInfo && (
+                <>
+                  <InfoSectionHeader text={t('connectionRequests.details.databaseInfo.title')} />
+                  <InfoItem
+                    label={t('connectionRequests.details.databaseInfo.name')}
+                    text={request.databaseInfo.name}
+                  />
+                  <InfoItem
+                    label={t('connectionRequests.details.databaseInfo.type')}
+                    text={request.databaseInfo.type}
+                  />
+                </>
+              )}
+              {request.orgAdminEmail && (
+                <>
+                  <InfoSectionHeader text={t('connectionRequests.details.orgAdminInfo.title')} />
+                  <InfoItem label={t('connectionRequests.details.orgAdminInfo.email')} text={request.orgAdminEmail} />
+                </>
+              )}
+              <InfoSectionHeader text={t('connectionRequests.details.dataInfo.title')} />
+              {request.dataInfo.collectionDuration.length > 0 && (
+                <InfoItem
+                  label={t('connectionRequests.details.dataInfo.collectionDuration')}
+                  text={`${request.dataInfo.collectionDuration[0].toLocaleDateString(
+                    'en-GB',
+                  )} - ${request.dataInfo.collectionDuration[1].toLocaleDateString('en-GB')}`}
+                />
+              )}
+              <InfoItem
+                label={t('connectionRequests.details.dataInfo.participantsNumber')}
+                text={request.dataInfo.participantsNumber?.toString()}
+              />
+              <InfoItem
+                label={t('connectionRequests.details.dataInfo.description')}
+                text={request.dataInfo.description}
+              />
+              <InfoItem
+                label={t('connectionRequests.details.dataInfo.keywords')}
+                text={request.dataInfo.keywords.join(', ')}
+              />
+            </S.InfoArea>
+          </S.InfoWrapper>
+        </S.Card>
+      </S.ViewWrapper>
+    </>
+  );
+};
+
+export default ViewRequestPage;

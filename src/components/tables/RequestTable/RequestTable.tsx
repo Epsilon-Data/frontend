@@ -13,7 +13,7 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { Priority } from '@app/constants/enums/priorities';
 import { useAppSelector } from '@app/hooks/reduxHooks';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const initialPagination: Pagination = {
   current: 1,
@@ -29,6 +29,7 @@ export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
   const { t } = useTranslation();
   const { isMounted } = useMounted();
   const user = useAppSelector((state) => state.user.user);
+  const navigate = useNavigate();
 
   const fetch = useCallback(
     (pagination: Pagination) => {
@@ -112,12 +113,7 @@ export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
             render: (text: string, record: { projectName: string; id: number }) => {
               return (
                 <BaseSpace>
-                  <BaseButton
-                    type="primary"
-                    onClick={() => {
-                      notificationController.info({ message: t('tables.viewMessage', { name: record.projectName }) });
-                    }}
-                  >
+                  <BaseButton type="primary" onClick={() => navigate('/r-connection-requests/view/' + record.id)}>
                     {t('tables.view')}
                   </BaseButton>
                 </BaseSpace>
@@ -138,12 +134,7 @@ export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
               const { priority } = record.requestStatus;
               return (
                 <BaseSpace>
-                  <BaseButton
-                    type="primary"
-                    onClick={() => {
-                      notificationController.info({ message: t('tables.viewMessage', { name: record.projectName }) });
-                    }}
-                  >
+                  <BaseButton type="primary" onClick={() => navigate('/r-connection-requests/view/' + record.id)}>
                     {t('tables.view')}
                   </BaseButton>
                   {priority === Priority.LOW && (
@@ -158,14 +149,7 @@ export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
                   )}
                   {priority === Priority.HIGH && (
                     <>
-                      <BaseButton
-                        type="primary"
-                        onClick={() => {
-                          notificationController.info({
-                            message: t('tables.viewMessage', { name: record.projectName }),
-                          });
-                        }}
-                      >
+                      <BaseButton type="primary" onClick={() => navigate('/r-connection-requests/view/' + record.id)}>
                         {t('common.edit')}
                       </BaseButton>
                       <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>

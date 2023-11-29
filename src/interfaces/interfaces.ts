@@ -46,6 +46,9 @@ export interface PaymentCard {
 }
 
 export interface RequestDetails {
+  id?: number;
+  date?: Date;
+  status?: number;
   projectName: string;
   projectDuration: Date[];
   projectLead: string;
@@ -59,9 +62,9 @@ export interface RequestDetails {
   databaseInfo?: {
     name: string;
     type: string;
-    url: string;
-    username: string;
-    password: string;
+    url?: string;
+    username?: string;
+    password?: string;
   };
   dataInfo: {
     collectionDuration: Date[];

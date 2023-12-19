@@ -4,20 +4,24 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './ViewRequestPage.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RequestDetails } from '@app/interfaces/interfaces';
-import { ConnectionRequestStatus, getRequestDetails } from 'api/connectionRequests.api';
+import { getRequestDetails } from 'api/connectionRequests.api';
 import { useMounted } from '@app/hooks/useMounted';
 import { InfoItem } from '@app/components/view-request/Info/InfoItem';
 import { InfoSectionHeader } from '@app/components/view-request/Info/InfoSectionHeader';
+import { RequestStatus } from '@app/constants/enums/requestStatus';
+import { Dates } from '@app/constants/Dates';
 
 const initialRequestFormValues: RequestDetails = {
-  projectName: '',
-  projectDuration: [],
-  projectLead: '',
-  projectTeamMembers: [],
-  university: '',
-  faculty: '',
-  ethicsApprovalId: '',
-  projectDescription: '',
+  projectInfo: {
+    name: '',
+    duration: [],
+    lead: '',
+    members: [],
+    university: '',
+    faculty: '',
+    ethicsApprovalId: '',
+    description: '',
+  },
   isOwnData: null,
   dataInfo: {
     collectionDuration: [],
@@ -55,22 +59,22 @@ const ViewRequestPage: React.FC = () => {
     };
 
     switch (status) {
-      case ConnectionRequestStatus.PENDING:
+      case RequestStatus.PENDING:
         return React.Children.toArray([
           <S.ActionButton type="default" key="back" onClick={handleBackClick}>
             {t('common.back')}
           </S.ActionButton>,
         ]);
-      case ConnectionRequestStatus.REVISION:
+      case RequestStatus.REVISION:
         return React.Children.toArray([
-          <S.ActionButton type="primary" key="edit">
+          <S.ActionButton type="primary" key="edit" onClick={() => navigate(`/r-connection-requests/edit/${id}`)}>
             {t('common.edit')}
           </S.ActionButton>,
           <S.ActionButton type="default" key="back" onClick={handleBackClick}>
             {t('common.back')}
           </S.ActionButton>,
         ]);
-      case ConnectionRequestStatus.APPROVED:
+      case RequestStatus.APPROVED:
         return React.Children.toArray([
           <S.ActionButton type="primary" key="source">
             {t('connectionRequests.viewSource')}
@@ -94,32 +98,39 @@ const ViewRequestPage: React.FC = () => {
         >
           <S.InfoWrapper>
             <S.InfoHeader>
-              <S.Title>{request.projectName}</S.Title>
+              <S.Title>{request.projectInfo.name}</S.Title>
             </S.InfoHeader>
             <S.InfoArea>
               <InfoSectionHeader text={t('connectionRequests.details.projectInfo.title')} />
-              {request.projectDuration.length > 0 && (
+              {request.projectInfo.duration.length > 0 && (
                 <InfoItem
                   label={t('connectionRequests.details.projectInfo.duration')}
-                  text={`${request.projectDuration[0].toLocaleDateString(
-                    'en-GB',
-                  )} - ${request.projectDuration[1].toLocaleDateString('en-GB')}`}
+                  text={`${Dates.format(request.projectInfo.duration[0], 'LL')} - ${Dates.format(
+                    request.projectInfo.duration[1],
+                    'LL',
+                  )}`}
                 />
               )}
-              <InfoItem label={t('connectionRequests.details.projectInfo.lead')} text={request.projectLead} />
+              <InfoItem label={t('connectionRequests.details.projectInfo.lead')} text={request.projectInfo.lead} />
               <InfoItem
                 label={t('connectionRequests.details.projectInfo.teamMembers')}
-                text={request.projectTeamMembers.join(', ')}
+                text={request.projectInfo.members.join(', ')}
               />
-              <InfoItem label={t('connectionRequests.details.projectInfo.university')} text={request.university} />
-              <InfoItem label={t('connectionRequests.details.projectInfo.faculty')} text={request.faculty} />
+              <InfoItem
+                label={t('connectionRequests.details.projectInfo.university')}
+                text={request.projectInfo.university}
+              />
+              <InfoItem
+                label={t('connectionRequests.details.projectInfo.faculty')}
+                text={request.projectInfo.faculty}
+              />
               <InfoItem
                 label={t('connectionRequests.details.projectInfo.ethicsApprovalId')}
-                text={request.ethicsApprovalId}
+                text={request.projectInfo.ethicsApprovalId}
               />
               <InfoItem
                 label={t('connectionRequests.details.projectInfo.description')}
-                text={request.projectDescription}
+                text={request.projectInfo.description}
               />
               {request.databaseInfo && (
                 <>
@@ -144,9 +155,10 @@ const ViewRequestPage: React.FC = () => {
               {request.dataInfo.collectionDuration.length > 0 && (
                 <InfoItem
                   label={t('connectionRequests.details.dataInfo.collectionDuration')}
-                  text={`${request.dataInfo.collectionDuration[0].toLocaleDateString(
-                    'en-GB',
-                  )} - ${request.dataInfo.collectionDuration[1].toLocaleDateString('en-GB')}`}
+                  text={`${Dates.format(request.dataInfo.collectionDuration[0], 'LL')} - ${Dates.format(
+                    request.dataInfo.collectionDuration[1],
+                    'LL',
+                  )}`}
                 />
               )}
               <InfoItem

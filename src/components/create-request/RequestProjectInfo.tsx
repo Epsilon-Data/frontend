@@ -4,12 +4,12 @@ import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/Ba
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { RequestDetails } from '@app/interfaces/interfaces';
-import { StringInputItem } from './StringInput/StringInputItem';
-import { StringTextAreaItem } from './StringInput/StringTextAreaItem';
+import { StringInputItem } from '../request-fields/StringInput/StringInputItem';
+import { StringTextAreaItem } from '../request-fields/StringInput/StringTextAreaItem';
 import { useNavigate } from 'react-router-dom';
-import { DateRangeInputItem } from './DateRangeInput/DateRangeInputItem';
-import { TagInputItem } from './TagInput/TagInputItem';
-import { RadioInputItem } from './RadioInput/RadioInputItem';
+import { DateRangeInputItem } from '../request-fields/DateRangeInput/DateRangeInputItem';
+import { TagInputItem } from '../request-fields/TagInput/TagInputItem';
+import { RadioInputItem } from '../request-fields/RadioInput/RadioInputItem';
 
 export const RequestProjectInfo: React.FC<{
   formValue: RequestDetails;
@@ -28,15 +28,17 @@ export const RequestProjectInfo: React.FC<{
       setLoading(true);
       const updatedRequest = {
         ...formValue,
-        projectName: values.projectName,
-        projectDuration: values.projectDuration,
-        projectLead: values.projectLead,
-        projectTeamMembers: values.projectTeamMembers,
-        university: values.university,
-        faculty: values.faculty,
-        ethicsApprovalId: values.ethicsApprovalId,
-        projectDescription: values.projectDescription,
         isOwnData: values.isOwnData,
+        projectInfo: {
+          name: values.projectInfo.name,
+          duration: values.projectInfo.duration,
+          lead: values.projectInfo.lead,
+          members: values.projectInfo.members,
+          university: values.projectInfo.university,
+          faculty: values.projectInfo.faculty,
+          ethicsApprovalId: values.projectInfo.ethicsApprovalId,
+          description: values.projectInfo.description,
+        },
       };
       setFormValue(updatedRequest);
       //TODO: add request to database
@@ -75,41 +77,49 @@ export const RequestProjectInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="projectName" label={t('connectionRequests.details.projectInfo.name')} required />
+          <StringInputItem name="projectInfo.name" label={t('connectionRequests.details.projectInfo.name')} required />
         </BaseCol>
 
         <BaseCol span={24}>
           <DateRangeInputItem
-            name="projectDuration"
+            name="projectInfo.duration"
             label={t('connectionRequests.details.projectInfo.duration')}
             required
           />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="projectLead" label={t('connectionRequests.details.projectInfo.lead')} required />
+          <StringInputItem name="projectInfo.lead" label={t('connectionRequests.details.projectInfo.lead')} required />
         </BaseCol>
 
         <BaseCol span={24}>
           <TagInputItem
-            name="projectTeamMembers"
+            name="projectInfo.members"
             label={t('connectionRequests.details.projectInfo.teamMembers')}
-            initialTags={formValue.projectTeamMembers}
+            initialTags={formValue.projectInfo.members}
             prompt={t('connectionRequests.details.projectInfo.addTeamMembers')}
           />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="university" label={t('connectionRequests.details.projectInfo.university')} required />
-        </BaseCol>
-
-        <BaseCol span={24}>
-          <StringInputItem name="faculty" label={t('connectionRequests.details.projectInfo.faculty')} required />
+          <StringInputItem
+            name="projectInfo.university"
+            label={t('connectionRequests.details.projectInfo.university')}
+            required
+          />
         </BaseCol>
 
         <BaseCol span={24}>
           <StringInputItem
-            name="ethicsApprovalId"
+            name="projectInfo.faculty"
+            label={t('connectionRequests.details.projectInfo.faculty')}
+            required
+          />
+        </BaseCol>
+
+        <BaseCol span={24}>
+          <StringInputItem
+            name="projectInfo.ethicsApprovalId"
             label={t('connectionRequests.details.projectInfo.ethicsApprovalId')}
             required
           />
@@ -117,7 +127,7 @@ export const RequestProjectInfo: React.FC<{
 
         <BaseCol span={24}>
           <StringTextAreaItem
-            name="projectDescription"
+            name="projectInfo.description"
             label={t('connectionRequests.details.projectInfo.description')}
           />
         </BaseCol>

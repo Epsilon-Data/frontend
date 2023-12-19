@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import { SearchDropdown } from '../searchDropdown/SearchDropdown';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { components as configComponents, Component } from '@app/constants/config/components';

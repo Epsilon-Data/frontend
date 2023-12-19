@@ -4,10 +4,10 @@ import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/Ba
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { RequestDetails } from '@app/interfaces/interfaces';
-import { StringInputItem } from './StringInput/StringInputItem';
+import { StringInputItem } from '../request-fields/StringInput/StringInputItem';
 import { useNavigate } from 'react-router-dom';
 import { RequestDataInfo } from './RequestDataInfo';
-import { StringTextAreaItem } from './StringInput/StringTextAreaItem';
+import { StringTextAreaItem } from '../request-fields/StringInput/StringTextAreaItem';
 import { BaseTooltip } from '../common/BaseTooltip/BaseTooltip';
 import { InfoCircleOutlined } from '@ant-design/icons';
 

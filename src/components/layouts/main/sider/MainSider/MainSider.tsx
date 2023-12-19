@@ -8,9 +8,10 @@ import SiderMenu from '../SiderMenu/SiderMenu';
 interface MainSiderProps {
   isCollapsed: boolean;
   setCollapsed: (isCollapsed: boolean) => void;
+  selectedNav: string;
 }
 
-const MainSider: React.FC<MainSiderProps> = ({ isCollapsed, setCollapsed, ...props }) => {
+const MainSider: React.FC<MainSiderProps> = ({ isCollapsed, setCollapsed, selectedNav, ...props }) => {
   const { isDesktop, mobileOnly, tabletOnly } = useResponsive();
 
   const isCollapsible = useMemo(() => mobileOnly && tabletOnly, [mobileOnly, tabletOnly]);
@@ -27,10 +28,10 @@ const MainSider: React.FC<MainSiderProps> = ({ isCollapsed, setCollapsed, ...pro
         width={260}
         {...props}
       >
-        <SiderLogo isSiderCollapsed={isCollapsed} toggleSider={toggleSider} />
+        <SiderLogo isSiderCollapsed={isCollapsed} toggleSider={toggleSider} selectedNav={selectedNav} />
         <S.HorizontalDivider />
         <S.SiderContent>
-          <SiderMenu setCollapsed={setCollapsed} />
+          <SiderMenu setCollapsed={setCollapsed} selectedNav={selectedNav} />
         </S.SiderContent>
       </S.Sider>
       {mobileOnly && <Overlay onClick={toggleSider} show={!isCollapsed} />}

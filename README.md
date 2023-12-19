@@ -13,17 +13,17 @@ git clone https://github.com/Epsilon-Data/frontend.git my-awesome-project && cd 
 
 Development mode
 ```
-yarn install && yarn start
+pnpm install && pnpm start
 ```
 
 Production mode
 ```
-yarn install && yarn build
+pnpm install && pnpm build
 ```
 
 #### How to analyze the bundle size
 ```
-yarn install && yarn build --stats
+pnpm install && pnpm build --stats
 ```
 
 And then use the [webpack-bundle-analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer) to open _build/bundle-stats.json_.

@@ -4,19 +4,21 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './CreateRequestPage.styles';
 import { useParams } from 'react-router-dom';
 import { RequestDetails } from '@app/interfaces/interfaces';
-import { RequestProjectInfo } from '../../components/create-request/RequestProjectInfo';
+import { RequestProjectInfo } from '../../../components/create-request/RequestProjectInfo';
 import { RequestDatabaseInfo } from '@app/components/create-request/RequestDatabaseInfo';
 import { RequestOrgAdminInfo } from '@app/components/create-request/RequestOrgAdminInfo';
 
 const initialRequestFormValues: RequestDetails = {
-  projectName: '',
-  projectDuration: [],
-  projectLead: '',
-  projectTeamMembers: [],
-  university: '',
-  faculty: '',
-  ethicsApprovalId: '',
-  projectDescription: '',
+  projectInfo: {
+    name: '',
+    duration: [],
+    lead: '',
+    members: [],
+    university: '',
+    faculty: '',
+    ethicsApprovalId: '',
+    description: '',
+  },
   isOwnData: null,
   dataInfo: {
     collectionDuration: [],

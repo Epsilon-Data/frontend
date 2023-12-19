@@ -31,15 +31,14 @@ export class Dates {
     return dayjs.weekdaysShort();
   }
 
-  static getDate(date: number | string): AppDate {
-    return dayjs(date);
+  static getDate(date: number | string, format?: string): AppDate {
+    return dayjs(date, format);
   }
 
   static format(date: AppDate | string | number, query: string): string {
-    if (typeof date === 'string' || typeof date === 'number') {
-      return dayjs(date).format(query);
-    } else {
-      return date.format(query);
-    }
+    const formattedDate =
+      typeof date === 'string' || typeof date === 'number' ? dayjs(date).format(query) : date.format(query);
+
+    return formattedDate;
   }
 }

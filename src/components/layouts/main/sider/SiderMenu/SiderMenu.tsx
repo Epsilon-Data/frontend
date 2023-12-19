@@ -2,28 +2,36 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import * as S from './SiderMenu.styles';
-import { sidebarNavigation, SidebarNavigationItem } from '../sidebarNavigation';
+import { homeNavigation, connectNavigation, manageNavigation, SidebarNavigationItem } from '../sidebarNavigation';
 
 interface SiderContentProps {
   setCollapsed: (isCollapsed: boolean) => void;
+  selectedNav: string;
 }
 
-const sidebarNavFlat = sidebarNavigation.reduce(
+const sidebarNavFlat = homeNavigation.reduce(
   (result: SidebarNavigationItem[], current) =>
     result.concat(current.children && current.children.length > 0 ? current.children : current),
   [],
 );
 
-const SiderMenu: React.FC<SiderContentProps> = ({ setCollapsed }) => {
+const SiderMenu: React.FC<SiderContentProps> = ({ setCollapsed, selectedNav }) => {
   const { t } = useTranslation();
   const location = useLocation();
 
   const currentMenuItem = sidebarNavFlat.find(({ url }) => url === location.pathname);
   const defaultSelectedKeys = currentMenuItem ? [currentMenuItem.key] : [];
 
-  const openedSubmenu = sidebarNavigation.find(
-    ({ children }) => children?.some(({ url }) => url === location.pathname),
-  );
+  let currentNav: SidebarNavigationItem[] = [];
+  if (selectedNav === 'connect') {
+    currentNav = connectNavigation;
+  } else if (selectedNav === 'manage') {
+    currentNav = manageNavigation;
+  } else if (selectedNav === 'home') {
+    currentNav = homeNavigation;
+  }
+
+  const openedSubmenu = homeNavigation.find(({ children }) => children?.some(({ url }) => url === location.pathname));
   const defaultOpenKeys = openedSubmenu ? [openedSubmenu.key] : [];
 
   return (
@@ -32,7 +40,7 @@ const SiderMenu: React.FC<SiderContentProps> = ({ setCollapsed }) => {
       defaultSelectedKeys={defaultSelectedKeys}
       defaultOpenKeys={defaultOpenKeys}
       onClick={() => setCollapsed(true)}
-      items={sidebarNavigation.map((nav) => {
+      items={currentNav.map((nav) => {
         const isSubMenu = nav.children?.length;
 
         return {

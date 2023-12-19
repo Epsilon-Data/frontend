@@ -1,20 +1,11 @@
 import axios from 'axios';
 import { Priority } from '../constants/enums/priorities';
 import { RequestDetails } from '@app/interfaces/interfaces';
-import moment from 'moment';
-
-export enum ConnectionRequestStatus {
-  PENDING = 1,
-  REVISION = 2,
-  APPROVED = 3,
-}
+import { RequestStatus } from '@app/constants/enums/requestStatus';
+import { Dates } from '@app/constants/Dates';
 
 const API_URL = 'http://127.0.0.1:5000/api';
-const DATE_FORMAT = 'DD/MM/YYYY';
-
-const convertDate = (dateString: string) => {
-  return moment(dateString, DATE_FORMAT, 'en-GB').toDate();
-};
+const DATE_FORMAT = 'D/M/YYYY';
 
 export interface Tag {
   value: string;
@@ -54,12 +45,12 @@ export const getRequestTableData = async (
   const formattedData = response.data.map((item: { requestStatus: number }) => {
     let requestStatus = { value: 'Pending', priority: Priority.INFO };
     switch (item.requestStatus) {
-      case ConnectionRequestStatus.PENDING:
+      case RequestStatus.PENDING:
         break;
-      case ConnectionRequestStatus.REVISION:
+      case RequestStatus.REVISION:
         requestStatus = { value: 'Requires Revision', priority: Priority.HIGH };
         break;
-      case ConnectionRequestStatus.APPROVED:
+      case RequestStatus.APPROVED:
         requestStatus = { value: 'Approved', priority: Priority.LOW };
         break;
     }
@@ -74,14 +65,14 @@ export const getRequestDetails = async (id: string | undefined): Promise<Request
       id,
     },
   });
-  response.data.date = convertDate(response.data.date);
-  response.data.projectDuration = [
-    convertDate(response.data.projectDuration[0]),
-    convertDate(response.data.projectDuration[1]),
+  response.data.date = Dates.getDate(response.data.date, DATE_FORMAT);
+  response.data.projectInfo.duration = [
+    Dates.getDate(response.data.projectInfo.duration[0], DATE_FORMAT),
+    Dates.getDate(response.data.projectInfo.duration[1], DATE_FORMAT),
   ];
   response.data.dataInfo.collectionDuration = [
-    convertDate(response.data.dataInfo.collectionDuration[0]),
-    convertDate(response.data.dataInfo.collectionDuration[1]),
+    Dates.getDate(response.data.dataInfo.collectionDuration[0], DATE_FORMAT),
+    Dates.getDate(response.data.dataInfo.collectionDuration[1], DATE_FORMAT),
   ];
 
   return response.data;

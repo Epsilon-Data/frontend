@@ -4,12 +4,12 @@ import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/Ba
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { RequestDetails } from '@app/interfaces/interfaces';
-import { StringInputItem } from './StringInput/StringInputItem';
-import { SelectInputItem } from './SelectInput/SelectInputItem';
-import { PasswordInputItem } from './PasswordInput/PasswordInputItem';
+import { StringInputItem } from '../request-fields/StringInput/StringInputItem';
+import { SelectInputItem } from '../request-fields/SelectInput/SelectInputItem';
+import { PasswordInputItem } from '../request-fields/PasswordInput/PasswordInputItem';
 import { RequestDataInfo } from './RequestDataInfo';
-import { TestConnectionGroup } from './TestConnectionGroup/TestConnectionGroup';
-import { FormModal } from './FormModal/FormModal';
+import { TestConnectionGroup } from '../request-fields/TestConnectionGroup/TestConnectionGroup';
+import { FormModal } from '../request-fields/FormModal/FormModal';
 
 export const RequestDatabaseInfo: React.FC<{
   formValue: RequestDetails;

@@ -10,8 +10,11 @@ export const Sider = styled(BaseLayout.Sider)`
   overflow: visible;
   right: 0;
   z-index: 5;
-  min-height: 100vh;
+  min-height: 88vh;
   max-height: 100vh;
+
+  margin: 2rem 2rem;
+  border-radius: 1rem;
 
   color: var(--text-secondary-color);
 
@@ -85,7 +88,7 @@ export const SiderLogoDiv = styled.div`
   }
 `;
 
-export const BrandSpan = styled.span`
+export const TabSpan = styled.span`
   margin: 0 1rem;
   font-weight: 700;
   font-size: 1.125rem;

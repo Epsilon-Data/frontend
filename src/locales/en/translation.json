@@ -940,7 +940,8 @@
     },
     "create": "Create New Request",
     "altCreate": "Create Request",
-    "view": "View Request"
+    "view": "View Request",
+    "edit": "Edit Request"
   },
   "databaseSources" : {
     "title": "Database Sources",
@@ -951,5 +952,11 @@
     "provider": "Provider",
     "sourceList"  : "Source List",
     "manage" : "Manage"
+  },
+  "topNavigation" : {
+    "home": "Home",
+    "connect": "Connect",
+    "manage": "Manage",
+    "browse": "Browse"
   }
 }

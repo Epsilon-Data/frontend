@@ -1,4 +1,3 @@
-import { AppDate } from '@app/constants/Dates';
 import { NumericLiteral } from 'typescript';
 
 export type Dimension = number | string;
@@ -48,10 +47,10 @@ export interface PaymentCard {
 
 export interface RequestDetails {
   id?: number;
-  date?: AppDate;
+  requestor?: number;
+  date?: Date;
   status?: number;
   projectInfo: ProjectInfoFormValues;
-  isOwnData: boolean | null;
   orgAdminEmail?: string;
   databaseInfo?: DatabaseInfoFormValues;
   dataInfo: DataInfoFormValues;
@@ -60,20 +59,21 @@ export interface RequestDetails {
 
 export interface ProjectInfoFormValues {
   name: string;
-  duration: AppDate[];
+  duration: Date[];
   lead: string;
   members: string[];
   university: string;
   faculty: string;
-  ethicsApprovalId: string;
+  ethicsId: string;
   description: string;
+  isOwnData?: boolean | null;
 }
 
 export interface DataInfoFormValues {
-  collectionDuration: AppDate[];
+  collectionDuration: Date[];
   participantsNumber: number | null;
-  description: string;
-  keywords: string[];
+  description?: string;
+  keywords?: string[];
 }
 
 export interface DatabaseInfoFormValues {

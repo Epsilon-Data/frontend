@@ -8,28 +8,22 @@ export interface SidebarNavigationItem {
   icon?: React.ReactNode;
 }
 
-export const homeNavigation: SidebarNavigationItem[] = [
+const homeNavigation: SidebarNavigationItem[] = [];
+
+const connectNavigation: SidebarNavigationItem[] = [
   {
-    title: 'breadcrumbs.home',
-    key: 'medical-dashboard',
-    url: '/',
+    title: 'connectionRequests.create',
+    key: 'create',
+    url: '/r-connection-requests/create/project-info',
   },
+  // {
+  //   title: 'connectionRequests.oaTitle',
+  //   key: 'oa-connection-requests',
+  //   url: '/oa-connection-requests',
+  // },
 ];
 
-export const connectNavigation: SidebarNavigationItem[] = [
-  {
-    title: 'connectionRequests.oaTitle',
-    key: 'oa-connection-requests',
-    url: '/oa-connection-requests',
-  },
-  {
-    title: 'connectionRequests.rTitle',
-    key: 'r-connection-requests',
-    url: '/r-connection-requests',
-  },
-];
-
-export const manageNavigation: SidebarNavigationItem[] = [
+const manageNavigation: SidebarNavigationItem[] = [
   {
     title: 'databaseSources.title',
     key: 'database-sources',
@@ -37,4 +31,15 @@ export const manageNavigation: SidebarNavigationItem[] = [
   },
 ];
 
-// export const browseNavigation: SidebarNavigationItem[] = [];
+// const browseNavigation: SidebarNavigationItem[] = [];
+
+export function returnCurrentNav(key: string): SidebarNavigationItem[] {
+  if (key === 'connect') {
+    return connectNavigation;
+  } else if (key === 'manage') {
+    return manageNavigation;
+  } else if (key === 'home') {
+    return homeNavigation;
+  }
+  return [];
+}

@@ -2,10 +2,10 @@ import axios from 'axios';
 import { Priority } from '../constants/enums/priorities';
 import { RequestDetails } from '@app/interfaces/interfaces';
 import { RequestStatus } from '@app/constants/enums/requestStatus';
-import { Dates } from '@app/constants/Dates';
+import { format } from 'date-fns';
 
-const API_URL = 'http://127.0.0.1:5000/api';
-const DATE_FORMAT = 'D/M/YYYY';
+const API_URL = 'http://localhost:3333/connection-request';
+export const DATE_FORMAT = 'dd/MM/yyyy';
 
 export interface Tag {
   value: string;
@@ -20,10 +20,10 @@ export interface Pagination {
 
 export interface RequestTableRow {
   id: number;
+  requestor?: number;
+  createdDate: string;
+  statusTag: Tag;
   projectName: string;
-  requestor?: string;
-  requestDate: string;
-  requestStatus: Tag;
 }
 
 export interface RequestTableData {
@@ -36,44 +36,47 @@ export const getRequestTableData = async (
   userType: string,
   userId?: number,
 ): Promise<RequestTableData> => {
-  const response = await axios.get(`${API_URL}/request-list`, {
+  const response = await axios.get(`${API_URL}/summary`, {
     params: {
-      id: userId,
-      type: userType,
+      userId: userId,
+      userType: userType,
     },
   });
-  const formattedData = response.data.map((item: { requestStatus: number }) => {
-    let requestStatus = { value: 'Pending', priority: Priority.INFO };
-    switch (item.requestStatus) {
-      case RequestStatus.PENDING:
-        break;
-      case RequestStatus.REVISION:
-        requestStatus = { value: 'Requires Revision', priority: Priority.HIGH };
-        break;
-      case RequestStatus.APPROVED:
-        requestStatus = { value: 'Approved', priority: Priority.LOW };
-        break;
-    }
-    return { ...item, requestStatus };
-  });
+  const formattedData = response.data.map(
+    (item: { id: number; requestor?: number; status: number; createdDate: Date; Project: { name: string } }) => {
+      let statusTag = { value: 'Pending', priority: Priority.INFO };
+      switch (item.status) {
+        case RequestStatus.PENDING:
+          break;
+        case RequestStatus.REVISION:
+          statusTag = { value: 'Requires Revision', priority: Priority.HIGH };
+          break;
+        case RequestStatus.APPROVED:
+          statusTag = { value: 'Approved', priority: Priority.LOW };
+          break;
+      }
+      return {
+        id: item.id,
+        requestor: item.requestor,
+        statusTag: statusTag,
+        createdDate: format(item.createdDate, DATE_FORMAT),
+        projectName: item.Project.name,
+      };
+    },
+  );
   return { data: formattedData, pagination: { ...pagination, total: formattedData.length } };
 };
 
 export const getRequestDetails = async (id: string | undefined): Promise<RequestDetails> => {
-  const response = await axios.get(`${API_URL}/request-details`, {
+  const response = await axios.get(`${API_URL}/details`, {
     params: {
-      id,
+      requestId: id,
     },
   });
-  response.data.date = Dates.getDate(response.data.date, DATE_FORMAT);
-  response.data.projectInfo.duration = [
-    Dates.getDate(response.data.projectInfo.duration[0], DATE_FORMAT),
-    Dates.getDate(response.data.projectInfo.duration[1], DATE_FORMAT),
-  ];
-  response.data.dataInfo.collectionDuration = [
-    Dates.getDate(response.data.dataInfo.collectionDuration[0], DATE_FORMAT),
-    Dates.getDate(response.data.dataInfo.collectionDuration[1], DATE_FORMAT),
-  ];
+  return response.data;
+};
 
+export const createRequest = async (data: RequestDetails): Promise<RequestDetails> => {
+  const response = await axios.post<RequestDetails>(`${API_URL}/create`, data);
   return response.data;
 };

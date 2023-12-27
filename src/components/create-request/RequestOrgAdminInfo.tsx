@@ -10,41 +10,49 @@ import { RequestDataInfo } from './RequestDataInfo';
 import { StringTextAreaItem } from '../request-fields/StringInput/StringTextAreaItem';
 import { BaseTooltip } from '../common/BaseTooltip/BaseTooltip';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { createRequest } from '@app/api/connectionRequests.api';
 
 export const RequestOrgAdminInfo: React.FC<{
   formValue: RequestDetails;
   setFormValue: (value: RequestDetails) => void;
 }> = ({ formValue, setFormValue }) => {
+  const initialValues = {
+    orgAdminEmail: formValue.orgAdminEmail,
+    dataCollectionDuration: formValue.dataInfo.collectionDuration,
+    dataParticipantsNumber: formValue.dataInfo.participantsNumber,
+    dataDescription: formValue.dataInfo.description,
+    dataKeywords: formValue.dataInfo.keywords,
+    additionalInfo: formValue.additionalInfo,
+  };
+
   const [isFieldsChanged, setFieldsChanged] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const [form] = BaseButtonsForm.useForm();
 
   const { t } = useTranslation();
 
   const onFinish = useCallback(
-    (values: RequestDetails) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (values: any) => {
       setLoading(true);
       const updatedRequest = {
         ...formValue,
         orgAdminEmail: values.orgAdminEmail || '',
         dataInfo: {
-          collectionDuration: values.dataInfo?.collectionDuration,
-          participantsNumber: values.dataInfo?.participantsNumber,
-          description: values.dataInfo?.description,
-          keywords: values.dataInfo?.keywords,
+          collectionDuration: values.dataCollectionDuration,
+          participantsNumber: values.dataParticipantsNumber,
+          description: values.dataDescription,
+          keywords: values.dataKeywords,
         },
         additionalInfo: values.additionalInfo || '',
       };
       setFormValue(updatedRequest);
-      //TODO: add request to database
-      setTimeout(() => {
-        setLoading(false);
-        setFieldsChanged(false);
-        navigate('/r-connection-requests');
-        console.log(formValue);
-      }, 1000);
+      createRequest(formValue);
+      setLoading(false);
+      setFieldsChanged(false);
+      navigate('/r-connection-requests');
+      console.log(formValue);
     },
     [formValue, navigate, setFormValue],
   );
@@ -54,7 +62,7 @@ export const RequestOrgAdminInfo: React.FC<{
       form={form}
       name="info"
       loading={isLoading}
-      initialValues={formValue}
+      initialValues={initialValues}
       isFieldsChanged={isFieldsChanged}
       setFieldsChanged={setFieldsChanged}
       onFieldsChange={() => setFieldsChanged(true)}
@@ -82,7 +90,7 @@ export const RequestOrgAdminInfo: React.FC<{
           />
         </BaseCol>
 
-        <RequestDataInfo formValue={formValue} />
+        <RequestDataInfo initialKeywords={initialValues.dataKeywords} />
 
         <BaseCol span={24}>
           <StringTextAreaItem

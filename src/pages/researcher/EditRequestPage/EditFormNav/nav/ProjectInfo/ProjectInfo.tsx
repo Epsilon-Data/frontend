@@ -18,7 +18,7 @@ const initialPersonalInfoValues: ProjectInfoFormValues = {
   members: [],
   university: '',
   faculty: '',
-  ethicsApprovalId: '',
+  ethicsId: '',
   description: '',
 };
 
@@ -36,7 +36,7 @@ export const ProjectInfo: React.FC<{ formValue: RequestDetails }> = ({ formValue
             members: formValue.projectInfo.members,
             university: formValue.projectInfo.university,
             faculty: formValue.projectInfo.faculty,
-            ethicsApprovalId: formValue.projectInfo.ethicsApprovalId,
+            ethicsId: formValue.projectInfo.ethicsId,
             description: formValue.projectInfo.description,
           }
         : initialPersonalInfoValues,
@@ -47,31 +47,14 @@ export const ProjectInfo: React.FC<{ formValue: RequestDetails }> = ({ formValue
 
   const { t } = useTranslation();
 
-  const onFinish = useCallback(
-    (values: RequestDetails) => {
-      setLoading(true);
-      const updatedRequest = {
-        ...formValue,
-        isOwnData: values.isOwnData,
-        projectInfo: {
-          name: values.projectInfo.name,
-          duration: values.projectInfo.duration,
-          lead: values.projectInfo.lead,
-          members: values.projectInfo.members,
-          university: values.projectInfo.university,
-          faculty: values.projectInfo.faculty,
-          ethicsApprovalId: values.projectInfo.ethicsApprovalId,
-          description: values.projectInfo.description,
-        },
-      };
-      //TODO: add request to database
-      setTimeout(() => {
-        setLoading(false);
-        setFieldsChanged(false);
-      }, 1000);
-    },
-    [formValue, setFieldsChanged],
-  );
+  const onFinish = useCallback((values: RequestDetails) => {
+    setLoading(true);
+    console.log(values);
+    setTimeout(() => {
+      setLoading(false);
+      setFieldsChanged(false);
+    }, 1000);
+  }, []);
 
   return (
     <BaseCard>
@@ -143,8 +126,8 @@ export const ProjectInfo: React.FC<{ formValue: RequestDetails }> = ({ formValue
 
           <BaseCol span={24}>
             <StringInputItem
-              name="projectInfo.ethicsApprovalId"
-              label={t('connectionRequests.details.projectInfo.ethicsApprovalId')}
+              name="projectInfo.ethicsId"
+              label={t('connectionRequests.details.projectInfo.ethicsId')}
               required
             />
           </BaseCol>

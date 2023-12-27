@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { BaseCard as CommonCard } from '@app/components/common/BaseCard/BaseCard';
 export const ListWrapper = styled.div`
-  margin-top: 2rem;
+  margin-top: -1rem;
 `;
 
 export const Card = styled(CommonCard)`

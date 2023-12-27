@@ -1,45 +1,53 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import * as S from './SiderMenu.styles';
-import { homeNavigation, connectNavigation, manageNavigation, SidebarNavigationItem } from '../sidebarNavigation';
+import { SidebarNavigationItem, returnCurrentNav } from '../sidebarNavigation';
 
 interface SiderContentProps {
-  setCollapsed: (isCollapsed: boolean) => void;
   selectedNav: string;
 }
 
-const sidebarNavFlat = homeNavigation.reduce(
-  (result: SidebarNavigationItem[], current) =>
-    result.concat(current.children && current.children.length > 0 ? current.children : current),
-  [],
-);
-
-const SiderMenu: React.FC<SiderContentProps> = ({ setCollapsed, selectedNav }) => {
+const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
   const { t } = useTranslation();
   const location = useLocation();
+  const [current, setCurrent] = useState(location.pathname);
+
+  const currentNav = returnCurrentNav(selectedNav);
+
+  const sidebarNavFlat = currentNav.reduce(
+    (result: SidebarNavigationItem[], current) =>
+      result.concat(current.children && current.children.length > 0 ? current.children : current),
+    [],
+  );
 
   const currentMenuItem = sidebarNavFlat.find(({ url }) => url === location.pathname);
   const defaultSelectedKeys = currentMenuItem ? [currentMenuItem.key] : [];
 
-  let currentNav: SidebarNavigationItem[] = [];
-  if (selectedNav === 'connect') {
-    currentNav = connectNavigation;
-  } else if (selectedNav === 'manage') {
-    currentNav = manageNavigation;
-  } else if (selectedNav === 'home') {
-    currentNav = homeNavigation;
-  }
-
-  const openedSubmenu = homeNavigation.find(({ children }) => children?.some(({ url }) => url === location.pathname));
+  const openedSubmenu = currentNav.find(({ children }) => children?.some(({ url }) => url === location.pathname));
   const defaultOpenKeys = openedSubmenu ? [openedSubmenu.key] : [];
+
+  useEffect(() => {
+    if (location) {
+      if (current !== location.pathname) {
+        setCurrent(location.pathname);
+      }
+    }
+  }, [location, current]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function handleClick(e: any) {
+    setCurrent(e.key);
+  }
 
   return (
     <S.Menu
       mode="inline"
       defaultSelectedKeys={defaultSelectedKeys}
       defaultOpenKeys={defaultOpenKeys}
-      onClick={() => setCollapsed(true)}
+      selectedKeys={defaultSelectedKeys}
+      onClick={handleClick}
+      disabledOverflow={true}
       items={currentNav.map((nav) => {
         const isSubMenu = nav.children?.length;
 

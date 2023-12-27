@@ -7,15 +7,11 @@ interface HeaderProps {
 }
 
 export default styled(BaseLayout.Content)<HeaderProps>`
-  padding: ${LAYOUT.mobile.paddingVertical} ${LAYOUT.mobile.paddingHorizontal};
+  padding: ${LAYOUT.desktop.paddingVertical} ${LAYOUT.desktop.paddingHorizontal};
   overflow: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  @media only screen and ${media.md} {
-    padding: ${LAYOUT.desktop.paddingVertical} ${LAYOUT.desktop.paddingHorizontal};
-  }
 
   @media only screen and ${media.xl} {
     ${(props) =>

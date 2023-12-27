@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import { RequestDetails } from '@app/interfaces/interfaces';
+import { ProjectInfoFormValues, RequestDetails } from '@app/interfaces/interfaces';
 import { StringInputItem } from '../request-fields/StringInput/StringInputItem';
 import { StringTextAreaItem } from '../request-fields/StringInput/StringTextAreaItem';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,17 @@ export const RequestProjectInfo: React.FC<{
   formValue: RequestDetails;
   setFormValue: (value: RequestDetails) => void;
 }> = ({ formValue, setFormValue }) => {
+  const initialValues: ProjectInfoFormValues = {
+    name: formValue.projectInfo.name,
+    duration: formValue.projectInfo.duration,
+    lead: formValue.projectInfo.lead,
+    members: formValue.projectInfo.members,
+    university: formValue.projectInfo.university,
+    faculty: formValue.projectInfo.faculty,
+    ethicsId: formValue.projectInfo.ethicsId,
+    description: formValue.projectInfo.description,
+    isOwnData: formValue.projectInfo.isOwnData,
+  };
   const [isFieldsChanged, setFieldsChanged] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -24,34 +35,25 @@ export const RequestProjectInfo: React.FC<{
   const { t } = useTranslation();
 
   const onFinish = useCallback(
-    (values: RequestDetails) => {
+    (values: ProjectInfoFormValues) => {
       setLoading(true);
+
+      if (!Array.isArray(values.members)) {
+        values.members = [values.members];
+      }
+
       const updatedRequest = {
         ...formValue,
-        isOwnData: values.isOwnData,
-        projectInfo: {
-          name: values.projectInfo.name,
-          duration: values.projectInfo.duration,
-          lead: values.projectInfo.lead,
-          members: values.projectInfo.members,
-          university: values.projectInfo.university,
-          faculty: values.projectInfo.faculty,
-          ethicsApprovalId: values.projectInfo.ethicsApprovalId,
-          description: values.projectInfo.description,
-        },
+        projectInfo: values,
       };
       setFormValue(updatedRequest);
-      //TODO: add request to database
-      setTimeout(() => {
-        setLoading(false);
-        setFieldsChanged(false);
-        if (values.isOwnData) {
-          navigate('/r-connection-requests/create/database-info');
-        } else {
-          navigate('/r-connection-requests/create/org-admin-info');
-        }
-        console.log(values);
-      }, 1000);
+      setLoading(false);
+      setFieldsChanged(false);
+      if (values.isOwnData) {
+        navigate('/r-connection-requests/create/database-info');
+      } else {
+        navigate('/r-connection-requests/create/org-admin-info');
+      }
     },
     [formValue, navigate, setFormValue],
   );
@@ -61,7 +63,7 @@ export const RequestProjectInfo: React.FC<{
       form={form}
       name="info"
       loading={isLoading}
-      initialValues={formValue}
+      initialValues={initialValues}
       isFieldsChanged={isFieldsChanged}
       setFieldsChanged={setFieldsChanged}
       onFieldsChange={() => setFieldsChanged(true)}
@@ -77,59 +79,40 @@ export const RequestProjectInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="projectInfo.name" label={t('connectionRequests.details.projectInfo.name')} required />
+          <StringInputItem name="name" label={t('connectionRequests.details.projectInfo.name')} required />
         </BaseCol>
 
         <BaseCol span={24}>
-          <DateRangeInputItem
-            name="projectInfo.duration"
-            label={t('connectionRequests.details.projectInfo.duration')}
-            required
-          />
+          <DateRangeInputItem name="duration" label={t('connectionRequests.details.projectInfo.duration')} required />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="projectInfo.lead" label={t('connectionRequests.details.projectInfo.lead')} required />
+          <StringInputItem name="lead" label={t('connectionRequests.details.projectInfo.lead')} required />
         </BaseCol>
 
         <BaseCol span={24}>
           <TagInputItem
-            name="projectInfo.members"
+            name="members"
             label={t('connectionRequests.details.projectInfo.teamMembers')}
-            initialTags={formValue.projectInfo.members}
+            initialTags={initialValues.members}
             prompt={t('connectionRequests.details.projectInfo.addTeamMembers')}
           />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem
-            name="projectInfo.university"
-            label={t('connectionRequests.details.projectInfo.university')}
-            required
-          />
+          <StringInputItem name="university" label={t('connectionRequests.details.projectInfo.university')} required />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem
-            name="projectInfo.faculty"
-            label={t('connectionRequests.details.projectInfo.faculty')}
-            required
-          />
+          <StringInputItem name="faculty" label={t('connectionRequests.details.projectInfo.faculty')} required />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem
-            name="projectInfo.ethicsApprovalId"
-            label={t('connectionRequests.details.projectInfo.ethicsApprovalId')}
-            required
-          />
+          <StringInputItem name="ethicsId" label={t('connectionRequests.details.projectInfo.ethicsId')} required />
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringTextAreaItem
-            name="projectInfo.description"
-            label={t('connectionRequests.details.projectInfo.description')}
-          />
+          <StringTextAreaItem name="description" label={t('connectionRequests.details.projectInfo.description')} />
         </BaseCol>
 
         <BaseCol span={24}>

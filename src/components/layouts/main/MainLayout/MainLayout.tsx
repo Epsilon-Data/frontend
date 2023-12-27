@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MainContent from '../MainContent/MainContent';
 import * as S from './MainLayout.styles';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { MEDICAL_DASHBOARD_PATH, NFT_DASHBOARD_PATH } from '@app/components/router/AppRouter';
 import { useResponsive } from '@app/hooks/useResponsive';
 import { References } from '@app/components/common/References/References';
@@ -12,7 +12,6 @@ import MainSider from '../sider/MainSider/MainSider';
 
 const MainLayout: React.FC = () => {
   const [isTwoColumnsLayout, setIsTwoColumnsLayout] = useState(true);
-  const [siderCollapsed, setSiderCollapsed] = useState(true);
   const { isDesktop } = useResponsive();
   const location = useLocation();
   const { t } = useTranslation();
@@ -32,14 +31,13 @@ const MainLayout: React.FC = () => {
           items={topNavigation.map((nav) => {
             return {
               key: nav.key,
-              label: t(nav.label),
+              label: <Link to={nav.url || ''}>{t(nav.label)}</Link>,
             };
           })}
-          style={{ flex: 1, minWidth: 0 }}
         />
       </S.Header>
       <Layout>
-        <MainSider isCollapsed={siderCollapsed} setCollapsed={setSiderCollapsed} selectedNav={selectedKey} />
+        <MainSider selectedNav={selectedKey} />
         <S.LayoutMain>
           <MainContent id="main-content" $isTwoColumnsLayout={isTwoColumnsLayout}>
             <div>

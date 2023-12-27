@@ -16,10 +16,10 @@ const initialRequestFormValues: RequestDetails = {
     members: [],
     university: '',
     faculty: '',
-    ethicsApprovalId: '',
+    ethicsId: '',
     description: '',
+    isOwnData: null,
   },
-  isOwnData: null,
   dataInfo: {
     collectionDuration: [],
     participantsNumber: null,

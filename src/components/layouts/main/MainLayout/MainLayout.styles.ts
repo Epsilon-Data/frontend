@@ -6,9 +6,14 @@ import { Layout, Menu } from 'antd';
 export const LayoutMaster = styled(BaseLayout)`
   height: 100vh;
   width: 100vw;
+
+  .ant-layout-has-sider {
+    margin-top: 3rem;
+  }
 `;
 
 export const LayoutMain = styled(BaseLayout)`
+  margin-top: 1.8rem;
   @media only screen and ${media.md} {
     margin-left: 80px;
   }
@@ -18,25 +23,14 @@ export const LayoutMain = styled(BaseLayout)`
   }
 `;
 
-export const BrandSpan = styled.span`
-  margin: 0 1rem;
-  font-weight: 700;
-  font-size: 1.125rem;
-  color: var(--black);
-`;
-
 export const TopNav = styled(Menu)`
-  @media only screen and ${media.md} {
-    right: unset;
-    left: 0;
-  }
-
-  @media only screen and ${media.xl} {
-    position: unset;
-  }
+  position: fixed;
+  width: 100vw;
+  height: 3rem;
 `;
 
 export const Header = styled(Layout)`
   width: 100vw;
   height: 3rem;
+  position: fixed;
 `;

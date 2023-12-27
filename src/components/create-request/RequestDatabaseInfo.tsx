@@ -10,11 +10,23 @@ import { PasswordInputItem } from '../request-fields/PasswordInput/PasswordInput
 import { RequestDataInfo } from './RequestDataInfo';
 import { TestConnectionGroup } from '../request-fields/TestConnectionGroup/TestConnectionGroup';
 import { FormModal } from '../request-fields/FormModal/FormModal';
+import { createRequest } from '@app/api/connectionRequests.api';
 
 export const RequestDatabaseInfo: React.FC<{
   formValue: RequestDetails;
   setFormValue: (value: RequestDetails) => void;
 }> = ({ formValue, setFormValue }) => {
+  const initialValues = {
+    databaseName: formValue.databaseInfo?.name,
+    databaseType: formValue.databaseInfo?.type,
+    databaseUrl: formValue.databaseInfo?.url,
+    databaseUsername: formValue.databaseInfo?.username,
+    databasePassword: formValue.databaseInfo?.password,
+    dataCollectionDuration: formValue.dataInfo.collectionDuration,
+    dataParticipantsNumber: formValue.dataInfo.participantsNumber,
+    dataDescription: formValue.dataInfo.description,
+    dataKeywords: formValue.dataInfo.keywords,
+  };
   const [isFieldsChanged, setFieldsChanged] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isConnected, setConnected] = useState(false);
@@ -41,34 +53,34 @@ export const RequestDatabaseInfo: React.FC<{
   ];
 
   const onFinish = useCallback(
-    (values: RequestDetails) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (values: any) => {
       setLoading(true);
       if (isConnected) {
         const updatedRequest = {
           ...formValue,
           databaseInfo: {
-            name: values.databaseInfo?.name || '',
-            type: values.databaseInfo?.type || '',
-            url: values.databaseInfo?.url || '',
-            username: values.databaseInfo?.username || '',
-            password: values.databaseInfo?.password || '',
+            name: values.databaseName,
+            type: values.databaseType,
+            url: values.databaseUrl || '',
+            username: values.databaseUsername || '',
+            password: values.databasePassword || '',
           },
           dataInfo: {
-            collectionDuration: values.dataInfo?.collectionDuration,
-            participantsNumber: values.dataInfo?.participantsNumber,
-            description: values.dataInfo?.description,
-            keywords: values.dataInfo?.keywords,
+            collectionDuration: values.dataCollectionDuration,
+            participantsNumber: values.dataParticipantsNumber,
+            description: values.dataDescription,
+            keywords: values.dataKeywords,
           },
         };
         setFormValue(updatedRequest);
-        //TODO: add request to database
+        createRequest(formValue);
       }
-      setTimeout(() => {
-        setLoading(false);
-        setFieldsChanged(false);
-        setIsFormModalOpen(true);
-        console.log(formValue);
-      }, 1000);
+
+      setLoading(false);
+      setFieldsChanged(false);
+      setIsFormModalOpen(true);
+      console.log(formValue);
     },
     [formValue, isConnected, setFormValue],
   );
@@ -84,7 +96,7 @@ export const RequestDatabaseInfo: React.FC<{
       form={form}
       name="info"
       loading={isLoading}
-      initialValues={formValue}
+      initialValues={initialValues}
       isFieldsChanged={isFieldsChanged}
       setFieldsChanged={setFieldsChanged}
       onFieldsChange={() => setFieldsChanged(true)}
@@ -101,16 +113,12 @@ export const RequestDatabaseInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem
-            name="databaseInfo.name"
-            label={t('connectionRequests.details.databaseInfo.name')}
-            required
-          />
+          <StringInputItem name="databaseName" label={t('connectionRequests.details.databaseInfo.name')} required />
         </BaseCol>
 
         <BaseCol span={24}>
           <SelectInputItem
-            name="databaseInfo.type"
+            name="databaseType"
             label={t('connectionRequests.details.databaseInfo.type')}
             optionItems={selectItems}
             prompt={t('connectionRequests.details.databaseInfo.typePrompt')}
@@ -119,12 +127,12 @@ export const RequestDatabaseInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="databaseInfo.url" label={t('connectionRequests.details.databaseInfo.url')} required />
+          <StringInputItem name="databaseUrl" label={t('connectionRequests.details.databaseInfo.url')} required />
         </BaseCol>
 
         <BaseCol span={24}>
           <StringInputItem
-            name="databaseInfo.username"
+            name="databaseUsername"
             label={t('connectionRequests.details.databaseInfo.username')}
             required
           />
@@ -132,7 +140,7 @@ export const RequestDatabaseInfo: React.FC<{
 
         <BaseCol span={24}>
           <PasswordInputItem
-            name="databaseInfo.password"
+            name="databasePassword"
             label={t('connectionRequests.details.databaseInfo.password')}
             required
           />
@@ -142,7 +150,7 @@ export const RequestDatabaseInfo: React.FC<{
           <TestConnectionGroup onClick={onTestConnection} connected={isConnected} show={showMessage} />
         </BaseCol>
 
-        <RequestDataInfo formValue={formValue} />
+        <RequestDataInfo initialKeywords={initialValues.dataKeywords} />
         <FormModal isFormModalOpen={isFormModalOpen} setIsFormModalOpen={setIsFormModalOpen} />
       </BaseRow>
     </BaseButtonsForm>

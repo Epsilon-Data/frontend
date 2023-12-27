@@ -892,7 +892,7 @@
         "addTeamMembers": "Add Member/Affiliate",
         "university": "University",
         "faculty": "Faculty",
-        "ethicsApprovalId": "Ethics Approval ID",
+        "ethicsId": "Ethics Approval ID",
         "description": "Project Description",
         "isOwnData": "Do you have access to your own data?",
         "continue": "Continue"
@@ -924,7 +924,7 @@
       },
       "orgAdminInfo": {
         "title": "Organisation Admin Information",
-        "email": "Organisation Admin Email ID",
+        "email": "Email ID",
         "tooltip": "Provide email address of organisation admin that has access to the database"
       },
       "addInfo": {
@@ -938,7 +938,7 @@
         "confirmConsent": "I confirm that the study participants have consented their data to be made accessible on the platform."
       }
     },
-    "create": "Create New Request",
+    "create": "Create Connection Request",
     "altCreate": "Create Request",
     "view": "View Request",
     "edit": "Edit Request"

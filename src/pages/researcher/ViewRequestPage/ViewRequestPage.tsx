@@ -4,12 +4,12 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './ViewRequestPage.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RequestDetails } from '@app/interfaces/interfaces';
-import { getRequestDetails } from 'api/connectionRequests.api';
+import { getRequestDetails, DATE_FORMAT } from 'api/connectionRequests.api';
 import { useMounted } from '@app/hooks/useMounted';
 import { InfoItem } from '@app/components/view-request/Info/InfoItem';
 import { InfoSectionHeader } from '@app/components/view-request/Info/InfoSectionHeader';
 import { RequestStatus } from '@app/constants/enums/requestStatus';
-import { Dates } from '@app/constants/Dates';
+import { format } from 'date-fns';
 
 const initialRequestFormValues: RequestDetails = {
   projectInfo: {
@@ -19,10 +19,9 @@ const initialRequestFormValues: RequestDetails = {
     members: [],
     university: '',
     faculty: '',
-    ethicsApprovalId: '',
+    ethicsId: '',
     description: '',
   },
-  isOwnData: null,
   dataInfo: {
     collectionDuration: [],
     participantsNumber: null,
@@ -105,9 +104,9 @@ const ViewRequestPage: React.FC = () => {
               {request.projectInfo.duration.length > 0 && (
                 <InfoItem
                   label={t('connectionRequests.details.projectInfo.duration')}
-                  text={`${Dates.format(request.projectInfo.duration[0], 'LL')} - ${Dates.format(
+                  text={`${format(request.projectInfo.duration[0], DATE_FORMAT)} - ${format(
                     request.projectInfo.duration[1],
-                    'LL',
+                    DATE_FORMAT,
                   )}`}
                 />
               )}
@@ -125,8 +124,8 @@ const ViewRequestPage: React.FC = () => {
                 text={request.projectInfo.faculty}
               />
               <InfoItem
-                label={t('connectionRequests.details.projectInfo.ethicsApprovalId')}
-                text={request.projectInfo.ethicsApprovalId}
+                label={t('connectionRequests.details.projectInfo.ethicsId')}
+                text={request.projectInfo.ethicsId}
               />
               <InfoItem
                 label={t('connectionRequests.details.projectInfo.description')}
@@ -155,9 +154,9 @@ const ViewRequestPage: React.FC = () => {
               {request.dataInfo.collectionDuration.length > 0 && (
                 <InfoItem
                   label={t('connectionRequests.details.dataInfo.collectionDuration')}
-                  text={`${Dates.format(request.dataInfo.collectionDuration[0], 'LL')} - ${Dates.format(
+                  text={`${format(request.dataInfo.collectionDuration[0], DATE_FORMAT)} - ${format(
                     request.dataInfo.collectionDuration[1],
-                    'LL',
+                    DATE_FORMAT,
                   )}`}
                 />
               )}
@@ -171,7 +170,7 @@ const ViewRequestPage: React.FC = () => {
               />
               <InfoItem
                 label={t('connectionRequests.details.dataInfo.keywords')}
-                text={request.dataInfo.keywords.join(', ')}
+                text={request.dataInfo.keywords?.join(', ')}
               />
             </S.InfoArea>
           </S.InfoWrapper>

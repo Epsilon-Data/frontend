@@ -80,7 +80,7 @@ export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
             title: t('connectionRequests.requestor'),
             dataIndex: 'requestor',
             key: 'requestor',
-            render: (text: string) => <span>{text}</span>,
+            render: (id: number) => <span>{id}</span>,
           },
         ]
       : userType === 'researcher'
@@ -88,14 +88,14 @@ export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
       : []),
     {
       title: t('connectionRequests.date'),
-      dataIndex: 'requestDate',
-      key: 'requestDate',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
       render: (text: string) => <span>{text}</span>,
     },
     {
       title: t('tables.status'),
-      dataIndex: 'requestStatus',
-      key: 'requestStatus',
+      dataIndex: 'statusTag',
+      key: 'statusTag',
       render: (tag: Tag) => (
         <BaseRow gutter={[10, 10]}>
           <BaseCol key={tag.value}>
@@ -110,7 +110,7 @@ export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
             title: t('tables.actions'),
             dataIndex: 'actions',
             width: '15%',
-            render: (text: string, record: { projectName: string; id: number }) => {
+            render: (text: string, record: { id: number }) => {
               return (
                 <BaseSpace>
                   <BaseButton type="primary" onClick={() => navigate('/r-connection-requests/view/' + record.id)}>
@@ -127,27 +127,25 @@ export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
             title: t('tables.actions'),
             dataIndex: 'actions',
             width: '15%',
-            render: (
-              text: string,
-              record: { projectName: string; id: number; requestStatus: { priority: Priority } },
-            ) => {
-              const { priority } = record.requestStatus;
+            render: (text: string, record: { id: number; projectName: string; statusTag: { priority: Priority } }) => {
               return (
                 <BaseSpace>
                   <BaseButton type="primary" onClick={() => navigate('/r-connection-requests/view/' + record.id)}>
                     {t('tables.view')}
                   </BaseButton>
-                  {priority === Priority.LOW && (
+                  {record.statusTag.priority === Priority.LOW && (
                     <BaseButton
                       type="primary"
                       onClick={() => {
-                        notificationController.info({ message: t('tables.viewMessage', { name: record.projectName }) });
+                        notificationController.info({
+                          message: t('tables.viewMessage', { name: record.projectName }),
+                        });
                       }}
                     >
                       {t('connectionRequests.viewSource')}
                     </BaseButton>
                   )}
-                  {priority === Priority.HIGH && (
+                  {record.statusTag.priority === Priority.HIGH && (
                     <>
                       <BaseButton type="primary" onClick={() => navigate('/r-connection-requests/view/' + record.id)}>
                         {t('common.edit')}
@@ -157,7 +155,7 @@ export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
                       </BaseButton>
                     </>
                   )}
-                  {priority === Priority.INFO && (
+                  {record.statusTag.priority === Priority.INFO && (
                     <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>
                       {t('tables.delete')}
                     </BaseButton>

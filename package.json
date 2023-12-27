@@ -23,13 +23,12 @@
     "axios-mock-adapter": "^1.22.0",
     "country-list": "^2.3.0",
     "credit-card-type": "^10.0.0",
+    "date-fns": "^3.0.6",
     "dayjs": "^1.11.10",
     "echarts": "^5.4.3",
     "echarts-for-react": "^3.0.2",
-    "elt-react-credit-cards": "^0.0.1",
     "i18next": "^23.6.0",
     "leaflet": "^1.9.4",
-    "moment": "^2.29.4",
     "pigeon-maps": "^0.21.3",
     "rc-field-form": "^1.41.0",
     "rc-picker": "^3.14.6",
@@ -73,6 +72,9 @@
     "workbox-routing": "^7.0.0",
     "workbox-strategies": "^7.0.0",
     "workbox-streams": "^7.0.0"
+  },
+  "overrides": {
+    "typescript": "^5.2.2"
   },
   "scripts": {
     "start": "pnpm buildThemes && craco start",
@@ -124,6 +126,9 @@
     "stylelint-processor-styled-components": "^1.10.0",
     "webpack-bundle-analyzer": "^4.9.1",
     "webpackbar": "^5.0.2"
+  },
+  "lint-staged": {
+    "*/**/*.{js,ts,tsx}": "pnpm lint"
   },
   "engines": {
     "node": "21.x"

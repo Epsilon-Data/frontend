@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom';
 //   projectTeamMembers: [],
 //   university: '',
 //   faculty: '',
-//   ethicsApprovalId: '',
+//   ethicsId: '',
 //   projectDescription: '',
 //   isOwnData: null,
 //   dataInfo: {

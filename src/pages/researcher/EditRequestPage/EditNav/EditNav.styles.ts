@@ -17,15 +17,18 @@ export const Btn = styled(BaseButton)<BtnProps>`
   align-items: center;
   justify-content: unset !important;
   width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.87rem;
 
   &:hover {
-    background-color: rgba(var(--primary-rgb-color), 0.05);
+    background-color: rgba(var(--primary-rgb-color), 0.1);
   }
 
   ${(props) =>
     props.$isActive &&
     css`
-      background-color: rgba(var(--primary-rgb-color), 0.05);
+      background-color: rgba(var(--primary-rgb-color), 0.1);
     `};
 
   & > span:first-of-type {

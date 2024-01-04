@@ -73,9 +73,13 @@ export default createGlobalStyle`
   }
 
   // notifications start
+  .ant-notification .ant-notification-notice-wrapper {
+    box-shadow: none;
+    background: transparent;
+  }
+
   .ant-notification-notice {
     width: 36rem;
-    padding: 2rem;
     min-height: 6rem;
     
     .ant-notification-notice-with-icon .ant-notification-notice-message {

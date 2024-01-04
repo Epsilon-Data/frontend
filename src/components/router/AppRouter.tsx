@@ -26,12 +26,6 @@ const CreateRequestPage = React.lazy(() => import('@app/pages/researcher/CreateR
 const ViewRequestPage = React.lazy(() => import('@app/pages/researcher/ViewRequestPage/ViewRequestPage'));
 const EditRequestPage = React.lazy(() => import('@app/pages/researcher/EditRequestPage/EditRequestPage'));
 
-const ProjectInfoPage = React.lazy(() => import('@app/pages/researcher/EditRequestPage/EditRequestPage'));
-const DatabaseInfoPage = React.lazy(() => import('@app/pages/researcher/EditRequestPage/EditRequestPage'));
-const DataInfoPage = React.lazy(() => import('@app/pages/researcher/EditRequestPage/EditRequestPage'));
-const OrgAdminInfoPage = React.lazy(() => import('@app/pages/researcher/EditRequestPage/EditRequestPage'));
-const AdditionalInfoPage = React.lazy(() => import('@app/pages/researcher/EditRequestPage/EditRequestPage'));
-
 const SourceListPage = React.lazy(() => import('@app/pages/researcher/SourceListPage'));
 
 export const MEDICAL_DASHBOARD_PATH = '/';
@@ -47,14 +41,9 @@ const OAConnectionRequests = withLoading(OAConnectionRequestsPage);
 const RConnectionRequests = withLoading(RConnectionRequestsPage);
 const CreateRequest = withLoading(CreateRequestPage);
 const ViewRequest = withLoading(ViewRequestPage);
-const EditRequest = withLoading(EditRequestPage);
 
 // Edit Request
-const ProjectInfo = withLoading(ProjectInfoPage);
-const DatabaseInfo = withLoading(DatabaseInfoPage);
-const DataInfo = withLoading(DataInfoPage);
-const OrgAdminInfo = withLoading(OrgAdminInfoPage);
-const AdditionalInfo = withLoading(AdditionalInfoPage);
+const EditRequest = withLoading(EditRequestPage);
 
 const SourceList = withLoading(SourceListPage);
 
@@ -83,13 +72,7 @@ export const AppRouter: React.FC = () => {
           <Route path="r-connection-requests" element={<RConnectionRequests />} />
           <Route path="r-connection-requests/create/:page" element={<CreateRequest />} />
           <Route path="r-connection-requests/view/:id" element={<ViewRequest />} />
-          <Route path="r-connection-requests/edit/:id" element={<EditRequest />}>
-            <Route path="project-info" element={<ProjectInfo />} />
-            <Route path="database-info" element={<DatabaseInfo />} />
-            <Route path="data-info" element={<DataInfo />} />
-            <Route path="org-admin-info" element={<OrgAdminInfo />} />
-            <Route path="add-info" element={<AdditionalInfo />} />
-          </Route>
+          <Route path="r-connection-requests/edit/:id/:page" element={<EditRequest />} />
           <Route path="database-sources" element={<SourceList />} />
           <Route path="data-tables" element={<DataTables />} />
         </Route>

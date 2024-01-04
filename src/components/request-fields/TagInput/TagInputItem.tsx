@@ -6,13 +6,13 @@ import * as S from './TagInputItem.styles';
 import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
 
 export const TagInputItem: React.FC<{
-  initialTags: string[];
+  tags: string[];
   prompt: string;
   name: string;
   label: string;
   required?: boolean;
-}> = ({ initialTags, prompt, name, label, required }) => {
-  const [tags, setTags] = useState(initialTags);
+  onTagsChange: (tags: string[]) => void;
+}> = ({ tags, prompt, name, label, required, onTagsChange }) => {
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [editInputIndex, setEditInputIndex] = useState(-1);
@@ -32,8 +32,7 @@ export const TagInputItem: React.FC<{
 
   const handleClose = (removedTag: string) => {
     const newTags = tags.filter((tag) => tag !== removedTag);
-    console.log(newTags);
-    setTags(newTags);
+    onTagsChange(newTags);
   };
 
   const showInput = () => {
@@ -46,7 +45,8 @@ export const TagInputItem: React.FC<{
 
   const handleInputConfirm = () => {
     if (inputValue && !tags.includes(inputValue)) {
-      setTags([...tags, inputValue]);
+      const newTags = [...tags, inputValue];
+      onTagsChange(newTags);
     }
     setInputVisible(false);
     setInputValue('');
@@ -59,7 +59,7 @@ export const TagInputItem: React.FC<{
   const handleEditInputConfirm = () => {
     const newTags = [...tags];
     newTags[editInputIndex] = editInputValue;
-    setTags(newTags);
+    onTagsChange(newTags);
     setEditInputIndex(-1);
     setEditInputValue('');
   };

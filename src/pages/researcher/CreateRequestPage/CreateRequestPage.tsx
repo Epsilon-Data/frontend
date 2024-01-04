@@ -7,37 +7,23 @@ import { RequestDetails } from '@app/interfaces/interfaces';
 import { RequestProjectInfo } from '../../../components/create-request/RequestProjectInfo';
 import { RequestDatabaseInfo } from '@app/components/create-request/RequestDatabaseInfo';
 import { RequestOrgAdminInfo } from '@app/components/create-request/RequestOrgAdminInfo';
-
-const initialRequestFormValues: RequestDetails = {
-  projectInfo: {
-    name: '',
-    duration: [],
-    lead: '',
-    members: [],
-    university: '',
-    faculty: '',
-    ethicsId: '',
-    description: '',
-    isOwnData: null,
-  },
-  dataInfo: {
-    collectionDuration: [],
-    participantsNumber: null,
-    description: '',
-    keywords: [],
-  },
-};
+import { useAppSelector } from '@app/hooks/reduxHooks';
+import { INITIAL_REQUEST_VALUES } from '@app/constants/connectionRequest';
 
 const CreateRequestPage: React.FC = () => {
+  const initialRequestFormValues = INITIAL_REQUEST_VALUES;
   const { page } = useParams();
   const { t } = useTranslation();
+  const user = useAppSelector((state) => state.user.user);
   const [request, setRequest] = useState<RequestDetails>(initialRequestFormValues);
+
+  initialRequestFormValues.requestor = user?.id;
 
   return (
     <>
-      <PageTitle>{t('connectionRequests.create')}</PageTitle>
+      <PageTitle>{t('connectionRequests.create.title')}</PageTitle>
       <S.FormWrapper>
-        <S.Card id="create-request" title={t('connectionRequests.create')} padding="1.25rem 1.25rem 0">
+        <S.Card id="create-request" title={t('connectionRequests.create.title')} padding="1.25rem 1.25rem 0">
           {page === 'project-info' && <RequestProjectInfo formValue={request} setFormValue={setRequest} />}
           {page === 'database-info' && <RequestDatabaseInfo formValue={request} setFormValue={setRequest} />}
           {page === 'org-admin-info' && <RequestOrgAdminInfo formValue={request} setFormValue={setRequest} />}

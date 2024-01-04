@@ -8,8 +8,9 @@ import { TagInputItem } from '../request-fields/TagInput/TagInputItem';
 import { NumberInputItem } from '../request-fields/NumberInput/NumberInputItem';
 
 export const RequestDataInfo: React.FC<{
-  initialKeywords: string[] | undefined;
-}> = ({ initialKeywords }) => {
+  tags: string[] | undefined;
+  onTagsChange: (value: string[]) => void;
+}> = ({ tags, onTagsChange }) => {
   const { t } = useTranslation();
 
   return (
@@ -48,8 +49,9 @@ export const RequestDataInfo: React.FC<{
         <TagInputItem
           name="dataKeywords"
           label={t('connectionRequests.details.dataInfo.keywords')}
-          initialTags={initialKeywords || []}
+          tags={tags || []}
           prompt={t('connectionRequests.details.dataInfo.addKeywords')}
+          onTagsChange={onTagsChange}
           required
         />
       </BaseCol>

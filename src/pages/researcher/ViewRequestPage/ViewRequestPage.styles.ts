@@ -4,11 +4,12 @@ import { FONT_SIZE, FONT_WEIGHT, media } from '@app/styles/themes/constants';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 
 export const ViewWrapper = styled.div`
-  margin-top: 2rem;
+  margin-top: -1rem;
 `;
 
 export const Card = styled(CommonCard)`
   margin-bottom: 2rem;
+  padding-bottom: 2rem;
 
   .ant-card-actions li {
     margin-left: 4rem;

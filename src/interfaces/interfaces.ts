@@ -79,7 +79,8 @@ export interface DataInfoFormValues {
 export interface DatabaseInfoFormValues {
   name: string;
   type: string;
-  url?: string;
+  host?: string;
+  port?: string;
   username?: string;
   password?: string;
 }

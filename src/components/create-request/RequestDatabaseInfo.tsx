@@ -10,7 +10,11 @@ import { PasswordInputItem } from '../request-fields/PasswordInput/PasswordInput
 import { RequestDataInfo } from './RequestDataInfo';
 import { TestConnectionGroup } from '../request-fields/TestConnectionGroup/TestConnectionGroup';
 import { FormModal } from '../request-fields/FormModal/FormModal';
-import { createRequest } from '@app/api/connectionRequests.api';
+// import { createRequest } from '@app/api/connectionRequests.api';
+import { AppDate } from '@app/constants/Dates';
+import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
+import { testConnection } from '@epsilon-data/epsilon-connector';
 
 export const RequestDatabaseInfo: React.FC<{
   formValue: RequestDetails;
@@ -19,19 +23,23 @@ export const RequestDatabaseInfo: React.FC<{
   const initialValues = {
     databaseName: formValue.databaseInfo?.name,
     databaseType: formValue.databaseInfo?.type,
-    databaseUrl: formValue.databaseInfo?.url,
+    databaseHost: formValue.databaseInfo?.host,
+    databasePort: formValue.databaseInfo?.port,
     databaseUsername: formValue.databaseInfo?.username,
     databasePassword: formValue.databaseInfo?.password,
-    dataCollectionDuration: formValue.dataInfo.collectionDuration,
+    dataCollectionDuration: formValue.dataInfo.collectionDuration.map((date: Date) => dayjs(date)),
     dataParticipantsNumber: formValue.dataInfo.participantsNumber,
     dataDescription: formValue.dataInfo.description,
     dataKeywords: formValue.dataInfo.keywords,
   };
   const [isFieldsChanged, setFieldsChanged] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const [isFormLoading, setFormLoading] = useState(false);
+  const [isTestLoading, setTestLoading] = useState(false);
   const [isConnected, setConnected] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState<boolean>(false);
+  const [keywords, setKeywords] = useState(initialValues.dataKeywords);
+  const navigate = useNavigate();
 
   const [form] = BaseButtonsForm.useForm();
 
@@ -55,14 +63,18 @@ export const RequestDatabaseInfo: React.FC<{
   const onFinish = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (values: any) => {
-      setLoading(true);
+      setFormLoading(true);
+      values.dataCollectionDuration = values.dataCollectionDuration.map((appDate: AppDate) => dayjs(appDate).toDate());
+      values.dataKeywords = keywords;
+
       if (isConnected) {
         const updatedRequest = {
           ...formValue,
           databaseInfo: {
             name: values.databaseName,
             type: values.databaseType,
-            url: values.databaseUrl || '',
+            host: values.databaseHost || '',
+            port: values.databasePort || '',
             username: values.databaseUsername || '',
             password: values.databasePassword || '',
           },
@@ -74,34 +86,66 @@ export const RequestDatabaseInfo: React.FC<{
           },
         };
         setFormValue(updatedRequest);
-        createRequest(formValue);
+        setIsFormModalOpen(true);
       }
-
-      setLoading(false);
-      setFieldsChanged(false);
-      setIsFormModalOpen(true);
-      console.log(formValue);
     },
-    [formValue, isConnected, setFormValue],
+    [formValue, isConnected, keywords, setFormValue],
   );
 
-  const onTestConnection = () => {
-    //TODO: test connection
-    setConnected(true);
+  const onTestConnection = async () => {
+    setTestLoading(true);
+    const { databaseName, databaseType, databaseHost, databasePort, databaseUsername, databasePassword } =
+      form.getFieldsValue([
+        'databaseName',
+        'databaseType',
+        'databaseHost',
+        'databasePort',
+        'databaseUsername',
+        'databasePassword',
+      ]);
+
+    const connectionData = {
+      driver: databaseType,
+      port: databasePort,
+      host: databaseHost,
+      user: databaseUsername,
+      password: databasePassword,
+      database: databaseName,
+      ssl: false,
+    };
+
+    await testConnection(connectionData)
+      .then(() => {
+        setConnected(true);
+      })
+      .catch((error) => {
+        setConnected(false);
+        console.log(error);
+      });
+
     setShowMessage(true);
+    setTestLoading(false);
+  };
+
+  const handleSubmit = () => {
+    setFormLoading(false);
+    setFieldsChanged(false);
+    console.log(formValue);
+    // createRequest(formValue);
+    navigate('/r-connection-requests');
   };
 
   return (
     <BaseButtonsForm
       form={form}
       name="info"
-      loading={isLoading}
+      loading={isFormLoading}
       initialValues={initialValues}
       isFieldsChanged={isFieldsChanged}
       setFieldsChanged={setFieldsChanged}
       onFieldsChange={() => setFieldsChanged(true)}
       onFinish={onFinish}
-      buttonText={t('connectionRequests.altCreate')}
+      buttonText={t('connectionRequests.create.altTitle')}
       style={{ width: '80%' }}
       disabled={!isConnected}
     >
@@ -127,7 +171,11 @@ export const RequestDatabaseInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="databaseUrl" label={t('connectionRequests.details.databaseInfo.url')} required />
+          <StringInputItem name="databaseHost" label={t('connectionRequests.details.databaseInfo.host')} required />
+        </BaseCol>
+
+        <BaseCol span={24}>
+          <StringInputItem name="databasePort" label={t('connectionRequests.details.databaseInfo.port')} required />
         </BaseCol>
 
         <BaseCol span={24}>
@@ -147,11 +195,16 @@ export const RequestDatabaseInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <TestConnectionGroup onClick={onTestConnection} connected={isConnected} show={showMessage} />
+          <TestConnectionGroup
+            onClick={onTestConnection}
+            loading={isTestLoading}
+            connected={isConnected}
+            show={showMessage}
+          />
         </BaseCol>
 
-        <RequestDataInfo initialKeywords={initialValues.dataKeywords} />
-        <FormModal isFormModalOpen={isFormModalOpen} setIsFormModalOpen={setIsFormModalOpen} />
+        <RequestDataInfo tags={keywords} onTagsChange={setKeywords} />
+        <FormModal isFormModalOpen={isFormModalOpen} setIsFormModalOpen={setIsFormModalOpen} onSubmit={handleSubmit} />
       </BaseRow>
     </BaseButtonsForm>
   );

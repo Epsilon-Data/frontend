@@ -3,21 +3,24 @@ import { useTranslation } from 'react-i18next';
 import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import { ProjectInfoFormValues, RequestDetails } from '@app/interfaces/interfaces';
+import { RequestDetails } from '@app/interfaces/interfaces';
 import { StringInputItem } from '../request-fields/StringInput/StringInputItem';
 import { StringTextAreaItem } from '../request-fields/StringInput/StringTextAreaItem';
 import { useNavigate } from 'react-router-dom';
 import { DateRangeInputItem } from '../request-fields/DateRangeInput/DateRangeInputItem';
 import { TagInputItem } from '../request-fields/TagInput/TagInputItem';
 import { RadioInputItem } from '../request-fields/RadioInput/RadioInputItem';
+import dayjs from 'dayjs';
+import { AppDate } from '@app/constants/Dates';
 
 export const RequestProjectInfo: React.FC<{
   formValue: RequestDetails;
   setFormValue: (value: RequestDetails) => void;
 }> = ({ formValue, setFormValue }) => {
-  const initialValues: ProjectInfoFormValues = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const initialValues: any = {
     name: formValue.projectInfo.name,
-    duration: formValue.projectInfo.duration,
+    duration: formValue.projectInfo.duration.map((date: Date) => dayjs(date)),
     lead: formValue.projectInfo.lead,
     members: formValue.projectInfo.members,
     university: formValue.projectInfo.university,
@@ -29,18 +32,18 @@ export const RequestProjectInfo: React.FC<{
   const [isFieldsChanged, setFieldsChanged] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [members, setMembers] = useState(initialValues.members);
 
   const [form] = BaseButtonsForm.useForm();
 
   const { t } = useTranslation();
 
   const onFinish = useCallback(
-    (values: ProjectInfoFormValues) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (values: any) => {
       setLoading(true);
-
-      if (!Array.isArray(values.members)) {
-        values.members = [values.members];
-      }
+      values.duration = values.duration.map((appDate: AppDate) => dayjs(appDate).toDate());
+      values.members = members;
 
       const updatedRequest = {
         ...formValue,
@@ -55,7 +58,7 @@ export const RequestProjectInfo: React.FC<{
         navigate('/r-connection-requests/create/org-admin-info');
       }
     },
-    [formValue, navigate, setFormValue],
+    [formValue, members, navigate, setFormValue],
   );
 
   return (
@@ -93,9 +96,11 @@ export const RequestProjectInfo: React.FC<{
         <BaseCol span={24}>
           <TagInputItem
             name="members"
+            tags={members}
+            onTagsChange={setMembers}
             label={t('connectionRequests.details.projectInfo.teamMembers')}
-            initialTags={initialValues.members}
             prompt={t('connectionRequests.details.projectInfo.addTeamMembers')}
+            required
           />
         </BaseCol>
 

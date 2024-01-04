@@ -4,13 +4,14 @@ import * as S from './TestConnectionGroup.styles';
 
 export const TestConnectionGroup: React.FC<{
   onClick?: React.MouseEventHandler<HTMLElement> | undefined;
+  loading?: boolean;
   connected: boolean;
   show: boolean;
-}> = ({ onClick, connected, show }) => {
+}> = ({ onClick, loading, connected, show }) => {
   const { t } = useTranslation();
   return (
     <>
-      <S.ConnectionButton type="primary" onClick={onClick}>
+      <S.ConnectionButton type="primary" loading={loading} onClick={onClick}>
         {t('connectionRequests.details.databaseInfo.testConnection')}
       </S.ConnectionButton>
       <S.ButtonTip>{t('connectionRequests.details.databaseInfo.testConnectionTip')}</S.ButtonTip>

@@ -12,7 +12,7 @@ const homeNavigation: SidebarNavigationItem[] = [];
 
 const connectNavigation: SidebarNavigationItem[] = [
   {
-    title: 'connectionRequests.create',
+    title: 'connectionRequests.create.title',
     key: 'create',
     url: '/r-connection-requests/create/project-info',
   },

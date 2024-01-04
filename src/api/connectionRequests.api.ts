@@ -3,9 +3,9 @@ import { Priority } from '../constants/enums/priorities';
 import { RequestDetails } from '@app/interfaces/interfaces';
 import { RequestStatus } from '@app/constants/enums/requestStatus';
 import { format } from 'date-fns';
+import { DATE_FORMAT } from '@app/constants/connectionRequest';
 
 const API_URL = 'http://localhost:3333/connection-request';
-export const DATE_FORMAT = 'dd/MM/yyyy';
 
 export interface Tag {
   value: string;
@@ -78,5 +78,10 @@ export const getRequestDetails = async (id: string | undefined): Promise<Request
 
 export const createRequest = async (data: RequestDetails): Promise<RequestDetails> => {
   const response = await axios.post<RequestDetails>(`${API_URL}/create`, data);
+  return response.data;
+};
+
+export const updateRequest = async (data: RequestDetails): Promise<RequestDetails> => {
+  const response = await axios.patch(`${API_URL}/update`, data);
   return response.data;
 };

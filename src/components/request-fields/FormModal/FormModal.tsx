@@ -1,7 +1,6 @@
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import * as S from './FormModal.styles';
 import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
@@ -9,13 +8,10 @@ import { CheckboxValueType } from 'antd/es/checkbox/Group';
 export const FormModal: React.FC<{
   isFormModalOpen: boolean;
   setIsFormModalOpen: (value: boolean) => void;
-}> = ({ isFormModalOpen, setIsFormModalOpen }) => {
+  onSubmit: () => void;
+}> = ({ isFormModalOpen, setIsFormModalOpen, onSubmit }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [allChecked, setAllChecked] = React.useState(false);
-  const handleClick = () => {
-    navigate('/r-connection-requests');
-  };
 
   const handleCheckboxChange = (checkedValues: Array<CheckboxValueType>) => {
     setAllChecked(checkedValues.length === groupOptions.length);
@@ -34,7 +30,7 @@ export const FormModal: React.FC<{
       onCancel={() => setIsFormModalOpen(false)}
       size="medium"
       footer={
-        <BaseButton type="primary" onClick={handleClick} disabled={!allChecked}>
+        <BaseButton type="primary" onClick={onSubmit} disabled={!allChecked}>
           {t('common.submit')}
         </BaseButton>
       }

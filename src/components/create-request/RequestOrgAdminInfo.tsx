@@ -11,6 +11,9 @@ import { StringTextAreaItem } from '../request-fields/StringInput/StringTextArea
 import { BaseTooltip } from '../common/BaseTooltip/BaseTooltip';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { createRequest } from '@app/api/connectionRequests.api';
+import { AppDate } from '@app/constants/Dates';
+import dayjs from 'dayjs';
+import { notificationController } from '@app/controllers/notificationController';
 
 export const RequestOrgAdminInfo: React.FC<{
   formValue: RequestDetails;
@@ -18,7 +21,7 @@ export const RequestOrgAdminInfo: React.FC<{
 }> = ({ formValue, setFormValue }) => {
   const initialValues = {
     orgAdminEmail: formValue.orgAdminEmail,
-    dataCollectionDuration: formValue.dataInfo.collectionDuration,
+    dataCollectionDuration: formValue.dataInfo.collectionDuration.map((date: Date) => dayjs(date)),
     dataParticipantsNumber: formValue.dataInfo.participantsNumber,
     dataDescription: formValue.dataInfo.description,
     dataKeywords: formValue.dataInfo.keywords,
@@ -28,6 +31,8 @@ export const RequestOrgAdminInfo: React.FC<{
   const [isFieldsChanged, setFieldsChanged] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [keywords, setKeywords] = useState(initialValues.dataKeywords);
+
   const [form] = BaseButtonsForm.useForm();
 
   const { t } = useTranslation();
@@ -36,6 +41,9 @@ export const RequestOrgAdminInfo: React.FC<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (values: any) => {
       setLoading(true);
+      values.dataCollectionDuration = values.dataCollectionDuration.map((appDate: AppDate) => dayjs(appDate).toDate());
+      values.dataKeywords = keywords;
+
       const updatedRequest = {
         ...formValue,
         orgAdminEmail: values.orgAdminEmail || '',
@@ -48,13 +56,22 @@ export const RequestOrgAdminInfo: React.FC<{
         additionalInfo: values.additionalInfo || '',
       };
       setFormValue(updatedRequest);
-      createRequest(formValue);
-      setLoading(false);
-      setFieldsChanged(false);
-      navigate('/r-connection-requests');
-      console.log(formValue);
+      createRequest(updatedRequest)
+        .then(() => {
+          setLoading(false);
+          setFieldsChanged(false);
+          navigate('/r-connection-requests');
+          notificationController.success({
+            message: t('connectionRequests.create.successNotify'),
+          });
+        })
+        .catch(() => {
+          notificationController.error({
+            message: t('connectionRequests.create.failNotify'),
+          });
+        });
     },
-    [formValue, navigate, setFormValue],
+    [formValue, keywords, navigate, setFormValue, t],
   );
 
   return (
@@ -67,7 +84,7 @@ export const RequestOrgAdminInfo: React.FC<{
       setFieldsChanged={setFieldsChanged}
       onFieldsChange={() => setFieldsChanged(true)}
       onFinish={onFinish}
-      buttonText={t('connectionRequests.altCreate')}
+      buttonText={t('connectionRequests.create.altTitle')}
       style={{ width: '80%' }}
     >
       <BaseRow gutter={{ xs: 10, md: 15, xl: 30 }} style={{ paddingBottom: '2rem' }}>
@@ -90,7 +107,7 @@ export const RequestOrgAdminInfo: React.FC<{
           />
         </BaseCol>
 
-        <RequestDataInfo initialKeywords={initialValues.dataKeywords} />
+        <RequestDataInfo tags={keywords} onTagsChange={setKeywords} />
 
         <BaseCol span={24}>
           <StringTextAreaItem

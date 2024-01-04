@@ -67,6 +67,8 @@ export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
       title: t('connectionRequests.id'),
       dataIndex: 'id',
       key: 'id',
+      defaultSortOrder: 'ascend',
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: t('connectionRequests.projectName'),
@@ -147,7 +149,10 @@ export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
                   )}
                   {record.statusTag.priority === Priority.HIGH && (
                     <>
-                      <BaseButton type="primary" onClick={() => navigate('/r-connection-requests/view/' + record.id)}>
+                      <BaseButton
+                        type="primary"
+                        onClick={() => navigate('/r-connection-requests/edit/' + record.id + '/project-info')}
+                      >
                         {t('common.edit')}
                       </BaseButton>
                       <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>

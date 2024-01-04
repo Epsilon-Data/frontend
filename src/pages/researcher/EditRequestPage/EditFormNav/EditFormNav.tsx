@@ -3,32 +3,41 @@ import { ProjectInfo } from './nav/ProjectInfo/ProjectInfo';
 import { DatabaseInfo } from './nav/DatabaseInfo/DatabaseInfo';
 import { DataInfo } from './nav/DataInfo/DataInfo';
 import { OrgAdminInfo } from './nav/OrgAdminInfo/OrgAdminInfo';
+import { AdditionalInfo } from './nav/AdditionalInfo/AdditionalInfo';
+import { RequestDetails } from '@app/interfaces/interfaces';
 
-interface ProfileFormNavProps {
+interface EditFormNavProps {
   menu: string;
+  values: RequestDetails;
+  setValues: (value: RequestDetails) => void;
 }
 
-export const ProfileFormNav: React.FC<ProfileFormNavProps> = ({ menu }) => {
+export const EditFormNav: React.FC<EditFormNavProps> = ({ menu, values, setValues }) => {
   let currentMenu;
 
   switch (menu) {
-    case 'project': {
-      currentMenu = <ProjectInfo />;
+    case 'project-info': {
+      currentMenu = <ProjectInfo formValue={values} setFormValue={setValues} />;
       break;
     }
 
-    case 'database': {
-      currentMenu = <DatabaseInfo />;
+    case 'database-info': {
+      currentMenu = <DatabaseInfo formValue={values} setFormValue={setValues} />;
       break;
     }
 
-    case 'data': {
-      currentMenu = <DataInfo />;
+    case 'data-info': {
+      currentMenu = <DataInfo formValue={values} setFormValue={setValues} />;
       break;
     }
 
-    case 'orgAdmin': {
-      currentMenu = <OrgAdminInfo />;
+    case 'org-admin-info': {
+      currentMenu = <OrgAdminInfo formValue={values} setFormValue={setValues} />;
+      break;
+    }
+
+    case 'add-info': {
+      currentMenu = <AdditionalInfo formValue={values} setFormValue={setValues} />;
       break;
     }
 

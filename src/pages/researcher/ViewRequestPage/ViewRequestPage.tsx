@@ -4,33 +4,16 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './ViewRequestPage.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RequestDetails } from '@app/interfaces/interfaces';
-import { getRequestDetails, DATE_FORMAT } from 'api/connectionRequests.api';
+import { getRequestDetails } from 'api/connectionRequests.api';
 import { useMounted } from '@app/hooks/useMounted';
 import { InfoItem } from '@app/components/view-request/Info/InfoItem';
 import { InfoSectionHeader } from '@app/components/view-request/Info/InfoSectionHeader';
 import { RequestStatus } from '@app/constants/enums/requestStatus';
 import { format } from 'date-fns';
-
-const initialRequestFormValues: RequestDetails = {
-  projectInfo: {
-    name: '',
-    duration: [],
-    lead: '',
-    members: [],
-    university: '',
-    faculty: '',
-    ethicsId: '',
-    description: '',
-  },
-  dataInfo: {
-    collectionDuration: [],
-    participantsNumber: null,
-    description: '',
-    keywords: [],
-  },
-};
+import { DATE_FORMAT, INITIAL_REQUEST_VALUES } from '@app/constants/connectionRequest';
 
 const ViewRequestPage: React.FC = () => {
+  const initialRequestFormValues = INITIAL_REQUEST_VALUES;
   const { id } = useParams();
   const { t } = useTranslation();
   const { isMounted } = useMounted();
@@ -66,7 +49,11 @@ const ViewRequestPage: React.FC = () => {
         ]);
       case RequestStatus.REVISION:
         return React.Children.toArray([
-          <S.ActionButton type="primary" key="edit" onClick={() => navigate(`/r-connection-requests/edit/${id}`)}>
+          <S.ActionButton
+            type="primary"
+            key="edit"
+            onClick={() => navigate(`/r-connection-requests/edit/${id}/project-info`)}
+          >
             {t('common.edit')}
           </S.ActionButton>,
           <S.ActionButton type="default" key="back" onClick={handleBackClick}>
@@ -91,7 +78,7 @@ const ViewRequestPage: React.FC = () => {
       <S.ViewWrapper>
         <S.Card
           id="view-request"
-          title={`${t('connectionRequests.view')} ID ${id}`}
+          title={t('connectionRequests.view', { id: id })}
           padding="1.25rem 1.25rem 0"
           actions={actionButtons(request.status)}
         >

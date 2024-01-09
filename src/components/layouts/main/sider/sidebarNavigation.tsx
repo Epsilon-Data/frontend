@@ -23,12 +23,10 @@ const connectNavigation: SidebarNavigationItem[] = [
   // },
 ];
 
-const manageNavigation: SidebarNavigationItem[] = [
-  {
-    title: 'databaseSources.title',
-    key: 'database-sources',
-    children: [{ title: 'databaseSources.sourceList', key: 'list', url: '/database-sources/list' }],
-  },
+const sourceNavigation: SidebarNavigationItem[] = [
+  { title: 'databaseSources.metadata.title', key: 'metadata' },
+  { title: 'databaseSources.describeDataset', key: 'describe-dataset' },
+  { title: 'databaseSources.accessPermissions', key: 'access-permissions' },
 ];
 
 // const browseNavigation: SidebarNavigationItem[] = [];
@@ -36,10 +34,16 @@ const manageNavigation: SidebarNavigationItem[] = [
 export function returnCurrentNav(key: string): SidebarNavigationItem[] {
   if (key === 'connect') {
     return connectNavigation;
-  } else if (key === 'manage') {
-    return manageNavigation;
   } else if (key === 'home') {
     return homeNavigation;
+  } else if (key === 'database') {
+    return sourceNavigation;
   }
   return [];
+}
+
+export function updateUrlById(id: string): void {
+  sourceNavigation.forEach((item: SidebarNavigationItem) => {
+    item.url = '/database-sources/' + item.key + '/' + id;
+  });
 }

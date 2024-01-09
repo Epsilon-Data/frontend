@@ -13,4 +13,8 @@ export const CardItem = styled(CommonCard)`
   margin-bottom: 2rem;
   border-radius: 1.5rem;
   background-color: var(--secondary-background-color);
+
+  .ant-card-body {
+    padding: 2.3rem 2rem;
+  }
 `;

@@ -12,14 +12,16 @@ export const Wrapper = styled.div`
   row-gap: 1.5rem;
 `;
 
-export const Btn = styled(BaseButton)<BtnProps>`
+export const Button = styled(BaseButton)<BtnProps>`
   display: flex;
-  align-items: center;
-  justify-content: unset !important;
+  justify-content: left;
+  white-space: normal;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 0.87rem;
+  height: auto;
+  text-align: left;
 
   &:hover {
     background-color: rgba(var(--primary-rgb-color), 0.1);
@@ -32,12 +34,8 @@ export const Btn = styled(BaseButton)<BtnProps>`
     `};
 
   & > span:first-of-type {
-    padding: 0.625rem;
-    border-radius: 10px;
     margin-right: 0.5rem;
 
     color: ${(props) => `var(--${props.color}-color)`};
-
-    background-color: rgba(var(--primary-rgb-color), 0.05);
   }
 `;

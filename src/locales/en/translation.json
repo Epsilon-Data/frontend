@@ -961,12 +961,32 @@
     "date": "Connect Date",
     "provider": "Provider",
     "sourceList"  : "Source List",
-    "manage" : "Manage"
+    "manage" : "Manage",
+    "describeDataset": "Describe Dataset",
+    "accessPermissions": "Set Access Permissions",
+    "projectId": "Project {{id}}",
+    "metadata": {
+      "title": "Metadata",
+      "projectTitle": "Metadata Project {{id}}",
+      "dbSummary": "Database Summary",
+      "overallDesc": {
+        "title": "Overall Description",
+        "dateCreated": "Date Created",
+        "schemaCount": "Schema Count",
+        "tableCount": "Total Table Count",
+        "viewCount": "View Count",
+        "columnCount": "Total Column Count"
+      },
+      "erd": "Entity Relationship Diagram (ERD)",
+      "tableInfo": "Table Information"
+
+    }
+    
   },
   "topNavigation" : {
     "home": "Home",
     "connect": "Connect",
-    "manage": "Manage",
+    "database": "My Databases",
     "browse": "Browse"
   }
 }

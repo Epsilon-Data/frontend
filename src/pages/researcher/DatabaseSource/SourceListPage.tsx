@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
-import * as S from '../../components/list/CardList/CardList.styles';
+import * as S from '@app/components/list/CardList/CardList.styles';
 import { CardList } from '@app/components/list/CardList/CardList';
 
 const SourceListPage: React.FC = () => {

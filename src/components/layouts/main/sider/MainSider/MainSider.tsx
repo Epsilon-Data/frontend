@@ -4,14 +4,17 @@ import { SiderLogo } from '../SiderLogo';
 import SiderMenu from '../SiderMenu/SiderMenu';
 
 interface MainSiderProps {
+  title: string;
+  titleUrl: string;
   selectedNav: string;
+  hidden: boolean;
 }
 
-const MainSider: React.FC<MainSiderProps> = ({ selectedNav, ...props }) => {
+const MainSider: React.FC<MainSiderProps> = ({ title, titleUrl, selectedNav, hidden }) => {
   return (
     <>
-      <S.Sider trigger={null} width={260} {...props}>
-        <SiderLogo selectedNav={selectedNav} />
+      <S.Sider trigger={null} width={260} hidden={hidden}>
+        <SiderLogo title={title} url={titleUrl} />
         <S.HorizontalDivider />
         <S.SiderContent>
           <SiderMenu selectedNav={selectedNav} />

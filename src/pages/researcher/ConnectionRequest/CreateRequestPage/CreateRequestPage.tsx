@@ -4,7 +4,7 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './CreateRequestPage.styles';
 import { useParams } from 'react-router-dom';
 import { RequestDetails } from '@app/interfaces/interfaces';
-import { RequestProjectInfo } from '../../../components/create-request/RequestProjectInfo';
+import { RequestProjectInfo } from '../../../../components/create-request/RequestProjectInfo';
 import { RequestDatabaseInfo } from '@app/components/create-request/RequestDatabaseInfo';
 import { RequestOrgAdminInfo } from '@app/components/create-request/RequestOrgAdminInfo';
 import { useAppSelector } from '@app/hooks/reduxHooks';

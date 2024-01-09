@@ -18,7 +18,7 @@ export const EditNav: React.FC<{ ownData: boolean }> = ({ ownData }) => {
   return (
     <S.Wrapper>
       {filteredNavData.map((item) => (
-        <S.Btn
+        <S.Button
           key={item.id}
           icon={item.icon}
           type="text"
@@ -27,7 +27,7 @@ export const EditNav: React.FC<{ ownData: boolean }> = ({ ownData }) => {
           $isActive={`/r-connection-requests/edit/${id}/${item.href}` === location.pathname}
         >
           {t(item.name)}
-        </S.Btn>
+        </S.Button>
       ))}
     </S.Wrapper>
   );

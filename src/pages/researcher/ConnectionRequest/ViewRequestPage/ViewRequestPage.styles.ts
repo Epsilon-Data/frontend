@@ -9,10 +9,9 @@ export const ViewWrapper = styled.div`
 
 export const Card = styled(CommonCard)`
   margin-bottom: 2rem;
-  padding-bottom: 2rem;
 
   .ant-card-actions li {
-    margin-left: 4rem;
+    margin-left: 1rem;
   }
 
   .ant-card-actions li span {

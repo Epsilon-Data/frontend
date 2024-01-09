@@ -84,3 +84,11 @@ export interface DatabaseInfoFormValues {
   username?: string;
   password?: string;
 }
+
+export interface OverallDatabaseInfo {
+  dateCreated: Date | string;
+  schemaCount: number;
+  totalTableCount: number;
+  viewCount: number;
+  totalColCount: number;
+}

@@ -1,3 +1,4 @@
+import { OverallDatabaseInfo } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 
 export interface Tag {
@@ -47,5 +48,18 @@ export const getSourceList = (pagination: Pagination): Promise<SourceListData> =
         pagination: { ...pagination, total: 2 },
       });
     }, 1000);
+  });
+};
+
+export const getDbOverallDesc = (id: string | undefined): Promise<OverallDatabaseInfo> => {
+  console.log(id);
+  return new Promise((res) => {
+    res({
+      dateCreated: new Date(),
+      schemaCount: 2,
+      totalTableCount: 10,
+      viewCount: 2,
+      totalColCount: 20,
+    });
   });
 };

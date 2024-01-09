@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { RequestTable } from '../../components/tables/RequestTable/RequestTable';
+import { RequestTable } from '../../../components/tables/RequestTable/RequestTable';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
-import * as S from '../../components/tables/Tables/Tables.styles';
+import * as S from '../../../components/tables/Tables/Tables.styles';
 
 const ConnectionRequestsPage: React.FC = () => {
   const { t } = useTranslation();

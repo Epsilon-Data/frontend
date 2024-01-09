@@ -125,6 +125,7 @@ export const commonThemeVariables = css`
   --blue: ${BASE_COLORS.blue};
   --skyblue: ${BASE_COLORS.skyblue};
   --red: ${BASE_COLORS.red};
+  --aquamarine: ${BASE_COLORS.aquamarine};
 `;
 
 export const antOverrideCssVariables = css`

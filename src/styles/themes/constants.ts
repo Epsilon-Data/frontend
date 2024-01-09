@@ -13,6 +13,7 @@ export const BASE_COLORS = {
   blue: '#0000ff',
   skyblue: '#35a0dc',
   red: '#ff5252',
+  aquamarine: '#b2ffe5',
 } as const;
 
 export const LAYOUT = {

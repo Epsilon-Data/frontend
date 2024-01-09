@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import * as S from './SiderMenu.styles';
 import { SidebarNavigationItem, returnCurrentNav } from '../sidebarNavigation';
+import { useTranslation } from 'react-i18next';
 
 interface SiderContentProps {
   selectedNav: string;
 }
 
 const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
-  const { t } = useTranslation();
   const location = useLocation();
   const [current, setCurrent] = useState(location.pathname);
+  const { t } = useTranslation();
 
   const currentNav = returnCurrentNav(selectedNav);
 

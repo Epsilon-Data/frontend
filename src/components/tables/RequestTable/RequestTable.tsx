@@ -5,7 +5,6 @@ import { ColumnsType } from 'antd/es/table';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { useTranslation } from 'react-i18next';
 import { defineColorByPriority } from '@app/utils/utils';
-import { notificationController } from 'controllers/notificationController';
 import { Status } from '@app/components/profile/profileCard/profileFormNav/nav/payments/paymentHistory/Status/Status';
 import { useMounted } from '@app/hooks/useMounted';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
@@ -136,14 +135,7 @@ export const RequestTable: React.FC<{ userType: string }> = ({ userType }) => {
                     {t('tables.view')}
                   </BaseButton>
                   {record.statusTag.priority === Priority.LOW && (
-                    <BaseButton
-                      type="primary"
-                      onClick={() => {
-                        notificationController.info({
-                          message: t('tables.viewMessage', { name: record.projectName }),
-                        });
-                      }}
-                    >
+                    <BaseButton type="primary" onClick={() => navigate('/database-sources/metadata/' + record.id)}>
                       {t('connectionRequests.viewSource')}
                     </BaseButton>
                   )}

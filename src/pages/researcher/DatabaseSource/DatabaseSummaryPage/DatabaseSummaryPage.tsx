@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './DatabaseSummaryPage.styles';
 import { OverallDescription } from '@app/components/database-summary/OverallDescription/OverallDescription';
-import { getDbOverallDesc } from '@app/api/databaseSources.api';
+import { getDbSummary } from '@app/api/databaseSources.api';
 import { useParams } from 'react-router-dom';
 import { OverallDatabaseInfo } from '@app/interfaces/interfaces';
 import { useMounted } from '@app/hooks/useMounted';
@@ -16,12 +16,14 @@ const DatabaseSummaryPage: React.FC = () => {
   const { isMounted } = useMounted();
   const [activeTabKey, setActiveTabKey] = useState('overall');
   const [info, setInfo] = useState<OverallDatabaseInfo>(INITIAL_OVERALL_DB_INFO);
+  const [diagramCode, setDiagramCode] = useState('');
 
   const fetch = useCallback(
     (id: string | undefined) => {
-      getDbOverallDesc(id).then((res) => {
+      getDbSummary(id).then((res) => {
         if (isMounted.current) {
-          setInfo(res);
+          setInfo(res.overall);
+          setDiagramCode(res.diagram);
         }
       });
     },
@@ -41,7 +43,7 @@ const DatabaseSummaryPage: React.FC = () => {
     {
       key: 'erd',
       label: t('databaseSources.metadata.erd'),
-      children: <ERD />,
+      children: <ERD diagramCode={diagramCode} />,
     },
   ];
 

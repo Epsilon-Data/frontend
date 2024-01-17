@@ -1,5 +1,11 @@
+import axios from 'axios';
 import { OverallDatabaseInfo } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
+import { SourceStatus } from '@app/constants/enums/sourceStatus';
+import { DATE_FORMAT } from '@app/constants/databaseSource';
+import { format } from 'date-fns';
+
+const API_URL = 'http://localhost:3333/database-source';
 
 export interface Tag {
   value: string;
@@ -25,41 +31,45 @@ export interface SourceListData {
   pagination: Pagination;
 }
 
-export const getSourceList = (pagination: Pagination): Promise<SourceListData> => {
-  return new Promise((res) => {
-    setTimeout(() => {
-      res({
-        data: [
-          {
-            projectId: 1,
-            projectName: 'Project 1',
-            databaseName: 'PostgreSQL',
-            connectDate: new Date(2023, 3, 26),
-            sourceStatus: { value: 'Active', priority: Priority.LOW },
-          },
-          {
-            projectId: 2,
-            projectName: 'Project 2',
-            databaseName: 'MySQL',
-            connectDate: new Date(2023, 5, 10),
-            sourceStatus: { value: 'Crawling', priority: Priority.DISABLED },
-          },
-        ],
-        pagination: { ...pagination, total: 2 },
-      });
-    }, 1000);
+export interface DatabaseSummaryInfo {
+  overall: OverallDatabaseInfo;
+  diagram: string;
+}
+
+export const getSourceList = async (pagination: Pagination, userId?: number): Promise<SourceListData> => {
+  const response = await axios.get(`${API_URL}/list`, {
+    params: {
+      userId: userId,
+    },
   });
+
+  const formattedData = response.data.map((item: { connectDate: Date; sourceStatus: number }) => {
+    let statusTag = { value: 'Pending', priority: Priority.INFO };
+    switch (item.sourceStatus) {
+      case SourceStatus.PENDING:
+        break;
+      case SourceStatus.CRAWL:
+        statusTag = { value: 'Crawling', priority: Priority.DISABLED };
+        break;
+      case SourceStatus.ACTIVE:
+        statusTag = { value: 'Active', priority: Priority.LOW };
+        break;
+    }
+    return {
+      ...item,
+      connectDate: item.connectDate ? format(item.connectDate, DATE_FORMAT) : '-',
+      sourceStatus: statusTag,
+    };
+  });
+
+  return { data: formattedData, pagination: { ...pagination, total: formattedData.length } };
 };
 
-export const getDbOverallDesc = (id: string | undefined): Promise<OverallDatabaseInfo> => {
-  console.log(id);
-  return new Promise((res) => {
-    res({
-      dateCreated: new Date(),
-      schemaCount: 2,
-      totalTableCount: 10,
-      viewCount: 2,
-      totalColCount: 20,
-    });
+export const getDbSummary = async (dbId: string | undefined): Promise<DatabaseSummaryInfo> => {
+  const response = await axios.get(`${API_URL}/summary`, {
+    params: {
+      dbId: dbId,
+    },
   });
+  return response.data;
 };

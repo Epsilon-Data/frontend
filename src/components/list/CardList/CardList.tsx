@@ -1,5 +1,5 @@
 import { BaseList } from '@app/components/common/BaseList/BaseList';
-import { SourceListItem, getSourceList, Pagination } from 'api/databaseSources.api';
+import { SourceListItem, getSourceList, Pagination } from '@app/api/databaseSources.api';
 import { useTranslation } from 'react-i18next';
 import { useMounted } from '@app/hooks/useMounted';
 import { useCallback, useState, useEffect } from 'react';
@@ -11,7 +11,8 @@ import { Status } from '@app/components/profile/profileCard/profileFormNav/nav/p
 import { defineColorByPriority } from '@app/utils/utils';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseProgress } from '@app/components/common/BaseProgress/BaseProgress';
-import { Priority } from '@app/constants/enums/priorities';
+import { useAppSelector } from '@app/hooks/reduxHooks';
+import { useNavigate } from 'react-router-dom';
 
 const { Meta } = Card;
 const initialPagination: Pagination = {
@@ -27,17 +28,19 @@ export const CardList: React.FC = () => {
   });
   const { t } = useTranslation();
   const { isMounted } = useMounted();
+  const user = useAppSelector((state) => state.user.user);
+  const navigate = useNavigate();
 
   const fetch = useCallback(
     (pagination: Pagination) => {
       setListData((listData) => ({ ...listData, loading: true }));
-      getSourceList(pagination).then((res) => {
+      getSourceList(pagination, user?.id).then((res) => {
         if (isMounted.current) {
           setListData({ data: res.data, pagination: res.pagination, loading: false });
         }
       });
     },
-    [isMounted],
+    [isMounted, user?.id],
   );
 
   useEffect(() => {
@@ -60,7 +63,7 @@ export const CardList: React.FC = () => {
             />
             <div style={{ marginTop: '1.5rem', lineHeight: '0.5rem' }}>
               <p>{`Database Name: ${item.databaseName}`}</p>
-              <p>{`Connect Date: ${item.connectDate.toLocaleDateString('en-GB')}`}</p>
+              <p>{`Connect Date: ${item.connectDate}`}</p>
               {item.sourceStatus && (
                 <>
                   <p>Status:</p>
@@ -75,13 +78,17 @@ export const CardList: React.FC = () => {
                 </>
               )}
             </div>
-            {item.sourceStatus && item.sourceStatus.priority !== Priority.LOW && (
+            {item.sourceStatus && item.sourceStatus.value === 'Crawling' && (
               <>
                 <BaseProgress percent={50} status="active" strokeColor={'var(--collapse-background-color)'} />
                 <p>Crawling status text...</p>
               </>
             )}
-            <BaseButton style={{ marginTop: '1rem', float: 'right' }} type="primary">
+            <BaseButton
+              style={{ marginTop: '1rem', float: 'right' }}
+              type="primary"
+              onClick={() => navigate('/database-sources/metadata/' + item.projectId)}
+            >
               {t('databaseSources.manage')}
             </BaseButton>
           </S.CardItem>

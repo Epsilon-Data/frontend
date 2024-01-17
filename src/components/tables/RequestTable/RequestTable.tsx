@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { RequestTableRow, getRequestTableData, Pagination, Tag } from 'api/connectionRequests.api';
+import { RequestTableRow, getRequestTableData, Pagination, Tag } from '@app/api/connectionRequests.api';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { ColumnsType } from 'antd/es/table';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';

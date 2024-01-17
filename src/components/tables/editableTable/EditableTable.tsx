@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
-import { getEditableTableData, BasicTableRow, Pagination } from 'api/table.api';
+import { getEditableTableData, BasicTableRow, Pagination } from '@app/api/table.api';
 import { EditableCell } from './EditableCell';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { useTranslation } from 'react-i18next';

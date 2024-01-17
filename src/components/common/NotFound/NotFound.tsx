@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import notFoundImg from 'assets/images/nothing-found.webp';
+import notFoundImg from '@app/assets/images/nothing-found.webp';
 import * as S from './NotFound.styles';
 import { BaseImage } from '../BaseImage/BaseImage';
 

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { EChartsInstance } from 'echarts-for-react';
 import { BaseChart } from '../../../common/charts/BaseChart';
 import { Dates } from '@app/constants/Dates';
-import { useResponsive } from 'hooks/useResponsive';
+import { useResponsive } from '@app/hooks/useResponsive';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { themeObject } from '@app/styles/themes/themeVariables';
 

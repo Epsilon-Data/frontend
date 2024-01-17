@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ColumnType } from 'antd/lib/table';
-import { Dates } from 'constants/Dates';
+import { Dates } from '@app/constants/Dates';
 import { Status } from '../Status/Status';
-import { paymentStatuses, PaymentStatus } from 'constants/paymentStatuses';
+import { paymentStatuses, PaymentStatus } from '@app/constants/paymentStatuses';
 import { defineColorByPriority, getCurrencyPrice } from '@app/utils/utils';
-import { Payment } from 'api/paymentHistory.api';
+import { Payment } from '@app/api/paymentHistory.api';
 import * as S from './PaymentsTable.styles';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseAvatar } from '@app/components/common/BaseAvatar/BaseAvatar';

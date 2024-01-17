@@ -3,7 +3,7 @@ import { SuffixInput } from '../SuffixInput/SuffixInput';
 import { useTranslation } from 'react-i18next';
 import { FileTextOutlined } from '@ant-design/icons';
 import { BaseInputProps } from '../BaseInput/BaseInput';
-import { websitePattern } from 'constants/patterns';
+import { websitePattern } from '@app/constants/patterns';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseTooltip } from '../../BaseTooltip/BaseTooltip';
 

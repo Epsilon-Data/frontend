@@ -1,6 +1,6 @@
 import React from 'react';
 import { BaseCard } from '../../../common/BaseCard/BaseCard';
-import notFoundImg from 'assets/images/nothing-found.webp';
+import notFoundImg from '@app/assets/images/nothing-found.webp';
 import { useTranslation } from 'react-i18next';
 import * as S from './TreatmentNotFound.styles';
 

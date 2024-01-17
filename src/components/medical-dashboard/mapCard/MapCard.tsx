@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { DashboardCard } from '../DashboardCard/DashboardCard';
 import { DoctorsMap } from './DoctorsMap/DoctorsMap';
-import { Doctor, getDoctorsData } from 'api/doctors.api';
+import { Doctor, getDoctorsData } from '@app/api/doctors.api';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 
 export const MapCard: React.FC = () => {

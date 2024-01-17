@@ -2,13 +2,13 @@ import React from 'react';
 import L, { IconOptions, PointExpression } from 'leaflet';
 import { Marker, Popup } from 'react-leaflet';
 
-import { ReactComponent as MapBackgroundIcon } from 'assets/icons/map-background.svg';
+import MapBackgroundIcon from '@app/assets/icons/map-background.svg?react';
 
 import * as S from './DoctorsMap.styles';
-import { useResponsive } from 'hooks/useResponsive';
+import { useResponsive } from '@app/hooks/useResponsive';
 
-import { Doctor } from 'api/doctors.api';
-import { DoctorProfile } from 'components/common/DoctorProfile/DoctorProfile';
+import { Doctor } from '@app/api/doctors.api';
+import { DoctorProfile } from '@app/components/common/DoctorProfile/DoctorProfile';
 
 const LARGE_MARKER_SIZE: PointExpression = [50, 50];
 const MARKER_SIZE: PointExpression = [30, 30];

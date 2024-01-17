@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { defineColorByPriority, getCurrencyPrice } from '@app/utils/utils';
-import { paymentStatuses } from 'constants/paymentStatuses';
-import { Dates } from 'constants/Dates';
+import { paymentStatuses } from '@app/constants/paymentStatuses';
+import { Dates } from '@app/constants/Dates';
 import { Status } from '../Status/Status';
 import * as S from './Payment.styles';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';

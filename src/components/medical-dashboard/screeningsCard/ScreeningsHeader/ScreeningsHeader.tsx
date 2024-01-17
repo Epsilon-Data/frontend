@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CurrentStatisticsState } from '../ScreeningsCard/ScreeningsCard';
-import { MonthSelect } from 'components/common/selects/MonthSelect/MonthSelect';
-import { StatisticsSelect } from 'components/common/selects/StatisticsSelect/StatisticsSelect';
+import { MonthSelect } from '@app/components/common/selects/MonthSelect/MonthSelect';
+import { StatisticsSelect } from '@app/components/common/selects/StatisticsSelect/StatisticsSelect';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 

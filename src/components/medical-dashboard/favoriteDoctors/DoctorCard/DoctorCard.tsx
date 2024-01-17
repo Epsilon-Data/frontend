@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { specifities } from 'constants/specifities';
-import { Dates } from 'constants/Dates';
+import { specifities } from '@app/constants/specifities';
+import { Dates } from '@app/constants/Dates';
 import * as S from './DoctorCard.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';

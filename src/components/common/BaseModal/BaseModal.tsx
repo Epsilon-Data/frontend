@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, ModalProps } from 'antd';
-import { modalSizes } from 'constants/modalSizes';
+import { modalSizes } from '@app/constants/modalSizes';
 
 interface BaseModalProps extends ModalProps {
   size?: 'small' | 'medium' | 'large';

@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { ReactComponent as BonesIcon } from '@app/assets/icons/bones.svg';
-import { ReactComponent as FatIcon } from '@app/assets/icons/fat.svg';
-import { ReactComponent as ProteinIcon } from '@app/assets/icons/protein.svg';
-import { ReactComponent as WaterBalanceIcon } from '@app/assets/icons/water.svg';
+import BonesIcon from '@app/assets/icons/bones.svg?react';
+import FatIcon from '@app/assets/icons/fat.svg?react';
+import ProteinIcon from '@app/assets/icons/protein.svg?react';
+import WaterBalanceIcon from '@app/assets/icons/water.svg?react';
 
 export type StatisticColor = 'primary' | 'error' | 'secondary' | 'success';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { Key, DefaultRecordType } from 'rc-table/lib/interface';
-import { TreeTableRow, Pagination, getTreeTableData } from 'api/table.api';
+import { TreeTableRow, Pagination, getTreeTableData } from '@app/api/table.api';
 import { useTranslation } from 'react-i18next';
 import { useMounted } from '@app/hooks/useMounted';
 

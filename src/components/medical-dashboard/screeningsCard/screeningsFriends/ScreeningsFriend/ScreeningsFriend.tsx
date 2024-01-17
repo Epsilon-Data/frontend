@@ -1,7 +1,7 @@
 import React from 'react';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
-import { useResponsive } from 'hooks/useResponsive';
-import { getDifference } from 'utils/utils';
+import { useResponsive } from '@app/hooks/useResponsive';
+import { getDifference } from '@app/utils/utils';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';

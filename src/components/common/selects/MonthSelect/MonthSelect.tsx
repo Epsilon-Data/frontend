@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Dates } from 'constants/Dates';
+import { Dates } from '@app/constants/Dates';
 import { BaseSelect, Option, BaseSelectProps } from '../BaseSelect/BaseSelect';
 
 export const MonthSelect: React.FC<BaseSelectProps> = ({ className, ...props }) => {

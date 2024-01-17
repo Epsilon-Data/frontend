@@ -1,6 +1,6 @@
 import React from 'react';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
-import { getDifference } from 'utils/utils';
+import { getDifference } from '@app/utils/utils';
 import * as S from './StatisticsInfo.styles';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 

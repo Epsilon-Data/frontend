@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { categoriesList, CategoryType } from 'constants/categoriesList';
+import { categoriesList, CategoryType } from '@app/constants/categoriesList';
 import { CategoryComponents } from '@app/components/header/components/HeaderSearch/HeaderSearch';
 import * as S from './SearchFilter.styles';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';

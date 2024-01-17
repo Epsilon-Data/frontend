@@ -4,7 +4,7 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './ViewRequestPage.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RequestDetails } from '@app/interfaces/interfaces';
-import { getRequestDetails } from 'api/connectionRequests.api';
+import { getRequestDetails } from '@app/api/connectionRequests.api';
 import { useMounted } from '@app/hooks/useMounted';
 import { InfoItem } from '@app/components/view-request/InfoItem';
 import { InfoSectionHeader } from '@app/components/view-request/InfoSectionHeader';

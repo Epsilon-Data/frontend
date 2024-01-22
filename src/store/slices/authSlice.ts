@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   ResetPasswordRequest,
   login,
-  LoginRequest,
   signUp,
   SignUpRequest,
   resetPassword,
@@ -12,7 +11,7 @@ import {
   setNewPassword,
 } from '@app/api/auth.api';
 import { setUser } from '@app/store/slices/userSlice';
-import { deleteToken, deleteUser, persistToken, readToken } from '@app/services/localStorage.service';
+import { deleteToken, deleteUser, readToken } from '@app/services/localStorage.service';
 
 export interface AuthSlice {
   token: string | null;
@@ -22,13 +21,21 @@ const initialState: AuthSlice = {
   token: readToken(),
 };
 
-export const doLogin = createAsyncThunk('auth/doLogin', async (loginPayload: LoginRequest, { dispatch }) =>
-  login(loginPayload).then((res) => {
-    dispatch(setUser(res.user));
-    persistToken(res.token);
+export const doLogin = createAsyncThunk(
+  'auth/doLogin',
+  // async (
+  //   loginPayload: LoginRequest,
+  //   {
+  //     /*dispatch */
+  //   },
+  // ) =>
+  //   login(loginPayload).then((res) => {
+  //     dispatch(setUser(res.user));
+  //     persistToken(res.token);
 
-    return res.token;
-  }),
+  //     return res.token;
+  //   }),
+  async () => login('http://localhost:3000'),
 );
 
 export const doSignUp = createAsyncThunk('auth/doSignUp', async (signUpPayload: SignUpRequest) =>

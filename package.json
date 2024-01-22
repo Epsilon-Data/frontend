@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
-    "@epsilon-data/epsilon-connector": "^1.0.0",
+    "@epsilon-data/epsilon-connector": "^0.0.9",
+    "@epsilon-data/epsilon-auth-client": "^0.0.3",
     "@lit-labs/react": "^2.1.2",
     "@react-google-maps/api": "^2.19.2",
     "@reduxjs/toolkit": "^1.9.7",
@@ -140,7 +141,7 @@
     "@types/react": "^18.0.28",
     "react-error-overlay": "6.0.9"
   },
-  "packageManager": "yarn@3.1.1",
+  "packageManager": "pnpm@8.14.2",
   "keywords": [
     "lightence",
     "admin",

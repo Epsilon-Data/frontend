@@ -1,4 +1,5 @@
-import { httpApi } from '@app/api/http.api';
+import { httpClient, getLoginUrl, getUserInfo, getUserClaims, refreshToken, logout } from '@app/api/http.api';
+
 import './mocks/auth.api.mock';
 import { UserModel } from '@app/domain/UserModel';
 
@@ -36,17 +37,35 @@ export interface LoginResponse {
   user: UserModel;
 }
 
-export const login = (loginPayload: LoginRequest): Promise<LoginResponse> =>
-  httpApi.post<LoginResponse>('login', { ...loginPayload }).then(({ data }) => data);
+export const login = async (currentPath: string): Promise<string> =>
+  // httpApi.post<LoginResponse>('login', { ...loginPayload }).then(({ data }) => data);
+  (window.location.href = await getLoginUrl(currentPath));
 
 export const signUp = (signUpData: SignUpRequest): Promise<undefined> =>
-  httpApi.post<undefined>('signUp', { ...signUpData }).then(({ data }) => data);
+  httpClient.post<undefined>('signUp', { ...signUpData }).then(({ data }) => data);
+
+export const fetchUserInfo = async () => {
+  return await getUserInfo();
+};
+
+export const fetchClaims = async (csrf: string) => {
+  return await getUserClaims(csrf);
+};
+
+export const refresh = async (csrf: string) => {
+  await refreshToken(csrf);
+};
 
 export const resetPassword = (resetPasswordPayload: ResetPasswordRequest): Promise<undefined> =>
-  httpApi.post<undefined>('forgotPassword', { ...resetPasswordPayload }).then(({ data }) => data);
+  httpClient.post<undefined>('forgotPassword', { ...resetPasswordPayload }).then(({ data }) => data);
 
 export const verifySecurityCode = (securityCodePayload: SecurityCodePayload): Promise<undefined> =>
-  httpApi.post<undefined>('verifySecurityCode', { ...securityCodePayload }).then(({ data }) => data);
+  httpClient.post<undefined>('verifySecurityCode', { ...securityCodePayload }).then(({ data }) => data);
 
 export const setNewPassword = (newPasswordData: NewPasswordData): Promise<undefined> =>
-  httpApi.post<undefined>('setNewPassword', { ...newPasswordData }).then(({ data }) => data);
+  httpClient.post<undefined>('setNewPassword', { ...newPasswordData }).then(({ data }) => data);
+
+export const signOut = async (csrf: string) => {
+  const { url } = await logout(csrf);
+  window.location.href = url;
+};

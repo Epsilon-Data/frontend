@@ -8,4 +8,8 @@ console.error = (errObj, ...args) => {
   consoleError(errObj, ...args);
 };
 
-export default {};
+export default {
+  // TODO: change to general API gateway for all APIs
+  apiPrefix: import.meta.env.VITE_EPSILON_API_PREFIX || '/api/v1',
+  cookiePrefix: import.meta.env.VITE_EPSILON_COOKIE_PREFIX || 'epsilon',
+};

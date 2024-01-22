@@ -50,3 +50,13 @@ export const readUser = (): UserModel | null => {
 
 export const deleteToken = (): void => localStorage.removeItem('accessToken');
 export const deleteUser = (): void => localStorage.removeItem('user');
+
+export const persistCsrf = (csrf: string): void => {
+  localStorage.setItem('csrf', csrf);
+};
+
+export const readCsrf = (): string => {
+  return localStorage.getItem('csrf') || '';
+};
+
+export const deleteCsrf = (): void => localStorage.removeItem('csrf');

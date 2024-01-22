@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // no lazy loading for auth pages to avoid flickering
 const AuthLayout = React.lazy(() => import('@app/components/layouts/AuthLayout/AuthLayout'));
-import LoginPage from '@app/pages/LoginPage';
+// import LoginPage from '@app/pages/LoginPage';
 import SignUpPage from '@app/pages/SignUpPage';
 import ForgotPasswordPage from '@app/pages/ForgotPasswordPage';
 import SecurityCodePage from '@app/pages/SecurityCodePage';
@@ -15,6 +15,7 @@ import RequireAuth from '@app/components/router/RequireAuth';
 import { withLoading } from '@app/hocs/withLoading.hoc';
 import MedicalDashboardPage from '@app/pages/DashboardPages/MedicalDashboardPage';
 const Logout = React.lazy(() => import('./Logout'));
+const Login = React.lazy(() => import('./Login'));
 
 const OAConnectionRequestsPage = React.lazy(() => import('@app/pages/orgAdmin/ConnectionRequestsPage'));
 const RConnectionRequestsPage = React.lazy(
@@ -65,6 +66,7 @@ const DatabaseSummary = withLoading(DatabaseSummaryPage);
 
 const AuthLayoutFallback = withLoading(AuthLayout);
 const LogoutFallback = withLoading(Logout);
+const LoginFallback = withLoading(Login);
 
 export const AppRouter: React.FC = () => {
   const protectedLayout = (
@@ -91,7 +93,7 @@ export const AppRouter: React.FC = () => {
           <Route path="database-sources/access-permissions/:id" element={<AccessPermissions />} /> */}
         </Route>
         <Route path="/auth" element={<AuthLayoutFallback />}>
-          <Route path="login" element={<LoginPage />} />
+          <Route path="login" element={<LoginFallback />} />
           <Route path="sign-up" element={<SignUpPage />} />
           <Route
             path="lock"

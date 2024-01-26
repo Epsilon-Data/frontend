@@ -1,4 +1,12 @@
-import { httpClient, getLoginUrl, getUserInfo, getUserClaims, refreshToken, logout } from '@app/api/http.api';
+import {
+  httpClient,
+  getLoginUrl,
+  getUserInfo,
+  getUserClaims,
+  refreshToken,
+  logout,
+  handlePageLoad,
+} from '@app/api/http.api';
 
 import './mocks/auth.api.mock';
 import { UserModel } from '@app/domain/UserModel';
@@ -37,10 +45,10 @@ export interface LoginResponse {
   user: UserModel;
 }
 
-export const login = async (currentPath: string): Promise<string> =>
+export const login = async (currentPath: string) => {
   // httpApi.post<LoginResponse>('login', { ...loginPayload }).then(({ data }) => data);
-  (window.location.href = await getLoginUrl(currentPath));
-
+  return await getLoginUrl(currentPath);
+};
 export const signUp = (signUpData: SignUpRequest): Promise<undefined> =>
   httpClient.post<undefined>('signUp', { ...signUpData }).then(({ data }) => data);
 
@@ -68,4 +76,10 @@ export const setNewPassword = (newPasswordData: NewPasswordData): Promise<undefi
 export const signOut = async (csrf: string) => {
   const { url } = await logout(csrf);
   window.location.href = url;
+};
+
+export const doPageLoad = async (query: URLSearchParams) => {
+  const state = query.get('state') || '';
+  const code = query.get('code') || '';
+  return await handlePageLoad(state, code);
 };

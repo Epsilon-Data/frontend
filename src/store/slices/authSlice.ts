@@ -9,16 +9,23 @@ import {
   SecurityCodePayload,
   NewPasswordData,
   setNewPassword,
+  doPageLoad,
 } from '@app/api/auth.api';
 import { setUser } from '@app/store/slices/userSlice';
-import { deleteToken, deleteUser, readToken } from '@app/services/localStorage.service';
+import { deleteCsrf, deleteUser, persistCsrf, readCsrf } from '@app/services/localStorage.service';
+import { getUserClaims } from '@app/api/http.api';
+import { UserDetails } from '@app/domain/UserModel';
+
+// export interface AuthSlice {
+//   token: string | null;
+// }
 
 export interface AuthSlice {
-  token: string | null;
+  csrf: string | null;
 }
 
 const initialState: AuthSlice = {
-  token: readToken(),
+  csrf: readCsrf(),
 };
 
 export const doLogin = createAsyncThunk(
@@ -35,7 +42,24 @@ export const doLogin = createAsyncThunk(
 
   //     return res.token;
   //   }),
-  async () => login('http://localhost:3000'),
+  async () =>
+    login('http://localhost:3000').then((res) => {
+      return res;
+    }),
+);
+
+export const handleAuth = createAsyncThunk('auth/handleAuth', async (query: URLSearchParams) =>
+  doPageLoad(query).then((res) => {
+    persistCsrf(res.csrf);
+    return res;
+  }),
+);
+
+export const getClaims = createAsyncThunk('auth/getClaims', async (payload, { dispatch }) =>
+  getUserClaims(readCsrf()).then((userDetails: UserDetails) => {
+    dispatch(setUser(userDetails));
+    return userDetails;
+  }),
 );
 
 export const doSignUp = createAsyncThunk('auth/doSignUp', async (signUpPayload: SignUpRequest) =>
@@ -57,7 +81,8 @@ export const doSetNewPassword = createAsyncThunk('auth/doSetNewPassword', async 
 );
 
 export const doLogout = createAsyncThunk('auth/doLogout', (payload, { dispatch }) => {
-  deleteToken();
+  // deleteToken();
+  deleteCsrf();
   deleteUser();
   dispatch(setUser(null));
 });
@@ -68,10 +93,10 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(doLogin.fulfilled, (state, action) => {
-      state.token = action.payload;
+      state.csrf = action.payload;
     });
     builder.addCase(doLogout.fulfilled, (state) => {
-      state.token = '';
+      state.csrf = '';
     });
   },
 });

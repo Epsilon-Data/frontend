@@ -13,6 +13,7 @@ const clientOptions: AuthClientOptionsDto = {
 };
 
 const httpClientOptions: AxiosRequestConfig = {
+  baseURL: config.apiPrefix,
   // Use this to add any additional headers
   headers: {},
 };

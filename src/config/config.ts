@@ -10,6 +10,6 @@ console.error = (errObj, ...args) => {
 
 export default {
   // TODO: change to general API gateway for all APIs
-  apiPrefix: import.meta.env.VITE_EPSILON_API_PREFIX || '/api/v1',
+  apiPrefix: import.meta.env.VITE_EPSILON_API_PREFIX || 'http://localhost/api/v1',
   cookiePrefix: import.meta.env.VITE_EPSILON_COOKIE_PREFIX || 'epsilon',
 };

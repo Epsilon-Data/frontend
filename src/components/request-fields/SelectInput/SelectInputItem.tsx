@@ -3,7 +3,7 @@ import { BaseSelect } from '@app/components/common/selects/BaseSelect/BaseSelect
 
 export const SelectInputItem: React.FC<{
   name: string;
-  label: string;
+  label?: string;
   optionItems: {
     value: string;
     label: string;

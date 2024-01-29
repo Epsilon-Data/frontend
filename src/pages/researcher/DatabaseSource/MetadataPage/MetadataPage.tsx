@@ -39,7 +39,7 @@ const MetadataPage: React.FC = () => {
                 icon={<TableOutlined rev={undefined} />}
                 onClick={() => navigate('table-info')}
               >
-                {t('databaseSources.metadata.tableInfo')}
+                {t('databaseSources.metadata.tableInfo.title')}
               </S.Button>
             </BaseCol>
           </BaseRow>

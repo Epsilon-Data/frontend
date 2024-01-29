@@ -6,6 +6,7 @@ import {
   darkThemeVariables,
   commonThemeVariables,
   antOverrideCssVariables,
+  elementMappingVariables,
 } from './themes/themeVariables';
 
 export default createGlobalStyle`
@@ -24,6 +25,7 @@ export default createGlobalStyle`
   :root {
     ${commonThemeVariables};
     ${antOverrideCssVariables};
+    ${elementMappingVariables};
   } 
 
   [data-no-transition] * {

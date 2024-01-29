@@ -4,7 +4,7 @@ import { FONT_SIZE } from '@app/styles/themes/constants';
 
 export const Table = styled(AntdTable)`
   .ant-table-content {
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     border: 2px solid var(--border-color);
   }
 
@@ -31,7 +31,7 @@ export const Table = styled(AntdTable)`
   & tbody .ant-table-cell {
     color: var(--text-main-color);
     font-size: ${FONT_SIZE.xs};
-    line-height: 1.25rem;
+    line-height: 1rem;
     border-left: 2px solid var(--border-color);
   }
 

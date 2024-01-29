@@ -9,19 +9,13 @@ const Login: React.FC = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    handleLogin();
-  }, []);
-
-  const handleLogin = () => {
     dispatch(doLogin())
       .unwrap()
-      .then((res) => {
-        window.location.href = res;
-      })
+      .then((res) => (window.location.href = res))
       .catch((err) => {
         notificationController.error({ message: err.message });
       });
-  };
+  }, [dispatch]);
   // return <Navigate to="/" replace />;
   return null;
 };

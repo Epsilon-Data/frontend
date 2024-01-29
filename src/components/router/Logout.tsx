@@ -8,19 +8,13 @@ const Logout: React.FC = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    handleLogout();
-  }, []);
-
-  const handleLogout = () => {
     dispatch(doLogout())
       .unwrap()
-      .then((res) => {
-        window.location.href = res;
-      })
+      .then((res) => (window.location.href = res))
       .catch((err) => {
         notificationController.error({ message: err.message });
       });
-  };
+  }, [dispatch]);
 
   // return <Navigate to="/auth/login" replace />;
   return null;

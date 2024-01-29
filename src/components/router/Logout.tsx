@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useAppDispatch } from '@app/hooks/reduxHooks';
 // import { Navigate } from 'react-router-dom';
 import { doLogout } from '@app/store/slices/authSlice';
+import { notificationController } from '@app/controllers/notificationController';
 
 const Logout: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -16,10 +17,8 @@ const Logout: React.FC = () => {
       .then((res) => {
         window.location.href = res;
       })
-      .catch((err: unknown) => {
-        // notificationController.error({ message: err.message });
-        // setLoading(false);
-        console.log(err);
+      .catch((err) => {
+        notificationController.error({ message: err.message });
       });
   };
 

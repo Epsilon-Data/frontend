@@ -3,6 +3,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@app/hooks/reduxHooks';
 import { WithChildrenProps } from '@app/types/generalTypes';
 import { getClaims, handleAuth } from '@app/store/slices/authSlice';
+import { notificationController } from '@app/controllers/notificationController';
 
 const RequireAuth: React.FC<WithChildrenProps> = ({ children }) => {
   const dispatch = useAppDispatch();
@@ -20,8 +21,8 @@ const RequireAuth: React.FC<WithChildrenProps> = ({ children }) => {
             navigate('/', { replace: true });
           }
         })
-        .catch((err: unknown) => {
-          console.log(err);
+        .catch((err) => {
+          notificationController.error({ message: err.message });
         });
     } else if (csrf !== '') {
       dispatch(getClaims());

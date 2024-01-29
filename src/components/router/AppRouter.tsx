@@ -4,11 +4,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // no lazy loading for auth pages to avoid flickering
 const AuthLayout = React.lazy(() => import('@app/components/layouts/AuthLayout/AuthLayout'));
 // import LoginPage from '@app/pages/LoginPage';
-import SignUpPage from '@app/pages/SignUpPage';
-import ForgotPasswordPage from '@app/pages/ForgotPasswordPage';
-import SecurityCodePage from '@app/pages/SecurityCodePage';
-import NewPasswordPage from '@app/pages/NewPasswordPage';
-import LockPage from '@app/pages/LockPage';
+// import SignUpPage from '@app/pages/SignUpPage';
+// import ForgotPasswordPage from '@app/pages/ForgotPasswordPage';
+// import SecurityCodePage from '@app/pages/SecurityCodePage';
+// import NewPasswordPage from '@app/pages/NewPasswordPage';
+// import LockPage from '@app/pages/LockPage';
 
 import MainLayout from '@app/components/layouts/main/MainLayout/MainLayout';
 import RequireAuth from '@app/components/router/RequireAuth';
@@ -94,8 +94,8 @@ export const AppRouter: React.FC = () => {
         </Route>
         <Route path="/auth" element={<AuthLayoutFallback />}>
           <Route path="login" element={<LoginFallback />} />
-          <Route path="sign-up" element={<SignUpPage />} />
-          <Route
+          {/* <Route path="sign-up" element={<SignUpPage />} /> */}
+          {/* <Route
             path="lock"
             element={
               <RequireAuth>
@@ -105,7 +105,7 @@ export const AppRouter: React.FC = () => {
           />
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
           <Route path="security-code" element={<SecurityCodePage />} />
-          <Route path="new-password" element={<NewPasswordPage />} />
+          <Route path="new-password" element={<NewPasswordPage />} /> */}
         </Route>
         <Route path="/logout" element={<LogoutFallback />} />
       </Routes>

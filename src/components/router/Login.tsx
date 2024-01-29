@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useAppDispatch } from '@app/hooks/reduxHooks';
 // import { Navigate } from 'react-router-dom';
 import { doLogin } from '@app/store/slices/authSlice';
+import { notificationController } from '@app/controllers/notificationController';
 
 const Login: React.FC = () => {
   // const navigate = useNavigate();
@@ -17,10 +18,8 @@ const Login: React.FC = () => {
       .then((res) => {
         window.location.href = res;
       })
-      .catch((err: unknown) => {
-        // notificationController.error({ message: err.message });
-        // setLoading(false);
-        console.log(err);
+      .catch((err) => {
+        notificationController.error({ message: err.message });
       });
   };
   // return <Navigate to="/" replace />;

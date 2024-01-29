@@ -23,7 +23,7 @@ const RequireAuth: React.FC<WithChildrenProps> = ({ children }) => {
         .catch((err: unknown) => {
           console.log(err);
         });
-    } else {
+    } else if (csrf !== '') {
       dispatch(getClaims());
     }
   }, [csrf, dispatch, navigate, search]);

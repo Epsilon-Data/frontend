@@ -10,6 +10,7 @@ import {
   NewPasswordData,
   setNewPassword,
   doPageLoad,
+  signOut,
 } from '@app/api/auth.api';
 import { setUser } from '@app/store/slices/userSlice';
 import { deleteCsrf, deleteUser, persistCsrf, readCsrf } from '@app/services/localStorage.service';
@@ -80,12 +81,16 @@ export const doSetNewPassword = createAsyncThunk('auth/doSetNewPassword', async 
   setNewPassword(newPasswordData),
 );
 
-export const doLogout = createAsyncThunk('auth/doLogout', (payload, { dispatch }) => {
-  // deleteToken();
-  deleteCsrf();
-  deleteUser();
-  dispatch(setUser(null));
-});
+export const doLogout = createAsyncThunk('auth/doLogout', async (payload, { dispatch }) =>
+  signOut(readCsrf()).then((res) => {
+    // deleteToken();
+    // console.log(res);
+    deleteCsrf();
+    deleteUser();
+    dispatch(setUser(null));
+    return res;
+  }),
+);
 
 const authSlice = createSlice({
   name: 'auth',

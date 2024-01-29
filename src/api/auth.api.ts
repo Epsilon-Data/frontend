@@ -75,7 +75,7 @@ export const setNewPassword = (newPasswordData: NewPasswordData): Promise<undefi
 
 export const signOut = async (csrf: string) => {
   const { url } = await logout(csrf);
-  window.location.href = url;
+  return url;
 };
 
 export const doPageLoad = async (query: URLSearchParams) => {

@@ -10,15 +10,18 @@ const initialState: UserState = {
   user: readUser(),
 };
 
-export const setUser = createAction<PrepareAction<UserModel>>('user/setUser', (userDetails) => {
-  const newUser = {
-    id: userDetails.sub,
-    firstName: userDetails.given_name,
-    lastName: userDetails.family_name,
-    userName: userDetails.preferred_username,
-    email: { name: userDetails.email, verified: userDetails.email_verified },
-    authTime: userDetails.auth_time * 1000,
-  };
+export const setUser = createAction<PrepareAction<UserModel | null>>('user/setUser', (userDetails) => {
+  const newUser = userDetails
+    ? {
+        id: userDetails.sub,
+        firstName: userDetails.given_name,
+        lastName: userDetails.family_name,
+        userName: userDetails.preferred_username,
+        email: { name: userDetails.email, verified: userDetails.email_verified },
+        authTime: userDetails.auth_time * 1000,
+      }
+    : null;
+
   persistUser(newUser);
   return {
     payload: newUser,

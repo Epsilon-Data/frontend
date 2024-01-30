@@ -1,12 +1,35 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAppSelector } from '@app/hooks/reduxHooks';
+import React, { useEffect } from 'react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '@app/hooks/reduxHooks';
 import { WithChildrenProps } from '@app/types/generalTypes';
+import { getClaims, handleAuth } from '@app/store/slices/authSlice';
+import { notificationController } from '@app/controllers/notificationController';
 
 const RequireAuth: React.FC<WithChildrenProps> = ({ children }) => {
-  const token = useAppSelector((state) => state.auth.token);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const search = useLocation().search;
+  const csrf = useAppSelector((state) => state.auth.csrf);
+  // get credentials and generate CSRF
+  useEffect(() => {
+    const query = new URLSearchParams(search);
+    if (query && query.size) {
+      dispatch(handleAuth(query))
+        .unwrap()
+        .then((res) => {
+          if (res.isLoggedIn && res.handled) {
+            navigate('/', { replace: true });
+          }
+        })
+        .catch((err) => {
+          notificationController.error({ message: err.message });
+        });
+    } else if (csrf !== '') {
+      dispatch(getClaims());
+    }
+  }, [csrf, dispatch, navigate, search]);
 
-  return token ? <>{children}</> : <Navigate to="/auth/login" replace />;
+  return csrf ? <>{children}</> : <Navigate to="/auth/login" replace />;
 };
 
 export default RequireAuth;

@@ -1,23 +1,23 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch } from '@app/hooks/reduxHooks';
 // import { Navigate } from 'react-router-dom';
-import { doLogout } from '@app/store/slices/authSlice';
+import { doLogin } from '@app/store/slices/authSlice';
 import { notificationController } from '@app/controllers/notificationController';
 
-const Logout: React.FC = () => {
+const Login: React.FC = () => {
+  // const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(doLogout())
+    dispatch(doLogin())
       .unwrap()
       .then((res) => (window.location.href = res))
       .catch((err) => {
         notificationController.error({ message: err.message });
       });
   }, [dispatch]);
-
-  // return <Navigate to="/auth/login" replace />;
+  // return <Navigate to="/" replace />;
   return null;
 };
 
-export default Logout;
+export default Login;

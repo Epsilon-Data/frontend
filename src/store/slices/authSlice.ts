@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   ResetPasswordRequest,
   login,
-  LoginRequest,
   signUp,
   SignUpRequest,
   resetPassword,
@@ -10,24 +9,57 @@ import {
   SecurityCodePayload,
   NewPasswordData,
   setNewPassword,
+  doPageLoad,
+  signOut,
 } from '@app/api/auth.api';
 import { setUser } from '@app/store/slices/userSlice';
-import { deleteToken, deleteUser, persistToken, readToken } from '@app/services/localStorage.service';
+import { deleteCsrf, deleteUser, persistCsrf, readCsrf } from '@app/services/localStorage.service';
+import { getUserClaims } from '@app/api/http.api';
+import { UserDetails } from '@app/domain/UserModel';
+
+// export interface AuthSlice {
+//   token: string | null;
+// }
 
 export interface AuthSlice {
-  token: string | null;
+  csrf: string | null;
 }
 
 const initialState: AuthSlice = {
-  token: readToken(),
+  csrf: readCsrf(),
 };
 
-export const doLogin = createAsyncThunk('auth/doLogin', async (loginPayload: LoginRequest, { dispatch }) =>
-  login(loginPayload).then((res) => {
-    dispatch(setUser(res.user));
-    persistToken(res.token);
+export const doLogin = createAsyncThunk(
+  'auth/doLogin',
+  // async (
+  //   loginPayload: LoginRequest,
+  //   {
+  //     /*dispatch */
+  //   },
+  // ) =>
+  //   login(loginPayload).then((res) => {
+  //     dispatch(setUser(res.user));
+  //     persistToken(res.token);
 
-    return res.token;
+  //     return res.token;
+  //   }),
+  async () =>
+    login('http://localhost:3000').then((res) => {
+      return res;
+    }),
+);
+
+export const handleAuth = createAsyncThunk('auth/handleAuth', async (query: URLSearchParams) =>
+  doPageLoad(query).then((res) => {
+    persistCsrf(res.csrf);
+    return res;
+  }),
+);
+
+export const getClaims = createAsyncThunk('auth/getClaims', async (payload, { dispatch }) =>
+  getUserClaims(readCsrf()).then((userDetails: UserDetails) => {
+    dispatch(setUser(userDetails));
+    return userDetails;
   }),
 );
 
@@ -49,11 +81,16 @@ export const doSetNewPassword = createAsyncThunk('auth/doSetNewPassword', async 
   setNewPassword(newPasswordData),
 );
 
-export const doLogout = createAsyncThunk('auth/doLogout', (payload, { dispatch }) => {
-  deleteToken();
-  deleteUser();
-  dispatch(setUser(null));
-});
+export const doLogout = createAsyncThunk('auth/doLogout', async (payload, { dispatch }) =>
+  signOut(readCsrf()).then((res) => {
+    // deleteToken();
+    // console.log(res);
+    deleteCsrf();
+    deleteUser();
+    dispatch(setUser(null));
+    return res;
+  }),
+);
 
 const authSlice = createSlice({
   name: 'auth',
@@ -61,10 +98,10 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(doLogin.fulfilled, (state, action) => {
-      state.token = action.payload;
+      state.csrf = action.payload;
     });
     builder.addCase(doLogout.fulfilled, (state) => {
-      state.token = '';
+      state.csrf = '';
     });
   },
 });

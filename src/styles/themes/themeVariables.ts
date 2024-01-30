@@ -131,3 +131,10 @@ export const commonThemeVariables = css`
 export const antOverrideCssVariables = css`
   --ant-primary-1: var(--primary1-color) !important;
 `;
+
+export const elementMappingVariables = css`
+  --element-object-bg: #ff9898;
+  --element-category-bg: #ffa439;
+  --element-subcategory-bg: #ffe69b;
+  --sider-bg: #ecf1ff;
+`;

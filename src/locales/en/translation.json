@@ -962,7 +962,37 @@
     "provider": "Provider",
     "sourceList"  : "Source List",
     "manage" : "Manage",
-    "describeDataset": "Describe Dataset",
+    "describeDataset": {
+      "title": "Describe Dataset",
+      "projectTitle": "Describe Dataset Project {{id}}",
+      "step1": "Step 1",
+      "step2": "Step 2",
+      "step3": "Save",
+      "step1Description": "Describe your data structure.",
+      "step2Description": "Map column names.",
+      "step3Description": "Please wait...",
+      "instructions": {
+        "title": "Instructions",
+        "description": "Start defining the object of your data collection (e.g. person, event).",
+        "example": "Click here to view an example of a predefined archetype.",
+        "modal": "In this diagram, the person object is initially defined as it is the focal point for data collection. Various attributes pertaining to the person, such as demographic data and lifestyle data, are mapped out as distinct sub-categories. These categories can be as detailed as needed."
+      },
+      "elementSidebar": {
+        "description": "You can drag these elements to the pane on the right.",
+        "elements": "Elements",
+        "object": "Object",
+        "category": "Category",
+        "subcategory": "Sub-Category"
+      },
+      "columnSidebar": {
+        "search": "Search columns"
+      },
+      "clear": "Clear",
+      "saveTemplate": "Save Archetype Template",
+      "saveMapping": "Save Mapping",
+      "noObjectNotify": "Please add an object to your archetype.",
+      "duplicateElementsNotify": "Duplicate element names found: {{names}}"
+    },
     "accessPermissions": "Set Access Permissions",
     "projectId": "Project {{id}}",
     "metadata": {
@@ -978,8 +1008,15 @@
         "columnCount": "Total Column Count"
       },
       "erd": "Entity Relationship Diagram (ERD)",
-      "tableInfo": "Table Information"
-
+      "tableInfo": {
+        "title": "Table Information",
+        "selectPrompt": "Select a table",
+        "colCount": "Column Count",
+        "schema": "Table Schema",
+        "column": "Column",
+        "dataType" : "Data Type",
+        "isNullable": "Is Nullable"
+      }
     }
     
   },

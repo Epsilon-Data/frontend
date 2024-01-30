@@ -62,7 +62,7 @@ const ViewRequestPage: React.FC = () => {
         ]);
       case RequestStatus.APPROVED:
         return React.Children.toArray([
-          <S.ActionButton type="primary" key="source">
+          <S.ActionButton type="primary" key="source" onClick={() => navigate('/database-sources/metadata/' + id)}>
             {t('connectionRequests.viewSource')}
           </S.ActionButton>,
           <S.ActionButton type="default" key="back" onClick={handleBackClick}>

@@ -36,10 +36,10 @@ const MetadataPage = React.lazy(() => import('@app/pages/researcher/DatabaseSour
 const DatabaseSummaryPage = React.lazy(
   () => import('@app/pages/researcher/DatabaseSource/DatabaseSummaryPage/DatabaseSummaryPage'),
 );
-// const TableInfoPage = React.lazy(() => import('@app/pages/researcher/DatabaseSource/TableInfoPage/TableInfoPage'));
-// const DescribeDatasetPage = React.lazy(
-//   () => import('@app/pages/researcher/DatabaseSource/DescribeDatasetPage/DescribeDatasetPage'),
-// );
+const TableInfoPage = React.lazy(() => import('@app/pages/researcher/DatabaseSource/TableInfoPage/TableInfoPage'));
+const DescribeDatasetPage = React.lazy(
+  () => import('@app/pages/researcher/DatabaseSource/DescribeDatasetPage/DescribeDatasetPage'),
+);
 // const AccessPermissionsPage = React.lazy(
 //   () => import('@app/pages/researcher/DatabaseSource/AccessPermissionsPage/AccessPermissionsPage'),
 // );
@@ -60,8 +60,8 @@ const EditRequest = withLoading(EditRequestPage);
 const SourceList = withLoading(SourceListPage);
 const Metadata = withLoading(MetadataPage);
 const DatabaseSummary = withLoading(DatabaseSummaryPage);
-// const TableInfo = withLoading(TableInfoPage);
-// const DescribeDataset = withLoading(DescribeDatasetPage);
+const TableInfo = withLoading(TableInfoPage);
+const DescribeDataset = withLoading(DescribeDatasetPage);
 // const AccessPermissions = withLoading(AccessPermissionsPage);
 
 const AuthLayoutFallback = withLoading(AuthLayout);
@@ -88,9 +88,9 @@ export const AppRouter: React.FC = () => {
           <Route path="database-sources" element={<SourceList />} />
           <Route path="database-sources/metadata/:id" element={<Metadata />} />
           <Route path="database-sources/metadata/:id/db-summary" element={<DatabaseSummary />} />
-          {/* <Route path="database-sources/metadata/:id/table-info" element={<TableInfo />} /> */}
-          {/* <Route path="database-sources/describe-dataset/:id" element={<DescribeDataset />} />
-          <Route path="database-sources/access-permissions/:id" element={<AccessPermissions />} /> */}
+          <Route path="database-sources/metadata/:id/table-info" element={<TableInfo />} />
+          <Route path="database-sources/describe-dataset/:id" element={<DescribeDataset />} />
+          {/* <Route path="database-sources/access-permissions/:id" element={<AccessPermissions />} /> */}
         </Route>
         <Route path="/auth" element={<AuthLayoutFallback />}>
           <Route path="login" element={<LoginFallback />} />

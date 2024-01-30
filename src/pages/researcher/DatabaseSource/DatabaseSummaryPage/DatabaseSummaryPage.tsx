@@ -5,7 +5,7 @@ import * as S from './DatabaseSummaryPage.styles';
 import { OverallDescription } from '@app/components/database-summary/OverallDescription/OverallDescription';
 import { getDbSummary } from '@app/api/databaseSources.api';
 import { useParams } from 'react-router-dom';
-import { OverallDatabaseInfo } from '@app/interfaces/interfaces';
+import { OverallDatabaseInfoValues } from '@app/interfaces/interfaces';
 import { useMounted } from '@app/hooks/useMounted';
 import { INITIAL_OVERALL_DB_INFO } from '@app/constants/databaseSource';
 import { ERD } from '@app/components/database-summary/ERD/ERD';
@@ -15,7 +15,7 @@ const DatabaseSummaryPage: React.FC = () => {
   const { t } = useTranslation();
   const { isMounted } = useMounted();
   const [activeTabKey, setActiveTabKey] = useState('overall');
-  const [info, setInfo] = useState<OverallDatabaseInfo>(INITIAL_OVERALL_DB_INFO);
+  const [info, setInfo] = useState<OverallDatabaseInfoValues>(INITIAL_OVERALL_DB_INFO);
   const [diagramCode, setDiagramCode] = useState('');
 
   const fetch = useCallback(
@@ -50,7 +50,7 @@ const DatabaseSummaryPage: React.FC = () => {
   return (
     <>
       <PageTitle>{t('databaseSources.metadata.dbSummary')}</PageTitle>
-      <S.FormWrapper>
+      <S.CardWrapper>
         <S.Card
           id="metadata"
           title={t('databaseSources.metadata.dbSummary')}
@@ -60,7 +60,7 @@ const DatabaseSummaryPage: React.FC = () => {
           onTabChange={(key) => setActiveTabKey(key)}
           tabProps={{ tabPosition: 'left' }}
         ></S.Card>
-      </S.FormWrapper>
+      </S.CardWrapper>
     </>
   );
 };

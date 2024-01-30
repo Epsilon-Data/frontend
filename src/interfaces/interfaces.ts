@@ -85,7 +85,7 @@ export interface DatabaseInfoFormValues {
   password?: string;
 }
 
-export interface OverallDatabaseInfo {
+export interface OverallDatabaseInfoValues {
   dateCreated: Date | string;
   schemaCount: number;
   totalTableCount: number;

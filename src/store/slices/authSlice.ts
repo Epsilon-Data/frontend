@@ -16,6 +16,7 @@ import { setUser } from '@app/store/slices/userSlice';
 import { deleteCsrf, deleteUser, persistCsrf, readCsrf } from '@app/services/localStorage.service';
 import { getUserClaims } from '@app/api/http.api';
 import { UserDetails } from '@app/domain/UserModel';
+import { gatewayTest } from '@app/api/gateway.api';
 
 // export interface AuthSlice {
 //   token: string | null;
@@ -62,6 +63,8 @@ export const getClaims = createAsyncThunk('auth/getClaims', async (payload, { di
     return userDetails;
   }),
 );
+
+export const testGateway = createAsyncThunk('auth/gatewayTest', async () => gatewayTest());
 
 export const doSignUp = createAsyncThunk('auth/doSignUp', async (signUpPayload: SignUpRequest) =>
   signUp(signUpPayload),

@@ -8,7 +8,7 @@ import {
   handlePageLoad,
 } from '@app/api/http.api';
 
-import './mocks/auth.api.mock';
+// import './mocks/auth.api.mock';
 import { UserModel } from '@app/domain/UserModel';
 
 export interface AuthData {
@@ -49,6 +49,7 @@ export const login = async (currentPath: string) => {
   // httpApi.post<LoginResponse>('login', { ...loginPayload }).then(({ data }) => data);
   return await getLoginUrl(currentPath);
 };
+
 export const signUp = (signUpData: SignUpRequest): Promise<undefined> =>
   httpClient.post<undefined>('signUp', { ...signUpData }).then(({ data }) => data);
 

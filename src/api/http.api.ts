@@ -1,8 +1,9 @@
 import { authClient, AuthClientOptionsDto } from '@epsilon-data/epsilon-auth-client';
 
-import { AxiosRequestConfig } from 'axios';
+import { AxiosError, AxiosRequestConfig } from 'axios';
 
 import config from '@app/config/config';
+import { ApiError } from './ApiError';
 
 const clientOptions: AuthClientOptionsDto = {
   tokenHandlerUri: `${config.apiPrefix}/token`,
@@ -33,13 +34,13 @@ const { getLoginUrl, handlePageLoad, getUserInfo, getUserClaims, refreshToken, l
 //   return config;
 // });
 
-// httpApi.interceptors.response.use(undefined, (error: AxiosError) => {
-//   const responseData = error.response?.data as ApiErrorData;
-//   throw new ApiError<ApiErrorData>(responseData?.message || error.message, responseData);
-// });
+httpClient.interceptors.response.use(undefined, (error: AxiosError) => {
+  const responseData = error.response?.data as ApiErrorData;
+  throw new ApiError<ApiErrorData>(responseData?.message || error.message, responseData);
+});
 
-// export interface ApiErrorData {
-//   message: string;
-// }
+export interface ApiErrorData {
+  message: string;
+}
 
 export { getLoginUrl, handlePageLoad, getUserInfo, getUserClaims, refreshToken, logout, httpClient };

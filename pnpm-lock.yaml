@@ -12,12 +12,12 @@ dependencies:
   '@ant-design/icons':
     specifier: ^5.2.6
     version: 5.2.6(react-dom@18.2.0)(react@18.2.0)
-  '@epsilon-data/epsilon-auth-client':
-    specifier: ^0.0.3
-    version: 0.0.3
   '@dagrejs/dagre':
     specifier: ^1.0.4
     version: 1.0.4
+  '@epsilon-data/epsilon-auth-client':
+    specifier: ^0.0.5
+    version: 0.0.5
   '@epsilon-data/epsilon-connector':
     specifier: ^0.0.9
     version: 0.0.9
@@ -682,8 +682,8 @@ packages:
     resolution: {integrity: sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==}
     dev: false
 
-  /@epsilon-data/epsilon-auth-client@0.0.3:
-    resolution: {integrity: sha512-eWupYJaboQalnbaKtA1S4i2xIBMg8ksW3XHIRXm63Vi2Lkji3XM9uPN2wZKfJHwj+oNNNeif1VuYTYdCsbLpdg==, tarball: https://npm.pkg.github.com/download/@epsilon-data/epsilon-auth-client/0.0.3/652a9666094fd378e6bc4be58d7f5a44bba40275}
+  /@epsilon-data/epsilon-auth-client@0.0.5:
+    resolution: {integrity: sha512-hYP/b5lxMT3/POG5dd0ViKajWZOCyQGmARQLZl2Cub6EihuVTFLMk6s+WjEX2bA2DQcRoQNo7OgzhRL7nBa42w==, tarball: https://npm.pkg.github.com/download/@epsilon-data/epsilon-auth-client/0.0.5/afb0e9c551b59224ebe396d2f0d68c2cdf654206}
     dependencies:
       '@types/node': 20.10.4
       axios: 1.6.5

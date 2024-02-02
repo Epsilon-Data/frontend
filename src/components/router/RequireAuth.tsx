@@ -26,6 +26,7 @@ const RequireAuth: React.FC<WithChildrenProps> = ({ children }) => {
         });
     } else if (csrf !== '') {
       dispatch(getClaims());
+      // dispatch(testGateway());
     }
   }, [csrf, dispatch, navigate, search]);
 

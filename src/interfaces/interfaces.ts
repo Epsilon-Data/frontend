@@ -91,3 +91,13 @@ export interface OverallDatabaseInfoValues {
   totalTableCount: number;
   totalColCount: number;
 }
+
+export type DatabaseConnectionDetails = {
+  readonly type: string;
+  readonly host: string;
+  readonly port: string;
+  readonly username: string;
+  readonly password: string;
+  readonly name: string;
+  readonly ssl?: boolean;
+};

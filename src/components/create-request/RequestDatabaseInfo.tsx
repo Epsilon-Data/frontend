@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import { RequestDetails } from '@app/interfaces/interfaces';
+import { DatabaseConnectionDetails, RequestDetails } from '@app/interfaces/interfaces';
 import { StringInputItem } from '../request-fields/StringInput/StringInputItem';
 import { SelectInputItem } from '../request-fields/SelectInput/SelectInputItem';
 import { PasswordInputItem } from '../request-fields/PasswordInput/PasswordInputItem';
@@ -14,19 +14,20 @@ import { FormModal } from '../request-fields/FormModal/FormModal';
 import { AppDate } from '@app/constants/Dates';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
-import { testConnection } from '@epsilon-data/epsilon-connector';
+import { testConnection } from '@app/api/connectionRequests.api';
+import config from '@app/config/config';
 
 export const RequestDatabaseInfo: React.FC<{
   formValue: RequestDetails;
   setFormValue: (value: RequestDetails) => void;
 }> = ({ formValue, setFormValue }) => {
   const initialValues = {
-    databaseName: formValue.databaseInfo?.name,
-    databaseType: formValue.databaseInfo?.type,
-    databaseHost: formValue.databaseInfo?.host,
-    databasePort: formValue.databaseInfo?.port,
-    databaseUsername: formValue.databaseInfo?.username,
-    databasePassword: formValue.databaseInfo?.password,
+    databaseName: formValue.databaseInfo?.name || `${config.isDev ? 'test' : ''}`,
+    databaseType: formValue.databaseInfo?.type || `${config.isDev ? 'postgres' : ''}`,
+    databaseHost: formValue.databaseInfo?.host || `${config.isDev ? 'localhost' : ''}`,
+    databasePort: formValue.databaseInfo?.port || `${config.isDev ? '5433' : ''}`,
+    databaseUsername: formValue.databaseInfo?.username || `${config.isDev ? 'test_admin' : ''}`,
+    databasePassword: formValue.databaseInfo?.password || `${config.isDev ? 'supersecret' : ''}`,
     dataCollectionDuration: formValue.dataInfo.collectionDuration.map((date: Date) => dayjs(date)),
     dataParticipantsNumber: formValue.dataInfo.participantsNumber,
     dataDescription: formValue.dataInfo.description,
@@ -104,13 +105,13 @@ export const RequestDatabaseInfo: React.FC<{
         'databasePassword',
       ]);
 
-    const connectionData = {
-      driver: databaseType,
+    const connectionData: DatabaseConnectionDetails = {
+      type: databaseType,
       port: databasePort,
       host: databaseHost,
-      user: databaseUsername,
+      username: databaseUsername,
       password: databasePassword,
-      database: databaseName,
+      name: databaseName,
       ssl: false,
     };
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Priority } from '../constants/enums/priorities';
-import { RequestDetails } from '@app/interfaces/interfaces';
+import { DatabaseConnectionDetails, RequestDetails } from '@app/interfaces/interfaces';
 import { RequestStatus } from '@app/constants/enums/requestStatus';
 import { format } from 'date-fns';
 import { DATE_FORMAT } from '@app/constants/connectionRequest';
@@ -83,5 +83,10 @@ export const createRequest = async (data: RequestDetails): Promise<RequestDetail
 
 export const updateRequest = async (data: RequestDetails): Promise<RequestDetails> => {
   const response = await axios.patch(`${API_URL}/update`, data);
+  return response.data;
+};
+
+export const testConnection = async (data: DatabaseConnectionDetails): Promise<unknown> => {
+  const response = await axios.post<DatabaseConnectionDetails>(`${API_URL}/test-connection`, data);
   return response.data;
 };

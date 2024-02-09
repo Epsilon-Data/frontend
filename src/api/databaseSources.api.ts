@@ -1,11 +1,12 @@
-import axios from 'axios';
 import { OverallDatabaseInfoValues } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 import { SourceStatus } from '@app/constants/enums/sourceStatus';
 import { DATE_FORMAT } from '@app/constants/databaseSource';
 import { format } from 'date-fns';
 
-const API_URL = 'http://localhost:3333/database-source';
+import { httpClient, getCsrfHeader } from './http.api';
+
+// const API_URL = 'http://localhost:3333/database-source';
 
 export interface Tag {
   value: string;
@@ -51,11 +52,18 @@ export interface ColumnTableRow {
 }
 
 export const getSourceList = async (pagination: Pagination, userId?: number): Promise<SourceListData> => {
-  const response = await axios.get(`${API_URL}/list`, {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get('/hub/database-source/list', {
+    headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       userId: userId,
     },
   });
+  // const response = await axios.get(`${API_URL}/list`, {
+  //   params: {
+  //     userId: userId,
+  //   },
+  // });
 
   const formattedData = response.data.map((item: { connectDate: Date; sourceStatus: number }) => {
     let statusTag = { value: 'Pending', priority: Priority.INFO };
@@ -80,25 +88,43 @@ export const getSourceList = async (pagination: Pagination, userId?: number): Pr
 };
 
 export const getDbSummary = async (projectId: string | undefined): Promise<DatabaseSummaryInfo> => {
-  const response = await axios.get(`${API_URL}/summary`, {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get('/hub/database-source/summary', {
+    headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       projectId: projectId,
     },
   });
+  // const response = await axios.get(`${API_URL}/summary`, {
+  //   params: {
+  //     projectId: projectId,
+  //   },
+  // });
   return response.data;
 };
 
 export const updateDbSummary = async (data: DatabaseSummaryInfo): Promise<DatabaseSummaryInfo> => {
-  const response = await axios.patch(`${API_URL}/update`, data);
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.patch('/hub/database-source/update', data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  // const response = await axios.patch(`${API_URL}/update`, data);
   return response.data;
 };
 
 export const getDbTableInfo = async (projectId: string | undefined): Promise<DatabaseTableInfo[]> => {
-  const response = await axios.get(`${API_URL}/tables`, {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get('/hub/database-source/tables', {
+    headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       projectId: projectId,
     },
   });
+  // const response = await axios.get(`${API_URL}/tables`, {
+  // params: {
+  //   projectId: projectId,
+  // },
+  // });
   return response.data;
 };
 
@@ -106,18 +132,33 @@ export const addDbTemplate = async (
   projectId: string | undefined,
   template: string,
 ): Promise<{ projectId: string; template: string }> => {
-  const response = await axios.post(`${API_URL}/add-template`, {
-    projectId: projectId,
-    template: template,
-  });
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post(
+    '/hub/database-source/add-template',
+    { projectId: projectId, template: template },
+    {
+      headers: { [csrfHeaderName]: `${csrf}` },
+    },
+  );
+  // const response = await axios.post(`${API_URL}/add-template`, {
+  // projectId: projectId,
+  // template: template,
+  // });
   return response.data;
 };
 
 export const getDbColumns = async (projectId: string | undefined): Promise<string[]> => {
-  const response = await axios.get(`${API_URL}/columns`, {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get('/hub/database-source/columns', {
+    headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       projectId: projectId,
     },
   });
+  // const response = await axios.get(`${API_URL}/columns`, {
+  //   params: {
+  //     projectId: projectId,
+  //   },
+  // });
   return response.data;
 };

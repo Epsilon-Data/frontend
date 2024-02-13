@@ -16,11 +16,6 @@ const connectNavigation: SidebarNavigationItem[] = [
     key: 'create',
     url: '/r-connection-requests/create/project-info',
   },
-  // {
-  //   title: 'connectionRequests.oaTitle',
-  //   key: 'oa-connection-requests',
-  //   url: '/oa-connection-requests',
-  // },
 ];
 
 const sourceNavigation: SidebarNavigationItem[] = [

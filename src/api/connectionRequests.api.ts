@@ -20,8 +20,9 @@ export interface Pagination {
 }
 
 export interface RequestTableRow {
-  id: number;
-  requestor?: number;
+  key: number;
+  id: string;
+  requestor?: string;
   createdDate: string;
   statusTag: Tag;
   projectName: string;
@@ -30,29 +31,23 @@ export interface RequestTableRow {
 export interface RequestTableData {
   data: RequestTableRow[];
   pagination: Pagination;
+  isAdmin: boolean;
 }
 
-export const getRequestTableData = async (
-  pagination: Pagination,
-  userType: string,
-  userId?: number,
-): Promise<RequestTableData> => {
+export const getRequestTableData = async (pagination: Pagination, userId?: string): Promise<RequestTableData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get('/hub/connection-request/summary', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       userId: userId,
-      userType: userType,
     },
   });
-  // const response = await axios.get(`${API_URL}/summary`, {
-  //   params: {
-  //     userId: userId,
-  //     userType: userType,
-  //   },
-  // });
+
   const formattedData = response.data.map(
-    (item: { id: number; requestor?: number; status: number; createdDate: Date; Project: { name: string } }) => {
+    (
+      item: { id: number; requestor?: number; status: number; createdDate: Date; Project: { name: string } },
+      index: number,
+    ) => {
       let statusTag = { value: 'Pending', priority: Priority.INFO };
       switch (item.status) {
         case RequestStatus.PENDING:
@@ -65,6 +60,7 @@ export const getRequestTableData = async (
           break;
       }
       return {
+        key: index + 1,
         id: item.id,
         requestor: item.requestor,
         statusTag: statusTag,
@@ -73,7 +69,11 @@ export const getRequestTableData = async (
       };
     },
   );
-  return { data: formattedData, pagination: { ...pagination, total: formattedData.length } };
+  return {
+    data: formattedData,
+    pagination: { ...pagination, total: formattedData.length },
+    isAdmin: response.data.isAdmin,
+  };
 };
 
 export const getRequestDetails = async (id: string | undefined): Promise<RequestDetails> => {
@@ -84,11 +84,6 @@ export const getRequestDetails = async (id: string | undefined): Promise<Request
       requestId: id,
     },
   });
-  // const response = await axios.get(`${API_URL}/details`, {
-  //   params: {
-  //     requestId: id,
-  //   },
-  // });
   return response.data;
 };
 

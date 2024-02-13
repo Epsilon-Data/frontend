@@ -141,8 +141,6 @@
     "copied": "Copied to clipboard",
     "copy": "Copy",
     "country": "Country",
-    "nft-dashboard": "NFT Dashboard",
-    "medical-dashboard": "Medical Dashboard",
     "dataDisplay": "Data display",
     "dataTables": "Data Tables",
     "dateTime": "Date & Time",
@@ -233,83 +231,6 @@
     "warning": "Warning",
     "zipcode": "Zipcode",
     "delete": "Delete"
-  },
-  "medical-dashboard": {
-    "activity": {
-      "kcalBurned": "kcal burned on",
-      "title": "Activity"
-    },
-    "bloodScreening": {
-      "flag": "Flag",
-      "high": "HIGH",
-      "low": "LOW",
-      "norm": "NORM",
-      "result": "Result",
-      "test": "Test",
-      "title": "Blood screening",
-      "units": "Units"
-    },
-    "bones": "Bones",
-    "covid": {
-      "casesPerDay": "cases/day",
-      "deaths": "deaths",
-      "title": "Real COVID-19 Statistics"
-    },
-    "fat": "Fat",
-    "favoriteDoctors": {
-      "lastVisit": "Last visit",
-      "title": "Favorite doctors"
-    },
-    "health": {
-      "ecology": {
-        "description": "The environment is a major determinant of health, estimated to account for almost 20% of all deaths in the WHO European Region.",
-        "title": "Ecology"
-      },
-      "genetics": {
-        "description": "Multivariate studies show that genetic factors enhancing SWB are partly overlapping with those protecting against depression and other mental health problems.",
-        "title": "Genetics"
-      },
-      "lifestyle": {
-        "description": "According to WHO, 60% of related factors to individual health and quality of life are correlated to lifestyle.",
-        "title": "Lifestyle"
-      },
-      "medicine": {
-        "description": "Relationship between health insurance (or lack of insurance), use of medical care and health outcomes for specific conditions and types of services, and with overall health status and mortality.",
-        "title": "Medicine"
-      },
-      "title": "Health"
-    },
-    "latestScreenings": {
-      "friends": "Friends",
-      "month": "Month",
-      "statistics": "Statistics",
-      "title": "Latest screenings"
-    },
-    "map": {
-      "polyclinic": "Polyclinic"
-    },
-    "news": "News",
-    "patientResults": {
-      "patientAdmission": {
-        "description": "Admission of a patient means allowing and facilitating a patient to stay in the hospital unit or ward for observation, investigation, and treatment of the disease he or she is suffering from.",
-        "title": "Patient admission"
-      },
-      "patientDischarge": {
-        "description": "A hospital will discharge you when you no longer need to receive inpatient care and can go home. Or, a hospital will discharge you to send you to another type of facility.",
-        "title": "Patient's discharge"
-      },
-      "title": "Patient timeline",
-      "treatmentStarts": {
-        "description": "Part of the evaluation and treatment of any patient, regardless of condition or diagnosis, is an appropriate framework or pathway for diagnosis, treatment, and, if necessary, referral for specialty care.",
-        "title": "Treatment starts"
-      }
-    },
-    "protein": "Protein",
-    "treatmentPlan": {
-      "noVisits": "No visits for that day",
-      "title": "Treatment plan"
-    },
-    "water": "Water"
   },
   "dataDisplay": {
     "avatars": {
@@ -627,32 +548,6 @@
         "SMS": "SMS",
         "title": "Notifications"
       },
-      "payments": {
-        "addNewCard": "Add New Card",
-        "cardholderName": "Cardholder Name",
-        "cardNumber": "Card Number",
-        "cardTheme": "Card Theme",
-        "CVV": "CVV",
-        "date": "Date",
-        "details": "Details",
-        "expDate": "Exp. Date",
-        "noHistory": "There is no payment history at the moment",
-        "paymentHistory": "Payment history",
-        "paymentMethod": "Payment Method",
-        "recipient": "Recipient",
-        "sameCard": "You can't add the same card!",
-        "status": {
-          "failed": "Failed",
-          "paid": "Paid",
-          "pending": "Pending",
-          "scheduled": "Scheduled",
-          "title": "Status"
-        },
-        "title": "Payments",
-        "totalAmount": "Total Amount",
-        "yourCardNumber": "Your card number",
-        "yourName": "Your name"
-      },
       "personalInfo": {
         "birthday": "Birthday",
         "contactInfo": "Contact Info",
@@ -850,33 +745,13 @@
     "failedUpload": "{{name}} file upload failed.",
     "successUpload": "{{name}} file uploaded successfully."
   },
-  "nft": {
-    "yourBalance": "Your Balance",
-    "topUpBalance": "Top Up Balance",
-    "amount": "Amount",
-    "selectCard": "Select card",
-    "totalEarning": "Total Earning",
-    "status": {
-      "sold": "Sold",
-      "added": "Added",
-      "booked": "Booked"
-    },
-    "activityStory": "Your Activity Story",
-    "by": "by",
-    "recentActivity": "Recent Activity",
-    "viewAll": "View all",
-    "filter": "Filter",
-    "show": "Show",
-    "bid": "Bid",
-    "trendingCollections": "Trending Collections",
-    "recentlyAddedNFTs": "Recently Added NFTs",
-    "trendingCreators": "Trending Creators"
+  "dashboard": {
+    "title": "Dashboard"
   },
   "connectionRequests" : {
-    "rTitle": "Connection Requests - R",
-    "oaTitle": "Connection Requests - OA",
+    "rTitle": "Connection Requests",
+    "oaTitle": "Connection Requests",
     "title": "Connection Requests",
-    "id": "Request ID",
     "projectName": "Project Name",
     "date": "Request Date",
     "requestor": "Requestor",
@@ -991,7 +866,8 @@
       "saveTemplate": "Save Archetype Template",
       "saveMapping": "Save Mapping",
       "noObjectNotify": "Please add an object to your archetype.",
-      "duplicateElementsNotify": "Duplicate element names found: {{names}}"
+      "duplicateElementsNotify": "Duplicate element names found: {{names}}",
+      "mapAllColumnsNotify": "Please map all columns to your archetype."
     },
     "accessPermissions": "Set Access Permissions",
     "projectId": "Project {{id}}",

@@ -2569,7 +2569,6 @@ packages:
     transitivePeerDependencies:
       - date-fns
       - luxon
-      - moment
     dev: false
 
   /argparse@2.0.1:
@@ -6412,7 +6411,6 @@ packages:
       date-fns: '>= 2.x'
       dayjs: '>= 1.x'
       luxon: '>= 3.x'
-      moment: '>= 2.x'
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     peerDependenciesMeta:
@@ -6421,8 +6419,6 @@ packages:
       dayjs:
         optional: true
       luxon:
-        optional: true
-      moment:
         optional: true
     dependencies:
       '@babel/runtime': 7.23.2

@@ -13,44 +13,35 @@ const AuthLayout = React.lazy(() => import('@app/components/layouts/AuthLayout/A
 import MainLayout from '@app/components/layouts/main/MainLayout/MainLayout';
 import RequireAuth from '@app/components/router/RequireAuth';
 import { withLoading } from '@app/hocs/withLoading.hoc';
-import MedicalDashboardPage from '@app/pages/DashboardPages/MedicalDashboardPage';
+import DashboardPage from '@app/pages/DashboardPages/DashboardPage';
 const Logout = React.lazy(() => import('./Logout'));
 const Login = React.lazy(() => import('./Login'));
 
-const OAConnectionRequestsPage = React.lazy(() => import('@app/pages/orgAdmin/ConnectionRequestsPage'));
-const RConnectionRequestsPage = React.lazy(
-  () => import('@app/pages/researcher/ConnectionRequest/ConnectionRequestsPage'),
-);
+const ConnectionRequestsPage = React.lazy(() => import('@app/pages/ConnectionRequestPages/ConnectionRequestsPage'));
 const CreateRequestPage = React.lazy(
-  () => import('@app/pages/researcher/ConnectionRequest/CreateRequestPage/CreateRequestPage'),
+  () => import('@app/pages/ConnectionRequestPages/CreateRequestPage/CreateRequestPage'),
 );
-const ViewRequestPage = React.lazy(
-  () => import('@app/pages/researcher/ConnectionRequest/ViewRequestPage/ViewRequestPage'),
-);
-const EditRequestPage = React.lazy(
-  () => import('@app/pages/researcher/ConnectionRequest/EditRequestPage/EditRequestPage'),
-);
+const ViewRequestPage = React.lazy(() => import('@app/pages/ConnectionRequestPages/ViewRequestPage/ViewRequestPage'));
+const EditRequestPage = React.lazy(() => import('@app/pages/ConnectionRequestPages/EditRequestPage/EditRequestPage'));
 
-const SourceListPage = React.lazy(() => import('@app/pages/researcher/DatabaseSource/SourceListPage'));
-const MetadataPage = React.lazy(() => import('@app/pages/researcher/DatabaseSource/MetadataPage/MetadataPage'));
+const SourceListPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/SourceListPage'));
+const MetadataPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/MetadataPage/MetadataPage'));
 const DatabaseSummaryPage = React.lazy(
-  () => import('@app/pages/researcher/DatabaseSource/DatabaseSummaryPage/DatabaseSummaryPage'),
+  () => import('@app/pages/DatabaseSourcePages/DatabaseSummaryPage/DatabaseSummaryPage'),
 );
-const TableInfoPage = React.lazy(() => import('@app/pages/researcher/DatabaseSource/TableInfoPage/TableInfoPage'));
+const TableInfoPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/TableInfoPage/TableInfoPage'));
 const DescribeDatasetPage = React.lazy(
-  () => import('@app/pages/researcher/DatabaseSource/DescribeDatasetPage/DescribeDatasetPage'),
+  () => import('@app/pages/DatabaseSourcePages/DescribeDatasetPage/DescribeDatasetPage'),
 );
 // const AccessPermissionsPage = React.lazy(
 //   () => import('@app/pages/researcher/DatabaseSource/AccessPermissionsPage/AccessPermissionsPage'),
 // );
 
-export const MEDICAL_DASHBOARD_PATH = '/';
-export const NFT_DASHBOARD_PATH = '/nft-dashboard';
+export const DASHBOARD_PATH = '/';
 
-const MedicalDashboard = withLoading(MedicalDashboardPage);
+const Dashboard = withLoading(DashboardPage);
 
-const OAConnectionRequests = withLoading(OAConnectionRequestsPage);
-const RConnectionRequests = withLoading(RConnectionRequestsPage);
+const ConnectionRequests = withLoading(ConnectionRequestsPage);
 const CreateRequest = withLoading(CreateRequestPage);
 const ViewRequest = withLoading(ViewRequestPage);
 
@@ -78,10 +69,9 @@ export const AppRouter: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={MEDICAL_DASHBOARD_PATH} element={protectedLayout}>
-          <Route index element={<MedicalDashboard />} />
-          <Route path="oa-connection-requests" element={<OAConnectionRequests />} />
-          <Route path="r-connection-requests" element={<RConnectionRequests />} />
+        <Route path={DASHBOARD_PATH} element={protectedLayout}>
+          <Route index element={<Dashboard />} />
+          <Route path="r-connection-requests" element={<ConnectionRequests />} />
           <Route path="r-connection-requests/create/:page" element={<CreateRequest />} />
           <Route path="r-connection-requests/view/:id" element={<ViewRequest />} />
           <Route path="r-connection-requests/edit/:id/:page" element={<EditRequest />} />

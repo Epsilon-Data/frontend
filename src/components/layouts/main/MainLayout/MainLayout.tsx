@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import MainContent from '../MainContent/MainContent';
 import * as S from './MainLayout.styles';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
-import { MEDICAL_DASHBOARD_PATH } from '@app/components/router/AppRouter';
+import { DASHBOARD_PATH } from '@app/components/router/AppRouter';
 import { useResponsive } from '@app/hooks/useResponsive';
 import { References } from '@app/components/common/References/References';
 import { Layout } from 'antd';
@@ -23,7 +23,7 @@ const MainLayout: React.FC = () => {
   const [url, setUrl] = useState('');
 
   useEffect(() => {
-    setIsTwoColumnsLayout([MEDICAL_DASHBOARD_PATH].includes(location.pathname) && isDesktop);
+    setIsTwoColumnsLayout([DASHBOARD_PATH].includes(location.pathname) && isDesktop);
     setSelectedKey(findKeyByUrl(location.pathname));
     if (location.pathname == '/database-sources') {
       setIsHidden(true);

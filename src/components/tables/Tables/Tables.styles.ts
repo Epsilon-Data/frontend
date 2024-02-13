@@ -7,4 +7,5 @@ export const TablesWrapper = styled.div`
 
 export const Card = styled(CommonCard)`
   margin-bottom: 2rem;
+  padding-bottom: 2rem;
 `;

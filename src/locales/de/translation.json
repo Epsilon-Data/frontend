@@ -141,8 +141,6 @@
     "copied": "In die Zwischenablage kopiert",
     "copy": "Kopieren",
     "country": "Land",
-    "nft-dashboard": "NFT Dashboard",
-    "medical-dashboard": "Medizinisches Dashboard",
     "dataDisplay": "Datenanzeige",
     "dataTables": "Datentabellen",
     "dateTime": "Terminzeit",
@@ -233,83 +231,6 @@
     "warning": "Warnung",
     "zipcode": "Postleitzahl",
     "delete": "Löschen"
-  },
-  "medical-dashboard": {
-    "activity": {
-      "kcalBurned": "Kalorienverbrauch am",
-      "title": "Aktivität"
-    },
-    "bloodScreening": {
-      "flag": "Flagge",
-      "high": "HOCH",
-      "low": "NIEDRIG",
-      "norm": "NORM",
-      "result": "Ergebnis",
-      "test": "Prüfung",
-      "title": "Blutuntersuchung",
-      "units": "Einheiten"
-    },
-    "bones": "Knochen",
-    "covid": {
-      "casesPerDay": "Fälle/Tag",
-      "deaths": "Todesfälle",
-      "title": "Echte COVID-19-Statistiken"
-    },
-    "fat": "Fett",
-    "favoriteDoctors": {
-      "lastVisit": "Letzter Besuch",
-      "title": "Lieblingsärzte"
-    },
-    "health": {
-      "ecology": {
-        "description": "Die Umwelt ist ein wichtiger Gesundheitsfaktor, auf den schätzungsweise fast 20 % aller Todesfälle in der Europäischen Region der WHO zurückzuführen sind.",
-        "title": "Ökologie"
-      },
-      "genetics": {
-        "description": "Multivariate Studien zeigen, dass sich genetische Faktoren, die SWB fördern, teilweise mit denen überschneiden, die vor Depressionen und anderen psychischen Gesundheitsproblemen schützen.",
-        "title": "Genetik"
-      },
-      "lifestyle": {
-        "description": "Laut WHO hängen 60 % der mit der individuellen Gesundheit und Lebensqualität verbundenen Faktoren mit dem Lebensstil zusammen.",
-        "title": "Lebensstil"
-      },
-      "medicine": {
-        "description": "Beziehung zwischen Krankenversicherung (oder fehlender Versicherung), Inanspruchnahme medizinischer Versorgung und Gesundheitsergebnissen für bestimmte Erkrankungen und Arten von Dienstleistungen sowie mit allgemeinem Gesundheitszustand und Sterblichkeit.",
-        "title": "Medizin"
-      },
-      "title": "Die Gesundheit"
-    },
-    "latestScreenings": {
-      "friends": "Freunde",
-      "month": "Monat",
-      "statistics": "Statistiken",
-      "title": "Neueste Vorführungen"
-    },
-    "map": {
-      "polyclinic": "Poliklinik"
-    },
-    "news": "Nachrichten",
-    "patientResults": {
-      "patientAdmission": {
-        "description": "Die Aufnahme eines Patienten bedeutet, einem Patienten zu gestatten und zu erleichtern, in der Krankenhausabteilung oder Station zur Beobachtung, Untersuchung und Behandlung der Krankheit, an der er oder sie leidet, zu bleiben.",
-        "title": "Patientenaufnahme"
-      },
-      "patientDischarge": {
-        "description": "Ein Krankenhaus entlässt Sie, wenn Sie keine stationäre Behandlung mehr benötigen und nach Hause gehen können. Oder ein Krankenhaus wird Sie entlassen, um Sie in eine andere Art von Einrichtung zu schicken.",
-        "title": "Entlassung des Patienten"
-      },
-      "title": "Patientenchronik",
-      "treatmentStarts": {
-        "description": "Ein Teil der Beurteilung und Behandlung eines jeden Patienten, unabhängig von seinem Zustand oder seiner Diagnose, ist ein geeigneter Rahmen oder Weg für die Diagnose, Behandlung und, falls erforderlich, Überweisung an einen Facharzt.",
-        "title": "Die Behandlung beginnt"
-      }
-    },
-    "protein": "Protein",
-    "treatmentPlan": {
-      "noVisits": "Keine Besuche an diesem Tag",
-      "title": "Behandlungsplan"
-    },
-    "water": "Wasser"
   },
   "dataDisplay": {
     "avatars": {

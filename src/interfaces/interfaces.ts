@@ -46,8 +46,8 @@ export interface PaymentCard {
 }
 
 export interface RequestDetails {
-  id?: number;
-  requestor?: number;
+  id?: string;
+  requestor?: string;
   date?: Date;
   status?: number;
   projectInfo: ProjectInfoFormValues;

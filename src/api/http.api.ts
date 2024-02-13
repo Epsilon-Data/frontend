@@ -4,6 +4,11 @@ import { AxiosError, AxiosRequestConfig } from 'axios';
 
 import config from '@app/config/config';
 import { ApiError } from './ApiError';
+import { readCsrf } from '@app/services/localStorage.service';
+
+type ApiErrorData = {
+  message: string;
+};
 
 const clientOptions: AuthClientOptionsDto = {
   tokenHandlerUri: `${config.apiPrefix}/token`,
@@ -19,28 +24,28 @@ const httpClientOptions: AxiosRequestConfig = {
   headers: {},
 };
 
+const getCsrfHeader = () => {
+  return { csrfHeaderName: `x-${config.cookiePrefix}-csrf`, csrf: readCsrf() };
+};
+
 const { getLoginUrl, handlePageLoad, getUserInfo, getUserClaims, refreshToken, logout, httpClient } = authClient(
   clientOptions,
   httpClientOptions,
 );
-
-// export const httpApi = axios.create({
-//   baseURL: import.meta.env.VITE_BASE_URL,
-// });
-
-// httpApi.interceptors.request.use((config) => {
-//   config.headers = { ...config.headers, Authorization: `Bearer ${readToken()}` } as AxiosRequestHeaders;
-
-//   return config;
-// });
 
 httpClient.interceptors.response.use(undefined, (error: AxiosError) => {
   const responseData = error.response?.data as ApiErrorData;
   throw new ApiError<ApiErrorData>(responseData?.message || error.message, responseData);
 });
 
-export interface ApiErrorData {
-  message: string;
-}
-
-export { getLoginUrl, handlePageLoad, getUserInfo, getUserClaims, refreshToken, logout, httpClient };
+export {
+  getLoginUrl,
+  handlePageLoad,
+  getUserInfo,
+  getUserClaims,
+  refreshToken,
+  logout,
+  httpClient,
+  getCsrfHeader,
+  ApiError,
+};

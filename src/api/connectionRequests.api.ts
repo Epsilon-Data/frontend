@@ -1,11 +1,12 @@
-import axios from 'axios';
 import { Priority } from '../constants/enums/priorities';
 import { DatabaseConnectionDetails, RequestDetails } from '@app/interfaces/interfaces';
 import { RequestStatus } from '@app/constants/enums/requestStatus';
 import { format } from 'date-fns';
 import { DATE_FORMAT } from '@app/constants/connectionRequest';
 
-const API_URL = 'http://localhost:3333/connection-request';
+import { httpClient, getCsrfHeader } from './http.api';
+
+// const API_URL = 'http://localhost:3333/connection-request';
 
 export interface Tag {
   value: string;
@@ -36,12 +37,20 @@ export const getRequestTableData = async (
   userType: string,
   userId?: number,
 ): Promise<RequestTableData> => {
-  const response = await axios.get(`${API_URL}/summary`, {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get('/hub/connection-request/summary', {
+    headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       userId: userId,
       userType: userType,
     },
   });
+  // const response = await axios.get(`${API_URL}/summary`, {
+  //   params: {
+  //     userId: userId,
+  //     userType: userType,
+  //   },
+  // });
   const formattedData = response.data.map(
     (item: { id: number; requestor?: number; status: number; createdDate: Date; Project: { name: string } }) => {
       let statusTag = { value: 'Pending', priority: Priority.INFO };
@@ -68,25 +77,44 @@ export const getRequestTableData = async (
 };
 
 export const getRequestDetails = async (id: string | undefined): Promise<RequestDetails> => {
-  const response = await axios.get(`${API_URL}/details`, {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get('/hub/connection-request/details', {
+    headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       requestId: id,
     },
   });
+  // const response = await axios.get(`${API_URL}/details`, {
+  //   params: {
+  //     requestId: id,
+  //   },
+  // });
   return response.data;
 };
 
 export const createRequest = async (data: RequestDetails): Promise<RequestDetails> => {
-  const response = await axios.post<RequestDetails>(`${API_URL}/create`, data);
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post('/hub/connection-request/create', data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  // const response = await axios.post<RequestDetails>(`${API_URL}/create`, data);
   return response.data;
 };
 
 export const updateRequest = async (data: RequestDetails): Promise<RequestDetails> => {
-  const response = await axios.patch(`${API_URL}/update`, data);
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.patch('/hub/connection-request/update', data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  // const response = await axios.patch(`${API_URL}/update`, data);
   return response.data;
 };
 
 export const testConnection = async (data: DatabaseConnectionDetails): Promise<unknown> => {
-  const response = await axios.post<DatabaseConnectionDetails>(`${API_URL}/test-connection`, data);
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post('/hub/connection-request/test-connection', data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  // const response = await axios.post<DatabaseConnectionDetails>(`${API_URL}/test-connection`, data);
   return response.data;
 };

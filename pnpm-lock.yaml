@@ -16,8 +16,8 @@ dependencies:
     specifier: ^1.0.4
     version: 1.0.4
   '@epsilon-data/epsilon-auth-client':
-    specifier: ^0.0.5
-    version: 0.0.5
+    specifier: ^0.0.6
+    version: 0.0.6
   '@epsilon-data/epsilon-connector':
     specifier: ^0.0.9
     version: 0.0.9
@@ -682,8 +682,8 @@ packages:
     resolution: {integrity: sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==}
     dev: false
 
-  /@epsilon-data/epsilon-auth-client@0.0.5:
-    resolution: {integrity: sha512-hYP/b5lxMT3/POG5dd0ViKajWZOCyQGmARQLZl2Cub6EihuVTFLMk6s+WjEX2bA2DQcRoQNo7OgzhRL7nBa42w==, tarball: https://npm.pkg.github.com/download/@epsilon-data/epsilon-auth-client/0.0.5/afb0e9c551b59224ebe396d2f0d68c2cdf654206}
+  /@epsilon-data/epsilon-auth-client@0.0.6:
+    resolution: {integrity: sha512-03wPqG1fuPSWVYnv4JhBy+pTl3smas7ytNJ4PUJUqRkwNuMcLpM2IX2W63jP/EQJflqpIWwwcfM/tjyXt1QC+g==, tarball: https://npm.pkg.github.com/download/@epsilon-data/epsilon-auth-client/0.0.6/e4cf8abb93ad571e6767e01addd7a9baa5ce623c}
     dependencies:
       '@types/node': 20.10.4
       axios: 1.6.5
@@ -2569,6 +2569,7 @@ packages:
     transitivePeerDependencies:
       - date-fns
       - luxon
+      - moment
     dev: false
 
   /argparse@2.0.1:
@@ -6411,6 +6412,7 @@ packages:
       date-fns: '>= 2.x'
       dayjs: '>= 1.x'
       luxon: '>= 3.x'
+      moment: '>= 2.x'
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     peerDependenciesMeta:
@@ -6419,6 +6421,8 @@ packages:
       dayjs:
         optional: true
       luxon:
+        optional: true
+      moment:
         optional: true
     dependencies:
       '@babel/runtime': 7.23.2

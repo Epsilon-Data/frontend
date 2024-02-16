@@ -43,7 +43,7 @@ export const handleAuth = createAsyncThunk('auth/handleAuth', async (query: URLS
 );
 
 export const getClaims = createAsyncThunk('auth/getClaims', async (payload, { dispatch }) =>
-  getUserClaims(readCsrf()).then((userDetails: UserDetails) => {
+  getUserClaims(readCsrf()).then(async (userDetails: UserDetails) => {
     dispatch(setUser(userDetails));
     return userDetails;
   }),

@@ -8,9 +8,6 @@ import {
   handlePageLoad,
 } from '@app/api/http.api';
 
-// import './mocks/auth.api.mock';
-import { UserModel } from '@app/domain/UserModel';
-
 export interface AuthData {
   email: string;
   password: string;
@@ -35,18 +32,7 @@ export interface NewPasswordData {
   newPassword: string;
 }
 
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  token: string;
-  user: UserModel;
-}
-
 export const login = async (currentPath: string) => {
-  // httpApi.post<LoginResponse>('login', { ...loginPayload }).then(({ data }) => data);
   return await getLoginUrl(currentPath);
 };
 

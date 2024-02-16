@@ -43,7 +43,7 @@ export const getRequestTableData = async (pagination: Pagination, userId?: strin
     },
   });
 
-  const formattedData = response.data.map(
+  const formattedData = response.data.requests.map(
     (
       item: { id: number; requestor?: number; status: number; createdDate: Date; Project: { name: string } },
       index: number,

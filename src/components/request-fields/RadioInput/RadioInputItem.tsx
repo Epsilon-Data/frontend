@@ -9,7 +9,7 @@ export const RadioInputItem: React.FC<{ name: string; label: string; required?: 
 }) => {
   return (
     <BaseButtonsForm.Item name={name} label={label} rules={[{ required: required }]}>
-      <BaseRadio.Group defaultValue="">
+      <BaseRadio.Group>
         <BaseRadio.Button value={true}>Yes</BaseRadio.Button>
         <BaseRadio.Button value={false}>No</BaseRadio.Button>
       </BaseRadio.Group>

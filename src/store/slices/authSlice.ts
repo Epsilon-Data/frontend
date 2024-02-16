@@ -29,24 +29,10 @@ const initialState: AuthSlice = {
   csrf: readCsrf(),
 };
 
-export const doLogin = createAsyncThunk(
-  'auth/doLogin',
-  // async (
-  //   loginPayload: LoginRequest,
-  //   {
-  //     /*dispatch */
-  //   },
-  // ) =>
-  //   login(loginPayload).then((res) => {
-  //     dispatch(setUser(res.user));
-  //     persistToken(res.token);
-
-  //     return res.token;
-  //   }),
-  async () =>
-    login('http://localhost:3000').then((res) => {
-      return res;
-    }),
+export const doLogin = createAsyncThunk('auth/doLogin', async () =>
+  login('http://localhost:3000').then((res) => {
+    return res;
+  }),
 );
 
 export const handleAuth = createAsyncThunk('auth/handleAuth', async (query: URLSearchParams) =>
@@ -83,8 +69,6 @@ export const doSetNewPassword = createAsyncThunk('auth/doSetNewPassword', async 
 
 export const doLogout = createAsyncThunk('auth/doLogout', async (payload, { dispatch }) =>
   signOut(readCsrf()).then((res) => {
-    // deleteToken();
-    // console.log(res);
     deleteCsrf();
     deleteUser();
     dispatch(setUser(null));
@@ -97,8 +81,8 @@ const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(doLogin.fulfilled, (state, action) => {
-      state.csrf = action.payload;
+    builder.addCase(handleAuth.fulfilled, (state, action) => {
+      state.csrf = action.payload.csrf;
     });
     builder.addCase(doLogout.fulfilled, (state) => {
       state.csrf = '';

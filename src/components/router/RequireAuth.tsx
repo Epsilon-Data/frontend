@@ -18,8 +18,8 @@ const RequireAuth: React.FC<WithChildrenProps> = ({ children }) => {
         .unwrap()
         .then((res) => {
           if (res.isLoggedIn && res.handled) {
-            navigate(res.previousUrl || '/', { replace: true });
-            // window.location.href = res.previousUrl || '/';
+            // navigate(res.previousUrl || '/', { replace: true });
+            window.location.href = res.previousUrl || '/';
           }
         })
         .catch((err) => {

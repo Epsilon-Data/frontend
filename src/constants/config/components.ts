@@ -380,7 +380,7 @@ export const components: Component[] = [
   {
     name: 'Create New Request',
     title: 'connectionRequests.create.title',
-    url: `/r-connection-requests/create`,
+    url: `/connection-requests/create`,
     categories: ['forms'],
     keywords: ['create', 'connection requests'],
   },

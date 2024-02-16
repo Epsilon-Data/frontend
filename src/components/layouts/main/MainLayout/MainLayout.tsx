@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import MainContent from '../MainContent/MainContent';
 import * as S from './MainLayout.styles';
-import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { DASHBOARD_PATH } from '@app/components/router/AppRouter';
 import { useResponsive } from '@app/hooks/useResponsive';
 import { References } from '@app/components/common/References/References';
-import { Layout } from 'antd';
 import { findKeyByUrl, findUrlByKey, topNavigation } from '../topNavigation';
 import { useTranslation } from 'react-i18next';
 import MainSider from '../sider/MainSider/MainSider';
@@ -21,6 +20,7 @@ const MainLayout: React.FC = () => {
   const { id } = useParams();
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsTwoColumnsLayout([DASHBOARD_PATH].includes(location.pathname) && isDesktop);
@@ -55,8 +55,9 @@ const MainLayout: React.FC = () => {
             };
           })}
         />
+        <S.LogoutBtn onClick={() => navigate('/logout')}>{t('sidebarNavigation.logout')}</S.LogoutBtn>
       </S.Header>
-      <Layout>
+      <S.LayoutWrapper>
         <MainSider title={title} titleUrl={url} selectedNav={selectedKey} hidden={isHidden} />
         <S.LayoutMain>
           <MainContent id="main-content" $isTwoColumnsLayout={isTwoColumnsLayout}>
@@ -66,7 +67,7 @@ const MainLayout: React.FC = () => {
             {!isTwoColumnsLayout && <References />}
           </MainContent>
         </S.LayoutMain>
-      </Layout>
+      </S.LayoutWrapper>
     </S.LayoutMaster>
   );
 };

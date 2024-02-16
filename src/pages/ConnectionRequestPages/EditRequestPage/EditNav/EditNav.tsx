@@ -23,8 +23,8 @@ export const EditNav: React.FC<{ ownData: boolean }> = ({ ownData }) => {
           icon={item.icon}
           type="text"
           color={item.color}
-          onClick={() => navigate(`/r-connection-requests/edit/${id}/${item.href}`)}
-          $isActive={`/r-connection-requests/edit/${id}/${item.href}` === location.pathname}
+          onClick={() => navigate(`/connection-requests/edit/${id}/${item.href}`)}
+          $isActive={`/connection-requests/edit/${id}/${item.href}` === location.pathname}
         >
           {t(item.name)}
         </S.Button>

@@ -11,7 +11,6 @@ import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { Priority } from '@app/constants/enums/priorities';
-import { useAppSelector } from '@app/hooks/reduxHooks';
 import { useNavigate } from 'react-router-dom';
 
 const initialPagination: Pagination = {
@@ -27,21 +26,19 @@ export const RequestTable: React.FC = () => {
   });
   const { t } = useTranslation();
   const { isMounted } = useMounted();
-  const user = useAppSelector((state) => state.user.user);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const navigate = useNavigate();
-
   const fetch = useCallback(
     (pagination: Pagination) => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
-      getRequestTableData(pagination, user?.id).then((res) => {
+      getRequestTableData(pagination).then((res) => {
         if (isMounted.current) {
           setTableData({ data: res.data, pagination: res.pagination, loading: false });
           setIsAdmin(res.isAdmin);
         }
       });
     },
-    [isMounted, user?.id],
+    [isMounted],
   );
 
   useEffect(() => {
@@ -109,7 +106,7 @@ export const RequestTable: React.FC = () => {
             render: (text: string, record: { id: string }) => {
               return (
                 <BaseSpace>
-                  <BaseButton type="primary" onClick={() => navigate('/r-connection-requests/view/' + record.id)}>
+                  <BaseButton type="primary" onClick={() => navigate('/connection-requests/view/' + record.id)}>
                     {t('tables.view')}
                   </BaseButton>
                 </BaseSpace>
@@ -125,7 +122,7 @@ export const RequestTable: React.FC = () => {
             render: (text: string, record: { key: number; id: string; statusTag: { priority: Priority } }) => {
               return (
                 <BaseSpace>
-                  <BaseButton type="primary" onClick={() => navigate('/r-connection-requests/view/' + record.id)}>
+                  <BaseButton type="primary" onClick={() => navigate('/connection-requests/view/' + record.id)}>
                     {t('tables.view')}
                   </BaseButton>
                   {record.statusTag.priority === Priority.LOW && (
@@ -137,7 +134,7 @@ export const RequestTable: React.FC = () => {
                     <>
                       <BaseButton
                         type="primary"
-                        onClick={() => navigate('/r-connection-requests/edit/' + record.id + '/project-info')}
+                        onClick={() => navigate('/connection-requests/edit/' + record.id + '/project-info')}
                       >
                         {t('common.edit')}
                       </BaseButton>

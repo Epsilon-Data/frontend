@@ -6,7 +6,7 @@ export interface TopNavigationItem {
 
 export const topNavigation: TopNavigationItem[] = [
   { key: 'home', label: 'topNavigation.home', url: '/' },
-  { key: 'connect', label: 'topNavigation.connect', url: '/r-connection-requests' },
+  { key: 'connect', label: 'topNavigation.connect', url: '/connection-requests' },
   { key: 'database', label: 'topNavigation.database', url: '/database-sources' },
   { key: 'browse', label: 'topNavigation.browse' },
 ];

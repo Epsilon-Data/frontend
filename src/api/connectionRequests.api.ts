@@ -6,8 +6,6 @@ import { DATE_FORMAT } from '@app/constants/connectionRequest';
 
 import { httpClient, getCsrfHeader } from './http.api';
 
-// const API_URL = 'http://localhost:3333/connection-request';
-
 export interface Tag {
   value: string;
   priority: Priority;
@@ -34,15 +32,11 @@ export interface RequestTableData {
   isAdmin: boolean;
 }
 
-export const getRequestTableData = async (pagination: Pagination, userId?: string): Promise<RequestTableData> => {
+export const getRequestTableData = async (pagination: Pagination): Promise<RequestTableData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get('/hub/connection-request/summary', {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userId: userId,
-    },
   });
-
   const formattedData = response.data.requests.map(
     (
       item: { id: number; requestor?: number; status: number; createdDate: Date; Project: { name: string } },
@@ -92,7 +86,6 @@ export const createRequest = async (data: RequestDetails): Promise<RequestDetail
   const response = await httpClient.post('/hub/connection-request/create', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-  // const response = await axios.post<RequestDetails>(`${API_URL}/create`, data);
   return response.data;
 };
 
@@ -101,7 +94,6 @@ export const updateRequest = async (data: RequestDetails): Promise<RequestDetail
   const response = await httpClient.patch('/hub/connection-request/update', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-  // const response = await axios.patch(`${API_URL}/update`, data);
   return response.data;
 };
 
@@ -110,6 +102,5 @@ export const testConnection = async (data: DatabaseConnectionDetails): Promise<u
   const response = await httpClient.post('/hub/connection-request/test-connection', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-  // const response = await axios.post<DatabaseConnectionDetails>(`${API_URL}/test-connection`, data);
   return response.data;
 };

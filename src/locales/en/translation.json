@@ -23,77 +23,6 @@
     "signUpSuccessDescription": "Please use your new credentials to log in",
     "signUpSuccessMessage": "New user was created"
   },
-  "autoCompletes": {
-    "antDesign": "AntDesign",
-    "antDesignFaq": "AntDesign FAQ",
-    "antDesignLanguage": "AntDesign design language",
-    "antDesignUI": "AntDesign UI",
-    "antDesignUIFaq": "AntDesign UI FAQ",
-    "articles": "Articles",
-    "basic": "Basic AutoComplete",
-    "categories": "AutoComplete with categories",
-    "customOptions": "AutoComplete with custom options",
-    "inputHere": "input here",
-    "libraries": "Libraries",
-    "solutions": "Solutions"
-  },
-  "breadcrumbs": {
-    "antd": "Ant Design",
-    "application": "An Application",
-    "applicationCenter": "Application Center",
-    "applicationList": "Application List",
-    "basic": "Basic breadcrumb",
-    "button": "Button",
-    "component": "Component",
-    "customSeparator": "Breadcrumb with custom separator",
-    "general": "General",
-    "home": "Home",
-    "layout": "Layout",
-    "navigation": "Navigation",
-    "withDropdown": "Breadcrumb with dropdown",
-    "withIcon": "Breadcrumb with icon"
-  },
-  "buttons": {
-    "click": "Click me!",
-    "danger": "Danger buttons",
-    "dashed": "Dashed",
-    "default": "Default",
-    "disabled": "Disabled buttons",
-    "ghost": "Ghost",
-    "icons": "Icons buttons",
-    "large": "Large",
-    "link": "Link",
-    "loading": "Loading",
-    "loadings": "Loading buttons",
-    "primary": "Primary",
-    "search": "Search",
-    "severities": "Button severities",
-    "sizes": "Button sizes",
-    "small": "Small",
-    "text": "Text",
-    "types": "Button types"
-  },
-  "charts": {
-    "averageValue": "Average Value",
-    "barLabel": "Bar Animation Delay",
-    "coal": "Coal",
-    "direct": "Direct",
-    "females": "Females",
-    "gas": "Gas",
-    "gradientLabel": "Gradient Stacked Area",
-    "hydro": "Hydro",
-    "incomeOf": "Income of Germany and France since 1950",
-    "lineRace": "Line Race",
-    "males": "Males",
-    "nuclear": "Nuclear",
-    "oil": "Oil",
-    "pie": "Pie",
-    "scatter": "Scatter",
-    "search": "Search Engine",
-    "union": "Union Ads",
-    "video": "Video Ads",
-    "visitorsFrom": "Visitors from"
-  },
   "checkboxes": {
     "apple": "Apple",
     "basic": "Basic checkbox",
@@ -391,29 +320,6 @@
       "upload": "Upload",
       "usa": "U.S.A"
     }
-  },
-  "header": {
-    "changeLanguage": "Change language",
-    "changeTheme": "Change theme",
-    "darkTheme": "Dark",
-    "lightTheme": "Light",
-    "logout": "Logout",
-    "nightMode": {
-      "from": "From",
-      "title": "Nightmode",
-      "to": "To",
-      "h": "h"
-    },
-    "notifications": {
-      "loginAttempt": "There was an attempt to log in to your account from another device",
-      "mention": "mentioned you in <0>{{place}}</0>",
-      "noNotifications": "No notifications yet",
-      "readAll": "Mark all as read",
-      "serverError": "The server is not responding, try again later",
-      "successPayment": "Your payment was successfully made",
-      "viewAll": "View all"
-    },
-    "search": "Search"
   },
   "inputs": {
     "basic": "Basic input",
@@ -901,5 +807,8 @@
     "connect": "Connect",
     "database": "My Databases",
     "browse": "Browse"
+  },
+  "sidebarNavigation" : {
+    "logout": "Logout"
   }
 }

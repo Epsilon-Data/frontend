@@ -29,7 +29,7 @@ const EditRequestPage: React.FC = () => {
       getRequestDetails(id).then((res) => {
         if (isMounted.current) {
           if (id) {
-            res.id = parseInt(id);
+            res.id = id;
             setRequest(res);
             if ('orgAdminEmail' in res) {
               setIsOwnData(false);
@@ -88,7 +88,7 @@ const EditRequestPage: React.FC = () => {
             <S.UpdateButton type="primary" key="edit" onClick={() => handleUpdate()}>
               {t('connectionRequests.edit.update')}
             </S.UpdateButton>
-            <S.CancelButton type="default" key="back" onClick={() => navigate('/r-connection-requests')}>
+            <S.CancelButton type="default" key="back" onClick={() => navigate('/connection-requests')}>
               {t('common.cancel')}
             </S.CancelButton>
           </S.ButtonsWrapper>

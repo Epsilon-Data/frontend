@@ -53,9 +53,9 @@ export const RequestProjectInfo: React.FC<{
       setLoading(false);
       setFieldsChanged(false);
       if (values.isOwnData) {
-        navigate('/r-connection-requests/create/database-info');
+        navigate('/connection-requests/create/database-info');
       } else {
-        navigate('/r-connection-requests/create/org-admin-info');
+        navigate('/connection-requests/create/org-admin-info');
       }
     },
     [formValue, members, navigate, setFormValue],

@@ -22,12 +22,12 @@ export const RequestDatabaseInfo: React.FC<{
   setFormValue: (value: RequestDetails) => void;
 }> = ({ formValue, setFormValue }) => {
   const initialValues = {
-    databaseName: formValue.databaseInfo?.name || `${config.isDev ? 'seaco' : ''}`,
+    databaseName: formValue.databaseInfo?.name || `${config.isDev ? 'test' : ''}`,
     databaseType: formValue.databaseInfo?.type || `${config.isDev ? 'postgres' : ''}`,
     databaseHost: formValue.databaseInfo?.host || `${config.isDev ? 'localhost' : ''}`,
-    databasePort: formValue.databaseInfo?.port || `${config.isDev ? '5432' : ''}`,
-    databaseUsername: formValue.databaseInfo?.username || `${config.isDev ? 'postgres' : ''}`,
-    databasePassword: formValue.databaseInfo?.password || `${config.isDev ? 'qwe123' : ''}`,
+    databasePort: formValue.databaseInfo?.port || `${config.isDev ? '5433' : ''}`,
+    databaseUsername: formValue.databaseInfo?.username || `${config.isDev ? 'test_admin' : ''}`,
+    databasePassword: formValue.databaseInfo?.password || `${config.isDev ? 'supersecret' : ''}`,
     dataCollectionDuration: formValue.dataInfo.collectionDuration.map((date: Date) => dayjs(date)),
     dataParticipantsNumber: formValue.dataInfo.participantsNumber,
     dataDescription: formValue.dataInfo.description,
@@ -133,7 +133,7 @@ export const RequestDatabaseInfo: React.FC<{
     setFieldsChanged(false);
     console.log(formValue);
     // createRequest(formValue);
-    navigate('/r-connection-requests');
+    navigate('/connection-requests');
   };
 
   return (

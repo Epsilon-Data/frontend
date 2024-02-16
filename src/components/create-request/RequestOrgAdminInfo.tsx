@@ -60,7 +60,7 @@ export const RequestOrgAdminInfo: React.FC<{
         .then(() => {
           setLoading(false);
           setFieldsChanged(false);
-          navigate('/r-connection-requests');
+          navigate('/connection-requests');
           notificationController.success({
             message: t('connectionRequests.create.successNotify'),
           });

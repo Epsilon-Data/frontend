@@ -71,14 +71,15 @@ export const AppRouter: React.FC = () => {
       <Routes>
         <Route path={DASHBOARD_PATH} element={protectedLayout}>
           <Route index element={<Dashboard />} />
-          <Route path="r-connection-requests" element={<ConnectionRequests />} />
-          <Route path="r-connection-requests/create/:page" element={<CreateRequest />} />
-          <Route path="r-connection-requests/view/:id" element={<ViewRequest />} />
-          <Route path="r-connection-requests/edit/:id/:page" element={<EditRequest />} />
+          <Route path="connection-requests" element={<ConnectionRequests />} />
+          <Route path="connection-requests/create/:page" element={<CreateRequest />} />
+          <Route path="connection-requests/view/:id" element={<ViewRequest />} />
+          <Route path="connection-requests/edit/:id/:page" element={<EditRequest />} />
           <Route path="database-sources" element={<SourceList />} />
-          <Route path="database-sources/metadata/:id" element={<Metadata />} />
-          <Route path="database-sources/metadata/:id/db-summary" element={<DatabaseSummary />} />
-          <Route path="database-sources/metadata/:id/table-info" element={<TableInfo />} />
+          <Route path="database-sources/metadata/:id" element={<Metadata />}>
+            <Route path="db-summary" element={<DatabaseSummary />} />
+            <Route path="table-info" element={<TableInfo />} />
+          </Route>
           <Route path="database-sources/describe-dataset/:id" element={<DescribeDataset />} />
           {/* <Route path="database-sources/access-permissions/:id" element={<AccessPermissions />} /> */}
         </Route>

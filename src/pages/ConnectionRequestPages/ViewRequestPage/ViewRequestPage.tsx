@@ -52,7 +52,7 @@ const ViewRequestPage: React.FC = () => {
           <S.ActionButton
             type="primary"
             key="edit"
-            onClick={() => navigate(`/r-connection-requests/edit/${id}/project-info`)}
+            onClick={() => navigate(`/connection-requests/edit/${id}/project-info`)}
           >
             {t('common.edit')}
           </S.ActionButton>,

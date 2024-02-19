@@ -72,6 +72,9 @@ dependencies:
   mermaid:
     specifier: ^10.6.1
     version: 10.7.0
+  npm-run-all:
+    specifier: ^4.1.5
+    version: 4.1.5
   pigeon-maps:
     specifier: ^0.21.3
     version: 0.21.3(react@18.2.0)

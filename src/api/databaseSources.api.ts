@@ -51,19 +51,11 @@ export interface ColumnTableRow {
   primary: boolean;
 }
 
-export const getSourceList = async (pagination: Pagination, userId?: number): Promise<SourceListData> => {
+export const getSourceList = async (pagination: Pagination): Promise<SourceListData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get('/hub/database-source/list', {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userId: userId,
-    },
   });
-  // const response = await axios.get(`${API_URL}/list`, {
-  //   params: {
-  //     userId: userId,
-  //   },
-  // });
 
   const formattedData = response.data.map((item: { connectDate: Date; sourceStatus: number }) => {
     let statusTag = { value: 'Pending', priority: Priority.INFO };
@@ -87,6 +79,17 @@ export const getSourceList = async (pagination: Pagination, userId?: number): Pr
   return { data: formattedData, pagination: { ...pagination, total: formattedData.length } };
 };
 
+export const getProjectName = async (projectId: string | undefined): Promise<string> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get('/hub/database-source/project-name', {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      projectId: projectId,
+    },
+  });
+  return response.data.name;
+};
+
 export const getDbSummary = async (projectId: string | undefined): Promise<DatabaseSummaryInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get('/hub/database-source/summary', {
@@ -95,11 +98,6 @@ export const getDbSummary = async (projectId: string | undefined): Promise<Datab
       projectId: projectId,
     },
   });
-  // const response = await axios.get(`${API_URL}/summary`, {
-  //   params: {
-  //     projectId: projectId,
-  //   },
-  // });
   return response.data;
 };
 

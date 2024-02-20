@@ -81,10 +81,9 @@ export const AppRouter: React.FC = () => {
           <Route path="connection-requests/edit/:id/:page" element={<EditRequest />} />
           <Route path="connection-requests/approve/:id" element={<ApproveRequest />} />
           <Route path="database-sources" element={<SourceList />} />
-          <Route path="database-sources/metadata/:id" element={<Metadata />}>
-            <Route path="db-summary" element={<DatabaseSummary />} />
-            <Route path="table-info" element={<TableInfo />} />
-          </Route>
+          <Route path="database-sources/metadata/:id" element={<Metadata />} />
+          <Route path="database-sources/metadata/:id/db-summary" element={<DatabaseSummary />} />
+          <Route path="database-sources/metadata/:id/table-info" element={<TableInfo />} />
           <Route path="database-sources/describe-dataset/:id" element={<DescribeDataset />} />
           {/* <Route path="database-sources/access-permissions/:id" element={<AccessPermissions />} /> */}
         </Route>

@@ -20,6 +20,7 @@ export interface Pagination {
 export interface RequestTableRow {
   key: number;
   id: string;
+  projectId?: string;
   requestor?: string;
   createdDate: string;
   statusTag: Tag;
@@ -39,7 +40,13 @@ export const getRequestTableData = async (pagination: Pagination): Promise<Reque
   });
   const formattedData = response.data.requests.map(
     (
-      item: { id: number; requestor?: number; status: number; createdDate: Date; Project: { name: string } },
+      item: {
+        id: number;
+        requestor?: number;
+        status: number;
+        createdDate: Date;
+        Project: { id: string; name: string };
+      },
       index: number,
     ) => {
       let statusTag = { value: 'Pending', priority: Priority.INFO };
@@ -57,6 +64,7 @@ export const getRequestTableData = async (pagination: Pagination): Promise<Reque
         key: index + 1,
         id: item.id,
         requestor: item.requestor,
+        projectId: item.Project.id,
         statusTag: statusTag,
         createdDate: format(item.createdDate, DATE_FORMAT),
         projectName: item.Project.name,

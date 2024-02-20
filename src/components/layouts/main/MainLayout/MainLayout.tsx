@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import MainContent from '../MainContent/MainContent';
 import * as S from './MainLayout.styles';
 import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { findKeyByUrl, findUrlByKey, topNavigation } from '../topNavigation';
 import { useTranslation } from 'react-i18next';
 import MainSider from '../sider/MainSider/MainSider';
 import { updateUrlById } from '../sider/sidebarNavigation';
+import { getProjectName } from '@app/api/databaseSources.api';
 
 const MainLayout: React.FC = () => {
   const [isTwoColumnsLayout, setIsTwoColumnsLayout] = useState(true);
@@ -21,8 +22,18 @@ const MainLayout: React.FC = () => {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const navigate = useNavigate();
+  const [projectName, setProjectName] = useState('');
+
+  const fetch = useCallback(() => {
+    if (id) {
+      getProjectName(id).then((res) => {
+        setProjectName(res);
+      });
+    }
+  }, [id]);
 
   useEffect(() => {
+    fetch();
     setIsTwoColumnsLayout([DASHBOARD_PATH].includes(location.pathname) && isDesktop);
     setSelectedKey(findKeyByUrl(location.pathname));
     if (location.pathname == '/database-sources') {
@@ -33,12 +44,12 @@ const MainLayout: React.FC = () => {
 
     if (selectedKey == 'database' && id) {
       updateUrlById(id);
-      setTitle(t('databaseSources.projectId', { id: id }));
+      setTitle(projectName);
     } else {
       setTitle(t('topNavigation.' + selectedKey));
     }
     setUrl(findUrlByKey(selectedKey));
-  }, [location.pathname, isDesktop, selectedKey, id, t]);
+  }, [location.pathname, isDesktop, selectedKey, id, t, fetch, projectName]);
 
   return (
     <S.LayoutMaster>

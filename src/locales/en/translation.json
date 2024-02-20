@@ -793,10 +793,9 @@
       "mapAllColumnsNotify": "Please map all columns to your archetype."
     },
     "accessPermissions": "Set Access Permissions",
-    "projectId": "Project {{id}}",
     "metadata": {
       "title": "Metadata",
-      "projectTitle": "Metadata Project {{id}}",
+      "projectTitle": "{{name}} Metadata",
       "dbSummary": "Database Summary",
       "overallDesc": {
         "title": "Overall Description",

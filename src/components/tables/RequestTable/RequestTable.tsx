@@ -52,19 +52,16 @@ export const RequestTable: React.FC = () => {
     fetch(pagination);
   };
 
-  const handleDeleteRow = (rowId: number) => {
-    const selectedRow = tableData.data.find((item) => item.key === rowId);
-    if (selectedRow) {
-      setTableData({
-        ...tableData,
-        data: tableData.data.filter((item) => item.key !== rowId),
-        pagination: {
-          ...tableData.pagination,
-          total: tableData.pagination.total ? tableData.pagination.total - 1 : tableData.pagination.total,
-        },
-      });
-      deleteRequest(selectedRow.id);
-    }
+  const handleDeleteRow = (requestId: string) => {
+    setTableData({
+      ...tableData,
+      data: tableData.data.filter((item) => item.id !== requestId),
+      pagination: {
+        ...tableData.pagination,
+        total: tableData.pagination.total ? tableData.pagination.total - 1 : tableData.pagination.total,
+      },
+    });
+    deleteRequest(requestId);
   };
 
   const columns: ColumnsType<RequestTableRow> = [
@@ -126,14 +123,17 @@ export const RequestTable: React.FC = () => {
             title: t('tables.actions'),
             dataIndex: 'actions',
             width: '15%',
-            render: (text: string, record: { key: number; id: string; statusTag: { priority: Priority } }) => {
+            render: (text: string, record: { id: string; projectId?: string; statusTag: { priority: Priority } }) => {
               return (
                 <BaseSpace>
                   <BaseButton type="primary" onClick={() => navigate('/connection-requests/view/' + record.id)}>
                     {t('tables.view')}
                   </BaseButton>
                   {record.statusTag.priority === Priority.LOW && (
-                    <BaseButton type="primary" onClick={() => navigate('/database-sources/metadata/' + record.id)}>
+                    <BaseButton
+                      type="primary"
+                      onClick={() => navigate('/database-sources/metadata/' + record.projectId)}
+                    >
                       {t('connectionRequests.viewSource')}
                     </BaseButton>
                   )}
@@ -145,13 +145,13 @@ export const RequestTable: React.FC = () => {
                       >
                         {t('common.edit')}
                       </BaseButton>
-                      <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.key)}>
+                      <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>
                         {t('tables.delete')}
                       </BaseButton>
                     </>
                   )}
                   {record.statusTag.priority === Priority.INFO && (
-                    <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.key)}>
+                    <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>
                       {t('tables.delete')}
                     </BaseButton>
                   )}

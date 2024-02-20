@@ -11,7 +11,6 @@ import { Status } from '@app/components/profile/profileCard/profileFormNav/nav/p
 import { defineColorByPriority } from '@app/utils/utils';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseProgress } from '@app/components/common/BaseProgress/BaseProgress';
-import { useAppSelector } from '@app/hooks/reduxHooks';
 import { useNavigate } from 'react-router-dom';
 
 const { Meta } = Card;
@@ -28,19 +27,18 @@ export const CardList: React.FC = () => {
   });
   const { t } = useTranslation();
   const { isMounted } = useMounted();
-  const user = useAppSelector((state) => state.user.user);
   const navigate = useNavigate();
 
   const fetch = useCallback(
     (pagination: Pagination) => {
       setListData((listData) => ({ ...listData, loading: true }));
-      getSourceList(pagination, user?.id).then((res) => {
+      getSourceList(pagination).then((res) => {
         if (isMounted.current) {
           setListData({ data: res.data, pagination: res.pagination, loading: false });
         }
       });
     },
-    [isMounted, user?.id],
+    [isMounted],
   );
 
   useEffect(() => {
@@ -88,6 +86,7 @@ export const CardList: React.FC = () => {
               style={{ marginTop: '1rem', float: 'right' }}
               type="primary"
               onClick={() => navigate('/database-sources/metadata/' + item.projectId)}
+              disabled={item.sourceStatus?.value !== 'Active'}
             >
               {t('databaseSources.manage')}
             </BaseButton>

@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import { BaseCard as CommonCard } from '@app/components/common/BaseCard/BaseCard';
 import { FONT_SIZE, FONT_WEIGHT, media } from '@app/styles/themes/constants';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
+import { Typography } from 'antd';
+
+const { Paragraph, Text } = Typography;
 
 export const ViewWrapper = styled.div`
   margin-top: -1rem;
@@ -69,6 +72,25 @@ export const InfoArea = styled.div`
 `;
 
 export const ActionButton = styled(BaseButton)`
-  width: 40%;
   max-width: 18rem;
+`;
+
+export const RevisionCard = styled(CommonCard)`
+  width: 80%;
+  background: var(--revision-card-bg);
+  margin: 1.3rem 0;
+
+  .ant-card-body {
+    padding: 1rem 1.5rem;
+  }
+`;
+
+export const RevisionHeader = styled(Paragraph)`
+  font-size: ${FONT_SIZE.md};
+  font-weight: ${FONT_WEIGHT.semibold};
+`;
+
+export const RevisionContent = styled(Text)`
+  font-size: ${FONT_SIZE.xs};
+  font-weight: ${FONT_WEIGHT.regular};
 `;

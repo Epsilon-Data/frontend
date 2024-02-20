@@ -1,4 +1,5 @@
 import { RequestDetails } from '@app/interfaces/interfaces';
+import { t } from 'i18next';
 
 export const DATE_FORMAT = 'dd/MM/yyyy';
 
@@ -21,3 +22,18 @@ export const INITIAL_REQUEST_VALUES: RequestDetails = {
     keywords: [],
   },
 };
+
+export const DATABASE_TYPES = [
+  {
+    value: 'postgres',
+    label: t('connectionRequests.details.databaseInfo.postgres'),
+  },
+  {
+    value: 'mysql',
+    label: t('connectionRequests.details.databaseInfo.mysql'),
+  },
+  {
+    value: 'mongo',
+    label: t('connectionRequests.details.databaseInfo.mongo'),
+  },
+];

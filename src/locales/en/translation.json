@@ -663,6 +663,7 @@
     "requestor": "Requestor",
     "requestList" : "Request List",
     "viewSource": "View Source",
+    "proceed": "Proceed",
     "details": {
       "projectInfo": {
         "title": "Project Information",
@@ -713,6 +714,9 @@
         "title": "Additional Information",
         "placeholder": "Additional notes related to request"
       },
+      "revisionInfo": {
+        "title": "Information On Revision Required"
+      },
       "openAccessForm": {
         "title": "Data Open Access Form",
         "confirmDataOwner": "I confirm that I am the data owner and have the rights to make this data available on the platform.",
@@ -732,6 +736,19 @@
       "update": "Update & Resubmit",
       "successNotify": "Request updated successfully.",
       "failNotify": "Request failed to update. Please try again."
+    },
+    "approve": {
+      "title": "Request Approval",
+      "confirm": "Approve",
+      "successNotify": "Connection request approved.",
+      "failNotify": "Unable to approve connection request. Please try again."
+    },
+    "revision": {
+      "title": "Request Additional Information",
+      "instruction": "Specify additional information required from research.",
+      "placeholder": "Enter text here",
+      "successNotify": "Revision information submitted successfully.",
+      "failNotify": "Unable to add revision information to connection request. Please try again."
     }
   },
   "databaseSources" : {

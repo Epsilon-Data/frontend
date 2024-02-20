@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import * as S from './SiderMenu.styles';
 import { SidebarNavigationItem, returnCurrentNav } from '../sidebarNavigation';
 import { useTranslation } from 'react-i18next';
+import { isAdmin } from '@app/api/user.api';
 
 interface SiderContentProps {
   selectedNav: string;
@@ -10,10 +11,13 @@ interface SiderContentProps {
 
 const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
   const location = useLocation();
+  const [admin, setAdmin] = useState<boolean>(false);
   const [current, setCurrent] = useState(location.pathname);
   const { t } = useTranslation();
-
-  const currentNav = returnCurrentNav(selectedNav);
+  const fetch = useCallback(() => {
+    isAdmin().then((res) => setAdmin(res));
+  }, []);
+  const currentNav = returnCurrentNav(selectedNav, admin);
 
   const sidebarNavFlat = currentNav.reduce(
     (result: SidebarNavigationItem[], current) =>
@@ -28,12 +32,13 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
   const defaultOpenKeys = openedSubmenu ? [openedSubmenu.key] : [];
 
   useEffect(() => {
+    fetch();
     if (location) {
       if (current !== location.pathname) {
         setCurrent(location.pathname);
       }
     }
-  }, [location, current]);
+  }, [location, current, fetch]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleClick(e: any) {

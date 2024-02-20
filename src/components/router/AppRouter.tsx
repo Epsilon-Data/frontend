@@ -23,6 +23,9 @@ const CreateRequestPage = React.lazy(
 );
 const ViewRequestPage = React.lazy(() => import('@app/pages/ConnectionRequestPages/ViewRequestPage/ViewRequestPage'));
 const EditRequestPage = React.lazy(() => import('@app/pages/ConnectionRequestPages/EditRequestPage/EditRequestPage'));
+const ApproveRequestPage = React.lazy(
+  () => import('@app/pages/ConnectionRequestPages/ApproveRequestPage/ApproveRequestPage'),
+);
 
 const SourceListPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/SourceListPage'));
 const MetadataPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/MetadataPage/MetadataPage'));
@@ -44,6 +47,7 @@ const Dashboard = withLoading(DashboardPage);
 const ConnectionRequests = withLoading(ConnectionRequestsPage);
 const CreateRequest = withLoading(CreateRequestPage);
 const ViewRequest = withLoading(ViewRequestPage);
+const ApproveRequest = withLoading(ApproveRequestPage);
 
 // Edit Request
 const EditRequest = withLoading(EditRequestPage);
@@ -75,6 +79,7 @@ export const AppRouter: React.FC = () => {
           <Route path="connection-requests/create/:page" element={<CreateRequest />} />
           <Route path="connection-requests/view/:id" element={<ViewRequest />} />
           <Route path="connection-requests/edit/:id/:page" element={<EditRequest />} />
+          <Route path="connection-requests/approve/:id" element={<ApproveRequest />} />
           <Route path="database-sources" element={<SourceList />} />
           <Route path="database-sources/metadata/:id" element={<Metadata />}>
             <Route path="db-summary" element={<DatabaseSummary />} />

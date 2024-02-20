@@ -10,12 +10,14 @@ import { PasswordInputItem } from '../request-fields/PasswordInput/PasswordInput
 import { RequestDataInfo } from './RequestDataInfo';
 import { TestConnectionGroup } from '../request-fields/TestConnectionGroup/TestConnectionGroup';
 import { FormModal } from '../request-fields/FormModal/FormModal';
-// import { createRequest } from '@app/api/connectionRequests.api';
+import { createRequest } from '@app/api/connectionRequests.api';
 import { AppDate } from '@app/constants/Dates';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { testConnection } from '@app/api/connectionRequests.api';
 import config from '@app/config/config';
+import { notificationController } from '@app/controllers/notificationController';
+import { DATABASE_TYPES } from '@app/constants/connectionRequest';
 
 export const RequestDatabaseInfo: React.FC<{
   formValue: RequestDetails;
@@ -45,21 +47,6 @@ export const RequestDatabaseInfo: React.FC<{
   const [form] = BaseButtonsForm.useForm();
 
   const { t } = useTranslation();
-
-  const selectItems = [
-    {
-      value: 'postgres',
-      label: t('connectionRequests.details.databaseInfo.postgres'),
-    },
-    {
-      value: 'mysql',
-      label: t('connectionRequests.details.databaseInfo.mysql'),
-    },
-    {
-      value: 'mongo',
-      label: t('connectionRequests.details.databaseInfo.mongo'),
-    },
-  ];
 
   const onFinish = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -131,9 +118,20 @@ export const RequestDatabaseInfo: React.FC<{
   const handleSubmit = () => {
     setFormLoading(false);
     setFieldsChanged(false);
-    console.log(formValue);
-    // createRequest(formValue);
-    navigate('/connection-requests');
+    createRequest(formValue)
+      .then(() => {
+        setFormLoading(false);
+        setFieldsChanged(false);
+        navigate('/connection-requests');
+        notificationController.success({
+          message: t('connectionRequests.create.successNotify'),
+        });
+      })
+      .catch(() => {
+        notificationController.error({
+          message: t('connectionRequests.create.failNotify'),
+        });
+      });
   };
 
   return (
@@ -165,7 +163,7 @@ export const RequestDatabaseInfo: React.FC<{
           <SelectInputItem
             name="databaseType"
             label={t('connectionRequests.details.databaseInfo.type')}
-            optionItems={selectItems}
+            optionItems={DATABASE_TYPES}
             prompt={t('connectionRequests.details.databaseInfo.typePrompt')}
             required
           />
@@ -205,7 +203,7 @@ export const RequestDatabaseInfo: React.FC<{
         </BaseCol>
 
         <RequestDataInfo tags={keywords} onTagsChange={setKeywords} />
-        <FormModal isFormModalOpen={isFormModalOpen} setIsFormModalOpen={setIsFormModalOpen} onSubmit={handleSubmit} />
+        <FormModal isModalOpen={isFormModalOpen} setIsModalOpen={setIsFormModalOpen} onSubmit={handleSubmit} />
       </BaseRow>
     </BaseButtonsForm>
   );

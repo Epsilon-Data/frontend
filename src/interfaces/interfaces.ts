@@ -55,6 +55,7 @@ export interface RequestDetails {
   databaseInfo?: DatabaseInfoFormValues;
   dataInfo: DataInfoFormValues;
   additionalInfo?: string;
+  revisionInfo?: string;
 }
 
 export interface ProjectInfoFormValues {

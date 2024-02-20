@@ -138,3 +138,7 @@ export const elementMappingVariables = css`
   --element-subcategory-bg: #ffe69b;
   --sider-bg: #ecf1ff;
 `;
+
+export const connectionRequestVariables = css`
+  --revision-card-bg: #ffc8c9;
+`;

@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { EditNav } from './EditNav/EditNav';
 import { RequestDetails } from '@app/interfaces/interfaces';
-import { getRequestDetails, updateRequest } from '@app/api/connectionRequests.api';
+import { getRequestDetails, editRequest } from '@app/api/connectionRequests.api';
 import { useMounted } from '@app/hooks/useMounted';
 import { INITIAL_REQUEST_VALUES } from '@app/constants/connectionRequest';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
@@ -49,7 +49,7 @@ const EditRequestPage: React.FC = () => {
   }, [fetch, id]);
 
   const handleUpdate = () => {
-    updateRequest(request)
+    editRequest(request)
       .then(() => {
         notificationController.success({
           message: t('connectionRequests.edit.successNotify'),

@@ -1,5 +1,5 @@
 import { Priority } from '../constants/enums/priorities';
-import { DatabaseConnectionDetails, RequestDetails } from '@app/interfaces/interfaces';
+import { DatabaseConnectionDetails, DatabaseInfoFormValues, RequestDetails } from '@app/interfaces/interfaces';
 import { RequestStatus } from '@app/constants/enums/requestStatus';
 import { format } from 'date-fns';
 import { DATE_FORMAT } from '@app/constants/connectionRequest';
@@ -70,12 +70,12 @@ export const getRequestTableData = async (pagination: Pagination): Promise<Reque
   };
 };
 
-export const getRequestDetails = async (id: string | undefined): Promise<RequestDetails> => {
+export const getRequestDetails = async (requestId: string | undefined): Promise<RequestDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get('/hub/connection-request/details', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
-      requestId: id,
+      requestId: requestId,
     },
   });
   return response.data;
@@ -89,10 +89,44 @@ export const createRequest = async (data: RequestDetails): Promise<RequestDetail
   return response.data;
 };
 
-export const updateRequest = async (data: RequestDetails): Promise<RequestDetails> => {
+export const editRequest = async (data: RequestDetails): Promise<RequestDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch('/hub/connection-request/update', data, {
+  const response = await httpClient.patch('/hub/connection-request/edit', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  return response.data;
+};
+
+export const deleteRequest = async (requestId: string | undefined): Promise<RequestDetails> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.delete('/hub/connection-request/delete', {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      requestId: requestId,
+    },
+  });
+  return response.data;
+};
+
+export const reviseRequest = async (data: {
+  requestId: string | undefined;
+  revisionInfo: string;
+}): Promise<RequestDetails> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.patch('/hub/connection-request/revision', data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  return response.data;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const approveRequest = async (data: DatabaseInfoFormValues, id: string | undefined): Promise<RequestDetails> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.patch('/hub/connection-request/approve', data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      requestId: id,
+    },
   });
   return response.data;
 };

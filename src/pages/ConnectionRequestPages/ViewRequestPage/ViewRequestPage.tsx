@@ -11,6 +11,8 @@ import { InfoSectionHeader } from '@app/components/view-request/InfoSectionHeade
 import { RequestStatus } from '@app/constants/enums/requestStatus';
 import { format } from 'date-fns';
 import { DATE_FORMAT, INITIAL_REQUEST_VALUES } from '@app/constants/connectionRequest';
+import { isAdmin } from '@app/api/user.api';
+import { RevisionModal } from '@app/components/request-fields/RevisionModal/RevisionModal';
 
 const ViewRequestPage: React.FC = () => {
   const initialRequestFormValues = INITIAL_REQUEST_VALUES;
@@ -19,6 +21,8 @@ const ViewRequestPage: React.FC = () => {
   const { isMounted } = useMounted();
   const navigate = useNavigate();
   const [request, setRequest] = useState<RequestDetails>(initialRequestFormValues);
+  const [isRevisionModalOpen, setIsRevisionModalOpen] = useState<boolean>(false);
+  const [admin, setAdmin] = useState<boolean>(false);
 
   const fetch = useCallback(
     (id: string | undefined) => {
@@ -27,6 +31,7 @@ const ViewRequestPage: React.FC = () => {
           setRequest(res);
         }
       });
+      isAdmin().then((res) => setAdmin(res));
     },
     [setRequest, isMounted],
   );
@@ -40,35 +45,46 @@ const ViewRequestPage: React.FC = () => {
       navigate(-1);
     };
 
-    switch (status) {
-      case RequestStatus.PENDING:
-        return React.Children.toArray([
-          <S.ActionButton type="default" key="back" onClick={handleBackClick}>
-            {t('common.back')}
-          </S.ActionButton>,
-        ]);
-      case RequestStatus.REVISION:
-        return React.Children.toArray([
-          <S.ActionButton
-            type="primary"
-            key="edit"
-            onClick={() => navigate(`/connection-requests/edit/${id}/project-info`)}
-          >
-            {t('common.edit')}
-          </S.ActionButton>,
-          <S.ActionButton type="default" key="back" onClick={handleBackClick}>
-            {t('common.back')}
-          </S.ActionButton>,
-        ]);
-      case RequestStatus.APPROVED:
-        return React.Children.toArray([
-          <S.ActionButton type="primary" key="source" onClick={() => navigate('/database-sources/metadata/' + id)}>
-            {t('connectionRequests.viewSource')}
-          </S.ActionButton>,
-          <S.ActionButton type="default" key="back" onClick={handleBackClick}>
-            {t('common.back')}
-          </S.ActionButton>,
-        ]);
+    if (!admin) {
+      switch (status) {
+        case RequestStatus.PENDING:
+          return React.Children.toArray([
+            <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+              {t('common.back')}
+            </S.ActionButton>,
+          ]);
+        case RequestStatus.REVISION:
+          return React.Children.toArray([
+            <S.ActionButton
+              type="primary"
+              key="edit"
+              onClick={() => navigate(`/connection-requests/edit/${id}/project-info`)}
+            >
+              {t('common.edit')}
+            </S.ActionButton>,
+            <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+              {t('common.back')}
+            </S.ActionButton>,
+          ]);
+        case RequestStatus.APPROVED:
+          return React.Children.toArray([
+            <S.ActionButton type="primary" key="source" onClick={() => navigate('/database-sources/metadata/' + id)}>
+              {t('connectionRequests.viewSource')}
+            </S.ActionButton>,
+            <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+              {t('common.back')}
+            </S.ActionButton>,
+          ]);
+      }
+    } else {
+      return React.Children.toArray([
+        <S.ActionButton type="primary" key="proceed" onClick={() => navigate(`/connection-requests/approve/${id}`)}>
+          {t('connectionRequests.proceed')}
+        </S.ActionButton>,
+        <S.ActionButton type="default" key="add-info" onClick={() => setIsRevisionModalOpen(true)}>
+          {t('connectionRequests.revision.title')}
+        </S.ActionButton>,
+      ]);
     }
   };
 
@@ -129,9 +145,17 @@ const ViewRequestPage: React.FC = () => {
                     label={t('connectionRequests.details.databaseInfo.type')}
                     text={request.databaseInfo.type}
                   />
+                  <InfoItem
+                    label={t('connectionRequests.details.databaseInfo.host')}
+                    text={request.databaseInfo.host}
+                  />
+                  <InfoItem
+                    label={t('connectionRequests.details.databaseInfo.port')}
+                    text={request.databaseInfo.port}
+                  />
                 </>
               )}
-              {request.orgAdminEmail && (
+              {request.orgAdminEmail && !admin && (
                 <>
                   <InfoSectionHeader text={t('connectionRequests.details.orgAdminInfo.title')} />
                   <InfoItem label={t('connectionRequests.details.orgAdminInfo.email')} text={request.orgAdminEmail} />
@@ -159,8 +183,22 @@ const ViewRequestPage: React.FC = () => {
                 label={t('connectionRequests.details.dataInfo.keywords')}
                 text={request.dataInfo.keywords?.join(', ')}
               />
+
+              {request.orgAdminEmail && (
+                <>
+                  <InfoSectionHeader text={t('connectionRequests.details.addInfo.title')} />
+                  <InfoItem text={request.additionalInfo} />
+                </>
+              )}
             </S.InfoArea>
+            {request.status == RequestStatus.REVISION && (
+              <S.RevisionCard>
+                <S.RevisionHeader>{t('connectionRequests.details.revisionInfo.title')}</S.RevisionHeader>
+                <S.RevisionContent>{request.revisionInfo}</S.RevisionContent>
+              </S.RevisionCard>
+            )}
           </S.InfoWrapper>
+          <RevisionModal requestId={id} isModalOpen={isRevisionModalOpen} setIsModalOpen={setIsRevisionModalOpen} />
         </S.Card>
       </S.ViewWrapper>
     </>

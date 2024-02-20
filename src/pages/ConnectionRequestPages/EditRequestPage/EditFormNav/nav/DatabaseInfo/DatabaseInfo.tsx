@@ -9,6 +9,7 @@ import { PasswordInputItem } from '@app/components/request-fields/PasswordInput/
 import { TestConnectionGroup } from '@app/components/request-fields/TestConnectionGroup/TestConnectionGroup';
 import { testConnection } from '@epsilon-data/epsilon-connector';
 import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
+import { DATABASE_TYPES } from '@app/constants/connectionRequest';
 
 export const DatabaseInfo: React.FC<{
   formValue: RequestDetails;
@@ -29,21 +30,6 @@ export const DatabaseInfo: React.FC<{
   const [form] = BaseForm.useForm();
 
   const { t } = useTranslation();
-
-  const selectItems = [
-    {
-      value: 'postgres',
-      label: t('connectionRequests.details.databaseInfo.postgres'),
-    },
-    {
-      value: 'mysql',
-      label: t('connectionRequests.details.databaseInfo.mysql'),
-    },
-    {
-      value: 'mongo',
-      label: t('connectionRequests.details.databaseInfo.mongo'),
-    },
-  ];
 
   const onTestConnection = async () => {
     setTestLoading(true);
@@ -114,7 +100,7 @@ export const DatabaseInfo: React.FC<{
           <SelectInputItem
             name="type"
             label={t('connectionRequests.details.databaseInfo.type')}
-            optionItems={selectItems}
+            optionItems={DATABASE_TYPES}
             prompt={t('connectionRequests.details.databaseInfo.typePrompt')}
             required
           />

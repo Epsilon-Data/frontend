@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { RequestTableRow, getRequestTableData, Pagination, Tag } from '@app/api/connectionRequests.api';
+import { RequestTableRow, getRequestTableData, Pagination, Tag, deleteRequest } from '@app/api/connectionRequests.api';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { ColumnsType } from 'antd/es/table';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
@@ -12,6 +12,7 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { Priority } from '@app/constants/enums/priorities';
 import { useNavigate } from 'react-router-dom';
+import { isAdmin } from '@app/api/user.api';
 
 const initialPagination: Pagination = {
   current: 1,
@@ -26,15 +27,17 @@ export const RequestTable: React.FC = () => {
   });
   const { t } = useTranslation();
   const { isMounted } = useMounted();
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [admin, setAdmin] = useState<boolean>(false);
   const fetch = useCallback(
     (pagination: Pagination) => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
       getRequestTableData(pagination).then((res) => {
         if (isMounted.current) {
           setTableData({ data: res.data, pagination: res.pagination, loading: false });
-          setIsAdmin(res.isAdmin);
+          isAdmin().then((res) => {
+            setAdmin(res);
+          });
         }
       });
     },
@@ -50,14 +53,18 @@ export const RequestTable: React.FC = () => {
   };
 
   const handleDeleteRow = (rowId: number) => {
-    setTableData({
-      ...tableData,
-      data: tableData.data.filter((item) => item.key !== rowId),
-      pagination: {
-        ...tableData.pagination,
-        total: tableData.pagination.total ? tableData.pagination.total - 1 : tableData.pagination.total,
-      },
-    });
+    const selectedRow = tableData.data.find((item) => item.key === rowId);
+    if (selectedRow) {
+      setTableData({
+        ...tableData,
+        data: tableData.data.filter((item) => item.key !== rowId),
+        pagination: {
+          ...tableData.pagination,
+          total: tableData.pagination.total ? tableData.pagination.total - 1 : tableData.pagination.total,
+        },
+      });
+      deleteRequest(selectedRow.id);
+    }
   };
 
   const columns: ColumnsType<RequestTableRow> = [
@@ -67,7 +74,7 @@ export const RequestTable: React.FC = () => {
       key: 'projectName',
       render: (text: string) => <span>{text}</span>,
     },
-    ...(isAdmin
+    ...(admin
       ? [
           {
             title: t('connectionRequests.requestor'),
@@ -97,7 +104,7 @@ export const RequestTable: React.FC = () => {
         </BaseRow>
       ),
     },
-    ...(isAdmin
+    ...(admin
       ? [
           {
             title: t('tables.actions'),

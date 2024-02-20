@@ -6,10 +6,10 @@ import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
 
 export const FormModal: React.FC<{
-  isFormModalOpen: boolean;
-  setIsFormModalOpen: (value: boolean) => void;
+  isModalOpen: boolean;
+  setIsModalOpen: (value: boolean) => void;
   onSubmit: () => void;
-}> = ({ isFormModalOpen, setIsFormModalOpen, onSubmit }) => {
+}> = ({ isModalOpen, setIsModalOpen, onSubmit }) => {
   const { t } = useTranslation();
   const [allChecked, setAllChecked] = React.useState(false);
 
@@ -26,8 +26,8 @@ export const FormModal: React.FC<{
     <S.Modal
       title={t('connectionRequests.details.openAccessForm.title')}
       centered
-      open={isFormModalOpen}
-      onCancel={() => setIsFormModalOpen(false)}
+      open={isModalOpen}
+      onCancel={() => setIsModalOpen(false)}
       size="medium"
       footer={
         <BaseButton type="primary" onClick={onSubmit} disabled={!allChecked}>

@@ -7,6 +7,7 @@ import {
   commonThemeVariables,
   antOverrideCssVariables,
   elementMappingVariables,
+  connectionRequestVariables,
 } from './themes/themeVariables';
 
 export default createGlobalStyle`
@@ -26,6 +27,7 @@ export default createGlobalStyle`
     ${commonThemeVariables};
     ${antOverrideCssVariables};
     ${elementMappingVariables};
+    ${connectionRequestVariables};
   } 
 
   [data-no-transition] * {

@@ -1,12 +1,9 @@
 import { OverallDatabaseInfoValues } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 import { SourceStatus } from '@app/constants/enums/sourceStatus';
-import { DATE_FORMAT } from '@app/constants/databaseSource';
+import { DATE_FORMAT, DATABASE_SOURCE_API_URL } from '@app/constants/databaseSource';
 import { format } from 'date-fns';
-
 import { httpClient, getCsrfHeader } from './http.api';
-
-// const API_URL = 'http://localhost:3333/database-source';
 
 export interface Tag {
   value: string;
@@ -21,10 +18,11 @@ export interface Pagination {
 
 export interface SourceListItem {
   projectId: number;
+  projectCustomId: string;
   projectName: string;
   databaseName: string;
   connectDate: Date;
-  sourceStatus?: Tag;
+  sourceStatus: Tag;
 }
 
 export interface SourceListData {
@@ -53,7 +51,7 @@ export interface ColumnTableRow {
 
 export const getSourceList = async (pagination: Pagination): Promise<SourceListData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get('/hub/database-source/list', {
+  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'list', {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
@@ -79,20 +77,20 @@ export const getSourceList = async (pagination: Pagination): Promise<SourceListD
   return { data: formattedData, pagination: { ...pagination, total: formattedData.length } };
 };
 
-export const getProjectName = async (projectId: string | undefined): Promise<string> => {
+export const getProjectId = async (id: string | undefined): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get('/hub/database-source/project-name', {
+  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'project-id', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
-      projectId: projectId,
+      id: id,
     },
   });
-  return response.data.name;
+  return response.data.customId;
 };
 
 export const getDbSummary = async (projectId: string | undefined): Promise<DatabaseSummaryInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get('/hub/database-source/summary', {
+  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'summary', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       projectId: projectId,
@@ -103,7 +101,7 @@ export const getDbSummary = async (projectId: string | undefined): Promise<Datab
 
 export const updateDbSummary = async (data: DatabaseSummaryInfo): Promise<DatabaseSummaryInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch('/hub/database-source/update', data, {
+  const response = await httpClient.patch(DATABASE_SOURCE_API_URL + 'update', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   // const response = await axios.patch(`${API_URL}/update`, data);
@@ -112,7 +110,7 @@ export const updateDbSummary = async (data: DatabaseSummaryInfo): Promise<Databa
 
 export const getDbTableInfo = async (projectId: string | undefined): Promise<DatabaseTableInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get('/hub/database-source/tables', {
+  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'tables', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       projectId: projectId,
@@ -132,7 +130,7 @@ export const addDbTemplate = async (
 ): Promise<{ projectId: string; template: string }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.post(
-    '/hub/database-source/add-template',
+    DATABASE_SOURCE_API_URL + 'add-template',
     { projectId: projectId, template: template },
     {
       headers: { [csrfHeaderName]: `${csrf}` },
@@ -147,7 +145,7 @@ export const addDbTemplate = async (
 
 export const getDbColumns = async (projectId: string | undefined): Promise<string[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get('/hub/database-source/columns', {
+  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'columns', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       projectId: projectId,

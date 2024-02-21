@@ -2,8 +2,7 @@ import { Priority } from '../constants/enums/priorities';
 import { DatabaseConnectionDetails, DatabaseInfoFormValues, RequestDetails } from '@app/interfaces/interfaces';
 import { RequestStatus } from '@app/constants/enums/requestStatus';
 import { format } from 'date-fns';
-import { DATE_FORMAT } from '@app/constants/connectionRequest';
-
+import { DATE_FORMAT, CONNECTION_REQUEST_API_URL } from '@app/constants/connectionRequest';
 import { httpClient, getCsrfHeader } from './http.api';
 
 export interface Tag {
@@ -21,6 +20,8 @@ export interface RequestTableRow {
   key: number;
   id: string;
   projectId?: string;
+  projectCustomId: string;
+  dbStatus?: number;
   requestor?: string;
   createdDate: string;
   statusTag: Tag;
@@ -35,17 +36,18 @@ export interface RequestTableData {
 
 export const getRequestTableData = async (pagination: Pagination): Promise<RequestTableData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get('/hub/connection-request/summary', {
+  const response = await httpClient.get(CONNECTION_REQUEST_API_URL + 'summary', {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   const formattedData = response.data.requests.map(
     (
       item: {
         id: number;
-        requestor?: number;
+        requestor?: string;
+        dbStatus?: number;
         status: number;
         createdDate: Date;
-        Project: { id: string; name: string };
+        Project: { id?: string; customId: string; name: string };
       },
       index: number,
     ) => {
@@ -65,6 +67,8 @@ export const getRequestTableData = async (pagination: Pagination): Promise<Reque
         id: item.id,
         requestor: item.requestor,
         projectId: item.Project.id,
+        projectCustomId: item.Project.customId,
+        dbStatus: item.dbStatus,
         statusTag: statusTag,
         createdDate: format(item.createdDate, DATE_FORMAT),
         projectName: item.Project.name,
@@ -80,7 +84,7 @@ export const getRequestTableData = async (pagination: Pagination): Promise<Reque
 
 export const getRequestDetails = async (requestId: string | undefined): Promise<RequestDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get('/hub/connection-request/details', {
+  const response = await httpClient.get(CONNECTION_REQUEST_API_URL + 'details', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       requestId: requestId,
@@ -89,9 +93,20 @@ export const getRequestDetails = async (requestId: string | undefined): Promise<
   return response.data;
 };
 
+export const isValidProjectId = async (projectId: string): Promise<boolean> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(CONNECTION_REQUEST_API_URL + 'valid-project-id', {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      projectId: projectId,
+    },
+  });
+  return response.data;
+};
+
 export const createRequest = async (data: RequestDetails): Promise<RequestDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post('/hub/connection-request/create', data, {
+  const response = await httpClient.post(CONNECTION_REQUEST_API_URL + 'create', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
@@ -99,7 +114,7 @@ export const createRequest = async (data: RequestDetails): Promise<RequestDetail
 
 export const editRequest = async (data: RequestDetails): Promise<RequestDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch('/hub/connection-request/edit', data, {
+  const response = await httpClient.patch(CONNECTION_REQUEST_API_URL + 'edit', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
@@ -107,7 +122,7 @@ export const editRequest = async (data: RequestDetails): Promise<RequestDetails>
 
 export const deleteRequest = async (requestId: string | undefined): Promise<RequestDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.delete('/hub/connection-request/delete', {
+  const response = await httpClient.delete(CONNECTION_REQUEST_API_URL + 'delete', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       requestId: requestId,
@@ -121,7 +136,7 @@ export const reviseRequest = async (data: {
   revisionInfo: string;
 }): Promise<RequestDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch('/hub/connection-request/revision', data, {
+  const response = await httpClient.patch(CONNECTION_REQUEST_API_URL + 'revision', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
@@ -130,7 +145,7 @@ export const reviseRequest = async (data: {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const approveRequest = async (data: DatabaseInfoFormValues, id: string | undefined): Promise<RequestDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch('/hub/connection-request/approve', data, {
+  const response = await httpClient.patch(CONNECTION_REQUEST_API_URL + 'approve', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       requestId: id,
@@ -141,7 +156,7 @@ export const approveRequest = async (data: DatabaseInfoFormValues, id: string | 
 
 export const testConnection = async (data: DatabaseConnectionDetails): Promise<unknown> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post('/hub/connection-request/test-connection', data, {
+  const response = await httpClient.post(CONNECTION_REQUEST_API_URL + 'test-connection', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;

@@ -13,6 +13,7 @@ import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { Priority } from '@app/constants/enums/priorities';
 import { useNavigate } from 'react-router-dom';
 import { isAdmin } from '@app/api/user.api';
+import { SourceStatus } from '@app/constants/enums/sourceStatus';
 
 const initialPagination: Pagination = {
   current: 1,
@@ -66,7 +67,13 @@ export const RequestTable: React.FC = () => {
 
   const columns: ColumnsType<RequestTableRow> = [
     {
-      title: t('connectionRequests.projectName'),
+      title: t('connectionRequests.details.projectInfo.id'),
+      dataIndex: 'projectCustomId',
+      key: 'projectCustomId',
+      render: (text: string) => <span>{text}</span>,
+    },
+    {
+      title: t('connectionRequests.details.projectInfo.name'),
       dataIndex: 'projectName',
       key: 'projectName',
       render: (text: string) => <span>{text}</span>,
@@ -123,21 +130,30 @@ export const RequestTable: React.FC = () => {
             title: t('tables.actions'),
             dataIndex: 'actions',
             width: '15%',
-            render: (text: string, record: { id: string; projectId?: string; statusTag: { priority: Priority } }) => {
+            render: (
+              text: string,
+              record: { id: string; projectId?: string; dbStatus?: number; statusTag: { priority: Priority } },
+            ) => {
               return (
                 <BaseSpace>
                   <BaseButton type="primary" onClick={() => navigate('/connection-requests/view/' + record.id)}>
                     {t('tables.view')}
                   </BaseButton>
-                  {record.statusTag.priority === Priority.LOW && (
+                  {record.statusTag.priority == Priority.LOW && (
                     <BaseButton
                       type="primary"
-                      onClick={() => navigate('/database-sources/metadata/' + record.projectId)}
+                      onClick={() => {
+                        if (record.dbStatus == SourceStatus.ACTIVE) {
+                          navigate('/database-sources/metadata/' + record.projectId);
+                        } else {
+                          navigate('/database-sources');
+                        }
+                      }}
                     >
                       {t('connectionRequests.viewSource')}
                     </BaseButton>
                   )}
-                  {record.statusTag.priority === Priority.HIGH && (
+                  {record.statusTag.priority == Priority.HIGH && (
                     <>
                       <BaseButton
                         type="primary"
@@ -145,12 +161,9 @@ export const RequestTable: React.FC = () => {
                       >
                         {t('common.edit')}
                       </BaseButton>
-                      <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>
-                        {t('tables.delete')}
-                      </BaseButton>
                     </>
                   )}
-                  {record.statusTag.priority === Priority.INFO && (
+                  {(record.statusTag.priority == Priority.INFO || record.statusTag.priority == Priority.HIGH) && (
                     <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>
                       {t('tables.delete')}
                     </BaseButton>

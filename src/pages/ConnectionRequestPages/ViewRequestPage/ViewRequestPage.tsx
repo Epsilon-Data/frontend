@@ -77,14 +77,23 @@ const ViewRequestPage: React.FC = () => {
           ]);
       }
     } else {
-      return React.Children.toArray([
-        <S.ActionButton type="primary" key="proceed" onClick={() => navigate(`/connection-requests/approve/${id}`)}>
-          {t('connectionRequests.proceed')}
-        </S.ActionButton>,
-        <S.ActionButton type="default" key="add-info" onClick={() => setIsRevisionModalOpen(true)}>
-          {t('connectionRequests.revision.title')}
-        </S.ActionButton>,
-      ]);
+      switch (status) {
+        case RequestStatus.APPROVED:
+          return React.Children.toArray([
+            <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+              {t('common.back')}
+            </S.ActionButton>,
+          ]);
+        default:
+          return React.Children.toArray([
+            <S.ActionButton type="primary" key="proceed" onClick={() => navigate(`/connection-requests/approve/${id}`)}>
+              {t('connectionRequests.proceed')}
+            </S.ActionButton>,
+            <S.ActionButton type="default" key="add-info" onClick={() => setIsRevisionModalOpen(true)}>
+              {t('connectionRequests.revision.title')}
+            </S.ActionButton>,
+          ]);
+      }
     }
   };
 

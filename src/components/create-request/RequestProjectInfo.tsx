@@ -12,6 +12,7 @@ import { TagInputItem } from '../request-fields/TagInput/TagInputItem';
 import { RadioInputItem } from '../request-fields/RadioInput/RadioInputItem';
 import dayjs from 'dayjs';
 import { AppDate } from '@app/constants/Dates';
+import { isValidProjectId } from '@app/api/connectionRequests.api';
 
 export const RequestProjectInfo: React.FC<{
   formValue: RequestDetails;
@@ -19,6 +20,7 @@ export const RequestProjectInfo: React.FC<{
 }> = ({ formValue, setFormValue }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const initialValues: any = {
+    id: formValue.projectInfo.id,
     name: formValue.projectInfo.name,
     duration: formValue.projectInfo.duration.map((date: Date) => dayjs(date)),
     lead: formValue.projectInfo.lead,
@@ -40,25 +42,33 @@ export const RequestProjectInfo: React.FC<{
 
   const onFinish = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (values: any) => {
+    async (values: any) => {
       setLoading(true);
       values.duration = values.duration.map((appDate: AppDate) => dayjs(appDate).toDate());
       values.members = members;
 
-      const updatedRequest = {
-        ...formValue,
-        projectInfo: values,
-      };
-      setFormValue(updatedRequest);
-      setLoading(false);
-      setFieldsChanged(false);
-      if (values.isOwnData) {
-        navigate('/connection-requests/create/database-info');
+      const validId = await isValidProjectId(values.id);
+
+      if (validId) {
+        const updatedRequest = {
+          ...formValue,
+          projectInfo: values,
+        };
+        setFormValue(updatedRequest);
+        setFieldsChanged(false);
+        if (values.isOwnData) {
+          navigate('/connection-requests/create/database-info');
+        } else {
+          navigate('/connection-requests/create/org-admin-info');
+        }
       } else {
-        navigate('/connection-requests/create/org-admin-info');
+        form.setFields([{ name: 'id', errors: [t('connectionRequests.details.projectInfo.invalidId')] }]);
+        form.scrollToField('id');
+        setFieldsChanged(false);
+        setLoading(false);
       }
     },
-    [formValue, members, navigate, setFormValue],
+    [form, formValue, members, navigate, setFormValue, t],
   );
 
   return (
@@ -83,6 +93,10 @@ export const RequestProjectInfo: React.FC<{
 
         <BaseCol span={24}>
           <StringInputItem name="name" label={t('connectionRequests.details.projectInfo.name')} required />
+        </BaseCol>
+
+        <BaseCol span={24}>
+          <StringInputItem name="id" label={t('connectionRequests.details.projectInfo.id')} required />
         </BaseCol>
 
         <BaseCol span={24}>

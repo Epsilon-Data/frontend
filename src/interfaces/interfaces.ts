@@ -59,6 +59,7 @@ export interface RequestDetails {
 }
 
 export interface ProjectInfoFormValues {
+  id: string;
   name: string;
   duration: Date[];
   lead: string;

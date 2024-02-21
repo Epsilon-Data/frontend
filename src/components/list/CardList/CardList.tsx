@@ -57,26 +57,22 @@ export const CardList: React.FC = () => {
             <Meta
               style={{ lineHeight: '1.1rem' }}
               title={item.projectName}
-              description={`Project ID: ${item.projectId}`}
+              description={`Project ID: ${item.projectCustomId}`}
             />
             <div style={{ marginTop: '1.5rem', lineHeight: '0.5rem' }}>
               <p>{`Database Name: ${item.databaseName}`}</p>
               <p>{`Connect Date: ${item.connectDate}`}</p>
-              {item.sourceStatus && (
-                <>
-                  <p>Status:</p>
-                  <BaseRow gutter={[10, 10]}>
-                    <BaseCol key={item.sourceStatus.value} style={{ flex: 0.3 }}>
-                      <Status
-                        color={defineColorByPriority(item.sourceStatus.priority)}
-                        text={item.sourceStatus.value.toUpperCase()}
-                      />
-                    </BaseCol>
-                  </BaseRow>
-                </>
-              )}
+              <p>Status:</p>
+              <BaseRow gutter={[10, 10]}>
+                <BaseCol key={item.sourceStatus.value} style={{ flex: 0.3 }}>
+                  <Status
+                    color={defineColorByPriority(item.sourceStatus.priority)}
+                    text={item.sourceStatus.value.toUpperCase()}
+                  />
+                </BaseCol>
+              </BaseRow>
             </div>
-            {item.sourceStatus && item.sourceStatus.value === 'Crawling' && (
+            {item.sourceStatus.value === 'Crawling' && (
               <>
                 <BaseProgress percent={50} status="active" strokeColor={'var(--collapse-background-color)'} />
                 <p>Crawling status text...</p>

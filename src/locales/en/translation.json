@@ -658,7 +658,6 @@
     "rTitle": "Connection Requests",
     "oaTitle": "Connection Requests",
     "title": "Connection Requests",
-    "projectName": "Project Name",
     "date": "Request Date",
     "requestor": "Requestor",
     "requestList" : "Request List",
@@ -666,6 +665,7 @@
     "proceed": "Proceed",
     "details": {
       "projectInfo": {
+        "id": "Project ID",
         "title": "Project Information",
         "name": "Project Name",
         "duration": "Project Duration",
@@ -677,7 +677,8 @@
         "ethicsId": "Ethics Approval ID",
         "description": "Project Description",
         "isOwnData": "Do you have access to your own data?",
-        "continue": "Continue"
+        "continue": "Continue",
+        "invalidId": "Please input a unique Project ID."
       },
       "databaseInfo": {
         "title": "Database Information",
@@ -760,6 +761,7 @@
     "provider": "Provider",
     "sourceList"  : "Source List",
     "manage" : "Manage",
+    "sidebarTitle": "Project {{id}}",
     "describeDataset": {
       "title": "Describe Dataset",
       "projectTitle": "Describe Dataset Project {{id}}",
@@ -795,7 +797,7 @@
     "accessPermissions": "Set Access Permissions",
     "metadata": {
       "title": "Metadata",
-      "projectTitle": "{{name}} Metadata",
+      "projectTitle": "Metadata Project {{id}}",
       "dbSummary": "Database Summary",
       "overallDesc": {
         "title": "Overall Description",

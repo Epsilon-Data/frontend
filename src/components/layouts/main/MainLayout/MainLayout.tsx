@@ -9,7 +9,7 @@ import { findKeyByUrl, findUrlByKey, topNavigation } from '../topNavigation';
 import { useTranslation } from 'react-i18next';
 import MainSider from '../sider/MainSider/MainSider';
 import { updateUrlById } from '../sider/sidebarNavigation';
-import { getProjectName } from '@app/api/databaseSources.api';
+import { getProjectId } from '@app/api/databaseSources.api';
 
 const MainLayout: React.FC = () => {
   const [isTwoColumnsLayout, setIsTwoColumnsLayout] = useState(true);
@@ -22,12 +22,12 @@ const MainLayout: React.FC = () => {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const navigate = useNavigate();
-  const [projectName, setProjectName] = useState('');
+  const [projectId, setProjectId] = useState('');
 
   const fetch = useCallback(() => {
     if (id) {
-      getProjectName(id).then((res) => {
-        setProjectName(res);
+      getProjectId(id).then((res) => {
+        setProjectId(res);
       });
     }
   }, [id]);
@@ -44,12 +44,12 @@ const MainLayout: React.FC = () => {
 
     if (selectedKey == 'database' && id) {
       updateUrlById(id);
-      setTitle(projectName);
+      setTitle(t('databaseSources.sidebarTitle', { id: projectId }));
     } else {
       setTitle(t('topNavigation.' + selectedKey));
     }
     setUrl(findUrlByKey(selectedKey));
-  }, [location.pathname, isDesktop, selectedKey, id, t, fetch, projectName]);
+  }, [location.pathname, isDesktop, selectedKey, id, t, fetch, projectId]);
 
   return (
     <S.LayoutMaster>

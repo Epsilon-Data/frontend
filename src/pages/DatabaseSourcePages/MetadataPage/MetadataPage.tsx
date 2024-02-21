@@ -7,18 +7,18 @@ import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { ClusterOutlined, TableOutlined } from '@ant-design/icons';
 import { useMounted } from '@app/hooks/useMounted';
-import { getProjectName } from '@app/api/databaseSources.api';
+import { getProjectId } from '@app/api/databaseSources.api';
 
 const MetadataPage: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isMounted } = useMounted();
-  const [projectName, setProjectName] = useState('');
+  const [projectId, setProjectId] = useState('');
   const fetch = useCallback(() => {
-    getProjectName(id).then((res) => {
+    getProjectId(id).then((res) => {
       if (isMounted.current) {
-        setProjectName(res);
+        setProjectId(res);
       }
     });
   }, [id, isMounted]);
@@ -29,11 +29,11 @@ const MetadataPage: React.FC = () => {
 
   return (
     <>
-      <PageTitle>{t('databaseSources.metadata.projectTitle', { name: projectName })}</PageTitle>
+      <PageTitle>{t('databaseSources.metadata.projectTitle', { id: projectId })}</PageTitle>
       <S.CardWrapper>
         <S.Card
           id="metadata"
-          title={t('databaseSources.metadata.projectTitle', { name: projectName })}
+          title={t('databaseSources.metadata.projectTitle', { id: projectId })}
           padding="1.25rem 1.25rem 0"
         >
           <BaseRow gutter={[50, 50]}>

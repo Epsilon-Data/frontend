@@ -58,6 +58,7 @@
     "reactflow": "^11.10.2",
     "round-slider": "^1.6.1",
     "slick-carousel": "^1.8.1",
+    "socket.io-client": "^4.7.4",
     "styled-components": "^6.1.1",
     "typeface-lato": "^1.1.13",
     "typeface-montserrat": "^1.1.13",

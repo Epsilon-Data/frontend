@@ -12,7 +12,8 @@ import { defineColorByPriority } from '@app/utils/utils';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseProgress } from '@app/components/common/BaseProgress/BaseProgress';
 import { useNavigate } from 'react-router-dom';
-
+import { io } from 'socket.io-client';
+import config from '@app/config/config';
 const { Meta } = Card;
 const initialPagination: Pagination = {
   current: 1,
@@ -20,6 +21,8 @@ const initialPagination: Pagination = {
 };
 
 export const CardList: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [crawlingStatuses, setCrawlingStatuses] = useState<any>([]);
   const [listData, setListData] = useState<{ data: SourceListItem[]; pagination: Pagination; loading: boolean }>({
     data: [],
     pagination: initialPagination,
@@ -43,6 +46,19 @@ export const CardList: React.FC = () => {
 
   useEffect(() => {
     fetch(initialPagination);
+    const socket = io(config.apiPrefix + '/hub');
+    socket.on('connect', () => {
+      console.log('socket connected');
+    });
+
+    socket.on('connect_error', (error: Error) => {
+      console.error(error);
+      socket.close();
+    });
+    socket.on('updateStatus', (result) => {
+      setCrawlingStatuses(result);
+      console.log(result);
+    });
   }, [fetch]);
 
   return (
@@ -74,8 +90,22 @@ export const CardList: React.FC = () => {
             </div>
             {item.sourceStatus.value === 'Crawling' && (
               <>
-                <BaseProgress percent={50} status="active" strokeColor={'var(--collapse-background-color)'} />
-                <p>Crawling status text...</p>
+                <BaseProgress
+                  percent={
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    crawlingStatuses.find((item: { name: any; databaseName: any }) => item.name === item.databaseName)
+                      ?.status_percent
+                  }
+                  status="active"
+                  strokeColor={'var(--collapse-background-color)'}
+                />
+                <p>
+                  {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    crawlingStatuses.find((item: { name: any; databaseName: any }) => item.name === item.databaseName)
+                      ?.status_msg
+                  }
+                </p>
               </>
             )}
             <BaseButton

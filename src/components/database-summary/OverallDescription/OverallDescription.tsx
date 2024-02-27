@@ -3,15 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { OverallDatabaseInfoValues } from '@app/interfaces/interfaces';
 import * as S from './OverallDescription.styles';
 import { Typography } from 'antd';
-import { format, isValid } from 'date-fns';
-import { DATE_FORMAT } from '@app/constants/databaseSource';
 
 export const OverallDescription: React.FC<{ info: OverallDatabaseInfoValues }> = ({ info }) => {
   const { t } = useTranslation();
   const { Title } = Typography;
-  const formattedDate = isValid(info.dateCreated)
-    ? format(info.dateCreated, DATE_FORMAT)
-    : info.dateCreated.toString().substring(0, 10);
 
   return (
     <>
@@ -19,8 +14,6 @@ export const OverallDescription: React.FC<{ info: OverallDatabaseInfoValues }> =
         {t('databaseSources.metadata.overallDesc.title')}
       </Title>
       <S.InfoArea>
-        <S.Header>{t('databaseSources.metadata.overallDesc.dateCreated')}</S.Header>
-        <S.Content>{formattedDate}</S.Content>
         <S.Header>{t('databaseSources.metadata.overallDesc.schemaCount')}</S.Header>
         <S.Content>{info.schemaCount}</S.Content>
         <S.Header>{t('databaseSources.metadata.overallDesc.tableCount')}</S.Header>

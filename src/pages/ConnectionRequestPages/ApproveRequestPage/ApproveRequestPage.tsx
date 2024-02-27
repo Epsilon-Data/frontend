@@ -11,7 +11,6 @@ import { SelectInputItem } from '@app/components/request-fields/SelectInput/Sele
 import { DATABASE_TYPES } from '@app/constants/connectionRequest';
 import { PasswordInputItem } from '@app/components/request-fields/PasswordInput/PasswordInputItem';
 import { TestConnectionGroup } from '@app/components/request-fields/TestConnectionGroup/TestConnectionGroup';
-import { FormModal } from '@app/components/request-fields/FormModal/FormModal';
 import { notificationController } from '@app/controllers/notificationController';
 import { approveRequest, testConnection } from '@app/api/connectionRequests.api';
 import config from '@app/config/config';
@@ -32,23 +31,33 @@ const ApproveRequestPage: React.FC = () => {
   const [isTestLoading, setTestLoading] = useState(false);
   const [isConnected, setConnected] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
-  const [isFormModalOpen, setIsFormModalOpen] = useState<boolean>(false);
-  const [formValue, setFormValue] = useState<DatabaseInfoFormValues>(initialValues);
   const navigate = useNavigate();
   const [form] = BaseButtonsForm.useForm();
   const { t } = useTranslation();
 
   const onFinish = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (values: DatabaseInfoFormValues) => {
+      setFieldsChanged(true);
       setFormLoading(true);
 
       if (isConnected) {
-        setFormValue(values);
-        setIsFormModalOpen(true);
+        approveRequest(values, id)
+          .then(() => {
+            setFormLoading(false);
+            setFieldsChanged(false);
+            navigate('/connection-requests');
+            notificationController.success({
+              message: t('connectionRequests.approve.successNotify'),
+            });
+          })
+          .catch(() => {
+            notificationController.error({
+              message: t('connectionRequests.approve.failNotify'),
+            });
+          });
       }
     },
-    [isConnected],
+    [id, isConnected, navigate, t],
   );
 
   const onTestConnection = async () => {
@@ -83,25 +92,6 @@ const ApproveRequestPage: React.FC = () => {
 
     setShowMessage(true);
     setTestLoading(false);
-  };
-
-  const handleSubmit = () => {
-    setFormLoading(false);
-    setFieldsChanged(false);
-    approveRequest(formValue, id)
-      .then(() => {
-        setFormLoading(false);
-        setFieldsChanged(false);
-        navigate('/connection-requests');
-        notificationController.success({
-          message: t('connectionRequests.approve.successNotify'),
-        });
-      })
-      .catch(() => {
-        notificationController.error({
-          message: t('connectionRequests.approve.failNotify'),
-        });
-      });
   };
 
   return (
@@ -175,7 +165,6 @@ const ApproveRequestPage: React.FC = () => {
                   show={showMessage}
                 />
               </BaseCol>
-              <FormModal isModalOpen={isFormModalOpen} setIsModalOpen={setIsFormModalOpen} onSubmit={handleSubmit} />
             </BaseRow>
           </BaseButtonsForm>
         </S.Card>

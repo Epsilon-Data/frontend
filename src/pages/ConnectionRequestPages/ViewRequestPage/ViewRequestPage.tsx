@@ -4,7 +4,7 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './ViewRequestPage.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RequestDetails } from '@app/interfaces/interfaces';
-import { getRequestDetails } from '@app/api/connectionRequests.api';
+import { getRequestDetails, reviseRequest } from '@app/api/connectionRequests.api';
 import { useMounted } from '@app/hooks/useMounted';
 import { InfoItem } from '@app/components/view-request/InfoItem';
 import { InfoSectionHeader } from '@app/components/view-request/InfoSectionHeader';
@@ -12,7 +12,8 @@ import { RequestStatus } from '@app/constants/enums/requestStatus';
 import { format } from 'date-fns';
 import { DATE_FORMAT, INITIAL_REQUEST_VALUES } from '@app/constants/connectionRequest';
 import { isAdmin } from '@app/api/user.api';
-import { RevisionModal } from '@app/components/request-fields/RevisionModal/RevisionModal';
+import { StringTextAreaItem } from '@app/components/request-fields/StringInput/StringTextAreaItem';
+import { notificationController } from '@app/controllers/notificationController';
 
 const ViewRequestPage: React.FC = () => {
   const initialRequestFormValues = INITIAL_REQUEST_VALUES;
@@ -21,24 +22,47 @@ const ViewRequestPage: React.FC = () => {
   const { isMounted } = useMounted();
   const navigate = useNavigate();
   const [request, setRequest] = useState<RequestDetails>(initialRequestFormValues);
-  const [isRevisionModalOpen, setIsRevisionModalOpen] = useState<boolean>(false);
+  const [revisionDefined, setRevisionDefined] = React.useState(false);
+  const [submitLoading, setSubmitLoading] = React.useState(false);
+  const [form] = S.AddInfoForm.useForm();
   const [admin, setAdmin] = useState<boolean>(false);
+  const [revisionInfo, setRevisionInfo] = useState('');
 
   const fetch = useCallback(
     (id: string | undefined) => {
       getRequestDetails(id).then((res) => {
         if (isMounted.current) {
           setRequest(res);
+          form.setFieldsValue({ info: res.revisionInfo });
+          if (res.revisionInfo) {
+            setRevisionInfo(res.revisionInfo);
+          }
         }
       });
       isAdmin().then((res) => setAdmin(res));
     },
-    [setRequest, isMounted],
+    [isMounted, form],
   );
 
   useEffect(() => {
     fetch(id);
   }, [fetch, id]);
+
+  const onFinish = (values: { info: string }) => {
+    reviseRequest({ requestId: id, revisionInfo: values.info })
+      .then(() => {
+        notificationController.success({
+          message: t('connectionRequests.revision.successNotify'),
+        });
+        setRevisionInfo(values.info);
+      })
+      .catch(() => {
+        notificationController.error({
+          message: t('connectionRequests.revision.failNotify'),
+        });
+      });
+    setSubmitLoading(false);
+  };
 
   const actionButtons = (status: number | undefined) => {
     const handleBackClick = () => {
@@ -88,9 +112,6 @@ const ViewRequestPage: React.FC = () => {
           return React.Children.toArray([
             <S.ActionButton type="primary" key="proceed" onClick={() => navigate(`/connection-requests/approve/${id}`)}>
               {t('connectionRequests.proceed')}
-            </S.ActionButton>,
-            <S.ActionButton type="default" key="add-info" onClick={() => setIsRevisionModalOpen(true)}>
-              {t('connectionRequests.revision.title')}
             </S.ActionButton>,
           ]);
       }
@@ -150,18 +171,6 @@ const ViewRequestPage: React.FC = () => {
                     label={t('connectionRequests.details.databaseInfo.name')}
                     text={request.databaseInfo.name}
                   />
-                  <InfoItem
-                    label={t('connectionRequests.details.databaseInfo.type')}
-                    text={request.databaseInfo.type}
-                  />
-                  <InfoItem
-                    label={t('connectionRequests.details.databaseInfo.host')}
-                    text={request.databaseInfo.host}
-                  />
-                  <InfoItem
-                    label={t('connectionRequests.details.databaseInfo.port')}
-                    text={request.databaseInfo.port}
-                  />
                 </>
               )}
               {request.orgAdminEmail && !admin && (
@@ -203,11 +212,27 @@ const ViewRequestPage: React.FC = () => {
             {request.status == RequestStatus.REVISION && (
               <S.RevisionCard>
                 <S.RevisionHeader>{t('connectionRequests.details.revisionInfo.title')}</S.RevisionHeader>
-                <S.RevisionContent>{request.revisionInfo}</S.RevisionContent>
+                <S.RevisionContent>{revisionInfo}</S.RevisionContent>
               </S.RevisionCard>
             )}
+            {admin && request.status != RequestStatus.APPROVED && (
+              <S.AddInfoForm form={form} onFinish={onFinish}>
+                <div style={{ marginBottom: '1rem' }}>
+                  <S.Instructions>{t('connectionRequests.revision.instruction')}</S.Instructions>
+                </div>
+                <StringTextAreaItem
+                  name="info"
+                  placeholder={t('connectionRequests.revision.placeholder')}
+                  onChange={(e) => setRevisionDefined(e.target.value.length > 0)}
+                />
+                <S.AddInfoForm.Item style={{ marginTop: '1rem' }}>
+                  <S.AddInfoButton type="default" htmlType="submit" disabled={!revisionDefined} loading={submitLoading}>
+                    {t('connectionRequests.revision.title')}
+                  </S.AddInfoButton>
+                </S.AddInfoForm.Item>
+              </S.AddInfoForm>
+            )}
           </S.InfoWrapper>
-          <RevisionModal requestId={id} isModalOpen={isRevisionModalOpen} setIsModalOpen={setIsRevisionModalOpen} />
         </S.Card>
       </S.ViewWrapper>
     </>

@@ -3,6 +3,7 @@ import { BaseCard as CommonCard } from '@app/components/common/BaseCard/BaseCard
 import { FONT_SIZE, FONT_WEIGHT, media } from '@app/styles/themes/constants';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { Typography } from 'antd';
+import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
 
 const { Paragraph, Text } = Typography;
 
@@ -93,4 +94,18 @@ export const RevisionHeader = styled(Paragraph)`
 export const RevisionContent = styled(Text)`
   font-size: ${FONT_SIZE.xs};
   font-weight: ${FONT_WEIGHT.regular};
+`;
+
+export const Instructions = styled(Text)`
+  font-size: ${FONT_SIZE.md};
+  font-weight: ${FONT_WEIGHT.semibold};
+`;
+
+export const AddInfoButton = styled(BaseButton)`
+  max-width: 18rem;
+  float: right;
+`;
+
+export const AddInfoForm = styled(BaseForm)`
+  margin-top: 6rem;
 `;

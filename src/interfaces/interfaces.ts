@@ -88,7 +88,6 @@ export interface DatabaseInfoFormValues {
 }
 
 export interface OverallDatabaseInfoValues {
-  dateCreated: Date | string;
   schemaCount: number;
   totalTableCount: number;
   totalColCount: number;

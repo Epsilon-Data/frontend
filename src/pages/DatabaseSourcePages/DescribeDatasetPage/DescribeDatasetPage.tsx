@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './DescribeDatasetPage.styles';
@@ -11,6 +11,8 @@ import { Step1 } from './Steps/Step1/Step1';
 import { Step2 } from './Steps/Step2/Step2';
 import { Step3 } from './Steps/Step3/Step3';
 import { useEdgesState, useNodesState } from 'reactflow';
+import { getProjectId } from '@app/api/databaseSources.api';
+import { useMounted } from '@app/hooks/useMounted';
 
 const initialNodes = [{ id: '1', position: { x: 320, y: 200 }, data: { label: 'Object' }, type: 'object' }];
 
@@ -63,13 +65,27 @@ const DescribeDatasetPage: React.FC = () => {
     },
   ];
 
+  const [projectId, setProjectId] = useState('');
+  const { isMounted } = useMounted();
+  const fetch = useCallback(() => {
+    getProjectId(id).then((res) => {
+      if (isMounted.current) {
+        setProjectId(res);
+      }
+    });
+  }, [id, isMounted]);
+
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+
   return (
     <>
-      <PageTitle>{t('databaseSources.describeDataset.projectTitle', { id: id })}</PageTitle>
+      <PageTitle>{t('databaseSources.describeDataset.projectTitle', { id: projectId })}</PageTitle>
       <S.CardWrapper>
         <S.Card
           id="metadata"
-          title={t('databaseSources.describeDataset.projectTitle', { id: id })}
+          title={t('databaseSources.describeDataset.projectTitle', { id: projectId })}
           padding="1.25rem 1.25rem 0"
         >
           <BaseRow>

@@ -58,6 +58,9 @@ const TableInfoPage: React.FC = () => {
           </span>
         );
       },
+      sorter: (a, b) => (a.primary === b.primary ? 0 : a.primary ? -1 : 1),
+      defaultSortOrder: 'ascend',
+      sortDirections: ['ascend', 'descend', 'ascend'],
     },
     {
       title: t('databaseSources.metadata.tableInfo.dataType'),

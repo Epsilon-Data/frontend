@@ -99,15 +99,6 @@ export const getDbSummary = async (projectId: string | undefined): Promise<Datab
   return response.data;
 };
 
-export const updateDbSummary = async (data: DatabaseSummaryInfo): Promise<DatabaseSummaryInfo> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch(DATABASE_SOURCE_API_URL + 'update', data, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-  // const response = await axios.patch(`${API_URL}/update`, data);
-  return response.data;
-};
-
 export const getDbTableInfo = async (projectId: string | undefined): Promise<DatabaseTableInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'tables', {
@@ -116,11 +107,6 @@ export const getDbTableInfo = async (projectId: string | undefined): Promise<Dat
       projectId: projectId,
     },
   });
-  // const response = await axios.get(`${API_URL}/tables`, {
-  // params: {
-  //   projectId: projectId,
-  // },
-  // });
   return response.data;
 };
 
@@ -136,10 +122,7 @@ export const addDbTemplate = async (
       headers: { [csrfHeaderName]: `${csrf}` },
     },
   );
-  // const response = await axios.post(`${API_URL}/add-template`, {
-  // projectId: projectId,
-  // template: template,
-  // });
+
   return response.data;
 };
 
@@ -151,10 +134,5 @@ export const getDbColumns = async (projectId: string | undefined): Promise<strin
       projectId: projectId,
     },
   });
-  // const response = await axios.get(`${API_URL}/columns`, {
-  //   params: {
-  //     projectId: projectId,
-  //   },
-  // });
   return response.data;
 };

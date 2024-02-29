@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { media } from '@app/styles/themes/constants';
+import { FONT_SIZE, FONT_WEIGHT, media } from '@app/styles/themes/constants';
 import { BaseLayout } from '@app/components/common/BaseLayout/BaseLayout';
 import { Layout, Menu } from 'antd';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
+import { Link } from 'react-router-dom';
 
 export const LayoutMaster = styled(BaseLayout)`
   height: 100vh;
@@ -53,4 +54,13 @@ export const LogoutBtn = styled(BaseButton)`
 
 export const LayoutWrapper = styled(Layout)`
   overflow-y: hidden;
+`;
+
+export const Username = styled(Link)`
+  color: var(--text-main-color);
+  font-size: ${FONT_SIZE.md};
+  font-weight: ${FONT_WEIGHT.medium};
+  position: absolute;
+  top: 0.3rem;
+  right: 9rem;
 `;

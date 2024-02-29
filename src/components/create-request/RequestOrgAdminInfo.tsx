@@ -14,6 +14,7 @@ import { createRequest } from '@app/api/connectionRequests.api';
 import { AppDate } from '@app/constants/Dates';
 import dayjs from 'dayjs';
 import { notificationController } from '@app/controllers/notificationController';
+import config from '@app/config/config';
 
 export const RequestOrgAdminInfo: React.FC<{
   formValue: RequestDetails;
@@ -22,10 +23,10 @@ export const RequestOrgAdminInfo: React.FC<{
   const initialValues = {
     orgAdminEmail: formValue.orgAdminEmail,
     dataCollectionDuration: formValue.dataInfo.collectionDuration.map((date: Date) => dayjs(date)),
-    dataParticipantsNumber: formValue.dataInfo.participantsNumber,
-    dataDescription: formValue.dataInfo.description,
+    dataParticipantsNumber: formValue.dataInfo.participantsNumber || `${config.isDev ? 100 : null}`,
+    dataDescription: formValue.dataInfo.description || `${config.isDev ? 'Some test data description.' : ''}`,
     dataKeywords: formValue.dataInfo.keywords,
-    additionalInfo: formValue.additionalInfo,
+    additionalInfo: formValue.additionalInfo || `${config.isDev ? 'Some additional info.' : ''}`,
   };
 
   const [isFieldsChanged, setFieldsChanged] = useState(false);

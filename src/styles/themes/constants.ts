@@ -6,7 +6,7 @@ export const BASE_COLORS = {
   green: '#008000',
   orange: '#ffb155',
   gray: '#808080',
-  lightgrey: '#c5d3e0',
+  lightgrey: '#d0dbe6',
   violet: '#ee82ee',
   lightgreen: '#89dca0',
   pink: '#ffc0cb',

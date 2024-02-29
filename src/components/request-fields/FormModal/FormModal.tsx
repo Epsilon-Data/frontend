@@ -9,7 +9,8 @@ export const FormModal: React.FC<{
   isModalOpen: boolean;
   setIsModalOpen: (value: boolean) => void;
   onSubmit: () => void;
-}> = ({ isModalOpen, setIsModalOpen, onSubmit }) => {
+  loading: boolean;
+}> = ({ isModalOpen, setIsModalOpen, onSubmit, loading }) => {
   const { t } = useTranslation();
   const [allChecked, setAllChecked] = React.useState(false);
 
@@ -30,7 +31,7 @@ export const FormModal: React.FC<{
       onCancel={() => setIsModalOpen(false)}
       size="medium"
       footer={
-        <BaseButton type="primary" onClick={onSubmit} disabled={!allChecked}>
+        <BaseButton type="primary" onClick={onSubmit} disabled={!allChecked} loading={loading}>
           {t('common.submit')}
         </BaseButton>
       }

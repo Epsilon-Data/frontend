@@ -31,8 +31,8 @@ export const RequestDatabaseInfo: React.FC<{
     databaseUsername: formValue.databaseInfo?.username || `${config.isDev ? 'test_admin' : ''}`,
     databasePassword: formValue.databaseInfo?.password || `${config.isDev ? 'supersecret' : ''}`,
     dataCollectionDuration: formValue.dataInfo.collectionDuration.map((date: Date) => dayjs(date)),
-    dataParticipantsNumber: formValue.dataInfo.participantsNumber,
-    dataDescription: formValue.dataInfo.description,
+    dataParticipantsNumber: formValue.dataInfo.participantsNumber || `${config.isDev ? 100 : null}`,
+    dataDescription: formValue.dataInfo.description || `${config.isDev ? 'Some test data description.' : ''}`,
     dataKeywords: formValue.dataInfo.keywords,
   };
   const [isFieldsChanged, setFieldsChanged] = useState(false);
@@ -42,6 +42,7 @@ export const RequestDatabaseInfo: React.FC<{
   const [showMessage, setShowMessage] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState<boolean>(false);
   const [keywords, setKeywords] = useState(initialValues.dataKeywords);
+  const [isSubmitLoading, setSubmitLoading] = useState(false);
   const navigate = useNavigate();
 
   const [form] = BaseButtonsForm.useForm();
@@ -116,12 +117,11 @@ export const RequestDatabaseInfo: React.FC<{
   };
 
   const handleSubmit = () => {
-    setFormLoading(false);
-    setFieldsChanged(false);
+    setFormLoading(true);
+    setFieldsChanged(true);
+    setSubmitLoading(true);
     createRequest(formValue)
       .then(() => {
-        setFormLoading(false);
-        setFieldsChanged(false);
         navigate('/connection-requests');
         notificationController.success({
           message: t('connectionRequests.create.successNotify'),
@@ -132,6 +132,10 @@ export const RequestDatabaseInfo: React.FC<{
           message: t('connectionRequests.create.failNotify'),
         });
       });
+
+    setFormLoading(false);
+    setFieldsChanged(false);
+    setSubmitLoading(false);
   };
 
   return (
@@ -203,7 +207,12 @@ export const RequestDatabaseInfo: React.FC<{
         </BaseCol>
 
         <RequestDataInfo tags={keywords} onTagsChange={setKeywords} />
-        <FormModal isModalOpen={isFormModalOpen} setIsModalOpen={setIsFormModalOpen} onSubmit={handleSubmit} />
+        <FormModal
+          isModalOpen={isFormModalOpen}
+          setIsModalOpen={setIsFormModalOpen}
+          onSubmit={handleSubmit}
+          loading={isSubmitLoading}
+        />
       </BaseRow>
     </BaseButtonsForm>
   );

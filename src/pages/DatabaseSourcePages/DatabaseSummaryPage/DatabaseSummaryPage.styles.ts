@@ -19,6 +19,10 @@ export const Card = styled(CommonCard)`
     font-size: ${FONT_SIZE.md};
     font-weight: ${FONT_WEIGHT.medium};
   }
+
+  .react-transform-wrapper {
+    width: 93%;
+  }
 `;
 
 export const Button = styled(BaseButton)`

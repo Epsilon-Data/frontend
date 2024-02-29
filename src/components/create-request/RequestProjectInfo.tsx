@@ -13,6 +13,7 @@ import { RadioInputItem } from '../request-fields/RadioInput/RadioInputItem';
 import dayjs from 'dayjs';
 import { AppDate } from '@app/constants/Dates';
 import { isValidProjectId } from '@app/api/connectionRequests.api';
+import config from '@app/config/config';
 
 export const RequestProjectInfo: React.FC<{
   formValue: RequestDetails;
@@ -21,14 +22,14 @@ export const RequestProjectInfo: React.FC<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const initialValues: any = {
     id: formValue.projectInfo.id,
-    name: formValue.projectInfo.name,
+    name: formValue.projectInfo.name || `${config.isDev ? 'Test Project' : ''}`,
     duration: formValue.projectInfo.duration.map((date: Date) => dayjs(date)),
-    lead: formValue.projectInfo.lead,
+    lead: formValue.projectInfo.lead || `${config.isDev ? 'Test Leader' : ''}`,
     members: formValue.projectInfo.members,
-    university: formValue.projectInfo.university,
-    faculty: formValue.projectInfo.faculty,
-    ethicsId: formValue.projectInfo.ethicsId,
-    description: formValue.projectInfo.description,
+    university: formValue.projectInfo.university || `${config.isDev ? 'Test University' : ''}`,
+    faculty: formValue.projectInfo.faculty || `${config.isDev ? 'Test Faculty' : ''}`,
+    ethicsId: formValue.projectInfo.ethicsId || `${config.isDev ? 'test123' : ''}`,
+    description: formValue.projectInfo.description || `${config.isDev ? 'Some test description.' : ''}`,
     isOwnData: formValue.projectInfo.isOwnData,
   };
   const [isFieldsChanged, setFieldsChanged] = useState(false);

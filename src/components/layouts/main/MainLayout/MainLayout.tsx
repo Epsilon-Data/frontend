@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 import MainSider from '../sider/MainSider/MainSider';
 import { updateUrlById } from '../sider/sidebarNavigation';
 import { getProjectId } from '@app/api/databaseSources.api';
+import { BiSolidUserCircle } from 'react-icons/bi';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const MainLayout: React.FC = () => {
   const [isTwoColumnsLayout, setIsTwoColumnsLayout] = useState(true);
@@ -23,6 +25,7 @@ const MainLayout: React.FC = () => {
   const [url, setUrl] = useState('');
   const navigate = useNavigate();
   const [projectId, setProjectId] = useState('');
+  const user = useAppSelector((state) => state.user.user);
 
   const fetch = useCallback(() => {
     if (id) {
@@ -66,6 +69,10 @@ const MainLayout: React.FC = () => {
             };
           })}
         />
+        <S.Username to={'/'}>
+          <BiSolidUserCircle size={23} style={{ marginRight: '0.6rem', top: '0.35rem', position: 'relative' }} />
+          {user?.userName}
+        </S.Username>
         <S.LogoutBtn onClick={() => navigate('/logout')}>{t('sidebarNavigation.logout')}</S.LogoutBtn>
       </S.Header>
       <S.LayoutWrapper>

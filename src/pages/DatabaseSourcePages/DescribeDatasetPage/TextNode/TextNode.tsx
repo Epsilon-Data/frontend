@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Position, NodeProps, Handle } from 'reactflow';
 import * as S from './TextNode.styles';
-import { RxDragHandleDots2 } from 'react-icons/rx';
 import { useState } from 'react';
 
 export type NodeData = {
@@ -34,7 +33,6 @@ export function TextNode({ data, type }: NodeProps<NodeData>) {
 
   return (
     <S.TextNodeWrapper style={{ background: typeColor }}>
-      <RxDragHandleDots2 size={30} style={{ position: 'relative', top: '0.5rem' }} />
       {isEditing ? (
         <S.TextNodeInput defaultValue={data.label} onChange={handleChange} onBlur={handleBlur} autoFocus />
       ) : (

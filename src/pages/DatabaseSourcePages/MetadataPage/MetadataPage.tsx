@@ -15,17 +15,20 @@ const MetadataPage: React.FC = () => {
   const navigate = useNavigate();
   const { isMounted } = useMounted();
   const [projectId, setProjectId] = useState('');
-  const fetch = useCallback(() => {
-    getProjectId(id).then((res) => {
-      if (isMounted.current) {
-        setProjectId(res);
-      }
-    });
-  }, [id, isMounted]);
+  const fetch = useCallback(
+    (id: string | undefined) => {
+      getProjectId(id).then((res) => {
+        if (isMounted.current) {
+          setProjectId(res);
+        }
+      });
+    },
+    [isMounted],
+  );
 
   useEffect(() => {
-    fetch();
-  }, [fetch]);
+    fetch(id);
+  }, [id, fetch]);
 
   return (
     <>

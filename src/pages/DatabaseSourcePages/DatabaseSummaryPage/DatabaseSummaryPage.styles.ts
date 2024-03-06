@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { BaseCard as CommonCard } from '@app/components/common/BaseCard/BaseCard';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
-import { FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
+import { FONT_WEIGHT } from '@app/styles/themes/constants';
 
 export const CardWrapper = styled.div`
   margin-top: -1rem;
@@ -16,8 +16,7 @@ export const Card = styled(CommonCard)`
   }
 
   .ant-tabs-tab-btn {
-    font-size: ${FONT_SIZE.md};
-    font-weight: ${FONT_WEIGHT.medium};
+    font-weight: ${FONT_WEIGHT.regular};
   }
 
   .react-transform-wrapper {

@@ -41,77 +41,52 @@ function checkDuplicateNames(nodes: Node[]) {
     return null;
   }
 }
-function convertToHierarchy(nodes: Node[], edges: Edge[]) {
-  const hierarchy: { object: { name: any; categories: { name: string; subcategories: { name: string }[] }[] } }[] = [];
-  const filteredNodes = [];
-  const filteredEdges = [];
 
-  for (const node of nodes) {
-    if (node.type === 'object') {
-      const objectNode = {
-        object: {
-          name: node.data.label,
-          categories: [] as { name: string; subcategories: { name: string }[] }[],
-        },
-      };
+function hasEmptyLabel(nodes: Node[]): boolean {
+  return nodes.some((node) => node.data.label.trim() === '');
+}
+
+function filterNodesEdges(nodes: Node[], edges: Edge[]) {
+  const filteredNodes: Node[] = [];
+  const filteredEdges: Edge[] = [];
+  let haveSingleObjects = false;
+
+  function addNodeAndEdges(node: Node, edge: Edge) {
+    if (!filteredNodes.some((n) => n.id === node.id)) {
       filteredNodes.push(node);
-      for (const edge of edges) {
-        if (edge.source === node.id) {
-          const targetNode = nodes.find((n) => n.id === edge.target);
-
-          if (targetNode) {
-            const categoryNode = {
-              name: targetNode.data.label,
-              subcategories: [] as { name: string }[],
-            };
-            filteredNodes.push(targetNode);
-            filteredEdges.push(edge);
-            for (const subEdge of edges) {
-              if (subEdge.source === targetNode.id) {
-                const subcategoryNode = nodes.find((n) => n.id === subEdge.target);
-
-                if (subcategoryNode) {
-                  categoryNode.subcategories.push({ name: subcategoryNode.data.label });
-                  filteredNodes.push(subcategoryNode);
-                  filteredEdges.push(subEdge);
-                }
-              }
-            }
-
-            objectNode.object.categories.push(categoryNode);
-          }
-        } else if (edge.target === node.id) {
-          const sourceNode = nodes.find((n) => n.id === edge.source);
-
-          if (sourceNode) {
-            const categoryNode = {
-              name: sourceNode.data.label,
-              subcategories: [] as { name: string }[],
-            };
-            filteredNodes.push(sourceNode);
-            filteredEdges.push(edge);
-            for (const subEdge of edges) {
-              if (subEdge.source === sourceNode.id) {
-                const subcategoryNode = nodes.find((n) => n.id === subEdge.target);
-
-                if (subcategoryNode) {
-                  categoryNode.subcategories.push({ name: subcategoryNode.data.label });
-                  filteredNodes.push(subcategoryNode);
-                  filteredEdges.push(subEdge);
-                }
-              }
-            }
-
-            objectNode.object.categories.push(categoryNode);
-          }
-        }
-      }
-
-      hierarchy.push(objectNode);
+    }
+    if (!filteredEdges.some((e) => e.id === edge.id)) {
+      filteredEdges.push(edge);
     }
   }
 
-  return { hierarchy, filteredNodes, filteredEdges };
+  for (const node of nodes) {
+    if (node.type === 'object') {
+      haveSingleObjects = true;
+      filteredNodes.push(node);
+      for (const edge of edges) {
+        if (edge.source === node.id || edge.target === node.id) {
+          const subNode = nodes.find((n) => n.id === (edge.source === node.id ? edge.target : edge.source));
+          if (subNode) {
+            haveSingleObjects = false;
+            addNodeAndEdges(subNode, edge);
+            for (const subEdge of edges) {
+              if (subEdge.source === subNode.id || subEdge.target === subNode.id) {
+                const subcategoryNode = nodes.find(
+                  (n) => n.id === (subEdge.source === subNode.id ? subEdge.target : subEdge.source),
+                );
+                if (subcategoryNode) {
+                  addNodeAndEdges(subcategoryNode, subEdge);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return { haveSingleObjects, filteredNodes, filteredEdges };
 }
 
 export const Step1: React.FC<{
@@ -138,7 +113,7 @@ export const Step1: React.FC<{
   const nodeTypes = useMemo(() => ({ object: TextNode, category: TextNode, subcategory: TextNode }), []);
   const edgeTypes = useMemo(() => ({ default: MapEdge }), []);
 
-  let nodeId = 0;
+  let nodeId = nodes.length;
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
 
@@ -155,8 +130,16 @@ export const Step1: React.FC<{
           return false;
         }
 
-        const isInvalidEdge = (edgeSource: Node, edgeTarget: Node, node: Node) =>
-          edgeSource?.type === node.type || edgeTarget?.type === node.type ? false : true;
+        const isInvalidEdge = (edgeSource: Node, edgeTarget: Node, node: Node) => {
+          if (edgeSource?.type != node.type && edgeTarget?.type != node.type) {
+            return false;
+          }
+          if (edgeSource.id === node.id || edgeTarget.id === node.id) {
+            return false;
+          }
+
+          return true;
+        };
 
         const relatedEdges = edges.filter(
           (edge) =>
@@ -219,7 +202,7 @@ export const Step1: React.FC<{
           y: event.clientY,
         });
         const newNode = {
-          id: `dndnode_${nodeId++}`,
+          id: `node_${nodeId++}`,
           type,
           position,
           data: { label: t('databaseSources.describeDataset.elementSidebar.' + type) },
@@ -232,25 +215,43 @@ export const Step1: React.FC<{
   );
 
   const onSaveTemplate = () => {
+    const containsEmptyLabel = hasEmptyLabel(nodes);
     const duplicateNames = checkDuplicateNames(nodes);
+
+    if (containsEmptyLabel) {
+      notificationController.error({
+        message: t('databaseSources.describeDataset.notify.emptyLabels'),
+      });
+      return;
+    }
+
     if (duplicateNames) {
       notificationController.error({
-        message: t('databaseSources.describeDataset.duplicateElementsNotify', { names: duplicateNames }),
+        message: t('databaseSources.describeDataset.notify.duplicateElements', { names: duplicateNames }),
       });
-    } else {
-      const template = convertToHierarchy(nodes, edges);
-      if (template.hierarchy.length !== 0) {
-        addDbTemplate(id, JSON.stringify(template.hierarchy)).then(() => {
-          setStep(1);
-          setNodes(template.filteredNodes);
-          setEdges(template.filteredEdges);
-        });
-      } else {
-        notificationController.error({
-          message: t('databaseSources.describeDataset.noObjectNotify'),
-        });
-      }
+      return;
     }
+
+    const template = filterNodesEdges(nodes, edges);
+    if (template.filteredNodes.length === 0) {
+      notificationController.error({
+        message: t('databaseSources.describeDataset.notify.noObject'),
+      });
+      return;
+    }
+
+    if (template.haveSingleObjects) {
+      notificationController.error({
+        message: t('databaseSources.describeDataset.notify.specifyCategory'),
+      });
+      return;
+    }
+
+    addDbTemplate(id, JSON.stringify({ nodes: template.filteredNodes, edges: template.filteredEdges })).then(() => {
+      setStep(1);
+      setNodes(template.filteredNodes);
+      setEdges(template.filteredEdges);
+    });
   };
 
   return (

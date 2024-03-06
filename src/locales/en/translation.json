@@ -770,7 +770,11 @@
       "step3": "Save",
       "step1Description": "Describe your data structure.",
       "step2Description": "Map column names.",
-      "step3Description": "Please wait...",
+      "step3Description": {
+        "loading": "Please wait...",
+        "success": "Saved!",
+        "fail": "Failed to save."
+      },
       "instructions": {
         "title": "Instructions",
         "description": "Start defining the object of your data collection (e.g. person, event).",
@@ -785,16 +789,40 @@
         "subcategory": "Sub-Category"
       },
       "columnSidebar": {
-        "search": "Search columns"
+        "search": "Search columns",
+        "checkAll": "Check all in current list"
       },
       "clear": "Clear",
+      "reset": "Reset",
       "saveTemplate": "Save Archetype Template",
       "saveMapping": "Save Mapping",
-      "noObjectNotify": "Please add an object to your archetype.",
-      "duplicateElementsNotify": "Duplicate element names found: {{names}}",
-      "mapAllColumnsNotify": "Please map all columns to your archetype."
+      "viewTemplates": "View Data Structure Templates",
+      "backToStep1": "Back to Step 1 - Template Creation",
+      "backToStep2": "Back to Step 2 - Column Mapping",
+      "notify": {
+        "noObject": "Please add an object to your archetype.",
+        "specifyCategory": "Please specify at least one category for an object.",
+        "duplicateElements": "Duplicate element names found: {{names}}",
+        "emptyLabels": "Please label all the nodes before saving.",
+        "mapAllColumns": "Please map all columns to your archetype."
+      },
+      "message" : {
+        "mappingFailed": "Some columns are not connected to your template.",
+        "mappingFailedDescription": "Please try mapping your columns again.",
+        "mappingSuccess": "Your dataset template and column mapping have been saved successfully.",
+        "mappingSuccessDescription": "You may now proceed to set access permissions or view all data structure templates.",
+        "saveFailed": "Your dataset template and column mapping failed to save.",
+        "saveFailedDescription": "Please try again later.",
+        "saving": "Saving your dataset description..."
+      }
     },
-    "accessPermissions": "Set Access Permissions",
+    "accessPermissions": {
+      "title": "Set Access Permissions",
+      "projectTitle": "Set Access Permissions Project {{id}}",
+      "research": "Research/Education Institution",
+      "govOrg": "Government Organisations",
+      "others": "Others"
+    },
     "metadata": {
       "title": "Metadata",
       "projectTitle": "Metadata Project {{id}}",

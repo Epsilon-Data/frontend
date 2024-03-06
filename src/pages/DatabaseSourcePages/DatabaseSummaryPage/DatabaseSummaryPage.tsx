@@ -58,7 +58,7 @@ const DatabaseSummaryPage: React.FC = () => {
           tabList={tabList}
           activeTabKey={activeTabKey}
           onTabChange={(key) => setActiveTabKey(key)}
-          tabProps={{ tabPosition: 'left' }}
+          tabProps={{ tabPosition: 'left', size: 'middle' }}
         ></S.Card>
       </S.CardWrapper>
     </>

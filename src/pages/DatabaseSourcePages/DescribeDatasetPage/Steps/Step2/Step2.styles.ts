@@ -47,11 +47,12 @@ export const MapWrapper = styled.div`
 export const SidebarCol = styled(BaseCol)`
   background: var(--sider-bg);
   border-radius: 1rem;
-  padding: 0.5rem 2rem;
+  padding: 0.5rem 0 0;
 `;
 
 export const ViewportCol = styled(BaseCol)`
   border: 2px solid var(--sider-bg);
   border-radius: 1rem;
   padding: 0.5rem;
+  height: fit-content;
 `;

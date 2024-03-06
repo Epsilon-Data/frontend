@@ -45,10 +45,28 @@ export const Step2: React.FC<{
   setEdges: React.Dispatch<React.SetStateAction<Edge<any>[]>>;
   onNodesChange: (value: NodeChange[]) => void;
   onEdgesChange: (value: EdgeChange[]) => void;
-}> = ({ id, setStep, setIsFormModalOpen, nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange }) => {
+  setColumnCount: (value: number) => void;
+}> = ({
+  id,
+  setStep,
+  setIsFormModalOpen,
+  nodes,
+  edges,
+  setNodes,
+  setEdges,
+  onNodesChange,
+  onEdgesChange,
+  setColumnCount,
+}) => {
   const { t } = useTranslation();
   const { isMounted } = useMounted();
+  const [initialColumns, setInitialColumns] = useState<string[]>([]);
   const [columns, setColumns] = useState<string[]>([]);
+  const [filteredColumns, setFilteredColumns] = useState<string[]>([]);
+  const [reset, setReset] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>('');
+  const templateEdges = edges.filter((edge) => !edge.source.includes('column_') && !edge.target.includes('column_'));
+
   const nodeTypes = useMemo(
     () => ({ object: TextNode, category: TextNode, subcategory: TextNode, column: ColumnNode }),
     [],
@@ -57,16 +75,18 @@ export const Step2: React.FC<{
 
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
-
   const fetch = useCallback(
     (id: string | undefined) => {
       getDbColumns(id).then((res) => {
         if (isMounted.current) {
           setColumns(res);
+          setInitialColumns(res);
+          setFilteredColumns(res);
+          setColumnCount(res.length);
         }
       });
     },
-    [isMounted],
+    [isMounted, setColumnCount],
   );
 
   useEffect(() => {
@@ -78,16 +98,14 @@ export const Step2: React.FC<{
       function isValidEdge(source: Node, target: Node) {
         if (!source || !target || source.type === target.type) return false;
 
-        const isCategory = (node: Node) => node?.type === 'category';
-        const isObject = (node: Node) => node?.type === 'object';
-        const isSubcategory = (node: Node) => node?.type === 'subcategory';
+        const isCategory = (node: Node) => node?.type == 'category';
+        const isObject = (node: Node) => node?.type == 'object';
+        const isSubcategory = (node: Node) => node?.type == 'subcategory';
+        const isColumn = (node: Node) => node?.type == 'column';
 
-        if ((isObject(source) || isObject(target)) && (isSubcategory(source) || isSubcategory(target))) {
+        if (isObject(source) || isObject(target) || !(isColumn(source) || isColumn(target))) {
           return false;
         }
-
-        const isInvalidEdge = (edgeSource: Node, edgeTarget: Node, node: Node) =>
-          edgeSource?.id === node.id || edgeTarget?.id === node.id ? false : true;
 
         const relatedEdges = edges.filter(
           (edge) =>
@@ -100,14 +118,12 @@ export const Step2: React.FC<{
         for (let i = 0; i < relatedEdges.length; i++) {
           const edgeSource = nodes.find((n) => n.id === relatedEdges[i].source);
           const edgeTarget = nodes.find((n) => n.id === relatedEdges[i].target);
-
           if (edgeSource && edgeTarget) {
-            if ((isCategory(source) || isCategory(target)) && (isObject(source) || isObject(target))) {
-              if (isObject(source) && isInvalidEdge(edgeSource, edgeTarget, source)) return false;
-              if (isObject(target) && isInvalidEdge(edgeSource, edgeTarget, target)) return false;
-            } else if ((isCategory(source) || isCategory(target)) && (isSubcategory(source) || isSubcategory(target))) {
-              if (isCategory(source) && isInvalidEdge(edgeSource, edgeTarget, source)) return false;
-              if (isCategory(target) && isInvalidEdge(edgeSource, edgeTarget, target)) return false;
+            if ((isCategory(source) || isCategory(target)) && (isSubcategory(edgeSource) || isSubcategory(edgeTarget)))
+              return false;
+            if (isColumn(edgeSource) || isColumn(edgeTarget)) {
+              if (isColumn(source) && (edgeSource.id == source.id || edgeTarget.id == source.id)) return false;
+              if (isColumn(target) && (edgeSource.id == target.id || edgeTarget.id == target.id)) return false;
             }
           }
         }
@@ -145,6 +161,9 @@ export const Step2: React.FC<{
       }
 
       const parsed = JSON.parse(data);
+      const getCurrentColumns = (columns: string[]) => {
+        return columns.filter((column) => !parsed.includes(column));
+      };
 
       if (reactFlowInstance) {
         const allNewNodes: Node[] = [];
@@ -156,7 +175,7 @@ export const Step2: React.FC<{
             y: event.clientY + positionOffset,
           });
           const newNode = {
-            id: `${label}_${nodes.length + i}`,
+            id: `column_${label}_${nodes.length + i}`,
             type: 'column',
             position,
             data: { label: label },
@@ -165,26 +184,49 @@ export const Step2: React.FC<{
           positionOffset += 100;
         }
         setNodes((nds: Node[]) => nds.concat(allNewNodes));
+        setColumns(getCurrentColumns(columns));
+        if (getCurrentColumns(filteredColumns).length == 0) {
+          setFilteredColumns(getCurrentColumns(columns));
+          setSearchValue('');
+        } else {
+          setFilteredColumns(getCurrentColumns(filteredColumns));
+        }
       }
     },
-    [nodes, reactFlowInstance, setNodes],
+    [columns, filteredColumns, nodes.length, reactFlowInstance, setNodes],
   );
 
-  const onConnectStart = (event: { preventDefault: () => void }, { nodeId }: any) => {
-    const node = nodes.find((n) => n.id === nodeId);
-    if (node && node.connectable === false) {
-      event.preventDefault();
-    }
-  };
+  function handleNodesChange(changes: NodeChange[]) {
+    const nextChanges = changes.reduce((acc, change) => {
+      if (change.type === 'remove') {
+        const node = nodes.find((n) => n.id == change.id);
+
+        if (node?.type == 'column') {
+          setColumns([...columns, node.data.label]);
+          if (searchValue && node.data.label.toLowerCase().includes(searchValue.toLowerCase())) {
+            setFilteredColumns([...filteredColumns, node.data.label]);
+          } else {
+            setFilteredColumns([...columns, node.data.label]);
+          }
+          return [...acc, change];
+        }
+
+        return acc;
+      }
+
+      return [...acc, change];
+    }, [] as NodeChange[]);
+
+    onNodesChange(nextChanges);
+  }
 
   const onSaveMapping = () => {
     if (columns.length == 0) {
       setStep(2);
     } else {
       notificationController.error({
-        message: t('databaseSources.describeDataset.mapAllColumnsNotify'),
+        message: t('databaseSources.describeDataset.notify.mapAllColumns'),
       });
-      setStep(2);
     }
   };
 
@@ -202,7 +244,15 @@ export const Step2: React.FC<{
       </BaseRow>
       <BaseRow style={{ padding: '0 2rem' }} justify="space-between">
         <S.SidebarCol span={6}>
-          <ColumnSidebar columns={columns} setColumns={setColumns} />
+          <ColumnSidebar
+            filteredColumns={filteredColumns}
+            setFilteredColumns={setFilteredColumns}
+            columns={columns}
+            reset={reset}
+            setReset={setReset}
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+          />
         </S.SidebarCol>
         <S.ViewportCol span={17}>
           <BaseRow>
@@ -211,10 +261,9 @@ export const Step2: React.FC<{
                 <ReactFlow
                   nodes={nodes}
                   edges={edges}
-                  onNodesChange={onNodesChange}
+                  onNodesChange={handleNodesChange}
                   onEdgesChange={onEdgesChange}
                   onConnect={onConnect}
-                  onConnectStart={onConnectStart}
                   onInit={setReactFlowInstance}
                   onDrop={onDrop}
                   onDragOver={onDragOver}
@@ -236,11 +285,14 @@ export const Step2: React.FC<{
                 block
                 type="default"
                 onClick={() => {
-                  setNodes([]);
-                  setEdges([]);
+                  setNodes(nodes.filter((node) => node.type !== 'column'));
+                  setColumns(initialColumns);
+                  setFilteredColumns(initialColumns);
+                  setEdges(templateEdges);
+                  setReset(true);
                 }}
               >
-                {t('databaseSources.describeDataset.clear')}
+                {t('databaseSources.describeDataset.reset')}
               </BaseButton>
             </BaseCol>
             <BaseCol span={12} style={{ paddingLeft: '1rem' }}>

@@ -11,18 +11,20 @@ import { Step1 } from './Steps/Step1/Step1';
 import { Step2 } from './Steps/Step2/Step2';
 import { Step3 } from './Steps/Step3/Step3';
 import { useEdgesState, useNodesState } from 'reactflow';
-import { getProjectId } from '@app/api/databaseSources.api';
+import { getProjectId, getTemplate } from '@app/api/databaseSources.api';
 import { useMounted } from '@app/hooks/useMounted';
 
-const initialNodes = [{ id: '1', position: { x: 320, y: 200 }, data: { label: 'Object' }, type: 'object' }];
+const initialNodes = [{ id: 'node_0', position: { x: 320, y: 200 }, data: { label: 'Object' }, type: 'object' }];
 
 const DescribeDatasetPage: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
+  const [saveDescription, setSaveDescription] = useState<string>('');
   const [isFormModalOpen, setIsFormModalOpen] = useState<boolean>(false);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [columnCount, setColumnCount] = useState(0);
   const steps = [
     {
       title: t('databaseSources.describeDataset.step1'),
@@ -55,13 +57,25 @@ const DescribeDatasetPage: React.FC = () => {
           setEdges={setEdges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
+          setColumnCount={setColumnCount}
         />
       ),
     },
     {
       title: t('databaseSources.describeDataset.step3'),
-      description: t('databaseSources.describeDataset.step3Description'),
-      content: <Step3 id={id} />,
+      description: saveDescription,
+      content: (
+        <Step3
+          id={id}
+          nodes={nodes}
+          edges={edges}
+          setNodes={setNodes}
+          setEdges={setEdges}
+          setSaveDescription={setSaveDescription}
+          setStep={setCurrentStep}
+          columnCount={columnCount}
+        />
+      ),
     },
   ];
 
@@ -73,7 +87,13 @@ const DescribeDatasetPage: React.FC = () => {
         setProjectId(res);
       }
     });
-  }, [id, isMounted]);
+    getTemplate(id).then((res) => {
+      if (res) {
+        setNodes(res.nodes);
+        setEdges(res.edges);
+      }
+    });
+  }, [id, isMounted, setEdges, setNodes]);
 
   useEffect(() => {
     fetch();

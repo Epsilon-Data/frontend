@@ -12,6 +12,7 @@ export interface UserModel {
     number: string;
     verified: boolean;
   };
+  roles: string[];
   imgUrl?: string;
   sex?: 'male' | 'female';
   birthday?: string;
@@ -38,4 +39,12 @@ export interface UserDetails {
   family_name: string;
   preferred_username: string;
   auth_time: number;
+  realm_access?: {
+    roles?: string[];
+  };
+  resource_access?: {
+    'realm-management'?: {
+      roles?: string[];
+    };
+  };
 }

@@ -19,6 +19,7 @@ export const setUser = createAction<PrepareAction<UserModel | null>>('user/setUs
         userName: userDetails.preferred_username,
         email: { name: userDetails.email, verified: userDetails.email_verified },
         authTime: userDetails.auth_time * 1000,
+        roles: userDetails.realm_access?.roles || [],
       }
     : null;
 

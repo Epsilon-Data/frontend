@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import { TextNode } from '../../TextNode/TextNode';
-import { MapEdge } from '../../MapEdge/MapEdge';
+import { TextNode } from '@app/components/reactflow-components/TextNode/TextNode';
+import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import ReactFlow, {
   Connection,
   Edge,
@@ -114,7 +114,6 @@ export const Step1: React.FC<{
   const edgeTypes = useMemo(() => ({ default: MapEdge }), []);
 
   let nodeId = nodes.length;
-  const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
 
   const onConnect = useCallback(
@@ -273,7 +272,7 @@ export const Step1: React.FC<{
         <S.ViewportCol span={17}>
           <BaseRow>
             <ReactFlowProvider>
-              <S.MapWrapper ref={reactFlowWrapper}>
+              <S.MapWrapper>
                 <ReactFlow
                   nodes={nodes}
                   edges={edges}

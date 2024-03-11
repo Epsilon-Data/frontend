@@ -821,7 +821,24 @@
       "projectTitle": "Set Access Permissions Project {{id}}",
       "research": "Research/Education Institution",
       "govOrg": "Government Organisations",
-      "others": "Others"
+      "others": "Others",
+      "clear": "Clear",
+      "save": "Set Permissions",
+      "popoverTitle": "Permissions for {{node}}",
+      "permission": {
+        "viewAggregated": "View aggregated results",
+        "performAnalysis": "Perform analysis"
+      },
+      "notify": {
+        "noPermissionsSet": "There are no permissions set. Please set at least 1 permission.",
+        "saveSuccess": "Permissions saved successfully for {{role}}.",
+        "saveFailed": "Your permissions failed to save. Please try again."
+      },
+      "modal": {
+        "instruction": "Select other groups (or skip) for the same access permissions: ",
+        "skip": "Skip",
+        "copyPermissions": "Copy Permissions"
+      }
     },
     "metadata": {
       "title": "Metadata",

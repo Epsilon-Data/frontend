@@ -1,4 +1,4 @@
-import { OverallDatabaseInfoValues } from '@app/interfaces/interfaces';
+import { OverallDatabaseInfoValues, RolePermissions } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 import { SourceStatus } from '@app/constants/enums/sourceStatus';
 import { DATE_FORMAT, DATABASE_SOURCE_API_URL } from '@app/constants/databaseSource';
@@ -141,7 +141,7 @@ export const getTemplate = async (projectId: string | undefined): Promise<{ node
 export const addColumnMapping = async (
   projectId: string | undefined,
   columnMapping: string,
-): Promise<{ projectId: string; template: string }> => {
+): Promise<{ projectId: string; columnMapping: string }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.post(
     DATABASE_SOURCE_API_URL + 'add-column-mapping',
@@ -162,5 +162,31 @@ export const getDbColumns = async (projectId: string | undefined): Promise<strin
       projectId: projectId,
     },
   });
+  return response.data;
+};
+
+export const getAccessPermissions = async (projectId: string | undefined): Promise<RolePermissions[]> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'permissions', {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      projectId: projectId,
+    },
+  });
+  return response.data;
+};
+
+export const addAccessPermissions = async (
+  projectId: string | undefined,
+  permissions: string,
+): Promise<{ projectId: string; permissions: string }> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post(
+    DATABASE_SOURCE_API_URL + 'add-permissions',
+    { projectId: projectId, permissions: permissions },
+    {
+      headers: { [csrfHeaderName]: `${csrf}` },
+    },
+  );
   return response.data;
 };

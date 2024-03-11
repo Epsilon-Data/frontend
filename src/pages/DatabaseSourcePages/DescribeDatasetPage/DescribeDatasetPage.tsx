@@ -81,23 +81,26 @@ const DescribeDatasetPage: React.FC = () => {
 
   const [projectId, setProjectId] = useState('');
   const { isMounted } = useMounted();
-  const fetch = useCallback(() => {
-    getProjectId(id).then((res) => {
-      if (isMounted.current) {
-        setProjectId(res);
-      }
-    });
-    getTemplate(id).then((res) => {
-      if (res) {
-        setNodes(res.nodes);
-        setEdges(res.edges);
-      }
-    });
-  }, [id, isMounted, setEdges, setNodes]);
+  const fetch = useCallback(
+    (id: string | undefined) => {
+      getProjectId(id).then((res) => {
+        if (isMounted.current) {
+          setProjectId(res);
+        }
+      });
+      getTemplate(id).then((res) => {
+        if (res) {
+          setNodes(res.nodes);
+          setEdges(res.edges);
+        }
+      });
+    },
+    [isMounted, setEdges, setNodes],
+  );
 
   useEffect(() => {
-    fetch();
-  }, [fetch]);
+    fetch(id);
+  }, [fetch, id]);
 
   return (
     <>

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import { TextNode } from '../../TextNode/TextNode';
-import { MapEdge } from '../../MapEdge/MapEdge';
+import { TextNode } from '@app/components/reactflow-components/TextNode/TextNode';
+import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import ReactFlow, {
   Connection,
   Edge,
@@ -23,7 +23,7 @@ import * as S from './Step2.styles';
 import { getDbColumns } from '@app/api/databaseSources.api';
 import { ColumnSidebar } from './ColumnSidebar/ColumnSidebar';
 import { useMounted } from '@app/hooks/useMounted';
-import { ColumnNode } from '../../ColumnNode/ColumnNode';
+import { ColumnNode } from '@app/components/reactflow-components/ColumnNode/ColumnNode';
 import { notificationController } from '@app/controllers/notificationController';
 
 export const Step2: React.FC<{
@@ -73,7 +73,6 @@ export const Step2: React.FC<{
   );
   const edgeTypes = useMemo(() => ({ default: MapEdge }), []);
 
-  const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
   const fetch = useCallback(
     (id: string | undefined) => {
@@ -257,7 +256,7 @@ export const Step2: React.FC<{
         <S.ViewportCol span={17}>
           <BaseRow>
             <ReactFlowProvider>
-              <S.MapWrapper ref={reactFlowWrapper}>
+              <S.MapWrapper>
                 <ReactFlow
                   nodes={nodes}
                   edges={edges}

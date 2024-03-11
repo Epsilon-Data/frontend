@@ -12,7 +12,7 @@ import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { useNavigate } from 'react-router-dom';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
 
-function convertToHierarchy(nodes: Node[], edges: Edge[]) {
+function createNodeColumnMapping(nodes: Node[], edges: Edge[]) {
   const columnNodeId = nodes.filter((node) => node.type == 'column').map((node) => node.id);
   const filteredEdges = edges.filter(
     (edge) => columnNodeId.includes(edge.source) || columnNodeId.includes(edge.target),
@@ -22,7 +22,7 @@ function convertToHierarchy(nodes: Node[], edges: Edge[]) {
     return null;
   }
 
-  const result: { nodeName: string; nodeType: string | undefined; columns: string[] }[] = [];
+  const result: { nodeId: string; nodeName: string; nodeType: string | undefined; columns: string[] }[] = [];
   const isColumn = (node: Node) => node?.type == 'column';
   filteredEdges.forEach((edge) => {
     const source = nodes.find((node) => node.id == edge.source);
@@ -33,6 +33,7 @@ function convertToHierarchy(nodes: Node[], edges: Edge[]) {
       );
       if (!isAppended) {
         result.push({
+          nodeId: isColumn(source) ? target.id : source.id,
           nodeName: isColumn(source) ? target.data.label : source.data.label,
           nodeType: isColumn(source) ? target.type : source.type,
           columns: [isColumn(source) ? source.data.label : target.data.label],
@@ -77,7 +78,7 @@ export const Step3: React.FC<{
 
   useEffect(() => {
     setSaveDescription(t('databaseSources.describeDataset.step3Description.loading'));
-    const result = convertToHierarchy(nodes, edges);
+    const result = createNodeColumnMapping(nodes, edges);
     const totalColumns = result?.reduce((total, obj) => total + obj.columns.length, 0);
     if (result === null || totalColumns != columnCount) {
       setLoading(false);

@@ -102,3 +102,13 @@ export type DatabaseConnectionDetails = {
   readonly name: string;
   readonly ssl?: boolean;
 };
+
+export interface RolePermissions {
+  role: string;
+  access: {
+    nodeId: string;
+    nodeName: string;
+    nodeType: string;
+    permissions: string[];
+  }[];
+}

@@ -11,9 +11,9 @@ import { InfoSectionHeader } from '@app/components/view-request/InfoSectionHeade
 import { RequestStatus } from '@app/constants/enums/requestStatus';
 import { format } from 'date-fns';
 import { DATE_FORMAT, INITIAL_REQUEST_VALUES } from '@app/constants/connectionRequest';
-import { isAdmin } from '@app/api/user.api';
 import { StringTextAreaItem } from '@app/components/request-fields/StringInput/StringTextAreaItem';
 import { notificationController } from '@app/controllers/notificationController';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const ViewRequestPage: React.FC = () => {
   const initialRequestFormValues = INITIAL_REQUEST_VALUES;
@@ -25,7 +25,7 @@ const ViewRequestPage: React.FC = () => {
   const [revisionDefined, setRevisionDefined] = React.useState(false);
   const [submitLoading, setSubmitLoading] = React.useState(false);
   const [form] = S.AddInfoForm.useForm();
-  const [admin, setAdmin] = useState<boolean>(false);
+  const admin = useAppSelector((state) => state.user.user?.roles.includes('admin') || false);
   const [revisionInfo, setRevisionInfo] = useState('');
 
   const fetch = useCallback(
@@ -39,7 +39,6 @@ const ViewRequestPage: React.FC = () => {
           }
         }
       });
-      isAdmin().then((res) => setAdmin(res));
     },
     [isMounted, form],
   );

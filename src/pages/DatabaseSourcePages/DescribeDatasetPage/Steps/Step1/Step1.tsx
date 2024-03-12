@@ -49,7 +49,9 @@ function hasEmptyLabel(nodes: Node[]): boolean {
 function filterNodesEdges(nodes: Node[], edges: Edge[]) {
   const filteredNodes: Node[] = [];
   const filteredEdges: Edge[] = [];
-  let haveSingleObjects = false;
+  let objectWithoutCategory = false;
+  let haveMultipleObjects = false;
+  let objectCount = 0;
 
   function addNodeAndEdges(node: Node, edge: Edge) {
     if (!filteredNodes.some((n) => n.id === node.id)) {
@@ -62,13 +64,14 @@ function filterNodesEdges(nodes: Node[], edges: Edge[]) {
 
   for (const node of nodes) {
     if (node.type === 'object') {
-      haveSingleObjects = true;
+      objectCount++;
+      objectWithoutCategory = true;
       filteredNodes.push(node);
       for (const edge of edges) {
         if (edge.source === node.id || edge.target === node.id) {
           const subNode = nodes.find((n) => n.id === (edge.source === node.id ? edge.target : edge.source));
           if (subNode) {
-            haveSingleObjects = false;
+            objectWithoutCategory = false;
             addNodeAndEdges(subNode, edge);
             for (const subEdge of edges) {
               if (subEdge.source === subNode.id || subEdge.target === subNode.id) {
@@ -86,7 +89,11 @@ function filterNodesEdges(nodes: Node[], edges: Edge[]) {
     }
   }
 
-  return { haveSingleObjects, filteredNodes, filteredEdges };
+  if (objectCount > 1) {
+    haveMultipleObjects = true;
+  }
+
+  return { objectWithoutCategory, haveMultipleObjects, filteredNodes, filteredEdges };
 }
 
 export const Step1: React.FC<{
@@ -239,7 +246,14 @@ export const Step1: React.FC<{
       return;
     }
 
-    if (template.haveSingleObjects) {
+    if (template.haveMultipleObjects) {
+      notificationController.error({
+        message: t('databaseSources.describeDataset.notify.onlyOneObject'),
+      });
+      return;
+    }
+
+    if (template.objectWithoutCategory) {
       notificationController.error({
         message: t('databaseSources.describeDataset.notify.specifyCategory'),
       });

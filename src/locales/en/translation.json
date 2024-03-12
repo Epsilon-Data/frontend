@@ -801,13 +801,16 @@
       "backToStep2": "Back to Step 2 - Column Mapping",
       "notify": {
         "noObject": "Please add an object to your archetype.",
+        "onlyOneObject": "Only one object is allowed in your archetype.",
         "specifyCategory": "Please specify at least one category for an object.",
         "duplicateElements": "Duplicate element names found: {{names}}",
         "emptyLabels": "Please label all the nodes before saving.",
         "mapAllColumns": "Please map all columns to your archetype."
       },
       "message" : {
-        "mappingFailed": "Some columns are not connected to your template.",
+        "columnsNotConnected": "Some columns are not connected to your template.",
+        "subcatCriteria": "Each sub-category should have at least two columns connected.",
+        "catCriteria": "Categories that does not contain any sub-categories should have at least one column connected.",
         "mappingFailedDescription": "Please try mapping your columns again.",
         "mappingSuccess": "Your dataset template and column mapping have been saved successfully.",
         "mappingSuccessDescription": "You may now proceed to set access permissions or view all data structure templates.",

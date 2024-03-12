@@ -12,8 +12,8 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { Priority } from '@app/constants/enums/priorities';
 import { useNavigate } from 'react-router-dom';
-import { isAdmin } from '@app/api/user.api';
 import { SourceStatus } from '@app/constants/enums/sourceStatus';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const initialPagination: Pagination = {
   current: 1,
@@ -29,20 +29,17 @@ export const RequestTable: React.FC = () => {
   const { t } = useTranslation();
   const { isMounted } = useMounted();
   const navigate = useNavigate();
-  const [admin, setAdmin] = useState<boolean>(false);
+  const admin = useAppSelector((state) => state.user.user?.roles.includes('admin') || false);
   const fetch = useCallback(
     (pagination: Pagination) => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
-      getRequestTableData(pagination).then((res) => {
+      getRequestTableData(pagination, admin).then((res) => {
         if (isMounted.current) {
           setTableData({ data: res.data, pagination: res.pagination, loading: false });
-          isAdmin().then((res) => {
-            setAdmin(res);
-          });
         }
       });
     },
-    [isMounted],
+    [admin, isMounted],
   );
 
   useEffect(() => {

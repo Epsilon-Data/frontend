@@ -97,9 +97,7 @@ export const Step2: React.FC<{
       function isValidEdge(source: Node, target: Node) {
         if (!source || !target || source.type === target.type) return false;
 
-        const isCategory = (node: Node) => node?.type == 'category';
         const isObject = (node: Node) => node?.type == 'object';
-        const isSubcategory = (node: Node) => node?.type == 'subcategory';
         const isColumn = (node: Node) => node?.type == 'column';
 
         if (isObject(source) || isObject(target) || !(isColumn(source) || isColumn(target))) {
@@ -118,8 +116,6 @@ export const Step2: React.FC<{
           const edgeSource = nodes.find((n) => n.id === relatedEdges[i].source);
           const edgeTarget = nodes.find((n) => n.id === relatedEdges[i].target);
           if (edgeSource && edgeTarget) {
-            if ((isCategory(source) || isCategory(target)) && (isSubcategory(edgeSource) || isSubcategory(edgeTarget)))
-              return false;
             if (isColumn(edgeSource) || isColumn(edgeTarget)) {
               if (isColumn(source) && (edgeSource.id == source.id || edgeTarget.id == source.id)) return false;
               if (isColumn(target) && (edgeSource.id == target.id || edgeTarget.id == target.id)) return false;
@@ -219,6 +215,25 @@ export const Step2: React.FC<{
     onNodesChange(nextChanges);
   }
 
+  function handleEdgesChange(changes: EdgeChange[]) {
+    const nextChanges = changes.filter((change) => {
+      if (change.type === 'remove') {
+        const edge = edges.find((edge) => edge.id == change.id);
+
+        if (edge) {
+          const sourceNode = nodes.find((node) => node.id === edge.source);
+          const targetNode = nodes.find((node) => node.id === edge.target);
+          if (sourceNode?.type !== 'column' && targetNode?.type !== 'column') {
+            return false;
+          }
+        }
+      }
+      return true;
+    });
+
+    onEdgesChange(nextChanges);
+  }
+
   const onSaveMapping = () => {
     if (columns.length == 0) {
       setStep(2);
@@ -261,7 +276,7 @@ export const Step2: React.FC<{
                   nodes={nodes}
                   edges={edges}
                   onNodesChange={handleNodesChange}
-                  onEdgesChange={onEdgesChange}
+                  onEdgesChange={handleEdgesChange}
                   onConnect={onConnect}
                   onInit={setReactFlowInstance}
                   onDrop={onDrop}

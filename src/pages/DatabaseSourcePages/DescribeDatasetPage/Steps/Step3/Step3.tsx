@@ -73,18 +73,61 @@ export const Step3: React.FC<{
   const [loading, setLoading] = useState(true);
   const [mappingSuccess, setMappingSuccess] = useState(false);
   const [message, setMessage] = useState(t('databaseSources.describeDataset.message.saving'));
-  const [messageDescription, setMessageDescription] = useState('');
+  const [messageDescription, setMessageDescription] = useState(
+    t('databaseSources.describeDataset.message.mappingFailedDescription'),
+  );
   const navigate = useNavigate();
+  const subcategoryNodes = nodes.filter((node) => node.type == 'subcategory');
+  const categoryNodes = nodes.filter((node) => node.type == 'category');
 
   useEffect(() => {
     setSaveDescription(t('databaseSources.describeDataset.step3Description.loading'));
     const result = createNodeColumnMapping(nodes, edges);
     const totalColumns = result?.reduce((total, obj) => total + obj.columns.length, 0);
+    let metSubcatCriteria = true;
+    let metCatCriteria = true;
+
+    if (result != null) {
+      // Check subcategory nodes
+      for (const subcategoryNode of subcategoryNodes) {
+        const subcategoryNodeResult = result.find(
+          (r) => r.nodeId === subcategoryNode.id && r.nodeType === 'subcategory',
+        );
+        if (!subcategoryNodeResult || subcategoryNodeResult.columns.length <= 1) {
+          metSubcatCriteria = false;
+          break;
+        }
+      }
+
+      // Check category nodes without subcategory edges
+      for (const categoryNode of categoryNodes) {
+        const connectedSubcategoryEdges = edges.filter(
+          (edge) =>
+            (edge.source === categoryNode.id || edge.target === categoryNode.id) &&
+            (subcategoryNodes.some((subcategoryNode) => subcategoryNode.id === edge.target) ||
+              subcategoryNodes.some((subcategoryNode) => subcategoryNode.id === edge.source)),
+        );
+        if (connectedSubcategoryEdges.length === 0) {
+          const categoryNodeResult = result.find((r) => r.nodeId === categoryNode.id);
+          if (!categoryNodeResult) {
+            metCatCriteria = false;
+            break;
+          }
+        }
+      }
+    }
+
     if (result === null || totalColumns != columnCount) {
-      setLoading(false);
       setMappingSuccess(false);
-      setMessage(t('databaseSources.describeDataset.message.mappingFailed'));
-      setMessageDescription(t('databaseSources.describeDataset.message.mappingFailedDescription'));
+      setMessage(t('databaseSources.describeDataset.message.columnsNotConnected'));
+      setSaveDescription(t('databaseSources.describeDataset.step3Description.fail'));
+    } else if (!metSubcatCriteria) {
+      setMappingSuccess(false);
+      setMessage(t('databaseSources.describeDataset.message.subcatCriteria'));
+      setSaveDescription(t('databaseSources.describeDataset.step3Description.fail'));
+    } else if (!metCatCriteria) {
+      setMappingSuccess(false);
+      setMessage(t('databaseSources.describeDataset.message.catCriteria'));
       setSaveDescription(t('databaseSources.describeDataset.step3Description.fail'));
     } else {
       addColumnMapping(id, JSON.stringify(result))
@@ -100,9 +143,9 @@ export const Step3: React.FC<{
           setMessageDescription(t('databaseSources.describeDataset.message.saveFailedDescription'));
           setSaveDescription(t('databaseSources.describeDataset.step3Description.fail'));
         });
-      setLoading(false);
     }
-  }, [nodes, edges, t, id, setSaveDescription, columnCount]);
+    setLoading(false);
+  }, [nodes, edges, t, id, setSaveDescription, columnCount, subcategoryNodes, categoryNodes]);
 
   const handleBackToStep = (stepNum: number) => {
     setNodes(nodes.filter((node) => node.type !== 'column'));

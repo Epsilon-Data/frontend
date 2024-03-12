@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Priority } from '../constants/enums/priorities';
 import { DatabaseConnectionDetails, DatabaseInfoFormValues, RequestDetails } from '@app/interfaces/interfaces';
 import { RequestStatus } from '@app/constants/enums/requestStatus';
 import { format } from 'date-fns';
 import { DATE_FORMAT, CONNECTION_REQUEST_API_URL } from '@app/constants/connectionRequest';
 import { httpClient, getCsrfHeader } from './http.api';
+import { getUsers } from './admin.api';
 
 export interface Tag {
   value: string;
@@ -31,14 +33,24 @@ export interface RequestTableRow {
 export interface RequestTableData {
   data: RequestTableRow[];
   pagination: Pagination;
-  isAdmin: boolean;
 }
 
-export const getRequestTableData = async (pagination: Pagination): Promise<RequestTableData> => {
+export const getRequestTableData = async (pagination: Pagination, isAdmin: boolean): Promise<RequestTableData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(CONNECTION_REQUEST_API_URL + 'summary', {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
+
+  let users: any[] = [];
+  if (isAdmin) {
+    users = await getUsers().then((res: any) => {
+      return res.map((user: { id: string; firstName: string; lastName: string }) => ({
+        id: user.id,
+        fullName: `${user.firstName} ${user.lastName}`,
+      }));
+    });
+  }
+
   const formattedData = response.data.requests.map(
     (
       item: {
@@ -62,10 +74,13 @@ export const getRequestTableData = async (pagination: Pagination): Promise<Reque
           statusTag = { value: 'Approved', priority: Priority.LOW };
           break;
       }
+
+      const userFullName = users.find((user) => user.id === item.requestor)?.fullName;
+
       return {
         key: index + 1,
         id: item.id,
-        requestor: item.requestor,
+        requestor: userFullName,
         projectId: item.Project.id,
         projectCustomId: item.Project.customId,
         dbStatus: item.dbStatus,
@@ -78,7 +93,6 @@ export const getRequestTableData = async (pagination: Pagination): Promise<Reque
   return {
     data: formattedData,
     pagination: { ...pagination, total: formattedData.length },
-    isAdmin: response.data.isAdmin,
   };
 };
 

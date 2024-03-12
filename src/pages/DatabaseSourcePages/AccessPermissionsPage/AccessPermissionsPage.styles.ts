@@ -22,7 +22,7 @@ export const MapWrapper = styled.div`
 `;
 
 export const PermissionsPopover = styled(AntdCard)`
-  width: 23%;
+  width: 25%;
   background: var(--sider-bg);
   position: absolute;
   transform: translate(-50%, -50%);

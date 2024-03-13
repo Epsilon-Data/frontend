@@ -17,6 +17,7 @@ import 'reactflow/dist/style.css';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { RolePermissions } from '@app/interfaces/interfaces';
 import { PermissionsModal } from './PermissionsModal/PermissionsModal';
+import { ClearModal } from './ClearModal/ClearModal';
 
 const initialPermissions = [
   { role: 'research', access: [] },
@@ -38,7 +39,10 @@ export const AccessPermissionsPage: React.FC = () => {
   const [clickedNode, setClickedNode] = useState<Node>();
   const rolePermissions = permissions.find((permission) => permission.role == activeTabKey);
   const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false);
+  const [isClearModalOpen, setIsClearModalOpen] = useState(false);
   const [isSubmitLoading, setSubmitLoading] = useState(false);
+  const [encapsulatingNode, setEncapsulatingNode] = useState('');
+  const [isForbidSetting, setIsForbidSetting] = useState(false);
 
   const nodeTypes = useMemo(
     () => ({ object: PermissionNode, category: PermissionNode, subcategory: PermissionNode }),
@@ -124,22 +128,49 @@ export const AccessPermissionsPage: React.FC = () => {
       setShowPermissions(false);
       return;
     }
+
+    const offsets = e.target.getBoundingClientRect();
+    const scrolled = document.getElementById('main-content')?.scrollTop || 0;
+    setPosition({ top: offsets.top + scrolled - 170, left: offsets.left - offsets.width });
+    setClickedNode(node);
+
+    if (node.type == 'subcategory') {
+      const categoryEdge = edges.find((e) => e.source === node.id || e.target === node.id);
+      if (categoryEdge) {
+        const connectedCategoryId = categoryEdge.source === node.id ? categoryEdge.target : categoryEdge.source;
+        const connectedCategoryEdges = edges.filter(
+          (e) => e.source === connectedCategoryId || e.target === connectedCategoryId,
+        );
+        const subcategoryCount = connectedCategoryEdges.reduce((count, edge) => {
+          const connectedId = edge.source === connectedCategoryId ? edge.target : edge.source;
+          const connectedNode = nodes.find((n) => n.id === connectedId && n.type === 'subcategory');
+          return connectedNode ? count + 1 : count;
+        }, 0);
+
+        if (subcategoryCount == 1) {
+          const categoryName = nodes.find((n) => n.id === connectedCategoryId)?.data.label;
+          setIsForbidSetting(true);
+          setEncapsulatingNode(categoryName);
+          setShowPermissions(true);
+          return;
+        }
+      }
+    }
+
     const nodePermissions = rolePermissions?.access.find((access) => access.nodeId == node.id)?.permissions;
     if (!nodePermissions) {
       setSelectedPermissions([]);
     } else {
       setSelectedPermissions(nodePermissions);
     }
-    const offsets = e.target.getBoundingClientRect();
-    const scrolled = document.getElementById('main-content')?.scrollTop || 0;
-    setPosition({ top: offsets.top + scrolled - 170, left: offsets.left - offsets.width });
-    setClickedNode(node);
+
+    setIsForbidSetting(false);
     setShowPermissions(true);
   };
 
-  const handleSubmit = (checkedRoles: Array<CheckboxValueType>) => {
+  const handleSubmit = (selectedRole: string, checkedRoles: Array<CheckboxValueType>) => {
     setSubmitLoading(true);
-    if (rolePermissions?.access.length == 0) {
+    if (permissions.every((permission) => permission.access.length === 0)) {
       notificationController.error({
         message: t('databaseSources.accessPermissions.notify.noPermissionsSet'),
       });
@@ -147,10 +178,11 @@ export const AccessPermissionsPage: React.FC = () => {
       setIsPermissionsModalOpen(false);
       return;
     }
-    checkedRoles.push(activeTabKey);
+
+    const accessToBeCopied = permissions.find((permission) => permission.role == selectedRole)?.access;
     permissions.forEach((permission) => {
-      if (checkedRoles.includes(permission.role) && rolePermissions?.access) {
-        permission.access = rolePermissions?.access;
+      if (checkedRoles.includes(permission.role) && accessToBeCopied) {
+        permission.access = accessToBeCopied;
       }
     });
 
@@ -169,6 +201,24 @@ export const AccessPermissionsPage: React.FC = () => {
       });
     setSubmitLoading(false);
     setIsPermissionsModalOpen(false);
+  };
+
+  const handleClear = (checkedRoles: Array<CheckboxValueType>) => {
+    checkedRoles.forEach((role) => {
+      permissions.forEach((permission) => {
+        if (role == permission.role) {
+          permission.access = [];
+        }
+      });
+    });
+
+    if (checkedRoles.length == 0) {
+      notificationController.info({ message: t('databaseSources.accessPermissions.notify.noneCleared') });
+    } else {
+      notificationController.success({ message: t('databaseSources.accessPermissions.notify.clearSuccess') });
+    }
+
+    setIsClearModalOpen(false);
   };
 
   return (
@@ -216,16 +266,22 @@ export const AccessPermissionsPage: React.FC = () => {
               style={{ top: position?.top, left: position?.left }}
               hidden={!showPermissions}
             >
-              <S.PermissionsCheckboxGroup
-                options={permissionOptions}
-                value={selectedPermissions}
-                onChange={handleCheckboxChange}
-              />
+              {isForbidSetting ? (
+                <S.Message>
+                  {t('databaseSources.accessPermissions.popoverMessage', { node: encapsulatingNode })}
+                </S.Message>
+              ) : (
+                <S.PermissionsCheckboxGroup
+                  options={permissionOptions}
+                  value={selectedPermissions}
+                  onChange={handleCheckboxChange}
+                />
+              )}
             </S.PermissionsPopover>
           </BaseRow>
           <BaseRow style={{ padding: '1rem' }}>
             <BaseCol span={12} offset={12} style={{ display: 'flex' }}>
-              <BaseButton block type="default">
+              <BaseButton block type="default" onClick={() => setIsClearModalOpen(true)}>
                 {t('databaseSources.accessPermissions.clear')}
               </BaseButton>
               <BaseButton
@@ -245,6 +301,7 @@ export const AccessPermissionsPage: React.FC = () => {
             onSubmit={handleSubmit}
             loading={isSubmitLoading}
           />
+          <ClearModal isModalOpen={isClearModalOpen} setIsModalOpen={setIsClearModalOpen} onClear={handleClear} />
         </S.Card>
       </S.CardWrapper>
     </>

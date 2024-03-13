@@ -779,7 +779,7 @@
         "title": "Instructions",
         "description": "Start defining the object of your data collection (e.g. person, event).",
         "example": "Click here to view an example of a predefined archetype.",
-        "modal": "In this diagram, the person object is initially defined as it is the focal point for data collection. Various attributes pertaining to the person, such as demographic data and lifestyle data, are mapped out as distinct sub-categories. These categories can be as detailed as needed."
+        "modal": "In this diagram, the 'Person' object is initially defined as it is the focal point (in pink) for data collection. Various attributes pertaining to the person, such as 'Demographic' data and 'Lifestyle' data, are mapped out as distinct categories. These categories can then contain more sub-categories such as ethnicity or directly connect to real variables from your database."
       },
       "elementSidebar": {
         "description": "You can drag these elements to the pane on the right.",
@@ -828,6 +828,7 @@
       "clear": "Clear",
       "save": "Set Permissions",
       "popoverTitle": "Permissions for {{node}}",
+      "popoverMessage": "Set permissions on {{node}}",
       "permission": {
         "viewAggregated": "View aggregated results",
         "performAnalysis": "Perform analysis"
@@ -835,12 +836,20 @@
       "notify": {
         "noPermissionsSet": "There are no permissions set. Please set at least 1 permission.",
         "saveSuccess": "Permissions saved successfully for {{role}}.",
-        "saveFailed": "Your permissions failed to save. Please try again."
+        "saveFailed": "Your permissions failed to save. Please try again.",
+        "clearSuccess": "Permissions cleared successfully for selected groups.",
+        "noneCleared": "No groups selected. No permissions were cleared."
       },
-      "modal": {
+      "permissionModal": {
         "instruction": "Select other groups (or skip) for the same access permissions: ",
+        "copyFrom": "Copy permissions from: ",
+        "copyTo": "Copy permissions to: ",
         "skip": "Skip",
         "copyPermissions": "Copy Permissions"
+      },
+      "clearModal": {
+        "instruction": "Select groups to clear permissions for: ",
+        "clearPermissions": "Clear Permissions"
       }
     },
     "metadata": {

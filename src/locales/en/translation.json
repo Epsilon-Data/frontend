@@ -827,8 +827,7 @@
       "others": "Others",
       "clear": "Clear",
       "save": "Set Permissions",
-      "popoverTitle": "Permissions for {{node}}",
-      "popoverMessage": "Set permissions on {{node}}",
+      "noArchetype": "Please create an archetype before setting permissions.",
       "permission": {
         "viewAggregated": "View aggregated results",
         "performAnalysis": "Perform analysis"
@@ -841,6 +840,8 @@
         "noneCleared": "No groups selected. No permissions were cleared."
       },
       "permissionModal": {
+        "title": "Permissions for {{node}}",
+        "message": "Set permissions on {{node}}",
         "instruction": "Select other groups (or skip) for the same access permissions: ",
         "copyFrom": "Copy permissions from: ",
         "copyTo": "Copy permissions to: ",

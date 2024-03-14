@@ -7,7 +7,7 @@ import { Card } from 'antd';
 import * as S from './CardList.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import { Status } from '@app/components/profile/profileCard/profileFormNav/nav/payments/paymentHistory/Status/Status';
+import { Status } from '@app/components/status/Status';
 import { defineColorByPriority } from '@app/utils/utils';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseProgress } from '@app/components/common/BaseProgress/BaseProgress';

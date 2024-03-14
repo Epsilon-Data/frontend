@@ -18,6 +18,7 @@ import { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { RolePermissions } from '@app/interfaces/interfaces';
 import { PermissionsModal } from './PermissionsModal/PermissionsModal';
 import { ClearModal } from './ClearModal/ClearModal';
+import { BsExclamationSquareFill } from 'react-icons/bs';
 
 const initialPermissions = [
   { role: 'research', access: [] },
@@ -234,66 +235,81 @@ export const AccessPermissionsPage: React.FC = () => {
           onTabChange={handleTabChange}
           tabProps={{ size: 'middle' }}
         >
-          <BaseRow>
-            <ReactFlowProvider>
-              <S.MapWrapper>
-                <ReactFlow
-                  nodes={nodes}
-                  edges={edges}
-                  onNodesChange={onNodesChange}
-                  onEdgesChange={onEdgesChange}
-                  onNodeClick={handleNodeClick}
-                  edgesUpdatable={false}
-                  edgesFocusable={false}
-                  nodesDraggable={false}
-                  nodesConnectable={false}
-                  nodesFocusable={false}
-                  draggable={false}
-                  zoomOnScroll={false}
-                  panOnDrag={false}
-                  zoomOnDoubleClick={false}
-                  deleteKeyCode={[]}
-                  nodeTypes={nodeTypes}
-                  edgeTypes={edgeTypes}
-                  nodeOrigin={[0.5, 0.5]}
-                  fitView
-                  fitViewOptions={{ maxZoom: 1.2 }}
-                ></ReactFlow>
-              </S.MapWrapper>
-            </ReactFlowProvider>
-            <S.PermissionsPopover
-              title={t('databaseSources.accessPermissions.popoverTitle', { node: clickedNode?.data.label })}
-              style={{ top: position?.top, left: position?.left }}
-              hidden={!showPermissions}
-            >
-              {isForbidSetting ? (
-                <S.Message>
-                  {t('databaseSources.accessPermissions.popoverMessage', { node: encapsulatingNode })}
-                </S.Message>
-              ) : (
-                <S.PermissionsCheckboxGroup
-                  options={permissionOptions}
-                  value={selectedPermissions}
-                  onChange={handleCheckboxChange}
-                />
-              )}
-            </S.PermissionsPopover>
-          </BaseRow>
-          <BaseRow style={{ padding: '1rem' }}>
-            <BaseCol span={12} offset={12} style={{ display: 'flex' }}>
-              <BaseButton block type="default" onClick={() => setIsClearModalOpen(true)}>
-                {t('databaseSources.accessPermissions.clear')}
-              </BaseButton>
-              <BaseButton
-                block
-                type="primary"
-                onClick={() => setIsPermissionsModalOpen(true)}
-                style={{ marginLeft: '2rem' }}
-              >
-                {t('databaseSources.accessPermissions.save')}
-              </BaseButton>
-            </BaseCol>
-          </BaseRow>
+          {nodes.length > 0 ? (
+            <>
+              <BaseRow>
+                <ReactFlowProvider>
+                  <S.MapWrapper>
+                    <ReactFlow
+                      nodes={nodes}
+                      edges={edges}
+                      onNodesChange={onNodesChange}
+                      onEdgesChange={onEdgesChange}
+                      onNodeClick={handleNodeClick}
+                      edgesUpdatable={false}
+                      edgesFocusable={false}
+                      nodesDraggable={false}
+                      nodesConnectable={false}
+                      nodesFocusable={false}
+                      draggable={false}
+                      zoomOnScroll={false}
+                      panOnDrag={false}
+                      zoomOnDoubleClick={false}
+                      deleteKeyCode={[]}
+                      nodeTypes={nodeTypes}
+                      edgeTypes={edgeTypes}
+                      nodeOrigin={[0.5, 0.5]}
+                      fitView
+                      fitViewOptions={{ maxZoom: 1.2 }}
+                    ></ReactFlow>
+                  </S.MapWrapper>
+                </ReactFlowProvider>
+                <S.PermissionsPopover
+                  title={t('databaseSources.accessPermissions.permissionModal.title', {
+                    node: clickedNode?.data.label,
+                  })}
+                  style={{ top: position?.top, left: position?.left }}
+                  hidden={!showPermissions}
+                >
+                  {isForbidSetting ? (
+                    <S.PermissionsMessage>
+                      {t('databaseSources.accessPermissions.permissionModal.message', { node: encapsulatingNode })}
+                    </S.PermissionsMessage>
+                  ) : (
+                    <S.PermissionsCheckboxGroup
+                      options={permissionOptions}
+                      value={selectedPermissions}
+                      onChange={handleCheckboxChange}
+                    />
+                  )}
+                </S.PermissionsPopover>
+              </BaseRow>
+              <BaseRow style={{ padding: '1rem' }}>
+                <BaseCol span={12} offset={12} style={{ display: 'flex' }}>
+                  <BaseButton block type="default" onClick={() => setIsClearModalOpen(true)}>
+                    {t('databaseSources.accessPermissions.clear')}
+                  </BaseButton>
+                  <BaseButton
+                    block
+                    type="primary"
+                    onClick={() => setIsPermissionsModalOpen(true)}
+                    style={{ marginLeft: '2rem' }}
+                  >
+                    {t('databaseSources.accessPermissions.save')}
+                  </BaseButton>
+                </BaseCol>
+              </BaseRow>
+            </>
+          ) : (
+            <>
+              <S.InfoRow style={{ marginTop: '4rem' }}>
+                <BsExclamationSquareFill style={{ width: '20%', height: '20%' }} />
+              </S.InfoRow>
+              <S.InfoRow>
+                <S.InfoMessage>{t('databaseSources.accessPermissions.noArchetype')}</S.InfoMessage>
+              </S.InfoRow>
+            </>
+          )}
           <PermissionsModal
             currentRole={activeTabKey}
             isModalOpen={isPermissionsModalOpen}

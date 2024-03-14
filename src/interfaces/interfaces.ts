@@ -34,17 +34,6 @@ export enum CurrencyTypeEnum {
   BTC = 'BTC',
 }
 
-export interface PaymentCard {
-  cvc: string;
-  expiry: string;
-  name: string;
-  number: string;
-  // eslint-disable-next-line
-  focused: any;
-  background: string;
-  isEdit: boolean;
-}
-
 export interface RequestDetails {
   id?: string;
   requestor?: string;

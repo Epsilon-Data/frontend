@@ -3,8 +3,9 @@ import { BaseCard as CommonCard } from '@app/components/common/BaseCard/BaseCard
 import { Card as AntdCard, Checkbox } from 'antd';
 import { FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
 import { Typography } from 'antd';
+import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 export const CardWrapper = styled.div`
   margin-top: -1rem;
@@ -48,9 +49,19 @@ export const PermissionsCheckboxGroup = styled(Checkbox.Group)`
   }
 `;
 
-export const Message = styled(Text)`
+export const PermissionsMessage = styled(Text)`
   font-size: ${FONT_SIZE.md};
   font-weight: ${FONT_WEIGHT.medium};
   margin-left: 0.3rem;
   color: var(--secondary-color);
+`;
+
+export const InfoRow = styled(BaseRow)`
+  margin: 0 3rem 2rem;
+  justify-content: center;
+`;
+
+export const InfoMessage = styled(Paragraph)`
+  font-size: ${FONT_SIZE.lg};
+  font-weight: ${FONT_WEIGHT.semibold};
 `;

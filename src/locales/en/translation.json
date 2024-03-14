@@ -765,6 +765,11 @@
     "describeDataset": {
       "title": "Describe Dataset",
       "projectTitle": "Describe Dataset Project {{id}}",
+      "listCols": {
+        "templateName": "Template Name"
+      },
+      "createTemplate": "Create New Template",
+      "createTemplateTitle": "Create Template Project {{id}}",
       "step1": "Step 1",
       "step2": "Step 2",
       "step3": "Save",
@@ -792,6 +797,7 @@
         "search": "Search columns",
         "checkAll": "Check all in current list"
       },
+      "templateName": "Template Name:",
       "clear": "Clear",
       "reset": "Reset",
       "saveTemplate": "Save Archetype Template",
@@ -805,7 +811,8 @@
         "specifyCategory": "Please specify at least one category for an object.",
         "duplicateElements": "Duplicate element names found: {{names}}",
         "emptyLabels": "Please label all the nodes before saving.",
-        "mapAllColumns": "Please map all columns to your archetype."
+        "mapAllColumns": "Please map all columns to your archetype.",
+        "specifyTemplateName": "Please specify a template name."
       },
       "message" : {
         "columnsNotConnected": "Some columns are not connected to your template.",

@@ -127,14 +127,33 @@ export const addDbTemplate = async (
   return response.data;
 };
 
-export const getTemplate = async (projectId: string | undefined): Promise<{ nodes: Node[]; edges: Edge[] }> => {
+export const getTemplates = async (
+  projectId: string | undefined,
+): Promise<{ id: string; name: string; nodes: Node[]; edges: Edge[] }[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'template', {
+  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'templates', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       projectId: projectId,
     },
   });
+
+  return response.data;
+};
+
+export const updateTemplates = async (
+  projectId: string | undefined,
+  templates: string,
+): Promise<{ projectId: string; templates: string }> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post(
+    DATABASE_SOURCE_API_URL + 'update-templates',
+    { projectId: projectId, template: templates },
+    {
+      headers: { [csrfHeaderName]: `${csrf}` },
+    },
+  );
+
   return response.data;
 };
 

@@ -2,85 +2,41 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './DescribeDatasetPage.styles';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
-import { BaseSteps } from '@app/components/common/BaseSteps/BaseSteps';
-import 'reactflow/dist/style.css';
-import { ExampleModal } from './ExampleModal/ExampleModal';
-import { Step1 } from './Steps/Step1/Step1';
-import { Step2 } from './Steps/Step2/Step2';
-import { Step3 } from './Steps/Step3/Step3';
-import { useEdgesState, useNodesState } from 'reactflow';
-import { getProjectId, getTemplate } from '@app/api/databaseSources.api';
 import { useMounted } from '@app/hooks/useMounted';
+import { Pagination, getProjectId, getTemplates, updateTemplates } from '@app/api/databaseSources.api';
+import { FaCirclePlus } from 'react-icons/fa6';
+import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
+import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
+import { ColumnsType } from 'antd/es/table';
+import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
+import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
+import { Node, Edge } from 'reactflow';
 
-const initialNodes = [{ id: 'node_0', position: { x: 320, y: 200 }, data: { label: 'Object' }, type: 'object' }];
+interface TemplateTableRow {
+  key: number;
+  id: string;
+  name: string;
+}
+
+const initialPagination: Pagination = {
+  current: 1,
+  pageSize: 5,
+};
 
 const DescribeDatasetPage: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation();
-  const [currentStep, setCurrentStep] = useState(0);
-  const [saveDescription, setSaveDescription] = useState<string>('');
-  const [isFormModalOpen, setIsFormModalOpen] = useState<boolean>(false);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [columnCount, setColumnCount] = useState(0);
-  const steps = [
-    {
-      title: t('databaseSources.describeDataset.step1'),
-      description: t('databaseSources.describeDataset.step1Description'),
-      content: (
-        <Step1
-          id={id}
-          setStep={setCurrentStep}
-          setIsFormModalOpen={setIsFormModalOpen}
-          nodes={nodes}
-          edges={edges}
-          setNodes={setNodes}
-          setEdges={setEdges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-        />
-      ),
-    },
-    {
-      title: t('databaseSources.describeDataset.step2'),
-      description: t('databaseSources.describeDataset.step2Description'),
-      content: (
-        <Step2
-          id={id}
-          setStep={setCurrentStep}
-          setIsFormModalOpen={setIsFormModalOpen}
-          nodes={nodes}
-          edges={edges}
-          setNodes={setNodes}
-          setEdges={setEdges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          setColumnCount={setColumnCount}
-        />
-      ),
-    },
-    {
-      title: t('databaseSources.describeDataset.step3'),
-      description: saveDescription,
-      content: (
-        <Step3
-          id={id}
-          nodes={nodes}
-          edges={edges}
-          setNodes={setNodes}
-          setEdges={setEdges}
-          setSaveDescription={setSaveDescription}
-          setStep={setCurrentStep}
-          columnCount={columnCount}
-        />
-      ),
-    },
-  ];
-
-  const [projectId, setProjectId] = useState('');
+  const navigate = useNavigate();
   const { isMounted } = useMounted();
+  const [projectId, setProjectId] = useState('');
+  const [tableData, setTableData] = useState<{ data: TemplateTableRow[]; pagination: Pagination; loading: boolean }>({
+    data: [],
+    pagination: initialPagination,
+    loading: false,
+  });
+  const [templates, setTemplates] = useState<{ id: string; name: string; nodes: Node[]; edges: Edge[] }[]>([]);
   const fetch = useCallback(
     (id: string | undefined) => {
       getProjectId(id).then((res) => {
@@ -88,19 +44,60 @@ const DescribeDatasetPage: React.FC = () => {
           setProjectId(res);
         }
       });
-      getTemplate(id).then((res) => {
-        if (res) {
-          setNodes(res.nodes);
-          setEdges(res.edges);
+      setTableData((tableData) => ({ ...tableData, loading: true }));
+      getTemplates(id).then((res) => {
+        if (isMounted.current && res) {
+          setTemplates(res);
+          const mapped = res.map((obj: { name: string; id: string }, index: number) => ({
+            key: index,
+            name: obj.name,
+            id: obj.id,
+          }));
+          const pagination = { ...initialPagination, total: res.length };
+          setTableData({ data: mapped, pagination: pagination, loading: false });
         }
       });
+      setTableData((tableData) => ({ ...tableData, loading: false }));
     },
-    [isMounted, setEdges, setNodes],
+    [isMounted],
   );
+
+  const handleDelete = (templateId: string) => {
+    setTableData({
+      ...tableData,
+      data: tableData.data.filter((item) => item.id !== templateId),
+      pagination: {
+        ...tableData.pagination,
+        total: tableData.pagination.total ? tableData.pagination.total - 1 : tableData.pagination.total,
+      },
+    });
+    updateTemplates(id, JSON.stringify(templates.filter((item) => item.id !== templateId)));
+  };
 
   useEffect(() => {
     fetch(id);
-  }, [fetch, id]);
+  }, [id, fetch]);
+
+  const columns: ColumnsType<TemplateTableRow> = [
+    {
+      title: t('databaseSources.describeDataset.listCols.templateName'),
+      dataIndex: 'name',
+      key: 'name',
+      render: (text: string) => <span>{text}</span>,
+    },
+    {
+      title: t('tables.actions'),
+      dataIndex: 'actions',
+      width: '15%',
+      render: (text: string, record: { id: string }) => (
+        <BaseSpace>
+          <BaseButton type="primary" danger onClick={() => handleDelete(record.id)}>
+            {t('tables.delete')}
+          </BaseButton>
+        </BaseSpace>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -111,12 +108,23 @@ const DescribeDatasetPage: React.FC = () => {
           title={t('databaseSources.describeDataset.projectTitle', { id: projectId })}
           padding="1.25rem 1.25rem 0"
         >
-          <BaseRow>
-            <BaseSteps current={currentStep} items={steps} style={{ padding: '1rem 2.7rem' }} />
+          <BaseRow gutter={[30, 30]}>
+            <BaseCol offset={16} span={8}>
+              <S.CreateButton type="primary" onClick={() => navigate(`create`)} icon={<FaCirclePlus />}>
+                {t('databaseSources.describeDataset.createTemplate')}
+              </S.CreateButton>
+            </BaseCol>
+            <BaseCol span={24}>
+              <BaseTable
+                columns={columns}
+                dataSource={tableData.data}
+                pagination={tableData.pagination}
+                loading={tableData.loading}
+                scroll={{ x: 800 }}
+              />
+            </BaseCol>
           </BaseRow>
-          <div>{steps[currentStep].content}</div>
         </S.Card>
-        <ExampleModal isExampleModalOpen={isFormModalOpen} setIsExampleModalOpen={setIsFormModalOpen} />
       </S.CardWrapper>
     </>
   );

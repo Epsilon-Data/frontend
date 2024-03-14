@@ -23,6 +23,7 @@ import * as S from './Step1.styles';
 import { notificationController } from '@app/controllers/notificationController';
 import { addDbTemplate } from '@app/api/databaseSources.api';
 import { ElementSidebar } from './ElementSidebar/ElementSidebar';
+import { BaseInput } from '@app/components/common/inputs/BaseInput/BaseInput';
 
 function checkDuplicateNames(nodes: Node[]) {
   const nameSet = new Set();
@@ -122,6 +123,7 @@ export const Step1: React.FC<{
 
   let nodeId = nodes.length;
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
+  const [templateName, setTemplateName] = useState('');
 
   const onConnect = useCallback(
     (params: Edge | Connection) => {
@@ -224,6 +226,13 @@ export const Step1: React.FC<{
     const containsEmptyLabel = hasEmptyLabel(nodes);
     const duplicateNames = checkDuplicateNames(nodes);
 
+    if (!templateName) {
+      notificationController.error({
+        message: t('databaseSources.describeDataset.notify.specifyTemplateName'),
+      });
+      return;
+    }
+
     if (containsEmptyLabel) {
       notificationController.error({
         message: t('databaseSources.describeDataset.notify.emptyLabels'),
@@ -260,7 +269,10 @@ export const Step1: React.FC<{
       return;
     }
 
-    addDbTemplate(id, JSON.stringify({ nodes: template.filteredNodes, edges: template.filteredEdges })).then(() => {
+    addDbTemplate(
+      id,
+      JSON.stringify({ name: templateName, nodes: template.filteredNodes, edges: template.filteredEdges }),
+    ).then(() => {
       setStep(1);
       setNodes(template.filteredNodes);
       setEdges(template.filteredEdges);
@@ -284,6 +296,14 @@ export const Step1: React.FC<{
           <ElementSidebar />
         </S.SidebarCol>
         <S.ViewportCol span={17}>
+          <BaseRow style={{ margin: '0.5rem 1rem 1rem' }}>
+            <BaseCol style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} span={5}>
+              <S.InputHeader>{t('databaseSources.describeDataset.templateName')}</S.InputHeader>
+            </BaseCol>
+            <BaseCol span={19}>
+              <BaseInput value={templateName} onChange={(e) => setTemplateName(e.target.value)}></BaseInput>
+            </BaseCol>
+          </BaseRow>
           <BaseRow>
             <ReactFlowProvider>
               <S.MapWrapper>

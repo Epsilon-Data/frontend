@@ -5,7 +5,7 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './AccessPermissionsPage.styles';
 import { useParams } from 'react-router-dom';
 import { useMounted } from '@app/hooks/useMounted';
-import { addAccessPermissions, getAccessPermissions, getProjectId, getTemplate } from '@app/api/databaseSources.api';
+import { addAccessPermissions, getAccessPermissions, getProjectId, getTemplates } from '@app/api/databaseSources.api';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
@@ -58,10 +58,10 @@ export const AccessPermissionsPage: React.FC = () => {
           setProjectId(res);
         }
       });
-      getTemplate(id).then((res) => {
-        if (res) {
-          setNodes(res.nodes);
-          setEdges(res.edges);
+      getTemplates(id).then((res) => {
+        if (res[0]) {
+          setNodes(res[0].nodes);
+          setEdges(res[0].edges);
         }
       });
       getAccessPermissions(id).then((res) => {

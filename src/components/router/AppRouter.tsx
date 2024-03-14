@@ -36,6 +36,9 @@ const TableInfoPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/Ta
 const DescribeDatasetPage = React.lazy(
   () => import('@app/pages/DatabaseSourcePages/DescribeDatasetPage/DescribeDatasetPage'),
 );
+const CreateTemplatePage = React.lazy(
+  () => import('@app/pages/DatabaseSourcePages/DescribeDatasetPage/CreateTemplatePage/CreateTemplatePage'),
+);
 const AccessPermissionsPage = React.lazy(
   () => import('@app/pages/DatabaseSourcePages/AccessPermissionsPage/AccessPermissionsPage'),
 );
@@ -57,6 +60,7 @@ const Metadata = withLoading(MetadataPage);
 const DatabaseSummary = withLoading(DatabaseSummaryPage);
 const TableInfo = withLoading(TableInfoPage);
 const DescribeDataset = withLoading(DescribeDatasetPage);
+const CreateTemplate = withLoading(CreateTemplatePage);
 const AccessPermissions = withLoading(AccessPermissionsPage);
 
 const AuthLayoutFallback = withLoading(AuthLayout);
@@ -85,6 +89,7 @@ export const AppRouter: React.FC = () => {
           <Route path="database-sources/metadata/:id/db-summary" element={<DatabaseSummary />} />
           <Route path="database-sources/metadata/:id/table-info" element={<TableInfo />} />
           <Route path="database-sources/describe-dataset/:id" element={<DescribeDataset />} />
+          <Route path="database-sources/describe-dataset/:id/create" element={<CreateTemplate />} />
           <Route path="database-sources/access-permissions/:id" element={<AccessPermissions />} />
         </Route>
         <Route path="/auth" element={<AuthLayoutFallback />}>

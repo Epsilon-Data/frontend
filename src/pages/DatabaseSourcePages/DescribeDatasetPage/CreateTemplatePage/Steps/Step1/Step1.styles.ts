@@ -55,3 +55,8 @@ export const ViewportCol = styled(BaseCol)`
   border-radius: 1rem;
   padding: 0.5rem;
 `;
+
+export const InputHeader = styled(Text)`
+  font-size: ${FONT_SIZE.lg};
+  font-weight: ${FONT_WEIGHT.medium};
+`;

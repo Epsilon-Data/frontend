@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import * as S from './Step1.styles';
 import { notificationController } from '@app/controllers/notificationController';
-import { addDbTemplate } from '@app/api/databaseSources.api';
+import { addTemplate } from '@app/api/databaseSources.api';
 import { ElementSidebar } from './ElementSidebar/ElementSidebar';
 import { BaseInput } from '@app/components/common/inputs/BaseInput/BaseInput';
 
@@ -100,6 +100,7 @@ function filterNodesEdges(nodes: Node[], edges: Edge[]) {
 export const Step1: React.FC<{
   id: string | undefined;
   setStep: (value: number) => void;
+  setTemplateId: (value: string) => void;
   setIsFormModalOpen: (value: boolean) => void;
   nodes: Node[];
   edges: Edge[];
@@ -116,7 +117,18 @@ export const Step1: React.FC<{
   setEdges: React.Dispatch<React.SetStateAction<Edge<any>[]>>;
   onNodesChange: (value: NodeChange[]) => void;
   onEdgesChange: (value: EdgeChange[]) => void;
-}> = ({ id, setStep, setIsFormModalOpen, nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange }) => {
+}> = ({
+  id,
+  setStep,
+  setTemplateId,
+  setIsFormModalOpen,
+  nodes,
+  edges,
+  setNodes,
+  setEdges,
+  onNodesChange,
+  onEdgesChange,
+}) => {
   const { t } = useTranslation();
   const nodeTypes = useMemo(() => ({ object: TextNode, category: TextNode, subcategory: TextNode }), []);
   const edgeTypes = useMemo(() => ({ default: MapEdge }), []);
@@ -269,10 +281,11 @@ export const Step1: React.FC<{
       return;
     }
 
-    addDbTemplate(
+    addTemplate(
       id,
       JSON.stringify({ name: templateName, nodes: template.filteredNodes, edges: template.filteredEdges }),
-    ).then(() => {
+    ).then((res) => {
+      setTemplateId(res);
       setStep(1);
       setNodes(template.filteredNodes);
       setEdges(template.filteredEdges);

@@ -25,6 +25,7 @@ const CreateTemplatePage: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [columnCount, setColumnCount] = useState(0);
+  const [templateId, setTemplateId] = useState('');
   const steps = [
     {
       title: t('databaseSources.describeDataset.step1'),
@@ -33,6 +34,7 @@ const CreateTemplatePage: React.FC = () => {
         <Step1
           id={id}
           setStep={setCurrentStep}
+          setTemplateId={setTemplateId}
           setIsFormModalOpen={setIsFormModalOpen}
           nodes={nodes}
           edges={edges}
@@ -74,6 +76,7 @@ const CreateTemplatePage: React.FC = () => {
           setSaveDescription={setSaveDescription}
           setStep={setCurrentStep}
           columnCount={columnCount}
+          templateId={templateId}
         />
       ),
     },

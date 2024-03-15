@@ -5,14 +5,13 @@ import * as S from './DescribeDatasetPage.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { useMounted } from '@app/hooks/useMounted';
-import { Pagination, getProjectId, getTemplates, updateTemplates } from '@app/api/databaseSources.api';
+import { Pagination, deleteTemplate, getProjectId, getTemplates } from '@app/api/databaseSources.api';
 import { FaCirclePlus } from 'react-icons/fa6';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { ColumnsType } from 'antd/es/table';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
-import { Template } from '@app/interfaces/interfaces';
 
 interface TemplateTableRow {
   key: number;
@@ -36,7 +35,6 @@ const DescribeDatasetPage: React.FC = () => {
     pagination: initialPagination,
     loading: false,
   });
-  const [templates, setTemplates] = useState<Template[]>([]);
   const fetch = useCallback(
     (id: string | undefined) => {
       getProjectId(id).then((res) => {
@@ -47,7 +45,6 @@ const DescribeDatasetPage: React.FC = () => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
       getTemplates(id).then((res) => {
         if (isMounted.current && res) {
-          setTemplates(res);
           const mapped = res.map((obj: { name: string; id: string }, index: number) => ({
             key: index,
             name: obj.name,
@@ -71,7 +68,7 @@ const DescribeDatasetPage: React.FC = () => {
         total: tableData.pagination.total ? tableData.pagination.total - 1 : tableData.pagination.total,
       },
     });
-    updateTemplates(id, JSON.stringify(templates.filter((item) => item.id !== templateId)));
+    deleteTemplate(id, templateId);
   };
 
   useEffect(() => {

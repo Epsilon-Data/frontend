@@ -110,10 +110,7 @@ export const getDbTableInfo = async (projectId: string | undefined): Promise<Dat
   return response.data;
 };
 
-export const addDbTemplate = async (
-  projectId: string | undefined,
-  template: string,
-): Promise<{ projectId: string; template: string }> => {
+export const addTemplate = async (projectId: string | undefined, template: string): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.post(
     DATABASE_SOURCE_API_URL + 'add-template',
@@ -138,14 +135,14 @@ export const getTemplates = async (projectId: string | undefined): Promise<Templ
   return response.data;
 };
 
-export const updateTemplates = async (
+export const deleteTemplate = async (
   projectId: string | undefined,
-  templates: string,
+  templateId: string,
 ): Promise<{ projectId: string; templates: string }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.post(
-    DATABASE_SOURCE_API_URL + 'update-templates',
-    { projectId: projectId, template: templates },
+    DATABASE_SOURCE_API_URL + 'delete-template',
+    { projectId: projectId, templateId: templateId },
     {
       headers: { [csrfHeaderName]: `${csrf}` },
     },
@@ -157,11 +154,12 @@ export const updateTemplates = async (
 export const addColumnMapping = async (
   projectId: string | undefined,
   columnMapping: string,
+  templateId: string | undefined,
 ): Promise<{ projectId: string; columnMapping: string }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.post(
     DATABASE_SOURCE_API_URL + 'add-column-mapping',
-    { projectId: projectId, columnMapping: columnMapping },
+    { projectId: projectId, columnMapping: columnMapping, templateId: templateId },
     {
       headers: { [csrfHeaderName]: `${csrf}` },
     },

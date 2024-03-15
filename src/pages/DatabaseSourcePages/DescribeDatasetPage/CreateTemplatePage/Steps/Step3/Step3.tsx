@@ -68,7 +68,8 @@ export const Step3: React.FC<{
   setSaveDescription: (value: string) => void;
   setStep: (value: number) => void;
   columnCount: number;
-}> = ({ id, nodes, edges, setNodes, setEdges, setSaveDescription, setStep, columnCount }) => {
+  templateId: string;
+}> = ({ id, nodes, edges, setNodes, setEdges, setSaveDescription, setStep, columnCount, templateId }) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [mappingSuccess, setMappingSuccess] = useState(false);
@@ -130,7 +131,7 @@ export const Step3: React.FC<{
       setMessage(t('databaseSources.describeDataset.message.catCriteria'));
       setSaveDescription(t('databaseSources.describeDataset.step3Description.fail'));
     } else {
-      addColumnMapping(id, JSON.stringify(result))
+      addColumnMapping(id, JSON.stringify(result), templateId)
         .then(() => {
           setMappingSuccess(true);
           setMessage(t('databaseSources.describeDataset.message.mappingSuccess'));
@@ -145,7 +146,8 @@ export const Step3: React.FC<{
         });
     }
     setLoading(false);
-  }, [nodes, edges, t, id, setSaveDescription, columnCount, subcategoryNodes, categoryNodes]);
+    return;
+  }, [nodes, edges, t, id, setSaveDescription, columnCount, subcategoryNodes, categoryNodes, templateId]);
 
   const handleBackToStep = (stepNum: number) => {
     setNodes(nodes.filter((node) => node.type !== 'column'));

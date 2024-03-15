@@ -1,10 +1,9 @@
-import { OverallDatabaseInfoValues, TemplatePermissions } from '@app/interfaces/interfaces';
+import { OverallDatabaseInfoValues, Template, TemplatePermissions } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 import { SourceStatus } from '@app/constants/enums/sourceStatus';
 import { DATE_FORMAT, DATABASE_SOURCE_API_URL } from '@app/constants/databaseSource';
 import { format } from 'date-fns';
 import { httpClient, getCsrfHeader } from './http.api';
-import { Node, Edge } from 'reactflow';
 
 export interface Tag {
   value: string;
@@ -127,9 +126,7 @@ export const addDbTemplate = async (
   return response.data;
 };
 
-export const getTemplates = async (
-  projectId: string | undefined,
-): Promise<{ id: string; name: string; nodes: Node[]; edges: Edge[] }[]> => {
+export const getTemplates = async (projectId: string | undefined): Promise<Template[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'templates', {
     headers: { [csrfHeaderName]: `${csrf}` },

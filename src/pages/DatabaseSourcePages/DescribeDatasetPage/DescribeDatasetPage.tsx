@@ -12,7 +12,7 @@ import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { ColumnsType } from 'antd/es/table';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
-import { Node, Edge } from 'reactflow';
+import { Template } from '@app/interfaces/interfaces';
 
 interface TemplateTableRow {
   key: number;
@@ -36,7 +36,7 @@ const DescribeDatasetPage: React.FC = () => {
     pagination: initialPagination,
     loading: false,
   });
-  const [templates, setTemplates] = useState<{ id: string; name: string; nodes: Node[]; edges: Edge[] }[]>([]);
+  const [templates, setTemplates] = useState<Template[]>([]);
   const fetch = useCallback(
     (id: string | undefined) => {
       getProjectId(id).then((res) => {

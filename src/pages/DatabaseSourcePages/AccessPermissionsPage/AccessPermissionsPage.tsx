@@ -9,13 +9,13 @@ import { addAccessPermissions, getAccessPermissions, getProjectId, getTemplates 
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
-import ReactFlow, { Edge, Node, ReactFlowProvider, useEdgesState, useNodesState } from 'reactflow';
+import ReactFlow, { Node, ReactFlowProvider, useEdgesState, useNodesState } from 'reactflow';
 import { PermissionNode } from '@app/components/reactflow-components/PermissionNode/PermissionNode';
 import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import { notificationController } from '@app/controllers/notificationController';
 import 'reactflow/dist/style.css';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
-import { RolePermissions, TemplatePermissions } from '@app/interfaces/interfaces';
+import { RolePermissions, Template, TemplatePermissions } from '@app/interfaces/interfaces';
 import { PermissionsModal } from './PermissionsModal/PermissionsModal';
 import { ClearModal } from './ClearModal/ClearModal';
 import { TemplateModal } from './TemplateModal/TemplateModal';
@@ -47,7 +47,7 @@ export const AccessPermissionsPage: React.FC = () => {
   const [encapsulatingNode, setEncapsulatingNode] = useState('');
   const [isForbidSetting, setIsForbidSetting] = useState(false);
   const [cardLoading, setCardLoading] = useState(true);
-  const [templates, setTemplates] = useState<{ id: string; name: string; nodes: Node[]; edges: Edge[] }[]>([]);
+  const [templates, setTemplates] = useState<Template[]>([]);
   const [templateId, setTemplateId] = useState('');
 
   const nodeTypes = useMemo(

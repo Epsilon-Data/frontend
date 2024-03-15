@@ -1,3 +1,4 @@
+import { Node, Edge } from 'reactflow';
 import { NumericLiteral } from 'typescript';
 
 export type Dimension = number | string;
@@ -106,4 +107,11 @@ export interface TemplatePermissions {
   templateId: string;
   active: boolean;
   settings: RolePermissions[];
+}
+
+export interface Template {
+  id: string;
+  name: string;
+  nodes: Node[];
+  edges: Edge[];
 }

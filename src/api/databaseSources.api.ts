@@ -1,4 +1,4 @@
-import { OverallDatabaseInfoValues, RolePermissions } from '@app/interfaces/interfaces';
+import { OverallDatabaseInfoValues, TemplatePermissions } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 import { SourceStatus } from '@app/constants/enums/sourceStatus';
 import { DATE_FORMAT, DATABASE_SOURCE_API_URL } from '@app/constants/databaseSource';
@@ -184,7 +184,7 @@ export const getDbColumns = async (projectId: string | undefined): Promise<strin
   return response.data;
 };
 
-export const getAccessPermissions = async (projectId: string | undefined): Promise<RolePermissions[]> => {
+export const getAccessPermissions = async (projectId: string | undefined): Promise<TemplatePermissions[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'permissions', {
     headers: { [csrfHeaderName]: `${csrf}` },

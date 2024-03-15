@@ -101,3 +101,9 @@ export interface RolePermissions {
     permissions: string[];
   }[];
 }
+
+export interface TemplatePermissions {
+  templateId: string;
+  active: boolean;
+  settings: RolePermissions[];
+}

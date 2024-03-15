@@ -57,6 +57,6 @@ export const ViewportCol = styled(BaseCol)`
 `;
 
 export const InputHeader = styled(Text)`
-  font-size: ${FONT_SIZE.lg};
+  font-size: ${FONT_SIZE.md};
   font-weight: ${FONT_WEIGHT.medium};
 `;

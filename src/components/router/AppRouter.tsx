@@ -42,7 +42,6 @@ const CreateTemplatePage = React.lazy(
 const AccessPermissionsPage = React.lazy(
   () => import('@app/pages/DatabaseSourcePages/AccessPermissionsPage/AccessPermissionsPage'),
 );
-
 export const DASHBOARD_PATH = '/';
 
 const Dashboard = withLoading(DashboardPage);

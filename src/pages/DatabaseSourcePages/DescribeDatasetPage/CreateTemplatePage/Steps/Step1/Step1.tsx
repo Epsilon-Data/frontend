@@ -297,7 +297,10 @@ export const Step1: React.FC<{
         </S.SidebarCol>
         <S.ViewportCol span={17}>
           <BaseRow style={{ margin: '0.5rem 1rem 1rem' }}>
-            <BaseCol style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} span={5}>
+            <BaseCol
+              style={{ paddingRight: '0.7rem', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              span={5}
+            >
               <S.InputHeader>{t('databaseSources.describeDataset.templateName')}</S.InputHeader>
             </BaseCol>
             <BaseCol span={19}>

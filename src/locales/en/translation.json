@@ -797,7 +797,7 @@
         "search": "Search columns",
         "checkAll": "Check all in current list"
       },
-      "templateName": "Template Name:",
+      "templateName": "Template Name: ",
       "clear": "Clear",
       "reset": "Reset",
       "saveTemplate": "Save Archetype Template",
@@ -829,26 +829,33 @@
     "accessPermissions": {
       "title": "Set Access Permissions",
       "projectTitle": "Set Access Permissions Project {{id}}",
+      "listTitle": "Access Permissions Project {{id}} ",
       "research": "Research/Education Institution",
       "govOrg": "Government Organisations",
       "others": "Others",
       "clear": "Clear",
       "save": "Set Permissions",
-      "noArchetype": "Please create an archetype before setting permissions.",
       "permission": {
+        "title": "Permissions for {{node}}",
+        "message": "Set permissions on {{node}}",
         "viewAggregated": "View aggregated results",
         "performAnalysis": "Perform analysis"
       },
       "notify": {
         "noPermissionsSet": "There are no permissions set. Please set at least 1 permission.",
-        "saveSuccess": "Permissions saved successfully for {{role}}.",
+        "saveSuccess": "Permissions saved successfully for template: {{template}}.",
         "saveFailed": "Your permissions failed to save. Please try again.",
         "clearSuccess": "Permissions cleared successfully for selected groups.",
         "noneCleared": "No groups selected. No permissions were cleared."
       },
+      "templateModal": {
+        "instruction": "Select a template for setting access permissions: ",
+        "placeholder": "Select a template",
+        "useTemplate": "Use Template",
+        "noTemplatesTitle": "No templates found.",
+        "noTemplatesMessage": "Please create a template before setting permissions."
+      },
       "permissionModal": {
-        "title": "Permissions for {{node}}",
-        "message": "Set permissions on {{node}}",
         "instruction": "Select other groups (or skip) for the same access permissions: ",
         "copyFrom": "Copy permissions from: ",
         "copyTo": "Copy permissions to: ",

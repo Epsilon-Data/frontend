@@ -7,15 +7,14 @@ import { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { BaseSelect } from '@app/components/common/selects/BaseSelect/BaseSelect';
 
 export const PermissionsModal: React.FC<{
-  currentRole: string;
   isModalOpen: boolean;
   setIsModalOpen: (value: boolean) => void;
   onSubmit: (selectedRole: string, checkedValues: Array<CheckboxValueType>) => void;
   loading: boolean;
-}> = ({ currentRole, isModalOpen, setIsModalOpen, onSubmit, loading }) => {
+}> = ({ isModalOpen, setIsModalOpen, onSubmit, loading }) => {
   const { t } = useTranslation();
   const [checkedValues, setCheckedValues] = useState<Array<CheckboxValueType>>([]);
-  const [selectedRole, setSelectedRole] = useState(currentRole);
+  const [selectedRole, setSelectedRole] = useState('research');
 
   const handleCheckboxChange = (checkedValues: Array<CheckboxValueType>) => {
     setCheckedValues(checkedValues);
@@ -58,7 +57,7 @@ export const PermissionsModal: React.FC<{
         <S.Prompt>{t('databaseSources.accessPermissions.permissionModal.copyFrom')}</S.Prompt>
         <BaseSelect
           style={{ width: '50%', marginBottom: '3rem' }}
-          defaultValue={currentRole}
+          defaultValue={'research'}
           options={selectOptions}
           onChange={handleChange}
         />

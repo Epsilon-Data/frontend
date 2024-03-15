@@ -9,16 +9,16 @@ import { addAccessPermissions, getAccessPermissions, getProjectId, getTemplates 
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
-import ReactFlow, { Node, ReactFlowProvider, useEdgesState, useNodesState } from 'reactflow';
+import ReactFlow, { Edge, Node, ReactFlowProvider, useEdgesState, useNodesState } from 'reactflow';
 import { PermissionNode } from '@app/components/reactflow-components/PermissionNode/PermissionNode';
 import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import { notificationController } from '@app/controllers/notificationController';
 import 'reactflow/dist/style.css';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
-import { RolePermissions } from '@app/interfaces/interfaces';
+import { RolePermissions, TemplatePermissions } from '@app/interfaces/interfaces';
 import { PermissionsModal } from './PermissionsModal/PermissionsModal';
 import { ClearModal } from './ClearModal/ClearModal';
-import { BsExclamationSquareFill } from 'react-icons/bs';
+import { TemplateModal } from './TemplateModal/TemplateModal';
 
 const initialPermissions = [
   { role: 'research', access: [] },
@@ -36,14 +36,19 @@ export const AccessPermissionsPage: React.FC = () => {
   const [selectedPermissions, setSelectedPermissions] = useState<Array<CheckboxValueType>>([]);
   const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
   const [showPermissions, setShowPermissions] = useState(false);
+  const [templatePermissions, setTemplatePermissions] = useState<TemplatePermissions[]>([]);
   const [permissions, setPermissions] = useState<RolePermissions[]>(initialPermissions);
   const [clickedNode, setClickedNode] = useState<Node>();
   const rolePermissions = permissions.find((permission) => permission.role == activeTabKey);
   const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false);
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(true);
   const [isSubmitLoading, setSubmitLoading] = useState(false);
   const [encapsulatingNode, setEncapsulatingNode] = useState('');
   const [isForbidSetting, setIsForbidSetting] = useState(false);
+  const [cardLoading, setCardLoading] = useState(true);
+  const [templates, setTemplates] = useState<{ id: string; name: string; nodes: Node[]; edges: Edge[] }[]>([]);
+  const [templateId, setTemplateId] = useState('');
 
   const nodeTypes = useMemo(
     () => ({ object: PermissionNode, category: PermissionNode, subcategory: PermissionNode }),
@@ -59,18 +64,17 @@ export const AccessPermissionsPage: React.FC = () => {
         }
       });
       getTemplates(id).then((res) => {
-        if (res[0]) {
-          setNodes(res[0].nodes);
-          setEdges(res[0].edges);
+        if (res) {
+          setTemplates(res);
         }
       });
       getAccessPermissions(id).then((res) => {
         if (res) {
-          setPermissions(res);
+          setTemplatePermissions(res);
         }
       });
     },
-    [isMounted, setEdges, setNodes],
+    [isMounted],
   );
 
   useEffect(() => {
@@ -187,11 +191,29 @@ export const AccessPermissionsPage: React.FC = () => {
       }
     });
 
-    addAccessPermissions(id, JSON.stringify(permissions))
+    let foundPermission = false;
+    templatePermissions.forEach((permission) => {
+      permission.active = false;
+      if (permission.templateId == templateId) {
+        foundPermission = true;
+        permission.settings = permissions;
+        permission.active = true;
+      }
+    });
+
+    if (!foundPermission) {
+      templatePermissions.push({
+        templateId: templateId,
+        active: true,
+        settings: permissions,
+      });
+    }
+
+    addAccessPermissions(id, JSON.stringify(templatePermissions))
       .then(() => {
         notificationController.success({
           message: t('databaseSources.accessPermissions.notify.saveSuccess', {
-            role: t('databaseSources.accessPermissions.' + activeTabKey),
+            template: templates.find((template) => template.id == templateId)?.name,
           }),
         });
       })
@@ -222,6 +244,21 @@ export const AccessPermissionsPage: React.FC = () => {
     setIsClearModalOpen(false);
   };
 
+  const handleSelectTemplate = (templateId: string) => {
+    const template = templates.find((template) => template.id == templateId);
+    if (template) {
+      setTemplateId(templateId);
+      setNodes(template.nodes);
+      setEdges(template.edges);
+    }
+    const corrPermissions = templatePermissions.find((permission) => permission.templateId == templateId);
+    if (corrPermissions) {
+      setPermissions(corrPermissions.settings);
+    }
+    setIsTemplateModalOpen(false);
+    setCardLoading(false);
+  };
+
   return (
     <>
       <PageTitle>{t('databaseSources.accessPermissions.projectTitle', { id: projectId })}</PageTitle>
@@ -234,84 +271,71 @@ export const AccessPermissionsPage: React.FC = () => {
           activeTabKey={activeTabKey}
           onTabChange={handleTabChange}
           tabProps={{ size: 'middle' }}
+          loading={cardLoading}
         >
-          {nodes.length > 0 ? (
-            <>
-              <BaseRow>
-                <ReactFlowProvider>
-                  <S.MapWrapper>
-                    <ReactFlow
-                      nodes={nodes}
-                      edges={edges}
-                      onNodesChange={onNodesChange}
-                      onEdgesChange={onEdgesChange}
-                      onNodeClick={handleNodeClick}
-                      edgesUpdatable={false}
-                      edgesFocusable={false}
-                      nodesDraggable={false}
-                      nodesConnectable={false}
-                      nodesFocusable={false}
-                      draggable={false}
-                      zoomOnScroll={false}
-                      panOnDrag={false}
-                      zoomOnDoubleClick={false}
-                      deleteKeyCode={[]}
-                      nodeTypes={nodeTypes}
-                      edgeTypes={edgeTypes}
-                      nodeOrigin={[0.5, 0.5]}
-                      fitView
-                      fitViewOptions={{ maxZoom: 1.2 }}
-                    ></ReactFlow>
-                  </S.MapWrapper>
-                </ReactFlowProvider>
-                <S.PermissionsPopover
-                  title={t('databaseSources.accessPermissions.permissionModal.title', {
-                    node: clickedNode?.data.label,
-                  })}
-                  style={{ top: position?.top, left: position?.left }}
-                  hidden={!showPermissions}
-                >
-                  {isForbidSetting ? (
-                    <S.PermissionsMessage>
-                      {t('databaseSources.accessPermissions.permissionModal.message', { node: encapsulatingNode })}
-                    </S.PermissionsMessage>
-                  ) : (
-                    <S.PermissionsCheckboxGroup
-                      options={permissionOptions}
-                      value={selectedPermissions}
-                      onChange={handleCheckboxChange}
-                    />
-                  )}
-                </S.PermissionsPopover>
-              </BaseRow>
-              <BaseRow style={{ padding: '1rem' }}>
-                <BaseCol span={12} offset={12} style={{ display: 'flex' }}>
-                  <BaseButton block type="default" onClick={() => setIsClearModalOpen(true)}>
-                    {t('databaseSources.accessPermissions.clear')}
-                  </BaseButton>
-                  <BaseButton
-                    block
-                    type="primary"
-                    onClick={() => setIsPermissionsModalOpen(true)}
-                    style={{ marginLeft: '2rem' }}
-                  >
-                    {t('databaseSources.accessPermissions.save')}
-                  </BaseButton>
-                </BaseCol>
-              </BaseRow>
-            </>
-          ) : (
-            <>
-              <S.InfoRow style={{ marginTop: '4rem' }}>
-                <BsExclamationSquareFill style={{ width: '20%', height: '20%' }} />
-              </S.InfoRow>
-              <S.InfoRow>
-                <S.InfoMessage>{t('databaseSources.accessPermissions.noArchetype')}</S.InfoMessage>
-              </S.InfoRow>
-            </>
-          )}
+          <BaseRow>
+            <ReactFlowProvider>
+              <S.MapWrapper>
+                <ReactFlow
+                  nodes={nodes}
+                  edges={edges}
+                  onNodesChange={onNodesChange}
+                  onEdgesChange={onEdgesChange}
+                  onNodeClick={handleNodeClick}
+                  edgesUpdatable={false}
+                  edgesFocusable={false}
+                  nodesDraggable={false}
+                  nodesConnectable={false}
+                  nodesFocusable={false}
+                  draggable={false}
+                  zoomOnScroll={false}
+                  panOnDrag={false}
+                  zoomOnDoubleClick={false}
+                  deleteKeyCode={[]}
+                  nodeTypes={nodeTypes}
+                  edgeTypes={edgeTypes}
+                  nodeOrigin={[0.5, 0.5]}
+                  fitView
+                  fitViewOptions={{ maxZoom: 1.2 }}
+                ></ReactFlow>
+              </S.MapWrapper>
+            </ReactFlowProvider>
+            <S.PermissionsPopover
+              title={t('databaseSources.accessPermissions.permission.title', {
+                node: clickedNode?.data.label,
+              })}
+              style={{ top: position?.top, left: position?.left }}
+              hidden={!showPermissions}
+            >
+              {isForbidSetting ? (
+                <S.PermissionsMessage>
+                  {t('databaseSources.accessPermissions.permission.message', { node: encapsulatingNode })}
+                </S.PermissionsMessage>
+              ) : (
+                <S.PermissionsCheckboxGroup
+                  options={permissionOptions}
+                  value={selectedPermissions}
+                  onChange={handleCheckboxChange}
+                />
+              )}
+            </S.PermissionsPopover>
+          </BaseRow>
+          <BaseRow style={{ padding: '1rem' }}>
+            <BaseCol span={12} offset={12} style={{ display: 'flex' }}>
+              <BaseButton block type="default" onClick={() => setIsClearModalOpen(true)}>
+                {t('databaseSources.accessPermissions.clear')}
+              </BaseButton>
+              <BaseButton
+                block
+                type="primary"
+                onClick={() => setIsPermissionsModalOpen(true)}
+                style={{ marginLeft: '2rem' }}
+              >
+                {t('databaseSources.accessPermissions.save')}
+              </BaseButton>
+            </BaseCol>
+          </BaseRow>
           <PermissionsModal
-            currentRole={activeTabKey}
             isModalOpen={isPermissionsModalOpen}
             setIsModalOpen={setIsPermissionsModalOpen}
             onSubmit={handleSubmit}
@@ -319,6 +343,12 @@ export const AccessPermissionsPage: React.FC = () => {
           />
           <ClearModal isModalOpen={isClearModalOpen} setIsModalOpen={setIsClearModalOpen} onClear={handleClear} />
         </S.Card>
+        <TemplateModal
+          templateNames={templates.map((template) => ({ label: template.name, value: template.id }))}
+          isModalOpen={isTemplateModalOpen}
+          setIsModalOpen={setIsTemplateModalOpen}
+          onSelectTemplate={handleSelectTemplate}
+        />
       </S.CardWrapper>
     </>
   );

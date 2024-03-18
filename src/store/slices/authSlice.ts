@@ -17,10 +17,6 @@ import { deleteCsrf, deleteUser, persistCsrf, readCsrf } from '@app/services/loc
 import { getUserClaims } from '@app/api/http.api';
 import { UserDetails } from '@app/domain/UserModel';
 
-// export interface AuthSlice {
-//   token: string | null;
-// }
-
 export interface AuthSlice {
   csrf: string | null;
 }
@@ -44,6 +40,8 @@ export const handleAuth = createAsyncThunk('auth/handleAuth', async (query: URLS
 
 export const getClaims = createAsyncThunk('auth/getClaims', async (payload, { dispatch }) =>
   getUserClaims(readCsrf()).then(async (userDetails: UserDetails) => {
+    // TODO: handle csrf expiry in auth-client
+    // (userDetails.exp < new Date().getTime())
     dispatch(setUser(userDetails));
     return userDetails;
   }),

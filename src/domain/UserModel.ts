@@ -47,4 +47,5 @@ export interface UserDetails {
       roles?: string[];
     };
   };
+  exp: number;
 }

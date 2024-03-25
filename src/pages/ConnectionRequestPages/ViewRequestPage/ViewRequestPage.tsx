@@ -91,7 +91,11 @@ const ViewRequestPage: React.FC = () => {
           ]);
         case RequestStatus.APPROVED:
           return React.Children.toArray([
-            <S.ActionButton type="primary" key="source" onClick={() => navigate('/database-sources/metadata/' + id)}>
+            <S.ActionButton
+              type="primary"
+              key="source"
+              onClick={() => navigate(`/database-sources/metadata/${request.projectInfo.id}`)}
+            >
               {t('connectionRequests.viewSource')}
             </S.ActionButton>,
             <S.ActionButton type="default" key="back" onClick={handleBackClick}>
@@ -133,6 +137,7 @@ const ViewRequestPage: React.FC = () => {
             </S.InfoHeader>
             <S.InfoArea>
               <InfoSectionHeader text={t('connectionRequests.details.projectInfo.title')} />
+              <InfoItem label={t('connectionRequests.details.projectInfo.id')} text={request.projectInfo.customId} />
               {request.projectInfo.duration.length > 0 && (
                 <InfoItem
                   label={t('connectionRequests.details.projectInfo.duration')}

@@ -6,7 +6,7 @@ export const CONNECTION_REQUEST_API_URL = '/hub/connection-request/';
 
 export const INITIAL_REQUEST_VALUES: RequestDetails = {
   projectInfo: {
-    id: '',
+    customId: '',
     name: '',
     duration: [],
     lead: '',

@@ -114,7 +114,7 @@ export const RequestTable: React.FC = () => {
             render: (text: string, record: { id: string }) => {
               return (
                 <BaseSpace>
-                  <BaseButton type="primary" onClick={() => navigate('/connection-requests/view/' + record.id)}>
+                  <BaseButton type="primary" onClick={() => navigate(`/connection-requests/view/${record.id}`)}>
                     {t('tables.view')}
                   </BaseButton>
                 </BaseSpace>
@@ -133,7 +133,7 @@ export const RequestTable: React.FC = () => {
             ) => {
               return (
                 <BaseSpace>
-                  <BaseButton type="primary" onClick={() => navigate('/connection-requests/view/' + record.id)}>
+                  <BaseButton type="primary" onClick={() => navigate(`/connection-requests/view/${record.id}`)}>
                     {t('tables.view')}
                   </BaseButton>
                   {record.statusTag.priority == Priority.LOW && (
@@ -154,7 +154,7 @@ export const RequestTable: React.FC = () => {
                     <>
                       <BaseButton
                         type="primary"
-                        onClick={() => navigate('/connection-requests/edit/' + record.id + '/project-info')}
+                        onClick={() => navigate(`/connection-requests/edit/${record.id}/project-info`)}
                       >
                         {t('common.edit')}
                       </BaseButton>

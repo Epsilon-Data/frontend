@@ -54,6 +54,7 @@ const EditRequestPage: React.FC = () => {
         notificationController.success({
           message: t('connectionRequests.edit.successNotify'),
         });
+        navigate('/connection-requests');
       })
       .catch(() => {
         notificationController.error({
@@ -64,13 +65,13 @@ const EditRequestPage: React.FC = () => {
 
   return (
     <>
-      <PageTitle>{t('connectionRequests.edit.title')}</PageTitle>
+      <PageTitle>{t('connectionRequests.edit.title', { id: request.projectInfo.customId })}</PageTitle>
       <S.CardWrapper>
         <BaseRow gutter={[30, 30]}>
           <BaseCol xs={7} md={7} xl={7}>
             <S.NavCard
               id="edit-request"
-              title={t('connectionRequests.edit.title', { id: id })}
+              title={t('connectionRequests.edit.title', { id: request.projectInfo.customId })}
               padding="1.25rem 1.25rem 2rem"
             >
               <EditNav ownData={isOwnData} />

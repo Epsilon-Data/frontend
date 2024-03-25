@@ -21,7 +21,7 @@ export const RequestProjectInfo: React.FC<{
 }> = ({ formValue, setFormValue }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const initialValues: any = {
-    id: formValue.projectInfo.id,
+    customId: formValue.projectInfo.customId,
     name: formValue.projectInfo.name || `${config.isDev ? 'Test Project' : ''}`,
     duration: formValue.projectInfo.duration.map((date: Date) => dayjs(date)),
     lead: formValue.projectInfo.lead || `${config.isDev ? 'Test Leader' : ''}`,
@@ -48,7 +48,7 @@ export const RequestProjectInfo: React.FC<{
       values.duration = values.duration.map((appDate: AppDate) => dayjs(appDate).toDate());
       values.members = members;
 
-      const validId = await isValidProjectId(values.id);
+      const validId = await isValidProjectId(values.customId);
 
       if (validId) {
         const updatedRequest = {
@@ -97,7 +97,7 @@ export const RequestProjectInfo: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringInputItem name="id" label={t('connectionRequests.details.projectInfo.id')} required />
+          <StringInputItem name="customId" label={t('connectionRequests.details.projectInfo.id')} required />
         </BaseCol>
 
         <BaseCol span={24}>

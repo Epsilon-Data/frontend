@@ -2,7 +2,6 @@ import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import * as S from './FormModal.styles';
-import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
 
 export const FormModal: React.FC<{
@@ -36,9 +35,7 @@ export const FormModal: React.FC<{
         </BaseButton>
       }
     >
-      <BaseForm>
-        <S.GroupCheckbox options={groupOptions} onChange={handleCheckboxChange} />
-      </BaseForm>
+      <S.GroupCheckbox options={groupOptions} onChange={handleCheckboxChange} />
     </S.Modal>
   );
 };

@@ -12,8 +12,8 @@ import { defineColorByPriority } from '@app/utils/utils';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseProgress } from '@app/components/common/BaseProgress/BaseProgress';
 import { useNavigate } from 'react-router-dom';
-import { io } from 'socket.io-client';
-import config from '@app/config/config';
+import WebSocketService from '@app/services/webSocket.service';
+
 const { Meta } = Card;
 const initialPagination: Pagination = {
   current: 1,
@@ -46,18 +46,10 @@ export const CardList: React.FC = () => {
 
   useEffect(() => {
     fetch(initialPagination);
-    const socket = io(config.apiPrefix + '/hub');
-    socket.on('connect', () => {
-      console.log('socket connected');
-    });
 
-    socket.on('connect_error', (error: Error) => {
-      console.error(error);
-      socket.close();
-    });
-    socket.on('updateStatus', (result) => {
-      setCrawlingStatuses(result);
-      console.log(result);
+    WebSocketService.listenToDatabaseStatuses((data) => {
+      setCrawlingStatuses(data.results);
+      console.log(data);
     });
   }, [fetch]);
 

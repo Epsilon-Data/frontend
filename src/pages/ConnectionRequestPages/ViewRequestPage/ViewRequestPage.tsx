@@ -33,14 +33,16 @@ const ViewRequestPage: React.FC = () => {
       getRequestDetails(id).then((res) => {
         if (isMounted.current) {
           setRequest(res);
-          form.setFieldsValue({ info: res.revisionInfo });
           if (res.revisionInfo) {
             setRevisionInfo(res.revisionInfo);
+            if (admin) {
+              form.setFieldsValue({ info: res.revisionInfo });
+            }
           }
         }
       });
     },
-    [isMounted, form],
+    [isMounted, admin, form],
   );
 
   useEffect(() => {
@@ -219,23 +221,21 @@ const ViewRequestPage: React.FC = () => {
                 <S.RevisionContent>{revisionInfo}</S.RevisionContent>
               </S.RevisionCard>
             )}
-            {admin && request.status != RequestStatus.APPROVED && (
-              <S.AddInfoForm form={form} onFinish={onFinish}>
-                <div style={{ marginBottom: '1rem' }}>
-                  <S.Instructions>{t('connectionRequests.revision.instruction')}</S.Instructions>
-                </div>
-                <StringTextAreaItem
-                  name="info"
-                  placeholder={t('connectionRequests.revision.placeholder')}
-                  onChange={(e) => setRevisionDefined(e.target.value.length > 0)}
-                />
-                <S.AddInfoForm.Item style={{ marginTop: '1rem' }}>
-                  <S.AddInfoButton type="default" htmlType="submit" disabled={!revisionDefined} loading={submitLoading}>
-                    {t('connectionRequests.revision.title')}
-                  </S.AddInfoButton>
-                </S.AddInfoForm.Item>
-              </S.AddInfoForm>
-            )}
+            <S.AddInfoForm hidden={!admin || request.status == RequestStatus.APPROVED} form={form} onFinish={onFinish}>
+              <div style={{ marginBottom: '1rem' }}>
+                <S.Instructions>{t('connectionRequests.revision.instruction')}</S.Instructions>
+              </div>
+              <StringTextAreaItem
+                name="info"
+                placeholder={t('connectionRequests.revision.placeholder')}
+                onChange={(e) => setRevisionDefined(e.target.value.length > 0)}
+              />
+              <S.AddInfoForm.Item style={{ marginTop: '1rem' }}>
+                <S.AddInfoButton type="default" htmlType="submit" disabled={!revisionDefined} loading={submitLoading}>
+                  {t('connectionRequests.revision.title')}
+                </S.AddInfoButton>
+              </S.AddInfoForm.Item>
+            </S.AddInfoForm>
           </S.InfoWrapper>
         </S.Card>
       </S.ViewWrapper>

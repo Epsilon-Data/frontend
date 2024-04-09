@@ -26,7 +26,7 @@ const ViewRequestPage: React.FC = () => {
   const [submitLoading, setSubmitLoading] = React.useState(false);
   const [form] = S.AddInfoForm.useForm();
   const admin = useAppSelector((state) => state.user.user?.roles.includes('admin') || false);
-  const [revisionInfo, setRevisionInfo] = useState('');
+  const [revisionInfo, setRevisionInfo] = useState(t('connectionRequests.details.revisionInfo.default'));
 
   const fetch = useCallback(
     (id: string | undefined) => {

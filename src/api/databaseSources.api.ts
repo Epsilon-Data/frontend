@@ -20,6 +20,7 @@ export interface SourceListItem {
   projectId: number;
   projectCustomId: string;
   projectName: string;
+  dbId: number;
   databaseName: string;
   connectDate: Date;
   sourceStatus: Tag;

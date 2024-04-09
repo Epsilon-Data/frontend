@@ -46,12 +46,14 @@ export const CardList: React.FC = () => {
 
   useEffect(() => {
     fetch(initialPagination);
+  }, [fetch]);
 
+  useEffect(() => {
     WebSocketService.listenToDatabaseStatuses((data) => {
       setCrawlingStatuses(data.results);
       console.log(data);
     });
-  }, [fetch]);
+  }, []);
 
   return (
     <BaseList
@@ -85,8 +87,7 @@ export const CardList: React.FC = () => {
                 <BaseProgress
                   percent={
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    crawlingStatuses.find((item: { name: any; databaseName: any }) => item.name === item.databaseName)
-                      ?.status_percent
+                    crawlingStatuses.find((status: { id: any }) => status.id === item.dbId)?.status_percent
                   }
                   status="active"
                   strokeColor={'var(--collapse-background-color)'}
@@ -94,8 +95,7 @@ export const CardList: React.FC = () => {
                 <p>
                   {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    crawlingStatuses.find((item: { name: any; databaseName: any }) => item.name === item.databaseName)
-                      ?.status_msg
+                    crawlingStatuses.find((status: { id: any }) => status.id === item.dbId)?.status_msg
                   }
                 </p>
               </>

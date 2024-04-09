@@ -716,7 +716,8 @@
         "placeholder": "Additional notes related to request"
       },
       "revisionInfo": {
-        "title": "Information On Revision Required"
+        "title": "Information On Revision Required",
+        "default": "Database connection failed. Please edit the database information."
       },
       "openAccessForm": {
         "title": "Data Open Access Form",

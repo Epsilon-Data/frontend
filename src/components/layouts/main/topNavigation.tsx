@@ -8,7 +8,7 @@ export const topNavigation: TopNavigationItem[] = [
   { key: 'home', label: 'topNavigation.home', url: '/' },
   { key: 'connect', label: 'topNavigation.connect', url: '/connection-requests' },
   { key: 'database', label: 'topNavigation.database', url: '/database-sources' },
-  { key: 'browse', label: 'topNavigation.browse' },
+  { key: 'browse', label: 'topNavigation.browse', url: '/browse' },
 ];
 
 export function findUrlByKey(key: string): string {

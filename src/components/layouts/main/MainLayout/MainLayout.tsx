@@ -13,6 +13,8 @@ import { getProjectId } from '@app/api/databaseSources.api';
 import { BiSolidUserCircle } from 'react-icons/bi';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 
+const sidebarDisabled = ['/database-sources', '/browse'];
+
 const MainLayout: React.FC = () => {
   const [isTwoColumnsLayout, setIsTwoColumnsLayout] = useState(true);
   const { isDesktop } = useResponsive();
@@ -28,21 +30,25 @@ const MainLayout: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
 
   const fetch = useCallback(() => {
-    if (id) {
+    if (id && location.pathname.includes('/database-sources')) {
       getProjectId(id).then((res) => {
         setProjectId(res);
       });
     }
-  }, [id]);
+  }, [id, location.pathname]);
 
   useEffect(() => {
     fetch();
     setIsTwoColumnsLayout([DASHBOARD_PATH].includes(location.pathname) && isDesktop);
     setSelectedKey(findKeyByUrl(location.pathname));
-    if (location.pathname == '/database-sources') {
+    if (sidebarDisabled.includes(location.pathname)) {
       setIsHidden(true);
     } else {
-      setIsHidden(false);
+      if (location.pathname.includes('/browse/')) {
+        setIsHidden(true);
+      } else {
+        setIsHidden(false);
+      }
     }
 
     if (selectedKey == 'database' && id) {

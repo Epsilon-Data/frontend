@@ -893,6 +893,61 @@
     }
     
   },
+  "browse": {
+    "title": "Browse Datasets",
+    "topSearch": {
+      "placeholder": "Search...",
+      "searchIn": "Search in: ",
+      "category": "Category: ",
+      "fields": {
+        "all": "All Fields",
+        "projectTitle": "Project Title",
+        "keywords": "Keywords",
+        "organisation": "Organisation(s)"
+      },
+      "categoryOptions": {
+        "all": "All Categories",
+        "nutrition": "Nutrition",
+        "biomedical": "Biomedical",
+        "healthScience": "Health Science"
+      }
+    },
+    "explore": "Explore",
+    "seeAll": "See All",
+    "recentlyAdded": "Recently Added",
+    "info": {
+      "requestAccess": "Request Data Access",
+      "createdDate": "Created Date: ",
+      "aboutDataset": "About Dataset",
+      "description": "Description",
+      "sampleDescription": "Dataset description. Sample text here.",
+      "collectionDuration": "Collection Duration",
+      "participantsNum": "Participants Number",
+      "tags": "Tags",
+      "visualisations": "Visualisations",
+      "datasetArchetype": "Dataset Archetype",
+      "noArchetype": "No archetype provided.",
+      "relatedProject": "Related Project",
+      "details": {
+        "title": "Details",
+        "altTitle": "Project Details",
+        "duration":"Project Duration",
+        "lead": "Project Lead",
+        "members": "Project Team Members/Affiliations",
+        "university": "University",
+        "faculty": "Faculty",
+        "ethics": "Ethics Approval ID"
+      }
+    },
+    "search": {
+      "sidebarTitle": "Current Search",
+      "results": "{{num}} matches found. Showing results from {{start}} to {{end}}.",
+      "term": "Searched Term: ",
+      "keywords": "Keywords: ",
+      "allDatasets": "Viewing all datasets.",
+      "selectAll": "Select all keywords"
+    }
+  },
   "topNavigation" : {
     "home": "Home",
     "connect": "Connect",

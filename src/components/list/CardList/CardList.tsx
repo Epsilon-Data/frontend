@@ -17,7 +17,7 @@ import WebSocketService from '@app/services/webSocket.service';
 const { Meta } = Card;
 const initialPagination: Pagination = {
   current: 1,
-  pageSize: 5,
+  pageSize: 6,
 };
 
 export const CardList: React.FC = () => {
@@ -55,10 +55,14 @@ export const CardList: React.FC = () => {
     });
   }, []);
 
+  const handlePaginationChange = (page: number) => {
+    setListData((listData) => ({ ...listData, pagination: { ...listData.pagination, current: page } }));
+  };
+
   return (
     <BaseList
       grid={{ gutter: 16, column: 2 }}
-      pagination={listData.pagination}
+      pagination={{ ...listData.pagination, onChange: handlePaginationChange }}
       loading={listData.loading}
       dataSource={listData.data}
       renderItem={(item) => (

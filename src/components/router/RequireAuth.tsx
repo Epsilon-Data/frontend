@@ -13,7 +13,7 @@ const RequireAuth: React.FC<WithChildrenProps> = ({ children }) => {
   // get credentials and generate CSRF
   useEffect(() => {
     const query = new URLSearchParams(search);
-    if (query && query.size) {
+    if (query && query.size && !query.get('q')) {
       dispatch(handleAuth(query))
         .unwrap()
         .then((res) => {

@@ -110,7 +110,7 @@ const BrowseDatasetPage: React.FC = () => {
               <S.SectionHeader>{t('browse.explore')}</S.SectionHeader>
             </BaseCol>
             <BaseCol span={2} style={{ marginTop: '0.1rem' }}>
-              <S.AllLink>{t('browse.seeAll')}</S.AllLink>
+              <S.AllLink onClick={() => navigate('search')}>{t('browse.seeAll')}</S.AllLink>
             </BaseCol>
           </BaseRow>
 
@@ -121,7 +121,7 @@ const BrowseDatasetPage: React.FC = () => {
               <BaseList.Item>
                 <S.CardItem
                   hoverable
-                  cover={<img src={sample} alt="Sample Image" />}
+                  cover={<img src={item.cover ?? sample} style={{ height: '15rem' }} alt="project-cover" />}
                   onClick={() => navigate(`summary/${item.id}`)}
                 >
                   <Meta
@@ -141,7 +141,7 @@ const BrowseDatasetPage: React.FC = () => {
               <BaseList.Item>
                 <S.CardItem
                   hoverable
-                  cover={<img src={sample} alt="Sample Image" />}
+                  cover={<img src={item.cover ?? sample} style={{ height: '15rem' }} alt="project-cover" />}
                   onClick={() => navigate(`summary/${item.id}`)}
                 >
                   <Meta

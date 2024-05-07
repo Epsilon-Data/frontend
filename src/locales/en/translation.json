@@ -890,8 +890,28 @@
         "dataType" : "Data Type",
         "isNullable": "Is Nullable"
       }
+    },
+    "otherSettings": {
+      "title": "Other Settings",
+      "cover": "Project Cover Photo",
+      "save": "Save",
+      "deleteSuccess": "Cover photo deleted successfully.",
+      "deleteFail": "Failed to delete cover photo. Please try again.",
+      "addTableau": "Add Tableau Visualisations",
+      "submitVis": "Submit Visualisations",
+      "submitSuccess": "Visualisations applied to project information.",
+      "submitFail": "Failed to save visualisations. Please try again.",
+      "urlInvalid": "Invalid Tableau URL.",
+      "visTitle": "Visualisation Title",
+      "visUrl": "Tableau URL",
+      "vis": "Visualisation",
+      "missingTitle": "Missing visualisation title.",
+      "missingUrl": "Missing Tableau URL.",
+      "upload": "Upload Cover Photo",
+      "uploadInfo": "Only JPG, JPEG files are allowed.",
+      "uploadSuccess": "Cover photo uploaded successfully.",
+      "uploadFail": "Failed to upload cover photo. Please try again."
     }
-    
   },
   "browse": {
     "title": "Browse Datasets",

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './DatasetInfoPage.styles';
@@ -29,12 +29,12 @@ declare global {
 const { tableau } = window;
 
 const DatasetSummaryPage: React.FC = () => {
-  const ref1 = useRef(null);
-  const ref2 = useRef(null);
   const { id } = useParams();
   const { t } = useTranslation();
   const { isMounted } = useMounted();
+  const [visList, setVisList] = useState<{ title: string; url: string }[]>([]);
   const [projectDetails, setProjectDetails] = useState<ProjectInfo>(INITIAL_DETAIL_VALUES);
+
   const nodeTypes = useMemo(
     () => ({ object: PermissionNode, category: PermissionNode, subcategory: PermissionNode }),
     [],
@@ -46,28 +46,31 @@ const DatasetSummaryPage: React.FC = () => {
     { label: t('browse.info.description'), children: projectDetails?.description, key: 'description' },
   ];
 
-  const initViz = () => {
-    const vizURL = [
-      'https://public.tableau.com/views/RegionalSampleWorkbook/College',
-      'https://public.tableau.com/views/RegionalSampleWorkbook/Obesity',
-    ];
+  useEffect(() => {
+    getProjectDetails(id).then((res) => {
+      if (isMounted.current) {
+        setProjectDetails(res);
+        setVisList(res.visualisations);
+      }
+    });
+
+    const urls = visList.map((item) => item.url);
 
     const options = {
       hideTabs: true,
     };
 
-    new tableau.Viz(ref1.current, vizURL[0], options);
-    new tableau.Viz(ref2.current, vizURL[1], options);
-  };
-
-  useEffect(() => {
-    initViz();
-    getProjectDetails(id).then((res) => {
-      if (isMounted.current) {
-        setProjectDetails(res);
+    for (let i = 0; i < urls.length; i++) {
+      const container = document.getElementById(`vis-${i}`);
+      const vizs = new tableau.VizManager.getVizs();
+      if (vizs.length > 0) {
+        for (let j = 0; j < vizs.length; j++) {
+          vizs[j].dispose();
+        }
       }
-    });
-  }, [isMounted, setProjectDetails, id]);
+      new tableau.Viz(container, urls[i], options);
+    }
+  }, [isMounted, setProjectDetails, id, visList]);
 
   return (
     <>
@@ -126,13 +129,19 @@ const DatasetSummaryPage: React.FC = () => {
               </Flex>
             </div>
 
-            <InfoSectionHeader text={t('browse.info.visualisations')} />
-            <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-              <S.Text style={{ marginTop: '1rem' }}>{'Visualisation Title 1'}</S.Text>
-              <div ref={ref1} style={{ height: '20%' }}></div>
-              <S.Text style={{ marginTop: '1rem' }}>{'Visualisation Title 2'}</S.Text>
-              <div ref={ref2} style={{ height: '20%' }}></div>
-            </Space>
+            {visList.length > 0 && (
+              <>
+                <InfoSectionHeader text={t('browse.info.visualisations')} />
+                <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                  {visList.map((vis, index) => (
+                    <div key={`vis-${index}`}>
+                      <S.Text>{vis.title}</S.Text>
+                      <div id={`vis-${index}`} style={{ height: '20%' }}></div>
+                    </div>
+                  ))}
+                </Space>
+              </>
+            )}
           </BaseRow>
           <S.HorizontalDivider />
           <BaseRow style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column' }}>

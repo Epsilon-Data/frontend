@@ -14,7 +14,8 @@ export interface ProjectSummaryInfo {
   organisation: string;
   createdDate: Date;
   description?: string;
-  keywords: string[];
+  keywords?: string[];
+  cover?: string | null;
 }
 
 export interface ProjectInfo {
@@ -31,6 +32,7 @@ export interface ProjectInfo {
   dataKeywords: string[];
   dataParticipantsNum: number;
   archetype: Template | null;
+  visualisations: { title: string; url: string }[];
 }
 
 export const getProjects = async (isSearch: boolean): Promise<ProjectSummaryInfo[]> => {
@@ -41,6 +43,15 @@ export const getProjects = async (isSearch: boolean): Promise<ProjectSummaryInfo
       isSearch: isSearch,
     },
   });
+
+  if (!isSearch) {
+    for (const item of response.data) {
+      if (item.cover) {
+        const content = Uint8Array.from(item.cover.data);
+        item.cover = URL.createObjectURL(new Blob([content.buffer], { type: 'image/jpg' }));
+      }
+    }
+  }
   return response.data;
 };
 
@@ -52,6 +63,11 @@ export const getProjectDetails = async (projectId: string | undefined): Promise<
       projectId: projectId,
     },
   });
+
+  response.data.visualisations = JSON.parse(response.data.visualisations);
+  if (!response.data.visualisations) {
+    response.data.visualisations = [];
+  }
 
   return response.data;
 };

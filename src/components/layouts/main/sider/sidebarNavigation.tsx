@@ -22,6 +22,7 @@ const sourceNavigation: SidebarNavigationItem[] = [
   { title: 'databaseSources.metadata.title', key: 'metadata' },
   { title: 'databaseSources.describeDataset.title', key: 'describe-dataset' },
   { title: 'databaseSources.accessPermissions.title', key: 'access-permissions' },
+  { title: 'databaseSources.otherSettings.title', key: 'other-settings' },
 ];
 
 // const browseNavigation: SidebarNavigationItem[] = [];

@@ -42,6 +42,9 @@ const CreateTemplatePage = React.lazy(
 const AccessPermissionsPage = React.lazy(
   () => import('@app/pages/DatabaseSourcePages/AccessPermissionsPage/AccessPermissionsPage'),
 );
+const OtherSettingsPage = React.lazy(
+  () => import('@app/pages/DatabaseSourcePages/OtherSettingsPage/OtherSettingsPage'),
+);
 
 const BrowseDatasetPage = React.lazy(() => import('@app/pages/BrowseDatasetPages/BrowseDatasetPage'));
 const DatasetInfoPage = React.lazy(() => import('@app/pages/BrowseDatasetPages/DatasetInfoPage/DatasetInfoPage'));
@@ -64,6 +67,7 @@ const TableInfo = withLoading(TableInfoPage);
 const DescribeDataset = withLoading(DescribeDatasetPage);
 const CreateTemplate = withLoading(CreateTemplatePage);
 const AccessPermissions = withLoading(AccessPermissionsPage);
+const OtherSettings = withLoading(OtherSettingsPage);
 
 const BrowseDatasets = withLoading(BrowseDatasetPage);
 const DatasetInfo = withLoading(DatasetInfoPage);
@@ -97,6 +101,7 @@ export const AppRouter: React.FC = () => {
           <Route path="database-sources/describe-dataset/:id" element={<DescribeDataset />} />
           <Route path="database-sources/describe-dataset/:id/create" element={<CreateTemplate />} />
           <Route path="database-sources/access-permissions/:id" element={<AccessPermissions />} />
+          <Route path="database-sources/other-settings/:id" element={<OtherSettings />} />
           <Route path="browse" element={<BrowseDatasets />} />
           <Route path="browse/summary/:id" element={<DatasetInfo />} />
           <Route path="browse/search" element={<SearchDatasets />} />

@@ -144,7 +144,7 @@
     "@types/react": "^18.0.28",
     "react-error-overlay": "6.0.9"
   },
-  "packageManager": "pnpm@9.0.3",
+  "packageManager": "pnpm@9.0.6",
   "keywords": [
     "lightence",
     "admin",

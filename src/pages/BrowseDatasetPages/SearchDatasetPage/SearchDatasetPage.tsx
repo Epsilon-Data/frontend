@@ -24,7 +24,7 @@ function filterProjectsByValue(projects: ProjectSummaryInfo[], value: string, fi
       return (
         item.name.toLowerCase().includes(value.toLowerCase()) ||
         item.organisation.toLowerCase().includes(value.toLowerCase()) ||
-        item.keywords.some((keyword) => keyword.toLowerCase().includes(value.toLowerCase()))
+        item.keywords?.some((keyword) => keyword.toLowerCase().includes(value.toLowerCase()))
       );
     } else {
       if (field === 'name') {
@@ -32,7 +32,7 @@ function filterProjectsByValue(projects: ProjectSummaryInfo[], value: string, fi
       } else if (field === 'organisation') {
         return item.organisation.toLowerCase().includes(value.toLowerCase());
       } else if (field === 'keywords') {
-        return item.keywords.some((keyword) => keyword.toLowerCase().includes(value.toLowerCase()));
+        return item.keywords?.some((keyword) => keyword.toLowerCase().includes(value.toLowerCase()));
       }
     }
   });
@@ -41,7 +41,7 @@ function filterProjectsByValue(projects: ProjectSummaryInfo[], value: string, fi
 function filterKeywords(projects: ProjectSummaryInfo[]): { keyword: string; amount: number }[] {
   const keywordCounts: { keyword: string; amount: number }[] = [];
   projects.forEach((project) => {
-    project.keywords.forEach((keyword) => {
+    project.keywords?.forEach((keyword) => {
       const existingKeyword = keywordCounts.find((k) => k.keyword === keyword);
       if (existingKeyword) {
         existingKeyword.amount++;
@@ -93,7 +93,7 @@ const SearchDatasetPage: React.FC = () => {
       ? [...selectedKeywords, keyword]
       : selectedKeywords.filter((t) => t !== keyword);
     setSelectedKeywords(nextSelectedKeywords);
-    const data = queryList.filter((item) => nextSelectedKeywords.some((keyword) => item.keywords.includes(keyword)));
+    const data = queryList.filter((item) => nextSelectedKeywords.some((keyword) => item.keywords?.includes(keyword)));
     setListData({ ...listData, data });
   };
 

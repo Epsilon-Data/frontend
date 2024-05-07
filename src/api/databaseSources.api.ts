@@ -1,9 +1,10 @@
-import { OverallDatabaseInfoValues, Template, TemplatePermissions } from '@app/interfaces/interfaces';
+import { OverallDatabaseInfoValues, ProjectSettings, Template, TemplatePermissions } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 import { SourceStatus } from '@app/constants/enums/sourceStatus';
 import { DATE_FORMAT, DATABASE_SOURCE_API_URL } from '@app/constants/databaseSource';
 import { format } from 'date-fns';
 import { httpClient, getCsrfHeader } from './http.api';
+import { AxiosProgressEvent } from 'axios';
 
 export interface Tag {
   value: string;
@@ -203,5 +204,85 @@ export const addAccessPermissions = async (
       headers: { [csrfHeaderName]: `${csrf}` },
     },
   );
+  return response.data;
+};
+
+export const getProjectSettings = async (projectId: string | undefined): Promise<ProjectSettings> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'settings', {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      projectId: projectId,
+    },
+  });
+
+  if (response.data.cover) {
+    const content = Uint8Array.from(response.data.cover.data);
+    const imageURL = URL.createObjectURL(new Blob([content.buffer], { type: 'image/jpg' }));
+    response.data.cover = [
+      {
+        uid: '1',
+        name: 'cover.jpg',
+        status: 'done',
+        url: imageURL,
+        thumbUrl: imageURL,
+      },
+    ];
+  } else {
+    response.data.cover = [];
+  }
+
+  if (response.data.visualisations) {
+    response.data.visualisations = JSON.parse(response.data.visualisations);
+    response.data.visualisations = response.data.visualisations.map((item: { url: string }) => ({
+      ...item,
+      url: item.url.replace('https://', ''),
+    }));
+  } else {
+    response.data.visualisations = [];
+  }
+
+  return response.data;
+};
+
+export const uploadProjectCover = async (
+  projectId: string | undefined,
+  file: File,
+  onUploadProgress: (progressEvent: AxiosProgressEvent) => void,
+): Promise<Buffer> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await httpClient.post(DATABASE_SOURCE_API_URL + 'upload-cover', formData, {
+    headers: { [csrfHeaderName]: `${csrf}`, 'Content-Type': 'multipart/form-data' },
+    params: {
+      projectId: projectId,
+    },
+    onUploadProgress: onUploadProgress,
+  });
+  return response.data;
+};
+
+export const uploadVis = async (projectId: string | undefined, visList: string): Promise<string> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post(
+    DATABASE_SOURCE_API_URL + 'upload-vis',
+    { projectId: projectId, vis: visList },
+    {
+      headers: { [csrfHeaderName]: `${csrf}` },
+    },
+  );
+  return response.data;
+};
+
+export const deleteCover = async (projectId: string | undefined): Promise<string> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post(DATABASE_SOURCE_API_URL + 'delete-cover', {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      projectId: projectId,
+    },
+  });
+
   return response.data;
 };

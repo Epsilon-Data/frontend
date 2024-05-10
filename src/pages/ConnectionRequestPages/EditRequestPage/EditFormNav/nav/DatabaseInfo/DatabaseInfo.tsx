@@ -71,7 +71,14 @@ export const DatabaseInfo: React.FC<{
     if (isConnected) {
       const updatedRequest = {
         ...formValue,
-        databaseInfo: allValues,
+        databaseInfo: {
+          name: allValues.name,
+          type: allValues.type,
+          host: allValues.host,
+          port: allValues.port,
+          username: allValues.username,
+          password: allValues.password,
+        },
       };
       setFormValue(updatedRequest);
     }

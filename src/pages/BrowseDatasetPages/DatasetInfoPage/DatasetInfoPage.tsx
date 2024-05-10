@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './DatasetInfoPage.styles';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { CgEnter } from 'react-icons/cg';
@@ -32,6 +32,7 @@ const DatasetSummaryPage: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const { isMounted } = useMounted();
+  const navigate = useNavigate();
   const [visList, setVisList] = useState<{ title: string; url: string }[]>([]);
   const [projectDetails, setProjectDetails] = useState<ProjectInfo>(INITIAL_DETAIL_VALUES);
 
@@ -85,7 +86,12 @@ const DatasetSummaryPage: React.FC = () => {
               </S.Text>
             </BaseCol>
             <BaseCol span={5} offset={14}>
-              <S.RequestButton type="primary" key="request" icon={<CgEnter />}>
+              <S.RequestButton
+                type="primary"
+                key="request"
+                icon={<CgEnter />}
+                onClick={() => navigate(`/browse/access/${id}/dataset`)}
+              >
                 {t('browse.info.requestAccess')}
               </S.RequestButton>
             </BaseCol>

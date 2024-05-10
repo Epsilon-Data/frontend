@@ -1,0 +1,97 @@
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
+import * as S from './RequestAccessPage.styles';
+import { useNavigate, useParams } from 'react-router-dom';
+import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
+import { useMounted } from '@app/hooks/useMounted';
+import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
+import { RequestNav } from './RequestNav/RequestNav';
+import { RequestFormNav } from './RequestFormNav/RequestFormNav';
+import { notificationController } from '@app/controllers/notificationController';
+import { AccessDetails } from '@app/interfaces/interfaces';
+import { getProjectSummary, requestAccess } from '@app/api/browseDatasets.api';
+import { INITIAL_ACCESS_VALUES } from '@app/constants/browseDatasets';
+
+const RequestAccessPage: React.FC = () => {
+  const { id, page } = useParams();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { isMounted } = useMounted();
+  const [isLoading, setLoading] = useState(false);
+  const [details, setDetails] = useState<AccessDetails>(INITIAL_ACCESS_VALUES);
+
+  const fetch = useCallback(
+    (id: string | undefined) => {
+      setLoading(true);
+      getProjectSummary(id).then((res) => {
+        if (isMounted.current) {
+          if (id) {
+            setDetails({
+              ...INITIAL_ACCESS_VALUES,
+              id: id,
+              customId: res.id,
+              name: res.name,
+            });
+          }
+        }
+      });
+      setLoading(false);
+    },
+    [isMounted],
+  );
+
+  useEffect(() => {
+    fetch(id);
+  }, [fetch, id]);
+
+  const handleAccess = () => {
+    requestAccess(details)
+      .then(() => {
+        notificationController.success({
+          message: t('browse.access.submitSuccess'),
+        });
+        navigate('/connection-requests');
+      })
+      .catch(() => {
+        notificationController.error({
+          message: t('browse.access.submitFail'),
+        });
+      });
+  };
+
+  return (
+    <>
+      <PageTitle>{t('browse.access.title')}</PageTitle>
+      <S.CardWrapper>
+        <BaseRow gutter={[30, 30]}>
+          <BaseCol xs={7} md={7} xl={7}>
+            <S.NavCard id="request-access" title={t('browse.access.title')} padding="1.25rem 1.25rem 2rem">
+              <RequestNav />
+            </S.NavCard>
+          </BaseCol>
+
+          {details.name && (
+            <BaseCol xs={17} md={17} xl={17}>
+              <S.FormCard loading={isLoading}>
+                <RequestFormNav menu={page || ''} values={details} setValues={setDetails} />
+              </S.FormCard>
+            </BaseCol>
+          )}
+        </BaseRow>
+        <BaseRow>
+          <S.ButtonsWrapper>
+            <S.RequestAccessButton type="primary" key="edit" onClick={() => handleAccess()}>
+              {t('browse.access.submit')}
+            </S.RequestAccessButton>
+            <S.CancelButton type="default" key="back" onClick={() => navigate(-1)}>
+              {t('common.cancel')}
+            </S.CancelButton>
+          </S.ButtonsWrapper>
+        </BaseRow>
+      </S.CardWrapper>
+    </>
+  );
+};
+
+export default RequestAccessPage;

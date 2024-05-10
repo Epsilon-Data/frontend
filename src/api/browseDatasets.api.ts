@@ -1,6 +1,6 @@
 import { BROWSE_DATASET_API_URL } from '@app/constants/browseDatasets';
 import { getCsrfHeader, httpClient } from './http.api';
-import { Template } from '@app/interfaces/interfaces';
+import { AccessDetails, Template } from '@app/interfaces/interfaces';
 
 export interface Pagination {
   current: number;
@@ -69,5 +69,24 @@ export const getProjectDetails = async (projectId: string | undefined): Promise<
     response.data.visualisations = [];
   }
 
+  return response.data;
+};
+
+export const getProjectSummary = async (projectId: string | undefined): Promise<ProjectSummaryInfo> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(BROWSE_DATASET_API_URL + 'project-summary', {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      projectId: projectId,
+    },
+  });
+  return response.data;
+};
+
+export const requestAccess = async (data: AccessDetails): Promise<AccessDetails> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post(BROWSE_DATASET_API_URL + 'apply-request', data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
   return response.data;
 };

@@ -908,7 +908,7 @@
       "missingTitle": "Missing visualisation title.",
       "missingUrl": "Missing Tableau URL.",
       "upload": "Upload Cover Photo",
-      "uploadInfo": "Only JPG, JPEG files are allowed.",
+      "uploadInfo": "Only JPG, JPEG files less than 2MB are allowed.",
       "uploadSuccess": "Cover photo uploaded successfully.",
       "uploadFail": "Failed to upload cover photo. Please try again."
     }
@@ -966,6 +966,37 @@
       "keywords": "Keywords: ",
       "allDatasets": "Viewing all datasets.",
       "selectAll": "Select all keywords"
+    },
+    "access": {
+      "title": "Data Access Request",
+      "submit": "Submit Request",
+      "submitSuccess": "Request submitted successfully.",
+      "submitFail": "Failed to submit request. Please try again.",
+      "dataset": {
+        "title": "Request Dataset",
+        "id": "Project ID",
+        "name": "Project Name",
+        "accessPurpose": "Access Purpose"
+      },
+      "requestor": {
+        "title": "Requestor Details",
+        "name": "Requestor Name",
+        "email": "Email",
+        "orgName": "Organisation Name",
+        "position": "Position/Title"
+      },
+      "project": {
+        "title": "Project Details",
+        "name":"Project Name",
+        "duration": "Project Duration",
+        "description": "Project Description",
+        "members": "Project Team Members/Affiliations",
+        "addMembers": "Add Member/Affiliate"
+      },
+      "ethics": {
+        "title": "Ethics",
+        "id": "Ethics Approval ID"
+      }
     }
   },
   "topNavigation" : {

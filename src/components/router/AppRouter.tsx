@@ -48,6 +48,7 @@ const OtherSettingsPage = React.lazy(
 
 const BrowseDatasetPage = React.lazy(() => import('@app/pages/BrowseDatasetPages/BrowseDatasetPage'));
 const DatasetInfoPage = React.lazy(() => import('@app/pages/BrowseDatasetPages/DatasetInfoPage/DatasetInfoPage'));
+const RequestAccessPage = React.lazy(() => import('@app/pages/BrowseDatasetPages/RequestAccessPage/RequestAccessPage'));
 const SearchDatasetPage = React.lazy(() => import('@app/pages/BrowseDatasetPages/SearchDatasetPage/SearchDatasetPage'));
 
 export const DASHBOARD_PATH = '/';
@@ -71,6 +72,7 @@ const OtherSettings = withLoading(OtherSettingsPage);
 
 const BrowseDatasets = withLoading(BrowseDatasetPage);
 const DatasetInfo = withLoading(DatasetInfoPage);
+const RequestAccess = withLoading(RequestAccessPage);
 const SearchDatasets = withLoading(SearchDatasetPage);
 
 const AuthLayoutFallback = withLoading(AuthLayout);
@@ -104,6 +106,7 @@ export const AppRouter: React.FC = () => {
           <Route path="database-sources/other-settings/:id" element={<OtherSettings />} />
           <Route path="browse" element={<BrowseDatasets />} />
           <Route path="browse/summary/:id" element={<DatasetInfo />} />
+          <Route path="browse/access/:id/:page" element={<RequestAccess />} />
           <Route path="browse/search" element={<SearchDatasets />} />
         </Route>
         <Route path="/auth" element={<AuthLayoutFallback />}>

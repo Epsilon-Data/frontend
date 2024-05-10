@@ -277,7 +277,7 @@ export const uploadVis = async (projectId: string | undefined, visList: string):
 
 export const deleteCover = async (projectId: string | undefined): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(DATABASE_SOURCE_API_URL + 'delete-cover', {
+  const response = await httpClient.delete(DATABASE_SOURCE_API_URL + 'delete-cover', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       projectId: projectId,

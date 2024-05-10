@@ -34,11 +34,19 @@ export const ProjectInfo: React.FC<{
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFormValueChange = (changedValues: any, allValues: any) => {
-    allValues.duration = allValues.duration.map((appDate: AppDate) => dayjs(appDate).toDate());
-    allValues.members = members;
     const updatedRequest = {
       ...formValue,
-      projectInfo: allValues,
+      projectInfo: {
+        name: allValues.name,
+        customId: formValue.projectInfo.customId,
+        duration: allValues.duration.map((appDate: AppDate) => dayjs(appDate).toDate()),
+        lead: allValues.lead,
+        members: members,
+        university: allValues.university,
+        faculty: allValues.faculty,
+        ethicsId: allValues.ethicsId,
+        description: allValues.description,
+      },
     };
     setFormValue(updatedRequest);
   };

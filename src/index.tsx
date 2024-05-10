@@ -6,7 +6,6 @@ import './config/config';
 import { Provider } from 'react-redux';
 import { store } from '@app/store/store';
 import { createRoot } from 'react-dom/client';
-import React from 'react';
 
 interface EventTarget {
   state?: 'activated';

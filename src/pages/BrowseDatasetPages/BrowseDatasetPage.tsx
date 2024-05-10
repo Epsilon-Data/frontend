@@ -3,10 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './BrowseDatasetPage.styles';
 import { BaseRadio } from '@app/components/common/BaseRadio/BaseRadio';
-// import { Tag } from 'antd';
 import { BaseList } from '@app/components/common/BaseList/BaseList';
 import { Card } from 'antd';
-import sample from '@app/assets/sample/sample.jpeg';
+import defaultCover from '@app/assets/images/default-cover.png';
 import { useNavigate } from 'react-router-dom';
 import { SearchProps } from 'antd/es/input';
 import { RadioChangeEvent } from 'antd/lib';
@@ -121,7 +120,7 @@ const BrowseDatasetPage: React.FC = () => {
               <BaseList.Item>
                 <S.CardItem
                   hoverable
-                  cover={<img src={item.cover ?? sample} style={{ height: '15rem' }} alt="project-cover" />}
+                  cover={<img src={item.cover ?? defaultCover} style={{ height: '15rem' }} alt="project-cover" />}
                   onClick={() => navigate(`summary/${item.id}`)}
                 >
                   <Meta
@@ -141,7 +140,7 @@ const BrowseDatasetPage: React.FC = () => {
               <BaseList.Item>
                 <S.CardItem
                   hoverable
-                  cover={<img src={item.cover ?? sample} style={{ height: '15rem' }} alt="project-cover" />}
+                  cover={<img src={item.cover ?? defaultCover} style={{ height: '15rem' }} alt="project-cover" />}
                   onClick={() => navigate(`summary/${item.id}`)}
                 >
                   <Meta

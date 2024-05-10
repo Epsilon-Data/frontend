@@ -14,12 +14,11 @@ import { EditFormNav } from './EditFormNav/EditFormNav';
 import { notificationController } from '@app/controllers/notificationController';
 
 const EditRequestPage: React.FC = () => {
-  const initialRequestFormValues = INITIAL_REQUEST_VALUES;
   const { id, page } = useParams();
   const { t } = useTranslation();
   const { isMounted } = useMounted();
   const navigate = useNavigate();
-  const [request, setRequest] = useState<RequestDetails>(initialRequestFormValues);
+  const [request, setRequest] = useState<RequestDetails>(INITIAL_REQUEST_VALUES);
   const [isLoading, setLoading] = useState(false);
   const [isOwnData, setIsOwnData] = useState(false);
 

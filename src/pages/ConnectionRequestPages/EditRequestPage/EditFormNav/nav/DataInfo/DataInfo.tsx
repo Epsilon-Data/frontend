@@ -28,11 +28,14 @@ export const DataInfo: React.FC<{
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFormValueChange = (changedValues: any, allValues: any) => {
-    allValues.collectionDuration = allValues.collectionDuration.map((appDate: AppDate) => dayjs(appDate).toDate());
-    allValues.keywords = keywords;
     const updatedRequest = {
       ...formValue,
-      dataInfo: allValues,
+      dataInfo: {
+        collectionDuration: allValues.collectionDuration.map((appDate: AppDate) => dayjs(appDate).toDate()),
+        participantsNumber: allValues.participantsNumber,
+        description: allValues.description,
+        keywords: keywords,
+      },
     };
     setFormValue(updatedRequest);
   };

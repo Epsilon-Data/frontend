@@ -104,13 +104,13 @@ const DescribeDatasetPage: React.FC = () => {
           id="metadata"
           title={t('databaseSources.describeDataset.projectTitle', { id: projectId })}
           padding="1.25rem 1.25rem 0"
+          extra={
+            <S.CreateButton type="primary" onClick={() => navigate(`create`)} icon={<FaCirclePlus />}>
+              {t('databaseSources.describeDataset.createTemplate')}
+            </S.CreateButton>
+          }
         >
           <BaseRow gutter={[30, 30]}>
-            <BaseCol offset={16} span={8}>
-              <S.CreateButton type="primary" onClick={() => navigate(`create`)} icon={<FaCirclePlus />}>
-                {t('databaseSources.describeDataset.createTemplate')}
-              </S.CreateButton>
-            </BaseCol>
             <BaseCol span={24}>
               <BaseTable
                 columns={columns}

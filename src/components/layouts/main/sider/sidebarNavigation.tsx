@@ -12,9 +12,14 @@ const homeNavigation: SidebarNavigationItem[] = [];
 
 const connectNavigation: SidebarNavigationItem[] = [
   {
-    title: 'connectionRequests.create.title',
-    key: 'create',
-    url: '/connection-requests/create/project-info',
+    title: 'connectionRequests.dbRequestList',
+    key: 'requests/database',
+    url: '/requests/database',
+  },
+  {
+    title: 'connectionRequests.userRequestList',
+    key: 'requests/user',
+    url: '/requests/user',
   },
 ];
 

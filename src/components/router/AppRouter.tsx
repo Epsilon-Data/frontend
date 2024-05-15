@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // no lazy loading for auth pages to avoid flickering
 const AuthLayout = React.lazy(() => import('@app/components/layouts/AuthLayout/AuthLayout'));
@@ -26,6 +26,9 @@ const EditRequestPage = React.lazy(() => import('@app/pages/ConnectionRequestPag
 const ApproveRequestPage = React.lazy(
   () => import('@app/pages/ConnectionRequestPages/ApproveRequestPage/ApproveRequestPage'),
 );
+
+const UserRequestsPage = React.lazy(() => import('@app/pages/UserRequestPages/UserRequestsPage'));
+const ViewUserRequestPage = React.lazy(() => import('@app/pages/UserRequestPages/ViewRequestPage/ViewRequestPage'));
 
 const SourceListPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/SourceListPage'));
 const MetadataPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/MetadataPage/MetadataPage'));
@@ -61,6 +64,9 @@ const ViewRequest = withLoading(ViewRequestPage);
 const ApproveRequest = withLoading(ApproveRequestPage);
 const EditRequest = withLoading(EditRequestPage);
 
+const UserRequests = withLoading(UserRequestsPage);
+const ViewUserRequest = withLoading(ViewUserRequestPage);
+
 const SourceList = withLoading(SourceListPage);
 const Metadata = withLoading(MetadataPage);
 const DatabaseSummary = withLoading(DatabaseSummaryPage);
@@ -91,11 +97,14 @@ export const AppRouter: React.FC = () => {
       <Routes>
         <Route path={DASHBOARD_PATH} element={protectedLayout}>
           <Route index element={<Dashboard />} />
-          <Route path="connection-requests" element={<ConnectionRequests />} />
-          <Route path="connection-requests/create/:page" element={<CreateRequest />} />
-          <Route path="connection-requests/view/:id" element={<ViewRequest />} />
-          <Route path="connection-requests/edit/:id/:page" element={<EditRequest />} />
-          <Route path="connection-requests/approve/:id" element={<ApproveRequest />} />
+          <Route path="requests" element={<Navigate to="/requests/database" replace />} />
+          <Route path="requests/database" element={<ConnectionRequests />} />
+          <Route path="requests/database/create/:page" element={<CreateRequest />} />
+          <Route path="requests/database/view/:id" element={<ViewRequest />} />
+          <Route path="requests/database/edit/:id/:page" element={<EditRequest />} />
+          <Route path="requests/database/approve/:id" element={<ApproveRequest />} />
+          <Route path="requests/user" element={<UserRequests />} />
+          <Route path="requests/user/view/:id" element={<ViewUserRequest />} />
           <Route path="database-sources" element={<SourceList />} />
           <Route path="database-sources/metadata/:id" element={<Metadata />} />
           <Route path="database-sources/metadata/:id/db-summary" element={<DatabaseSummary />} />

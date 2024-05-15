@@ -83,7 +83,7 @@ const ViewRequestPage: React.FC = () => {
             <S.ActionButton
               type="primary"
               key="edit"
-              onClick={() => navigate(`/connection-requests/edit/${id}/project-info`)}
+              onClick={() => navigate(`/requests/database/edit/${id}/project-info`)}
             >
               {t('common.edit')}
             </S.ActionButton>,
@@ -115,7 +115,7 @@ const ViewRequestPage: React.FC = () => {
           ]);
         default:
           return React.Children.toArray([
-            <S.ActionButton type="primary" key="proceed" onClick={() => navigate(`/connection-requests/approve/${id}`)}>
+            <S.ActionButton type="primary" key="proceed" onClick={() => navigate(`/requests/database/approve/${id}`)}>
               {t('connectionRequests.proceed')}
             </S.ActionButton>,
           ]);
@@ -129,7 +129,7 @@ const ViewRequestPage: React.FC = () => {
       <S.ViewWrapper>
         <S.Card
           id="view-request"
-          title={t('connectionRequests.view', { id: id })}
+          title={t('connectionRequests.view')}
           padding="1.25rem 1.25rem 0"
           actions={actionButtons(request.status)}
         >

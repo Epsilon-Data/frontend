@@ -53,7 +53,7 @@ const EditRequestPage: React.FC = () => {
         notificationController.success({
           message: t('connectionRequests.edit.successNotify'),
         });
-        navigate('/connection-requests');
+        navigate('/requests/database');
       })
       .catch(() => {
         notificationController.error({
@@ -88,7 +88,7 @@ const EditRequestPage: React.FC = () => {
             <S.UpdateButton type="primary" key="edit" onClick={() => handleUpdate()}>
               {t('connectionRequests.edit.update')}
             </S.UpdateButton>
-            <S.CancelButton type="default" key="back" onClick={() => navigate('/connection-requests')}>
+            <S.CancelButton type="default" key="back" onClick={() => navigate('/requests/database')}>
               {t('common.cancel')}
             </S.CancelButton>
           </S.ButtonsWrapper>

@@ -40,7 +40,11 @@ export const INITIAL_ACCESS_VALUES: AccessDetails = {
   position: '',
   projectName: '',
   projectDuration: [],
-  projectDescription: '',
+  projectBackground: '',
+  projectObjective: '',
+  projectHypotheses: '',
+  projectOutcome: '',
   projectMembers: [],
   ethicsId: '',
+  requestor: '',
 };

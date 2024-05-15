@@ -660,7 +660,10 @@
     "title": "Connection Requests",
     "date": "Request Date",
     "requestor": "Requestor",
-    "requestList" : "Request List",
+    "requestorProject": "Requestor's Project",
+    "requestingProject": "Requesting Project Dataset",
+    "dbRequestList" : "Database Request List",
+    "userRequestList": "User Request List",
     "viewSource": "View Source",
     "proceed": "Proceed",
     "details": {
@@ -724,6 +727,12 @@
         "confirmDataOwner": "I confirm that I am the data owner and have the rights to make this data available on the platform.",
         "confirmInLine": "I confirm that the data collection has been done in line with relevant local, national and institutional regulations and legislation.",
         "confirmConsent": "I confirm that the study participants have consented their data to be made accessible on the platform."
+      },
+      "requestorInfo": {
+        "title": "Requestor Information"
+      },
+      "requestDatasetInfo": {
+        "title": "Request Dataset Information"
       }
     },
     "create": {
@@ -747,7 +756,7 @@
     },
     "revision": {
       "title": "Request Additional Information",
-      "instruction": "Specify additional information required from research.",
+      "instruction": "Specify additional information required from request.",
       "placeholder": "Enter text here",
       "successNotify": "Revision information submitted successfully.",
       "failNotify": "Unable to add revision information to connection request. Please try again."
@@ -989,7 +998,10 @@
         "title": "Project Details",
         "name":"Project Name",
         "duration": "Project Duration",
-        "description": "Project Description",
+        "background": "Project Background",
+        "objective": "Project Objective",
+        "hypotheses": "Project Hypotheses",
+        "outcome": "Project Outcome",
         "members": "Project Team Members/Affiliations",
         "addMembers": "Add Member/Affiliate"
       },

@@ -58,9 +58,9 @@ export const RequestProjectInfo: React.FC<{
         setFormValue(updatedRequest);
         setFieldsChanged(false);
         if (values.isOwnData) {
-          navigate('/connection-requests/create/database-info');
+          navigate('/requests/database/create/database-info');
         } else {
-          navigate('/connection-requests/create/org-admin-info');
+          navigate('/requests/database/create/org-admin-info');
         }
       } else {
         form.setFields([{ name: 'id', errors: [t('connectionRequests.details.projectInfo.invalidId')] }]);

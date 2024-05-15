@@ -19,7 +19,10 @@ export const ProjectDetails: React.FC<{
   const initialValues: any = {
     projectName: formValue.projectName,
     projectDuration: formValue.projectDuration.map((date: Date) => dayjs(date)),
-    projectDescription: formValue.projectDescription,
+    projectBackground: formValue.projectBackground,
+    projectObjective: formValue.projectObjective,
+    projectHypotheses: formValue.projectHypotheses,
+    projectOutcome: formValue.projectOutcome,
     projectMembers: formValue.projectMembers,
   };
   const [members, setMembers] = useState(initialValues.projectMembers);
@@ -36,7 +39,10 @@ export const ProjectDetails: React.FC<{
       ...formValue,
       projectName: allValues.projectName,
       projectDuration: allValues.projectDuration,
-      projectDescription: allValues.projectDescription,
+      projectBackground: allValues.projectBackground,
+      projectObjective: allValues.projectObjective,
+      projectHypotheses: allValues.projectHypotheses,
+      projectOutcome: allValues.projectOutcome,
       projectMembers: allValues.projectMembers,
     };
     setFormValue(updatedDetails);
@@ -66,7 +72,19 @@ export const ProjectDetails: React.FC<{
         </BaseCol>
 
         <BaseCol span={24}>
-          <StringTextAreaItem name="projectDescription" label={t('browse.access.project.description')} required />
+          <StringTextAreaItem name="projectBackground" label={t('browse.access.project.background')} required />
+        </BaseCol>
+
+        <BaseCol span={24}>
+          <StringTextAreaItem name="projectObjective" label={t('browse.access.project.objective')} required />
+        </BaseCol>
+
+        <BaseCol span={24}>
+          <StringTextAreaItem name="projectHypotheses" label={t('browse.access.project.hypotheses')} required />
+        </BaseCol>
+
+        <BaseCol span={24}>
+          <StringTextAreaItem name="projectOutcome" label={t('browse.access.project.outcome')} required />
         </BaseCol>
 
         <BaseCol span={24}>

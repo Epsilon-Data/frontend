@@ -11,13 +11,10 @@ import { useAppSelector } from '@app/hooks/reduxHooks';
 import { INITIAL_REQUEST_VALUES } from '@app/constants/connectionRequest';
 
 const CreateRequestPage: React.FC = () => {
-  const initialRequestFormValues = INITIAL_REQUEST_VALUES;
   const { page } = useParams();
   const { t } = useTranslation();
   const user = useAppSelector((state) => state.user.user);
-  const [request, setRequest] = useState<RequestDetails>(initialRequestFormValues);
-
-  initialRequestFormValues.requestor = user?.id;
+  const [request, setRequest] = useState<RequestDetails>({ ...INITIAL_REQUEST_VALUES, requestor: user?.id ?? '' });
 
   return (
     <>

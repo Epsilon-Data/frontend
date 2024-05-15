@@ -12,6 +12,7 @@ import { notificationController } from '@app/controllers/notificationController'
 import { AccessDetails } from '@app/interfaces/interfaces';
 import { getProjectSummary, requestAccess } from '@app/api/browseDatasets.api';
 import { INITIAL_ACCESS_VALUES } from '@app/constants/browseDatasets';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const RequestAccessPage: React.FC = () => {
   const { id, page } = useParams();
@@ -19,6 +20,7 @@ const RequestAccessPage: React.FC = () => {
   const navigate = useNavigate();
   const { isMounted } = useMounted();
   const [isLoading, setLoading] = useState(false);
+  const user = useAppSelector((state) => state.user.user);
   const [details, setDetails] = useState<AccessDetails>(INITIAL_ACCESS_VALUES);
 
   const fetch = useCallback(
@@ -29,6 +31,7 @@ const RequestAccessPage: React.FC = () => {
           if (id) {
             setDetails({
               ...INITIAL_ACCESS_VALUES,
+              requestor: user?.id ?? '',
               id: id,
               customId: res.id,
               name: res.name,
@@ -38,7 +41,7 @@ const RequestAccessPage: React.FC = () => {
       });
       setLoading(false);
     },
-    [isMounted],
+    [isMounted, user?.id],
   );
 
   useEffect(() => {
@@ -51,7 +54,7 @@ const RequestAccessPage: React.FC = () => {
         notificationController.success({
           message: t('browse.access.submitSuccess'),
         });
-        navigate('/connection-requests');
+        navigate(`/browse/summary/${id}`);
       })
       .catch(() => {
         notificationController.error({
@@ -84,7 +87,7 @@ const RequestAccessPage: React.FC = () => {
             <S.RequestAccessButton type="primary" key="edit" onClick={() => handleAccess()}>
               {t('browse.access.submit')}
             </S.RequestAccessButton>
-            <S.CancelButton type="default" key="back" onClick={() => navigate(-1)}>
+            <S.CancelButton type="default" key="back" onClick={() => navigate(`/browse/summary/${id}`)}>
               {t('common.cancel')}
             </S.CancelButton>
           </S.ButtonsWrapper>

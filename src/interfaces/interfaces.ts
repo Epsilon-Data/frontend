@@ -129,16 +129,22 @@ export interface ProjectSettings {
 
 export interface AccessDetails {
   id: string;
-  customId: string;
+  customId?: string;
   name: string;
   accessPurpose: string;
+  requestor?: string;
   requestorName: string;
   email: string;
   orgName: string;
   position: string;
   projectName: string;
   projectDuration: Date[];
-  projectDescription: string;
+  projectBackground: string;
+  projectObjective: string;
+  projectHypotheses: string;
+  projectOutcome: string;
   projectMembers: string[];
   ethicsId: string;
+  status?: number;
+  createdDate?: Date;
 }

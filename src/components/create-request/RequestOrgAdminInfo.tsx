@@ -61,7 +61,7 @@ export const RequestOrgAdminInfo: React.FC<{
         .then(() => {
           setLoading(false);
           setFieldsChanged(false);
-          navigate('/connection-requests');
+          navigate('/requests/database');
           notificationController.success({
             message: t('connectionRequests.create.successNotify'),
           });

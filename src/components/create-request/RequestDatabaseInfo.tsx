@@ -122,7 +122,7 @@ export const RequestDatabaseInfo: React.FC<{
     setSubmitLoading(true);
     createRequest(formValue)
       .then(() => {
-        navigate('/connection-requests');
+        navigate('/requests/database');
         notificationController.success({
           message: t('connectionRequests.create.successNotify'),
         });

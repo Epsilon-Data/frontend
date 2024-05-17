@@ -28,6 +28,8 @@ const MainLayout: React.FC = () => {
   const navigate = useNavigate();
   const [projectId, setProjectId] = useState('');
   const user = useAppSelector((state) => state.user.user);
+  const admin = useAppSelector((state) => state.user.user?.roles.includes('admin') || false);
+  const researcher = useAppSelector((state) => state.user.user?.roles.includes('research') || false);
 
   const fetch = useCallback(() => {
     if (id && location.pathname.includes('/database-sources')) {
@@ -47,7 +49,11 @@ const MainLayout: React.FC = () => {
       if (location.pathname.includes('/browse/')) {
         setIsHidden(true);
       } else {
-        setIsHidden(false);
+        if ((admin || researcher) && location.pathname.includes('/requests')) {
+          setIsHidden(true);
+        } else {
+          setIsHidden(false);
+        }
       }
     }
 
@@ -58,7 +64,7 @@ const MainLayout: React.FC = () => {
       setTitle(t('topNavigation.' + selectedKey));
     }
     setUrl(findUrlByKey(selectedKey));
-  }, [location.pathname, isDesktop, selectedKey, id, t, fetch, projectId]);
+  }, [location.pathname, isDesktop, selectedKey, id, t, fetch, projectId, admin, researcher]);
 
   return (
     <S.LayoutMaster>

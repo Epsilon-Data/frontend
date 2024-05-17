@@ -147,4 +147,5 @@ export interface AccessDetails {
   ethicsId: string;
   status?: number;
   createdDate?: Date;
+  revisionInfo?: string;
 }

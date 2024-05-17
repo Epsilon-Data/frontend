@@ -30,10 +30,14 @@ const ViewRequestPage: React.FC = () => {
       getRequestDetails(id).then((res) => {
         if (isMounted.current) {
           setRequest(res);
+          if (res.revisionInfo) {
+            setRevisionInfo(res.revisionInfo);
+            form.setFieldsValue({ info: res.revisionInfo });
+          }
         }
       });
     },
-    [isMounted],
+    [form, isMounted],
   );
 
   useEffect(() => {

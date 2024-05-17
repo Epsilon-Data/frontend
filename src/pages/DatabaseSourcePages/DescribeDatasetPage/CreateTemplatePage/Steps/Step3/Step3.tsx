@@ -118,7 +118,7 @@ export const Step3: React.FC<{
       }
     }
 
-    if (result === null || totalColumns != columnCount) {
+    if (result === null || totalColumns == 0) {
       setMappingSuccess(false);
       setMessage(t('databaseSources.describeDataset.message.columnsNotConnected'));
       setSaveDescription(t('databaseSources.describeDataset.step3Description.fail'));

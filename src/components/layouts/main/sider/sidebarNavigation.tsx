@@ -32,8 +32,8 @@ const sourceNavigation: SidebarNavigationItem[] = [
 
 // const browseNavigation: SidebarNavigationItem[] = [];
 
-export function returnCurrentNav(key: string, isAdmin: boolean): SidebarNavigationItem[] {
-  if (key === 'connect' && !isAdmin) {
+export function returnCurrentNav(key: string): SidebarNavigationItem[] {
+  if (key === 'connect') {
     return connectNavigation;
   } else if (key === 'home') {
     return homeNavigation;

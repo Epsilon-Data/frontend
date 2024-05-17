@@ -235,11 +235,11 @@ export const Step2: React.FC<{
   }
 
   const onSaveMapping = () => {
-    if (columns.length == 0) {
+    if (columns.length < initialColumns.length) {
       setStep(2);
     } else {
       notificationController.error({
-        message: t('databaseSources.describeDataset.notify.mapAllColumns'),
+        message: t('databaseSources.describeDataset.notify.mapSingleColumn'),
       });
     }
   };

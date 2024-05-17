@@ -32,6 +32,7 @@ export interface ProjectInfo {
   dataKeywords: string[];
   dataParticipantsNum: number;
   archetype: Template | null;
+  isOwnProject: boolean;
   visualisations: { title: string; url: string }[];
 }
 

@@ -54,9 +54,10 @@ const DatasetSummaryPage: React.FC = () => {
         setVisList(res.visualisations);
       }
     });
+  }, [isMounted, id]);
 
+  useEffect(() => {
     const urls = visList.map((item) => item.url);
-
     const options = {
       hideTabs: true,
     };
@@ -71,7 +72,7 @@ const DatasetSummaryPage: React.FC = () => {
       }
       new tableau.Viz(container, urls[i], options);
     }
-  }, [isMounted, setProjectDetails, id, visList]);
+  });
 
   return (
     <>
@@ -86,14 +87,16 @@ const DatasetSummaryPage: React.FC = () => {
               </S.Text>
             </BaseCol>
             <BaseCol span={5} offset={14}>
-              <S.RequestButton
-                type="primary"
-                key="request"
-                icon={<CgEnter />}
-                onClick={() => navigate(`/browse/access/${id}/dataset`)}
-              >
-                {t('browse.info.requestAccess')}
-              </S.RequestButton>
+              {!projectDetails.isOwnProject && (
+                <S.RequestButton
+                  type="primary"
+                  key="request"
+                  icon={<CgEnter />}
+                  onClick={() => navigate(`/browse/access/${id}/dataset`)}
+                >
+                  {t('browse.info.requestAccess')}
+                </S.RequestButton>
+              )}
             </BaseCol>
           </BaseRow>
           <BaseRow style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column' }}>

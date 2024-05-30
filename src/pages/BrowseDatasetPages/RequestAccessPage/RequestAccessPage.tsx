@@ -13,8 +13,9 @@ import { AccessDetails } from '@app/interfaces/interfaces';
 import { getProjectSummary, requestAccess } from '@app/api/browseDatasets.api';
 import { INITIAL_ACCESS_VALUES } from '@app/constants/browseDatasets';
 import { useAppSelector } from '@app/hooks/reduxHooks';
+import { editRequest, getRequestDetails } from '@app/api/userRequests.api';
 
-const RequestAccessPage: React.FC = () => {
+const RequestAccessPage: React.FC<{ mode: string }> = ({ mode }) => {
   const { id, page } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -26,22 +27,36 @@ const RequestAccessPage: React.FC = () => {
   const fetch = useCallback(
     (id: string | undefined) => {
       setLoading(true);
-      getProjectSummary(id).then((res) => {
-        if (isMounted.current) {
-          if (id) {
-            setDetails({
-              ...INITIAL_ACCESS_VALUES,
-              requestor: user?.id ?? '',
-              id: id,
-              customId: res.id,
-              name: res.name,
-            });
+      if (mode == 'create') {
+        getProjectSummary(id).then((res) => {
+          if (isMounted.current) {
+            if (id) {
+              setDetails({
+                ...INITIAL_ACCESS_VALUES,
+                requestor: user?.id ?? '',
+                id: id,
+                customId: res.id,
+                name: res.name,
+              });
+            }
           }
-        }
-      });
+        });
+      } else {
+        getRequestDetails(id).then((res) => {
+          if (isMounted.current) {
+            if (id) {
+              setDetails({
+                ...res,
+                id: id,
+                requestor: user?.id ?? '',
+              });
+            }
+          }
+        });
+      }
       setLoading(false);
     },
-    [isMounted, user?.id],
+    [isMounted, user?.id, mode],
   );
 
   useEffect(() => {
@@ -49,18 +64,33 @@ const RequestAccessPage: React.FC = () => {
   }, [fetch, id]);
 
   const handleAccess = () => {
-    requestAccess(details)
-      .then(() => {
-        notificationController.success({
-          message: t('browse.access.submitSuccess'),
+    if (mode == 'create') {
+      requestAccess(details)
+        .then(() => {
+          notificationController.success({
+            message: t('browse.access.submitSuccess'),
+          });
+          navigate(`/browse/summary/${id}`);
+        })
+        .catch(() => {
+          notificationController.error({
+            message: t('browse.access.submitFail'),
+          });
         });
-        navigate(`/browse/summary/${id}`);
-      })
-      .catch(() => {
-        notificationController.error({
-          message: t('browse.access.submitFail'),
+    } else {
+      editRequest(details)
+        .then(() => {
+          notificationController.success({
+            message: t('connectionRequests.edit.successNotify'),
+          });
+          navigate('/requests');
+        })
+        .catch(() => {
+          notificationController.error({
+            message: t('connectionRequests.edit.failNotify'),
+          });
         });
-      });
+    }
   };
 
   return (
@@ -70,7 +100,7 @@ const RequestAccessPage: React.FC = () => {
         <BaseRow gutter={[30, 30]}>
           <BaseCol xs={7} md={7} xl={7}>
             <S.NavCard id="request-access" title={t('browse.access.title')} padding="1.25rem 1.25rem 2rem">
-              <RequestNav />
+              <RequestNav mode={mode} />
             </S.NavCard>
           </BaseCol>
 
@@ -85,7 +115,7 @@ const RequestAccessPage: React.FC = () => {
         <BaseRow>
           <S.ButtonsWrapper>
             <S.RequestAccessButton type="primary" key="edit" onClick={() => handleAccess()}>
-              {t('browse.access.submit')}
+              {mode == 'create' ? t('browse.access.submit') : t('connectionRequests.edit.update')}
             </S.RequestAccessButton>
             <S.CancelButton type="default" key="back" onClick={() => navigate(`/browse/summary/${id}`)}>
               {t('common.cancel')}

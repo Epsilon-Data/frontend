@@ -73,4 +73,8 @@ export const Menu = styled(BaseMenu)`
   .ant-menu-submenu-active .ant-menu-submenu-title {
     background-color: transparent !important;
   }
+
+  .ant-menu-submenu-arrow {
+    margin-right: 1rem;
+  }
 `;

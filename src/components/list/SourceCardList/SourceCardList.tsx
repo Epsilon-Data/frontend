@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMounted } from '@app/hooks/useMounted';
 import { useCallback, useState, useEffect } from 'react';
 import { Card } from 'antd';
-import * as S from './CardList.styles';
+import * as S from './SourceCardList.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { Status } from '@app/components/status/Status';
@@ -20,7 +20,7 @@ const initialPagination: Pagination = {
   pageSize: 6,
 };
 
-export const CardList: React.FC = () => {
+export const SourceCardList: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [crawlingStatuses, setCrawlingStatuses] = useState<any>([]);
   const [listData, setListData] = useState<{ data: SourceListItem[]; pagination: Pagination; loading: boolean }>({

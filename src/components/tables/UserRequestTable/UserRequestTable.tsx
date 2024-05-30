@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { RequestTableRow, getRequestTableData, Pagination, Tag } from '@app/api/userRequests.api';
+import { RequestTableRow, getRequestTableData, Pagination, Tag, deleteRequest } from '@app/api/userRequests.api';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { ColumnsType } from 'antd/es/table';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
@@ -15,13 +15,15 @@ import { Button, Input, InputRef, Space, TableColumnType } from 'antd';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import { useAppSelector } from '@app/hooks/reduxHooks';
+import { Priority } from '@app/constants/enums/priorities';
 
 const initialPagination: Pagination = {
   current: 1,
   pageSize: 5,
 };
 
-export const UserRequestTable: React.FC = () => {
+export const UserRequestTable: React.FC<{ page: string | undefined }> = ({ page }) => {
   const [tableData, setTableData] = useState<{ data: RequestTableRow[]; pagination: Pagination; loading: boolean }>({
     data: [],
     pagination: initialPagination,
@@ -30,6 +32,7 @@ export const UserRequestTable: React.FC = () => {
   const { t } = useTranslation();
   const { isMounted } = useMounted();
   const navigate = useNavigate();
+  const researcher = useAppSelector((state) => state.user.user?.roles.includes('research') || false);
 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof RequestTableRow>();
@@ -126,13 +129,13 @@ export const UserRequestTable: React.FC = () => {
   const fetch = useCallback(
     (pagination: Pagination) => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
-      getRequestTableData(pagination).then((res) => {
+      getRequestTableData(pagination, page).then((res) => {
         if (isMounted.current) {
           setTableData({ data: res.data, pagination: res.pagination, loading: false });
         }
       });
     },
-    [isMounted],
+    [isMounted, page],
   );
 
   useEffect(() => {
@@ -143,13 +146,29 @@ export const UserRequestTable: React.FC = () => {
     fetch(pagination);
   };
 
+  const handleDeleteRow = (requestId: string) => {
+    setTableData({
+      ...tableData,
+      data: tableData.data.filter((item) => item.id !== requestId),
+      pagination: {
+        ...tableData.pagination,
+        total: tableData.pagination.total ? tableData.pagination.total - 1 : tableData.pagination.total,
+      },
+    });
+    deleteRequest(requestId);
+  };
+
   const columns: ColumnsType<RequestTableRow> = [
-    {
-      title: t('connectionRequests.requestor'),
-      dataIndex: 'requestor',
-      key: 'requestor',
-      ...getColumnSearchProps('requestor'),
-    },
+    ...(researcher || page == 'sent'
+      ? []
+      : [
+          {
+            title: t('connectionRequests.requestor'),
+            dataIndex: 'requestor',
+            key: 'requestor',
+            ...getColumnSearchProps('requestor'),
+          },
+        ]),
     {
       title: t('connectionRequests.requestingProject'),
       dataIndex: 'requestingProject',
@@ -182,20 +201,62 @@ export const UserRequestTable: React.FC = () => {
         </BaseRow>
       ),
     },
-    {
-      title: t('tables.actions'),
-      dataIndex: 'actions',
-      width: '15%',
-      render: (text: string, record: { id: string }) => {
-        return (
-          <BaseSpace>
-            <BaseButton type="primary" onClick={() => navigate(`/requests/user/view/${record.id}`)}>
-              {t('tables.view')}
-            </BaseButton>
-          </BaseSpace>
-        );
-      },
-    },
+    ...(researcher || page == 'sent'
+      ? [
+          {
+            title: t('tables.actions'),
+            dataIndex: 'actions',
+            width: '15%',
+            render: (
+              text: string,
+              record: { id: string; requestingProjectId: string; statusTag: { priority: Priority } },
+            ) => {
+              return (
+                <BaseSpace>
+                  <BaseButton type="primary" onClick={() => navigate(`/requests/user/view/${record.id}`)}>
+                    {t('tables.view')}
+                  </BaseButton>
+                  {record.statusTag.priority == Priority.LOW && (
+                    <BaseButton
+                      type="primary"
+                      onClick={() => navigate(`/datasets/analysis/${record.requestingProjectId}`)}
+                    >
+                      {t('connectionRequests.viewDataset')}
+                    </BaseButton>
+                  )}
+                  {record.statusTag.priority == Priority.HIGH && (
+                    <>
+                      <BaseButton type="primary" onClick={() => navigate(`/requests/user/edit/${record.id}/dataset`)}>
+                        {t('common.edit')}
+                      </BaseButton>
+                    </>
+                  )}
+                  {(record.statusTag.priority == Priority.INFO || record.statusTag.priority == Priority.HIGH) && (
+                    <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>
+                      {t('tables.delete')}
+                    </BaseButton>
+                  )}
+                </BaseSpace>
+              );
+            },
+          },
+        ]
+      : [
+          {
+            title: t('tables.actions'),
+            dataIndex: 'actions',
+            width: '15%',
+            render: (text: string, record: { id: string }) => {
+              return (
+                <BaseSpace>
+                  <BaseButton type="primary" onClick={() => navigate(`/requests/user/view/${record.id}`)}>
+                    {t('tables.view')}
+                  </BaseButton>
+                </BaseSpace>
+              );
+            },
+          },
+        ]),
   ];
 
   return (

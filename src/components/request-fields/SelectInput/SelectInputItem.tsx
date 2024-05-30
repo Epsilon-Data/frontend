@@ -10,10 +10,11 @@ export const SelectInputItem: React.FC<{
   }[];
   prompt: string;
   required?: boolean;
-}> = ({ name, label, optionItems, prompt, required }) => {
+  mode?: 'multiple' | 'tags' | undefined;
+}> = ({ name, label, optionItems, prompt, required, mode }) => {
   return (
     <BaseButtonsForm.Item name={name} label={label} rules={[{ required: required }]} style={{ marginBottom: '2rem' }}>
-      <BaseSelect width={120} placeholder={prompt} options={optionItems} />
+      <BaseSelect mode={mode} width={120} placeholder={prompt} options={optionItems} />
     </BaseButtonsForm.Item>
   );
 };

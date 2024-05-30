@@ -8,6 +8,7 @@ export const topNavigation: TopNavigationItem[] = [
   { key: 'home', label: 'topNavigation.home', url: '/' },
   { key: 'connect', label: 'topNavigation.connect', url: '/requests' },
   { key: 'database', label: 'topNavigation.database', url: '/database-sources' },
+  { key: 'dataset', label: 'topNavigation.dataset', url: '/datasets' },
   { key: 'browse', label: 'topNavigation.browse', url: '/browse' },
 ];
 
@@ -29,3 +30,11 @@ const getSelectedUrl = (pathname: string) => {
   }
   return pathname;
 };
+
+export function returnUserTopNav(isResearcher: boolean): TopNavigationItem[] {
+  if (!isResearcher) {
+    return topNavigation;
+  } else {
+    return topNavigation.filter((nav) => nav.key !== 'database');
+  }
+}

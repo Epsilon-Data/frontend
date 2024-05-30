@@ -80,10 +80,10 @@ const DatasetSummaryPage: React.FC = () => {
       <S.CardWrapper>
         <S.Card id="dataset-summary" title={projectDetails.name} padding="1.25rem 1.25rem 0">
           <BaseRow style={{ width: '100%' }}>
-            <BaseCol span={5}>
+            <BaseCol span={6}>
               <S.OrgLink>{projectDetails.university}</S.OrgLink>
               <S.Text style={{ marginTop: '0.1rem', color: 'var(--text-light-color)' }}>
-                {t('browse.info.createdDate') + '20/04/2024 (TBD)'}
+                {'Last Updated: 10.13am on May 5, 2024'}
               </S.Text>
             </BaseCol>
             <BaseCol span={5} offset={14}>

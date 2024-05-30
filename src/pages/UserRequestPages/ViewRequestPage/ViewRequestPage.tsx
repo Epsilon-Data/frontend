@@ -4,7 +4,7 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './ViewRequestPage.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AccessDetails } from '@app/interfaces/interfaces';
-import { getRequestDetails, reviseRequest } from '@app/api/userRequests.api';
+import { getRequestDetails, proceedRequest, reviseRequest } from '@app/api/userRequests.api';
 import { useMounted } from '@app/hooks/useMounted';
 import { InfoItem } from '@app/components/display-info/InfoItem';
 import { InfoSectionHeader } from '@app/components/display-info/InfoSectionHeader';
@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { DATE_FORMAT, INITIAL_REQUEST_VALUES } from '@app/constants/userRequest';
 import { StringTextAreaItem } from '@app/components/request-fields/StringInput/StringTextAreaItem';
 import { notificationController } from '@app/controllers/notificationController';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const ViewRequestPage: React.FC = () => {
   const { id } = useParams();
@@ -23,6 +24,7 @@ const ViewRequestPage: React.FC = () => {
   const [revisionDefined, setRevisionDefined] = React.useState(false);
   const [submitLoading, setSubmitLoading] = React.useState(false);
   const [form] = S.AddInfoForm.useForm();
+  const researcher = useAppSelector((state) => state.user.user?.roles.includes('research') || false);
   const [revisionInfo, setRevisionInfo] = useState(t('connectionRequests.details.revisionInfo.default'));
 
   const fetch = useCallback(
@@ -32,12 +34,14 @@ const ViewRequestPage: React.FC = () => {
           setRequest(res);
           if (res.revisionInfo) {
             setRevisionInfo(res.revisionInfo);
-            form.setFieldsValue({ info: res.revisionInfo });
+            if (!researcher) {
+              form.setFieldsValue({ info: res.revisionInfo });
+            }
           }
         }
       });
     },
-    [form, isMounted],
+    [form, isMounted, researcher],
   );
 
   useEffect(() => {
@@ -65,19 +69,85 @@ const ViewRequestPage: React.FC = () => {
       navigate(-1);
     };
 
-    switch (status) {
-      case RequestStatus.APPROVED:
-        return React.Children.toArray([
-          <S.ActionButton type="default" key="back" onClick={handleBackClick}>
-            {t('common.back')}
-          </S.ActionButton>,
-        ]);
-      default:
-        return React.Children.toArray([
-          <S.ActionButton type="primary" key="proceed">
-            {t('connectionRequests.proceed')}
-          </S.ActionButton>,
-        ]);
+    const handleProceedClick = (isApproved: boolean) => {
+      let actionSuccess = 'approved';
+      let actionFail = 'approve';
+      if (!isApproved) {
+        actionSuccess = 'rejected';
+        actionFail = 'reject';
+      }
+
+      proceedRequest({ requestId: id, isApproved: isApproved })
+        .then(() => {
+          notificationController.success({
+            message: t('connectionRequests.approve.userRequest.successNotify', { action: actionSuccess }),
+          });
+          navigate('/requests/user/receive');
+        })
+        .catch(() => {
+          notificationController.error({
+            message: t('connectionRequests.approve.userRequest.failNotify', { action: actionFail }),
+          });
+        });
+    };
+
+    if (researcher) {
+      switch (status) {
+        case RequestStatus.PENDING:
+          return React.Children.toArray([
+            <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+              {t('common.back')}
+            </S.ActionButton>,
+          ]);
+        case RequestStatus.REVISION:
+          return React.Children.toArray([
+            <S.ActionButton type="primary" key="edit">
+              {t('common.edit')}
+            </S.ActionButton>,
+            <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+              {t('common.back')}
+            </S.ActionButton>,
+          ]);
+        case RequestStatus.APPROVED:
+          return React.Children.toArray([
+            <S.ActionButton type="primary" key="dataset">
+              {t('connectionRequests.viewDataset')}
+            </S.ActionButton>,
+            <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+              {t('common.back')}
+            </S.ActionButton>,
+          ]);
+        case RequestStatus.REJECTED:
+          return React.Children.toArray([
+            <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+              {t('common.back')}
+            </S.ActionButton>,
+          ]);
+      }
+    } else {
+      switch (status) {
+        case RequestStatus.APPROVED:
+          return React.Children.toArray([
+            <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+              {t('common.back')}
+            </S.ActionButton>,
+          ]);
+        case RequestStatus.REJECTED:
+          return React.Children.toArray([
+            <S.ActionButton type="default" key="back" onClick={handleBackClick}>
+              {t('common.back')}
+            </S.ActionButton>,
+          ]);
+        default:
+          return React.Children.toArray([
+            <S.ActionButton type="primary" key="approve" onClick={() => handleProceedClick(true)}>
+              {t('connectionRequests.approve.confirm')}
+            </S.ActionButton>,
+            <S.ActionButton danger type="primary" key="reject" onClick={() => handleProceedClick(false)}>
+              {t('connectionRequests.reject')}
+            </S.ActionButton>,
+          ]);
+      }
     }
   };
 
@@ -126,7 +196,13 @@ const ViewRequestPage: React.FC = () => {
                 <S.RevisionContent>{revisionInfo}</S.RevisionContent>
               </S.RevisionCard>
             )}
-            <S.AddInfoForm hidden={request.status == RequestStatus.APPROVED} form={form} onFinish={onFinish}>
+            <S.AddInfoForm
+              hidden={
+                researcher || request.status == RequestStatus.APPROVED || request.status == RequestStatus.REJECTED
+              }
+              form={form}
+              onFinish={onFinish}
+            >
               <div style={{ marginBottom: '1rem' }}>
                 <S.Instructions>{t('connectionRequests.revision.instruction')}</S.Instructions>
               </div>

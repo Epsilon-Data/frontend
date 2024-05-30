@@ -5,7 +5,7 @@ import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-
 import { DASHBOARD_PATH } from '@app/components/router/AppRouter';
 import { useResponsive } from '@app/hooks/useResponsive';
 import { References } from '@app/components/common/References/References';
-import { findKeyByUrl, findUrlByKey, topNavigation } from '../topNavigation';
+import { findKeyByUrl, findUrlByKey, returnUserTopNav } from '../topNavigation';
 import { useTranslation } from 'react-i18next';
 import MainSider from '../sider/MainSider/MainSider';
 import { updateUrlById } from '../sider/sidebarNavigation';
@@ -13,7 +13,7 @@ import { getProjectId } from '@app/api/databaseSources.api';
 import { BiSolidUserCircle } from 'react-icons/bi';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 
-const sidebarDisabled = ['/database-sources', '/browse'];
+const sidebarDisabled = ['/database-sources', '/browse', '/datasets'];
 
 const MainLayout: React.FC = () => {
   const [isTwoColumnsLayout, setIsTwoColumnsLayout] = useState(true);
@@ -58,14 +58,18 @@ const MainLayout: React.FC = () => {
     }
 
     if (selectedKey == 'database' && id) {
-      updateUrlById(id);
+      updateUrlById(id, selectedKey);
       setTitle(t('databaseSources.sidebarTitle', { id: projectId }));
+    } else if (selectedKey == 'dataset' && id) {
+      updateUrlById(id, selectedKey);
+      setTitle(t('topNavigation.' + selectedKey));
     } else {
       setTitle(t('topNavigation.' + selectedKey));
     }
     setUrl(findUrlByKey(selectedKey));
   }, [location.pathname, isDesktop, selectedKey, id, t, fetch, projectId, admin, researcher]);
 
+  const userTopNav = returnUserTopNav(researcher);
   return (
     <S.LayoutMaster>
       <S.Header>
@@ -74,7 +78,7 @@ const MainLayout: React.FC = () => {
           selectedKeys={[selectedKey]}
           defaultSelectedKeys={[selectedKey]}
           onClick={({ key }) => setSelectedKey(key)}
-          items={topNavigation.map((nav) => {
+          items={userTopNav.map((nav) => {
             return {
               key: nav.key,
               label: <Link to={nav.url || ''}>{t(nav.label)}</Link>,

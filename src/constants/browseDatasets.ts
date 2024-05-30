@@ -20,6 +20,7 @@ export const INITIAL_DETAIL_VALUES: ProjectInfo = {
   dataParticipantsNum: 0,
   archetype: { id: '', name: '', nodes: [], edges: [] },
   visualisations: [],
+  isOwnProject: false,
 };
 
 export const SEARCH_FIELDS = [

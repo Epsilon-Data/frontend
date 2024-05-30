@@ -12,14 +12,25 @@ const homeNavigation: SidebarNavigationItem[] = [];
 
 const connectNavigation: SidebarNavigationItem[] = [
   {
-    title: 'connectionRequests.dbRequestList',
+    title: 'connectionRequests.dbRequest',
     key: 'requests/database',
     url: '/requests/database',
   },
   {
-    title: 'connectionRequests.userRequestList',
+    title: 'connectionRequests.userRequestSidebar.main',
     key: 'requests/user',
-    url: '/requests/user',
+    children: [
+      {
+        title: 'connectionRequests.userRequestSidebar.received',
+        key: 'received',
+        url: '/requests/user/receive',
+      },
+      {
+        title: 'connectionRequests.userRequestSidebar.sent',
+        key: 'sent',
+        url: '/requests/user/sent',
+      },
+    ],
   },
 ];
 
@@ -30,7 +41,10 @@ const sourceNavigation: SidebarNavigationItem[] = [
   { title: 'databaseSources.otherSettings.title', key: 'other-settings' },
 ];
 
-// const browseNavigation: SidebarNavigationItem[] = [];
+const datasetNavigation: SidebarNavigationItem[] = [
+  { title: 'dataset.analysis.title', key: 'analysis' },
+  { title: 'dataset.details.title', key: 'details' },
+];
 
 export function returnCurrentNav(key: string): SidebarNavigationItem[] {
   if (key === 'connect') {
@@ -39,12 +53,21 @@ export function returnCurrentNav(key: string): SidebarNavigationItem[] {
     return homeNavigation;
   } else if (key === 'database') {
     return sourceNavigation;
+  } else if (key === 'dataset') {
+    return datasetNavigation;
   }
   return [];
 }
 
-export function updateUrlById(id: string): void {
-  sourceNavigation.forEach((item: SidebarNavigationItem) => {
-    item.url = '/database-sources/' + item.key + '/' + id;
+export function updateUrlById(id: string, selectedKey: string): void {
+  let prefixUrl = '';
+  const currentNav = returnCurrentNav(selectedKey);
+  if (selectedKey == 'database') {
+    prefixUrl = '/database-sources/';
+  } else if (selectedKey == 'dataset') {
+    prefixUrl = '/datasets/';
+  }
+  currentNav.forEach((item: SidebarNavigationItem) => {
+    item.url = prefixUrl + item.key + '/' + id;
   });
 }

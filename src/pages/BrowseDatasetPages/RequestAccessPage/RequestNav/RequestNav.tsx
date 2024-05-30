@@ -5,12 +5,14 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as S from './RequestNav.styles';
 import { requestAccessNavData } from '@app/constants/requestAccessNavData';
 
-export const RequestNav: React.FC = () => {
+export const RequestNav: React.FC<{ mode: string }> = ({ mode }) => {
   const { id } = useParams();
   const { t } = useTranslation();
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  const prefix = mode === 'create' ? '/browse/access' : '/requests/user/edit';
 
   return (
     <S.Wrapper>
@@ -20,8 +22,8 @@ export const RequestNav: React.FC = () => {
           icon={item.icon}
           type="text"
           color={item.color}
-          onClick={() => navigate(`/browse/access/${id}/${item.href}`)}
-          $isActive={`/browse/access/${id}/${item.href}` === location.pathname}
+          onClick={() => navigate(`${prefix}/${id}/${item.href}`)}
+          $isActive={`${prefix}/${id}/${item.href}` === location.pathname}
         >
           {t(item.name)}
         </S.Button>

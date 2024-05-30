@@ -18,10 +18,10 @@ export interface Pagination {
 }
 
 export interface SourceListItem {
-  projectId: number;
+  projectId: string;
   projectCustomId: string;
   projectName: string;
-  dbId: number;
+  dbId: string;
   databaseName: string;
   connectDate: Date;
   sourceStatus: Tag;

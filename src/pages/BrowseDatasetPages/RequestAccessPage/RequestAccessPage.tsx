@@ -13,7 +13,7 @@ import { AccessDetails } from '@app/interfaces/interfaces';
 import { getProjectSummary, requestAccess } from '@app/api/browseDatasets.api';
 import { INITIAL_ACCESS_VALUES } from '@app/constants/browseDatasets';
 import { useAppSelector } from '@app/hooks/reduxHooks';
-import { editRequest, getRequestDetails } from '@app/api/userRequests.api';
+import { editRequest, getRequestDetails } from '@app/api/accessRequests.api';
 
 const RequestAccessPage: React.FC<{ mode: string }> = ({ mode }) => {
   const { id, page } = useParams();

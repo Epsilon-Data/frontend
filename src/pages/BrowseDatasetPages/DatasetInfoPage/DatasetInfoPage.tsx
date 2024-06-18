@@ -83,10 +83,10 @@ const DatasetSummaryPage: React.FC = () => {
             <BaseCol span={6}>
               <S.OrgLink>{projectDetails.university}</S.OrgLink>
               <S.Text style={{ marginTop: '0.1rem', color: 'var(--text-light-color)' }}>
-                {'Last Updated: 10.13am on May 5, 2024'}
+                {`Last Updated: ${projectDetails.lastUpdated}`}
               </S.Text>
             </BaseCol>
-            <BaseCol span={5} offset={14}>
+            <BaseCol span={5} offset={13}>
               {!projectDetails.isOwnProject && (
                 <S.RequestButton
                   type="primary"

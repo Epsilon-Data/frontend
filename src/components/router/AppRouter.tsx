@@ -28,8 +28,8 @@ const ApproveRequestPage = React.lazy(
   () => import('@app/pages/ConnectionRequestPages/ApproveRequestPage/ApproveRequestPage'),
 );
 
-const UserRequestsPage = React.lazy(() => import('@app/pages/UserRequestPages/UserRequestsPage'));
-const ViewUserRequestPage = React.lazy(() => import('@app/pages/UserRequestPages/ViewRequestPage/ViewRequestPage'));
+const AccessRequestsPage = React.lazy(() => import('@app/pages/AccessRequestPages/AccessRequestsPage'));
+const ViewAccessRequestPage = React.lazy(() => import('@app/pages/AccessRequestPages/ViewRequestPage/ViewRequestPage'));
 
 const SourceListPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/SourceListPage'));
 const MetadataPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/MetadataPage/MetadataPage'));
@@ -55,6 +55,9 @@ const AnalysisPage = React.lazy(() => import('@app/pages/DatasetPages/AnalysisPa
 const AnalysisViewPage = React.lazy(
   () => import('@app/pages/DatasetPages/AnalysisPage/AnalysisViewPage/AnalysisViewPage'),
 );
+const StandardAnalysesPage = React.lazy(
+  () => import('@app/pages/DatasetPages/StandardAnalysesPage/StandardAnalysesPage'),
+);
 
 const BrowseDatasetPage = React.lazy(() => import('@app/pages/BrowseDatasetPages/BrowseDatasetPage'));
 const DatasetInfoPage = React.lazy(() => import('@app/pages/BrowseDatasetPages/DatasetInfoPage/DatasetInfoPage'));
@@ -71,8 +74,8 @@ const ViewRequest = withLoading(ViewRequestPage);
 const ApproveRequest = withLoading(ApproveRequestPage);
 const EditRequest = withLoading(EditRequestPage);
 
-const UserRequests = withLoading(UserRequestsPage);
-const ViewUserRequest = withLoading(ViewUserRequestPage);
+const AccessRequests = withLoading(AccessRequestsPage);
+const ViewAccessRequest = withLoading(ViewAccessRequestPage);
 
 const SourceList = withLoading(SourceListPage);
 const Metadata = withLoading(MetadataPage);
@@ -86,6 +89,7 @@ const OtherSettings = withLoading(OtherSettingsPage);
 const DatasetList = withLoading(DatasetListPage);
 const Analysis = withLoading(AnalysisPage);
 const AnalysisView = withLoading(AnalysisViewPage);
+const StandardAnalyses = withLoading(StandardAnalysesPage);
 
 const BrowseDatasets = withLoading(BrowseDatasetPage);
 const DatasetInfo = withLoading(DatasetInfoPage);
@@ -119,8 +123,8 @@ export const AppRouter: React.FC = () => {
           <Route path="requests/database/view/:id" element={<ViewRequest />} />
           <Route path="requests/database/edit/:id/:page" element={<EditRequest />} />
           <Route path="requests/database/approve/:id" element={<ApproveRequest />} />
-          <Route path="requests/user/:page" element={<UserRequests />} />
-          <Route path="requests/user/view/:id" element={<ViewUserRequest />} />
+          <Route path="requests/user/:page" element={<AccessRequests />} />
+          <Route path="requests/user/view/:id" element={<ViewAccessRequest />} />
           <Route path="requests/user/edit/:id/:page" element={<RequestAccess mode="edit" />} />
           <Route path="database-sources" element={<SourceList />} />
           <Route path="database-sources/metadata/:id" element={<Metadata />} />
@@ -132,7 +136,8 @@ export const AppRouter: React.FC = () => {
           <Route path="database-sources/other-settings/:id" element={<OtherSettings />} />
           <Route path="datasets" element={<DatasetList />} />
           <Route path="datasets/analysis/:id" element={<Analysis />} />
-          <Route path="datasets/analysis/view/:id" element={<AnalysisView />} />
+          <Route path="datasets/analysis/view/:analysisId" element={<AnalysisView />} />
+          <Route path="datasets/standard/:id" element={<StandardAnalyses />} />
           <Route path="browse" element={<BrowseDatasets />} />
           <Route path="browse/summary/:id" element={<DatasetInfo />} />
           <Route path="browse/access/:id/:page" element={<RequestAccess mode="create" />} />

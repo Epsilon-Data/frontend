@@ -21,6 +21,7 @@ export const INITIAL_DETAIL_VALUES: ProjectInfo = {
   archetype: { id: '', name: '', nodes: [], edges: [] },
   visualisations: [],
   isOwnProject: false,
+  lastUpdated: '',
 };
 
 export const SEARCH_FIELDS = [

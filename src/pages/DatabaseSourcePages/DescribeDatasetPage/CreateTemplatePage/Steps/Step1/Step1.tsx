@@ -317,7 +317,7 @@ export const Step1: React.FC<{
               <S.InputHeader>{t('databaseSources.describeDataset.templateName')}</S.InputHeader>
             </BaseCol>
             <BaseCol span={19}>
-              <BaseInput value={templateName} onChange={(e) => setTemplateName(e.target.value)}></BaseInput>
+              <BaseInput value={templateName} onChange={(e) => setTemplateName(e.target.value)} />
             </BaseCol>
           </BaseRow>
           <BaseRow>

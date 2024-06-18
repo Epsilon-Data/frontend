@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { AnalysisTableRow, getAnalysisTableData, Pagination } from '@app/api/datasets.api';
+import React, { useEffect, useState, useRef } from 'react';
+import { AnalysisTableRow, Pagination } from '@app/api/datasets.api';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { ColumnsType } from 'antd/es/table';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { useTranslation } from 'react-i18next';
-import { useMounted } from '@app/hooks/useMounted';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, InputRef, Space, TableColumnType } from 'antd';
@@ -17,14 +16,11 @@ const initialPagination: Pagination = {
   pageSize: 5,
 };
 
-export const AnalysisTable: React.FC = () => {
-  const [tableData, setTableData] = useState<{ data: AnalysisTableRow[]; pagination: Pagination; loading: boolean }>({
-    data: [],
-    pagination: initialPagination,
-    loading: false,
-  });
+export const AnalysisTable: React.FC<{
+  fetch: (pagination: Pagination) => void;
+  tableData: { data: AnalysisTableRow[]; pagination: Pagination; loading: boolean };
+}> = ({ fetch, tableData }) => {
   const { t } = useTranslation();
-  const { isMounted } = useMounted();
   const navigate = useNavigate();
 
   const [searchText, setSearchText] = useState('');
@@ -118,18 +114,6 @@ export const AnalysisTable: React.FC = () => {
         text
       ),
   });
-
-  const fetch = useCallback(
-    (pagination: Pagination) => {
-      setTableData((tableData) => ({ ...tableData, loading: true }));
-      getAnalysisTableData(pagination).then((res) => {
-        if (isMounted.current) {
-          setTableData({ data: res.data, pagination: res.pagination, loading: false });
-        }
-      });
-    },
-    [isMounted],
-  );
 
   useEffect(() => {
     fetch(initialPagination);

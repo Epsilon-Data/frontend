@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { RequestTableRow, getRequestTableData, Pagination, Tag, deleteRequest } from '@app/api/userRequests.api';
+import { RequestTableRow, getRequestTableData, Pagination, Tag, deleteRequest } from '@app/api/accessRequests.api';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { ColumnsType } from 'antd/es/table';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
@@ -23,7 +23,7 @@ const initialPagination: Pagination = {
   pageSize: 5,
 };
 
-export const UserRequestTable: React.FC<{ page: string | undefined }> = ({ page }) => {
+export const AccessRequestTable: React.FC<{ page: string | undefined }> = ({ page }) => {
   const [tableData, setTableData] = useState<{ data: RequestTableRow[]; pagination: Pagination; loading: boolean }>({
     data: [],
     pagination: initialPagination,
@@ -207,20 +207,14 @@ export const UserRequestTable: React.FC<{ page: string | undefined }> = ({ page 
             title: t('tables.actions'),
             dataIndex: 'actions',
             width: '15%',
-            render: (
-              text: string,
-              record: { id: string; requestingProjectId: string; statusTag: { priority: Priority } },
-            ) => {
+            render: (text: string, record: { id: string; statusTag: { priority: Priority } }) => {
               return (
                 <BaseSpace>
                   <BaseButton type="primary" onClick={() => navigate(`/requests/user/view/${record.id}`)}>
                     {t('tables.view')}
                   </BaseButton>
                   {record.statusTag.priority == Priority.LOW && (
-                    <BaseButton
-                      type="primary"
-                      onClick={() => navigate(`/datasets/analysis/${record.requestingProjectId}`)}
-                    >
+                    <BaseButton type="primary" onClick={() => navigate(`/datasets/analysis/${record.id}`)}>
                       {t('connectionRequests.viewDataset')}
                     </BaseButton>
                   )}

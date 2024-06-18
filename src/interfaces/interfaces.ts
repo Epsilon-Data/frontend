@@ -149,3 +149,9 @@ export interface AccessDetails {
   createdDate?: Date;
   revisionInfo?: string;
 }
+
+export interface DescriptiveAnalysis {
+  id: string;
+  variables: { name: string; type: string }[];
+  calculate: string[];
+}

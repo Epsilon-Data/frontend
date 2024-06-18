@@ -1,17 +1,19 @@
-import React, { CSSProperties, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as S from './Specifications.styles';
-import { Collapse, CollapseProps, Typography } from 'antd/lib';
+import { Collapse, CollapseProps, Typography, Upload } from 'antd/lib';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { FaPlus } from 'react-icons/fa';
-import { Pagination, ScriptInfo } from '@app/api/datasets.api';
+import { Pagination, ScriptInfo, deleteScript, uploadScript } from '@app/api/datasets.api';
 import { ColumnsType } from 'antd/lib/table';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { FaRegCircleCheck, FaRegCircleXmark } from 'react-icons/fa6';
-import { HiOutlineDotsCircleHorizontal } from 'react-icons/hi';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { ExecutionSettings } from './ExecutionSettings/ExecutionSettings';
+import { notificationController } from '@app/controllers/notificationController';
+import { useParams } from 'react-router-dom';
+import { MdPending } from 'react-icons/md';
 
 const initialPagination: Pagination = {
   current: 1,
@@ -19,7 +21,12 @@ const initialPagination: Pagination = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const Specifications: React.FC<{ info: any; isLoading: boolean }> = ({ info, isLoading }) => {
+export const Specifications: React.FC<{ info: any; isLoading: boolean; fetch: (id: string | undefined) => void }> = ({
+  info,
+  isLoading,
+  fetch,
+}) => {
+  const { analysisId } = useParams();
   const [tableData, setTableData] = useState<{ data: ScriptInfo[]; pagination: Pagination; loading: boolean }>({
     data: info.scripts,
     pagination: initialPagination,
@@ -28,12 +35,16 @@ export const Specifications: React.FC<{ info: any; isLoading: boolean }> = ({ in
   const { t } = useTranslation();
   const { Paragraph } = Typography;
 
+  useEffect(() => {
+    setTableData((tableData) => ({ ...tableData, data: info.scripts, loading: isLoading }));
+  }, [info.scripts, isLoading]);
+
   const getStatusIcon = (status: number) => {
     switch (status) {
       case 1:
-        return <HiOutlineDotsCircleHorizontal style={{ color: 'var(--warning-color)' }} />;
+        return <MdPending style={{ color: 'var(--warning-color)', top: '1.8rem', position: 'absolute' }} />;
       case 2:
-        return <FaRegCircleXmark style={{ color: 'var(--error-color)' }} />;
+        return <FaRegCircleXmark style={{ color: 'var(--error-color)', top: '1rem' }} />;
       case 3:
         return <FaRegCircleCheck style={{ color: 'var(--success-color)' }} />;
       default:
@@ -43,6 +54,18 @@ export const Specifications: React.FC<{ info: any; isLoading: boolean }> = ({ in
 
   const handleTableChange = (pagination: Pagination) => {
     setTableData((tableData) => ({ ...tableData, pagination: pagination }));
+  };
+
+  const handleDeleteRow = (scriptId: string) => {
+    setTableData({
+      ...tableData,
+      data: tableData.data.filter((item) => item.id !== scriptId),
+      pagination: {
+        ...tableData.pagination,
+        total: tableData.pagination.total ? tableData.pagination.total - 1 : tableData.pagination.total,
+      },
+    });
+    deleteScript(scriptId);
   };
 
   const columns: ColumnsType<ScriptInfo> = [
@@ -58,7 +81,8 @@ export const Specifications: React.FC<{ info: any; isLoading: boolean }> = ({ in
       key: 'statusMsg',
       render: (text: string, record: { status: number }) => (
         <span>
-          {getStatusIcon(record.status)} {text}
+          {getStatusIcon(record.status)}
+          <span style={{ marginLeft: '1.2rem' }}>{text}</span>
         </span>
       ),
     },
@@ -72,10 +96,10 @@ export const Specifications: React.FC<{ info: any; isLoading: boolean }> = ({ in
       title: t('tables.actions'),
       dataIndex: 'actions',
       width: '15%',
-      render: () => {
+      render: (text: string, record: { id: string }) => {
         return (
           <BaseSpace>
-            <BaseButton type="primary" danger>
+            <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>
               {t('tables.delete')}
             </BaseButton>
           </BaseSpace>
@@ -93,10 +117,10 @@ export const Specifications: React.FC<{ info: any; isLoading: boolean }> = ({ in
 
   const getItems: (panelStyle: CSSProperties) => CollapseProps['items'] = (panelStyle) => {
     const collapseItems = [];
-    for (let i = 0; i < info.scripts.length; i++) {
+    for (let i = 0; i < tableData.data.length; i++) {
       collapseItems.push({
         key: i,
-        label: info.scripts[i].name,
+        label: tableData.data[i].name,
         children: <ExecutionSettings />,
         style: panelStyle,
       });
@@ -112,9 +136,29 @@ export const Specifications: React.FC<{ info: any; isLoading: boolean }> = ({ in
       <S.InfoCard
         title={t('dataset.analysis.view.scripts')}
         extra={
-          <S.HeaderButton type="primary" icon={<FaPlus />}>
-            {t('dataset.analysis.view.addScript')}
-          </S.HeaderButton>
+          <Upload
+            showUploadList={false}
+            maxCount={1}
+            customRequest={({ file, onSuccess }) => {
+              if (onSuccess) {
+                uploadScript(analysisId, file)
+                  .then((response) => {
+                    onSuccess(response);
+                    notificationController.success({
+                      message: t('dataset.analysis.view.scriptAddSuccess'),
+                    });
+                    fetch(analysisId);
+                  })
+                  .catch(() => {
+                    notificationController.error({ message: t('dataset.analysis.view.scriptAddFail') });
+                  });
+              }
+            }}
+          >
+            <S.HeaderButton type="primary" icon={<FaPlus />}>
+              {t('dataset.analysis.view.addScript')}
+            </S.HeaderButton>
+          </Upload>
         }
       >
         <BaseTable

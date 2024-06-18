@@ -1,6 +1,7 @@
 import { BROWSE_DATASET_API_URL } from '@app/constants/browseDatasets';
 import { getCsrfHeader, httpClient } from './http.api';
 import { AccessDetails, Template } from '@app/interfaces/interfaces';
+import { format } from 'date-fns';
 
 export interface Pagination {
   current: number;
@@ -34,6 +35,7 @@ export interface ProjectInfo {
   archetype: Template | null;
   isOwnProject: boolean;
   visualisations: { title: string; url: string }[];
+  lastUpdated: string;
 }
 
 export const getProjects = async (isSearch: boolean): Promise<ProjectSummaryInfo[]> => {
@@ -69,6 +71,8 @@ export const getProjectDetails = async (projectId: string | undefined): Promise<
   if (!response.data.visualisations) {
     response.data.visualisations = [];
   }
+
+  response.data.lastUpdated = format(new Date(response.data.lastUpdated), "h.mma 'on' MMMM d, yyyy");
 
   return response.data;
 };

@@ -2,7 +2,7 @@
 import { Priority } from '../constants/enums/priorities';
 import { RequestStatus } from '@app/constants/enums/requestStatus';
 import { format } from 'date-fns';
-import { DATE_FORMAT, USER_REQUEST_API_URL } from '@app/constants/userRequest';
+import { DATE_FORMAT, ACCESS_REQUEST_API_URL } from '@app/constants/accessRequest';
 import { httpClient, getCsrfHeader } from './http.api';
 import { AccessDetails } from '@app/interfaces/interfaces';
 
@@ -38,7 +38,7 @@ export const getRequestTableData = async (
   page: string | undefined,
 ): Promise<RequestTableData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(USER_REQUEST_API_URL + 'summary', {
+  const response = await httpClient.get(ACCESS_REQUEST_API_URL + 'summary', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       mode: page,
@@ -92,7 +92,7 @@ export const getRequestTableData = async (
 
 export const getRequestDetails = async (requestId: string | undefined): Promise<AccessDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(USER_REQUEST_API_URL + 'details', {
+  const response = await httpClient.get(ACCESS_REQUEST_API_URL + 'details', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       requestId: requestId,
@@ -103,7 +103,7 @@ export const getRequestDetails = async (requestId: string | undefined): Promise<
 
 export const reviseRequest = async (data: { requestId: string | undefined; revisionInfo: string }): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch(USER_REQUEST_API_URL + 'revision', data, {
+  const response = await httpClient.patch(ACCESS_REQUEST_API_URL + 'revision', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
@@ -111,7 +111,7 @@ export const reviseRequest = async (data: { requestId: string | undefined; revis
 
 export const proceedRequest = async (data: { requestId: string | undefined; isApproved: boolean }): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch(USER_REQUEST_API_URL + 'proceed', data, {
+  const response = await httpClient.patch(ACCESS_REQUEST_API_URL + 'proceed', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
@@ -119,7 +119,7 @@ export const proceedRequest = async (data: { requestId: string | undefined; isAp
 
 export const deleteRequest = async (requestId: string | undefined): Promise<AccessDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.delete(USER_REQUEST_API_URL + 'delete', {
+  const response = await httpClient.delete(ACCESS_REQUEST_API_URL + 'delete', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       requestId: requestId,
@@ -130,7 +130,7 @@ export const deleteRequest = async (requestId: string | undefined): Promise<Acce
 
 export const editRequest = async (data: AccessDetails): Promise<AccessDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch(USER_REQUEST_API_URL + 'edit', data, {
+  const response = await httpClient.patch(ACCESS_REQUEST_API_URL + 'edit', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;

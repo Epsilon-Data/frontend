@@ -17,16 +17,16 @@ const connectNavigation: SidebarNavigationItem[] = [
     url: '/requests/database',
   },
   {
-    title: 'connectionRequests.userRequestSidebar.main',
+    title: 'connectionRequests.accessRequestSidebar.main',
     key: 'requests/user',
     children: [
       {
-        title: 'connectionRequests.userRequestSidebar.received',
+        title: 'connectionRequests.accessRequestSidebar.received',
         key: 'received',
         url: '/requests/user/receive',
       },
       {
-        title: 'connectionRequests.userRequestSidebar.sent',
+        title: 'connectionRequests.accessRequestSidebar.sent',
         key: 'sent',
         url: '/requests/user/sent',
       },
@@ -43,7 +43,7 @@ const sourceNavigation: SidebarNavigationItem[] = [
 
 const datasetNavigation: SidebarNavigationItem[] = [
   { title: 'dataset.analysis.title', key: 'analysis' },
-  { title: 'dataset.details.title', key: 'details' },
+  { title: 'dataset.standard.title', key: 'standard' },
 ];
 
 export function returnCurrentNav(key: string): SidebarNavigationItem[] {

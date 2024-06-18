@@ -34,7 +34,7 @@ export const ProjectDetails: React.FC<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFormValueChange = (changedValues: any, allValues: any) => {
     allValues.projectDuration = allValues.projectDuration.map((appDate: AppDate) => dayjs(appDate).toDate());
-    allValues.projectMembers = members;
+
     const updatedDetails = {
       ...formValue,
       projectName: allValues.projectName,
@@ -43,9 +43,13 @@ export const ProjectDetails: React.FC<{
       projectObjective: allValues.projectObjective,
       projectHypotheses: allValues.projectHypotheses,
       projectOutcome: allValues.projectOutcome,
-      projectMembers: allValues.projectMembers,
     };
     setFormValue(updatedDetails);
+  };
+
+  const handleTagsChange = (tags: string[]) => {
+    setMembers(tags);
+    setFormValue({ ...formValue, projectMembers: tags });
   };
 
   return (
@@ -91,7 +95,7 @@ export const ProjectDetails: React.FC<{
           <TagInputItem
             name="projectMembers"
             tags={members}
-            onTagsChange={setMembers}
+            onTagsChange={handleTagsChange}
             label={t('browse.access.project.members')}
             prompt={t('browse.access.project.addMembers')}
           />

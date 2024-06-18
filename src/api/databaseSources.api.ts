@@ -5,6 +5,7 @@ import { DATE_FORMAT, DATABASE_SOURCE_API_URL } from '@app/constants/databaseSou
 import { format } from 'date-fns';
 import { httpClient, getCsrfHeader } from './http.api';
 import { AxiosProgressEvent } from 'axios';
+import { RcFile } from 'antd/es/upload';
 
 export interface Tag {
   value: string;
@@ -178,6 +179,7 @@ export const getDbColumns = async (projectId: string | undefined): Promise<strin
       projectId: projectId,
     },
   });
+
   return response.data;
 };
 
@@ -247,7 +249,7 @@ export const getProjectSettings = async (projectId: string | undefined): Promise
 
 export const uploadProjectCover = async (
   projectId: string | undefined,
-  file: File,
+  file: string | Blob | RcFile,
   onUploadProgress: (progressEvent: AxiosProgressEvent) => void,
 ): Promise<Buffer> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();

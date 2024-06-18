@@ -34,10 +34,20 @@ export const DataInfo: React.FC<{
         collectionDuration: allValues.collectionDuration.map((appDate: AppDate) => dayjs(appDate).toDate()),
         participantsNumber: allValues.participantsNumber,
         description: allValues.description,
-        keywords: keywords,
       },
     };
     setFormValue(updatedRequest);
+  };
+
+  const handleTagsChange = (tags: string[]) => {
+    setKeywords(tags);
+    setFormValue({
+      ...formValue,
+      dataInfo: {
+        ...formValue.dataInfo,
+        keywords: tags,
+      },
+    });
   };
 
   return (
@@ -85,7 +95,7 @@ export const DataInfo: React.FC<{
             label={t('connectionRequests.details.dataInfo.keywords')}
             tags={keywords || []}
             prompt={t('connectionRequests.details.dataInfo.addKeywords')}
-            onTagsChange={setKeywords}
+            onTagsChange={handleTagsChange}
             required
           />
         </BaseCol>

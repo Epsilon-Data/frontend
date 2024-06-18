@@ -94,9 +94,9 @@ const OtherSettingsPage: React.FC = () => {
                       defaultFileList={fileList}
                       maxCount={1}
                       onChange={onChange}
-                      customRequest={({ file, onProgress, onSuccess }) => {
-                        if (onProgress && onSuccess) {
-                          uploadProjectCover(id, new File([file], 'cover.png'), (progressEvent: any) => {
+                      customRequest={({ file, onProgress, onSuccess, onError }) => {
+                        if (onProgress && onSuccess && onError) {
+                          uploadProjectCover(id, file, (progressEvent: any) => {
                             const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                             onProgress({ percent: percentCompleted });
                           })
@@ -106,9 +106,10 @@ const OtherSettingsPage: React.FC = () => {
                                 message: t('databaseSources.otherSettings.uploadSuccess'),
                               });
                             })
-                            .catch(() =>
-                              notificationController.error({ message: t('databaseSources.otherSettings.uploadFail') }),
-                            );
+                            .catch((err) => {
+                              onError(err);
+                              notificationController.error({ message: t('databaseSources.otherSettings.uploadFail') });
+                            });
                         }
                       }}
                     >

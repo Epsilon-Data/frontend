@@ -63,6 +63,7 @@ export const Step2: React.FC<{
   const [initialColumns, setInitialColumns] = useState<string[]>([]);
   const [columns, setColumns] = useState<string[]>([]);
   const [filteredColumns, setFilteredColumns] = useState<string[]>([]);
+  const [corrTables, setCorrTables] = useState<any[]>([]);
   const [reset, setReset] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
   const templateEdges = edges.filter((edge) => !edge.source.includes('column_') && !edge.target.includes('column_'));
@@ -78,10 +79,12 @@ export const Step2: React.FC<{
     (id: string | undefined) => {
       getDbColumns(id).then((res) => {
         if (isMounted.current) {
-          setColumns(res);
-          setInitialColumns(res);
-          setFilteredColumns(res);
-          setColumnCount(res.length);
+          const resCols = Object.keys(res);
+          setCorrTables(res);
+          setColumns(resCols);
+          setInitialColumns(resCols);
+          setFilteredColumns(resCols);
+          setColumnCount(resCols.length);
         }
       });
     },
@@ -262,6 +265,7 @@ export const Step2: React.FC<{
             filteredColumns={filteredColumns}
             setFilteredColumns={setFilteredColumns}
             columns={columns}
+            corrTables={corrTables}
             reset={reset}
             setReset={setReset}
             searchValue={searchValue}

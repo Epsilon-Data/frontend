@@ -8,9 +8,10 @@ export const StringInputItem: React.FC<{
   required?: boolean;
   suffix?: React.ReactNode;
   disabled?: boolean;
-}> = ({ name, label, required, suffix, disabled }) => {
+  style?: React.CSSProperties;
+}> = ({ name, label, required, suffix, disabled, style }) => {
   return (
-    <BaseButtonsForm.Item name={name} label={label} rules={[{ required: required }]}>
+    <BaseButtonsForm.Item name={name} label={label} rules={[{ required: required }]} style={style}>
       <BaseInput suffix={suffix} disabled={disabled} />
     </BaseButtonsForm.Item>
   );

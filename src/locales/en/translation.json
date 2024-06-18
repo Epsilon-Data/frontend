@@ -664,9 +664,9 @@
     "requestingProject": "Requesting Project Dataset",
     "dbRequest": "Database Request",
     "dbRequestList" : "Database Request List",
-    "userRequestList": "{{action}}User Request List",
-    "userRequestSidebar": {
-      "main": "User Request",
+    "accessRequestList": "{{action}}Access Request List",
+    "accessRequestSidebar": {
+      "main": "Access Request",
       "received": "Requests Received",
       "sent": "Requests Sent"
     },
@@ -929,7 +929,7 @@
       "missingTitle": "Missing visualisation title.",
       "missingUrl": "Missing Tableau URL.",
       "upload": "Upload Cover Photo",
-      "uploadInfo": "Only JPG, JPEG files less than 2MB are allowed.",
+      "uploadInfo": "Only JPG, JPEG and PNG files less than 2MB are allowed.",
       "uploadSuccess": "Cover photo uploaded successfully.",
       "uploadFail": "Failed to upload cover photo. Please try again."
     }
@@ -1027,9 +1027,44 @@
     "title": "Datasets",
     "datasetList": "Dataset List",
     "analyseData": "Analyse Data",
-    "details": {
-      "title": "Dataset Details"
-
+    "standard": {
+      "title": "Standard Analyses",
+      "descriptive":{
+        "title": "Descriptive",
+        "guide": "Guide",
+        "table": "Table",
+        "tablePrompt": "Select table",
+        "var": "Variables",
+        "varType": "Variables Type",
+        "dependentVar": "Dependent Variable",
+        "independentVar": "Independent Variables",
+        "varPrompt": "Select {{variable}}",
+        "calculate": {
+          "title": "Calculate",
+          "mean": "Mean",
+          "median": "Median",
+          "mode": "Mode",
+          "sd": "Standard Deviation",
+          "var": "Variance",
+          "min": "Minimum",
+          "max": "Maximum"
+        },
+        "output": "Output",
+        "generate":"Generate Output",
+        "failNotify": "Unable to generate output. Please try again.",
+        "selectVarNotify": "Please select at least one variable.",
+        "selectVarTypeNotify": "Please select the variable type for each variable.",
+        "selectCalcNotify": "Please select the calculations to be performed."
+      },
+      "hypothesis": {
+        "title": "Hypothesis",
+        "altHypo": "Alternative Hypothesis",
+        "sigLvl": "Significance Level",
+        "testValue": "Test Value"
+      },
+      "regression": {
+        "title": "Regression"
+      }
     },
     "analysis": {
       "title": "Analyse Data",
@@ -1037,7 +1072,12 @@
       "createdDate":"Created Date",
       "updatedDate": "Updated Date",
       "lastUpdated": "Last Updated By",
-      "create": "Create Analysis",
+      "create": {
+        "title": "Create Analysis",
+        "prompt": "Please provide your analysis name: ",
+        "successNotify": "Analysis created successfully.",
+        "failNotify": "Failed to create analysis. Please try again."
+      },
       "view": {
         "title": "Analysis Details",
         "delete": "Delete Analysis",
@@ -1047,6 +1087,8 @@
         "description": "Analysis Description",
         "scripts": "Analysis Scripts",
         "addScript": "Add Script",
+        "scriptAddSuccess": "Script added successfully.",
+        "scriptAddFail": "Failed to add script. Please try again.",
         "scriptName": "Script Name",
         "checkValidation": "Check Validation",
         "lastUpdated": "Last Updated",

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './AnalysisViewPage.styles';
@@ -13,16 +13,33 @@ import { Specifications } from './Specifications/Specifications';
 import { Utilities } from './Utilities/Utilities';
 
 const AnalysisViewPage: React.FC = () => {
-  const { id } = useParams();
+  const { analysisId } = useParams();
   const { t } = useTranslation();
   const { isMounted } = useMounted();
   const [analysisDetails, setAnalysisDetails] = useState<AnalysisInfo>(INITIAL_DETAIL_VALUES);
   const [isLoading, setIsLoading] = useState(false);
 
+  const fetch = useCallback(
+    (id: string | undefined) => {
+      getAnalysisDetails(id).then((res) => {
+        setIsLoading(true);
+        if (isMounted.current && res) {
+          setAnalysisDetails(res);
+          setIsLoading(false);
+        }
+      });
+    },
+    [isMounted],
+  );
+
+  useEffect(() => {
+    fetch(analysisId);
+  }, [analysisId, fetch]);
+
   const tabItems = [
     {
       label: t('dataset.analysis.view.specs'),
-      children: <Specifications info={analysisDetails} isLoading={isLoading} />,
+      children: <Specifications info={analysisDetails} isLoading={isLoading} fetch={fetch} />,
       key: 'specs',
     },
     {
@@ -31,16 +48,6 @@ const AnalysisViewPage: React.FC = () => {
       key: 'util',
     },
   ];
-
-  useEffect(() => {
-    getAnalysisDetails(id).then((res) => {
-      setIsLoading(true);
-      if (isMounted.current && res) {
-        setAnalysisDetails(res);
-        setIsLoading(false);
-      }
-    });
-  }, [isMounted, id]);
 
   return (
     <>

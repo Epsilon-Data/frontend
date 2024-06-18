@@ -7,13 +7,15 @@ import { CheckboxProps } from 'antd';
 
 export const ColumnSidebar: React.FC<{
   columns: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  corrTables: any[];
   reset: boolean;
   setReset: (value: boolean) => void;
   filteredColumns: string[];
   setFilteredColumns: (value: string[]) => void;
   searchValue: string;
   setSearchValue: (value: string) => void;
-}> = ({ columns, reset, setReset, filteredColumns, setFilteredColumns, searchValue, setSearchValue }) => {
+}> = ({ columns, corrTables, reset, setReset, filteredColumns, setFilteredColumns, searchValue, setSearchValue }) => {
   const { t } = useTranslation();
   const [selectedColumns, setSelectedColumns] = useState<Array<CheckboxValueType>>([]);
   const checkAll = filteredColumns.length === selectedColumns.length && filteredColumns.length > 0;
@@ -81,6 +83,7 @@ export const ColumnSidebar: React.FC<{
             <div className="text">
               <S.ColumnCheckbox value={columnName} onChange={handleCheckboxChange}></S.ColumnCheckbox>
               <span>{columnName}</span>
+              <span>{corrTables[columnName as string]}</span>
             </div>
           </S.Column>
         ))}

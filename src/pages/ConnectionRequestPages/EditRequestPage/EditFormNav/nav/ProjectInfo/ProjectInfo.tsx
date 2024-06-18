@@ -37,11 +37,11 @@ export const ProjectInfo: React.FC<{
     const updatedRequest = {
       ...formValue,
       projectInfo: {
+        ...formValue.projectInfo,
         name: allValues.name,
         customId: formValue.projectInfo.customId,
         duration: allValues.duration.map((appDate: AppDate) => dayjs(appDate).toDate()),
         lead: allValues.lead,
-        members: members,
         university: allValues.university,
         faculty: allValues.faculty,
         ethicsId: allValues.ethicsId,
@@ -49,6 +49,17 @@ export const ProjectInfo: React.FC<{
       },
     };
     setFormValue(updatedRequest);
+  };
+
+  const handleTagsChange = (tags: string[]) => {
+    setMembers(tags);
+    setFormValue({
+      ...formValue,
+      projectInfo: {
+        ...formValue.projectInfo,
+        members: tags,
+      },
+    });
   };
 
   return (
@@ -82,7 +93,7 @@ export const ProjectInfo: React.FC<{
           <TagInputItem
             name="members"
             tags={members}
-            onTagsChange={setMembers}
+            onTagsChange={handleTagsChange}
             label={t('connectionRequests.details.projectInfo.teamMembers')}
             prompt={t('connectionRequests.details.projectInfo.addTeamMembers')}
             required

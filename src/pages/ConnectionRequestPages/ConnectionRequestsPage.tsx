@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { DatabaseRequestTable } from '@app/components/tables/DatabaseRequestTable/DatabaseRequestTable';
+import { ConnectRequestTable } from '@app/components/tables/ConnectRequestTable/ConnectRequestTable';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './ConnectionRequestsPage.styles';
 import { FaCirclePlus } from 'react-icons/fa6';
@@ -24,7 +24,7 @@ const ConnectionRequestsPage: React.FC = () => {
           }
           padding="1.25rem 1.25rem 0"
         >
-          <DatabaseRequestTable />
+          <ConnectRequestTable />
         </S.Card>
       </S.TablesWrapper>
     </>

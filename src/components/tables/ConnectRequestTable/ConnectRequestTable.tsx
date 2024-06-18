@@ -20,7 +20,7 @@ const initialPagination: Pagination = {
   pageSize: 5,
 };
 
-export const DatabaseRequestTable: React.FC = () => {
+export const ConnectRequestTable: React.FC = () => {
   const [tableData, setTableData] = useState<{ data: RequestTableRow[]; pagination: Pagination; loading: boolean }>({
     data: [],
     pagination: initialPagination,

@@ -64,7 +64,7 @@ export const DatasetCardList: React.FC = () => {
             <BaseButton
               style={{ marginTop: '1rem', float: 'right' }}
               type="primary"
-              onClick={() => navigate('/datasets/analysis/' + item.projectId)}
+              onClick={() => navigate('/datasets/analysis/' + item.id)}
             >
               {t('dataset.analyseData')}
             </BaseButton>

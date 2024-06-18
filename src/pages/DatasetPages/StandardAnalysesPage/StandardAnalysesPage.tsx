@@ -12,11 +12,12 @@ import { GUIDE_CONTENT } from '@app/constants/datasets';
 const StandardAnalysesPage: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation();
-  const [columns, setColumns] = useState<string[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [lookupTable, setLookupTable] = useState<any[]>([]);
 
   const fetch = useCallback(() => {
     getAnalysisColumns(id).then((res) => {
-      setColumns(res);
+      setLookupTable(res);
     });
   }, [id]);
 
@@ -48,7 +49,7 @@ const StandardAnalysesPage: React.FC = () => {
               },
             ]}
           />
-          <Descriptive columns={columns} />
+          <Descriptive lookup={lookupTable} />
         </S.Card>
       </S.CardWrapper>
     </>

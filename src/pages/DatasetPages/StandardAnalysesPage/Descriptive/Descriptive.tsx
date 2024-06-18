@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import * as S from './Descriptive.styles';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
@@ -16,8 +17,7 @@ import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { BaseSelect } from '@app/components/common/selects/BaseSelect/BaseSelect';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const Descriptive: React.FC<{ columns: string[] }> = ({ columns }) => {
+export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
   const { id } = useParams();
   const { t } = useTranslation();
   const [selectedVars, setSelectedVars] = useState<string[]>([]);
@@ -25,12 +25,38 @@ export const Descriptive: React.FC<{ columns: string[] }> = ({ columns }) => {
   const [varTypes, setVarTypes] = useState<{ name: string; type: string }[]>([]);
   const [calculations, setCalculations] = useState<string[]>([]);
   const [output, setOutput] = useState<string>('');
+  const [columnsLoading, setColumnsLoading] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const [columns, setColumns] = useState<{ value: string; label: string }[]>([]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tableNames = new Set<string>();
+
+  for (const column_name in lookup) {
+    tableNames.add(lookup[column_name]);
+  }
+
+  const tableOptions = Array.from(tableNames).map((item) => ({
+    value: item,
+    label: item,
+  }));
+
   const handleVarSelectChange = (value: any) => {
     setSelectedVars(value);
     const filteredVarTypes = varTypes.filter((varType) => selectedVars.includes(varType.name));
     setVarTypes(filteredVarTypes);
+  };
+
+  const handleTableSelectChange = (value: any) => {
+    setColumnsLoading(true);
+    const resCols = Object.keys(lookup).filter((col) => lookup[col as any] === value);
+    setColumns(
+      resCols.map((item) => ({
+        value: item,
+        label: item,
+      })),
+    );
+    setColumnsLoading(false);
+    setIsDisabled(false);
   };
 
   const handleOnClick = () => {
@@ -58,11 +84,6 @@ export const Descriptive: React.FC<{ columns: string[] }> = ({ columns }) => {
         });
     }
   };
-
-  const options = columns.map((item) => ({
-    value: item,
-    label: item,
-  }));
 
   const handleTypeChange = (e: RadioChangeEvent) => {
     const column = e.target.name;
@@ -96,7 +117,13 @@ export const Descriptive: React.FC<{ columns: string[] }> = ({ columns }) => {
             rules={[{ required: false }]}
             style={{ marginBottom: '2rem', width: '80%' }}
           >
-            <BaseSelect width={120} placeholder={t('dataset.standard.descriptive.tablePrompt')} />
+            <BaseSelect
+              width={120}
+              placeholder={t('dataset.standard.descriptive.tablePrompt')}
+              onChange={handleTableSelectChange}
+              loading={columnsLoading}
+              options={tableOptions}
+            />
           </BaseForm.Item>
           <BaseForm.Item
             name={'var'}
@@ -110,7 +137,8 @@ export const Descriptive: React.FC<{ columns: string[] }> = ({ columns }) => {
               placeholder={t('dataset.standard.descriptive.varPrompt', {
                 variable: t('dataset.standard.descriptive.var').toLowerCase(),
               })}
-              options={options}
+              options={columns}
+              disabled={isDisabled}
               onChange={handleVarSelectChange}
             />
           </BaseForm.Item>

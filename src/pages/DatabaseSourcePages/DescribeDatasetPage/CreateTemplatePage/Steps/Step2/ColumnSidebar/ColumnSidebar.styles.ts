@@ -34,6 +34,13 @@ export const Column = styled.div`
     font-size: 0.9rem;
     text-align: right;
   }
+
+  .table span {
+    font-size: 0.7rem;
+    text-align: right;
+    padding: 1rem;
+    word-break: break-all;
+  }
 `;
 
 export const ColumnSearch = styled(BaseInput)`

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as S from './ColumnSidebar.styles';
@@ -83,7 +84,7 @@ export const ColumnSidebar: React.FC<{
             <div className="text">
               <S.ColumnCheckbox value={columnName} onChange={handleCheckboxChange}></S.ColumnCheckbox>
               <span>{columnName}</span>
-              <span>{corrTables[columnName as string]}</span>
+              <span>{corrTables[columnName as any]}</span>
             </div>
           </S.Column>
         ))}

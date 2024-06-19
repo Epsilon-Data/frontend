@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { CALC_OPTIONS, VAR_OPTIONS } from '@app/constants/datasets';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
-import { RadioChangeEvent } from 'antd';
+import { RadioChangeEvent, Space } from 'antd';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { notificationController } from '@app/controllers/notificationController';
 import { DescriptiveAnalysis } from '@app/interfaces/interfaces';
@@ -15,30 +15,15 @@ import { useParams } from 'react-router-dom';
 import { getDescriptive } from '@app/api/datasets.api';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { BaseSelect } from '@app/components/common/selects/BaseSelect/BaseSelect';
 
 export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
   const { id } = useParams();
   const { t } = useTranslation();
   const [selectedVars, setSelectedVars] = useState<string[]>([]);
   const [hidden, setHidden] = useState(true);
-  const [varTypes, setVarTypes] = useState<{ name: string; type: string }[]>([]);
+  const [varTypes, setVarTypes] = useState<{ name: string; type: string; table: string }[]>([]);
   const [calculations, setCalculations] = useState<string[]>([]);
   const [output, setOutput] = useState<string>('');
-  const [columnsLoading, setColumnsLoading] = useState<boolean>(false);
-  const [isDisabled, setIsDisabled] = useState<boolean>(true);
-  const [columns, setColumns] = useState<{ value: string; label: string }[]>([]);
-
-  const tableNames = new Set<string>();
-
-  for (const column_name in lookup) {
-    tableNames.add(lookup[column_name]);
-  }
-
-  const tableOptions = Array.from(tableNames).map((item) => ({
-    value: item,
-    label: item,
-  }));
 
   const handleVarSelectChange = (value: any) => {
     setSelectedVars(value);
@@ -46,18 +31,11 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
     setVarTypes(filteredVarTypes);
   };
 
-  const handleTableSelectChange = (value: any) => {
-    setColumnsLoading(true);
-    const resCols = Object.keys(lookup).filter((col) => lookup[col as any] === value);
-    setColumns(
-      resCols.map((item) => ({
-        value: item,
-        label: item,
-      })),
-    );
-    setColumnsLoading(false);
-    setIsDisabled(false);
-  };
+  const options = Object.keys(lookup).map((item) => ({
+    value: item,
+    label: item,
+    table: lookup[item as any],
+  }));
 
   const handleOnClick = () => {
     setHidden(true);
@@ -88,6 +66,7 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
   const handleTypeChange = (e: RadioChangeEvent) => {
     const column = e.target.name;
     const columnType = e.target.value;
+    const table = lookup[column as any];
 
     if (column) {
       setVarTypes((prev) => {
@@ -97,7 +76,7 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
           updatedVarTypes[index] = { ...updatedVarTypes[index], type: columnType };
           return updatedVarTypes;
         } else {
-          return [...prev, { name: column, type: columnType }];
+          return [...prev, { name: column, type: columnType, table: table }];
         }
       });
     }
@@ -112,20 +91,6 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
       <BaseForm>
         <BaseCol span={24}>
           <BaseForm.Item
-            name={'table'}
-            label={t('dataset.standard.descriptive.table')}
-            rules={[{ required: false }]}
-            style={{ marginBottom: '2rem', width: '80%' }}
-          >
-            <BaseSelect
-              width={120}
-              placeholder={t('dataset.standard.descriptive.tablePrompt')}
-              onChange={handleTableSelectChange}
-              loading={columnsLoading}
-              options={tableOptions}
-            />
-          </BaseForm.Item>
-          <BaseForm.Item
             name={'var'}
             label={t('dataset.standard.descriptive.var')}
             rules={[{ required: false }]}
@@ -137,8 +102,13 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
               placeholder={t('dataset.standard.descriptive.varPrompt', {
                 variable: t('dataset.standard.descriptive.var').toLowerCase(),
               })}
-              options={columns}
-              disabled={isDisabled}
+              options={options}
+              optionRender={(option) => (
+                <Space>
+                  <span>{option.data.label}</span>
+                  <span style={{ fontSize: '0.7rem', color: 'gray' }}>{option.data.table}</span>
+                </Space>
+              )}
               onChange={handleVarSelectChange}
             />
           </BaseForm.Item>

@@ -152,6 +152,6 @@ export interface AccessDetails {
 
 export interface DescriptiveAnalysis {
   id: string;
-  variables: { name: string; type: string }[];
+  variables: { name: string; type: string; table: string }[];
   calculate: string[];
 }

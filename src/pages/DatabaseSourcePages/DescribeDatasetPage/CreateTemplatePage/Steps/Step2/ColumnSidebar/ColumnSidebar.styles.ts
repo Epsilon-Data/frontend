@@ -30,16 +30,14 @@ export const Column = styled.div`
   }
 
   .text span {
-    flex: 1;
+    display: block;
     font-size: 0.9rem;
     text-align: right;
   }
 
-  .table span {
-    font-size: 0.7rem;
-    text-align: right;
-    padding: 1rem;
-    word-break: break-all;
+  .text span span {
+    font-size: ${FONT_SIZE.xxs};
+    font-weight: ${FONT_WEIGHT.light};
   }
 `;
 

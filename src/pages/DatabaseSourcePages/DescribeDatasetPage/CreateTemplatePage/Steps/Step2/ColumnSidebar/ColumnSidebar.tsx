@@ -83,8 +83,10 @@ export const ColumnSidebar: React.FC<{
           >
             <div className="text">
               <S.ColumnCheckbox value={columnName} onChange={handleCheckboxChange}></S.ColumnCheckbox>
-              <span>{columnName}</span>
-              <span>{corrTables[columnName as any]}</span>
+              <span>
+                {columnName}
+                <span>{corrTables[columnName as any]}</span>
+              </span>
             </div>
           </S.Column>
         ))}

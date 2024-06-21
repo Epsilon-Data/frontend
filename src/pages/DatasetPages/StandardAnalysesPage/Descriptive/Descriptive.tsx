@@ -27,8 +27,6 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
 
   const handleVarSelectChange = (value: any) => {
     setSelectedVars(value);
-    const filteredVarTypes = varTypes.filter((varType) => selectedVars.includes(varType.name));
-    setVarTypes(filteredVarTypes);
   };
 
   const options = Object.keys(lookup).map((item) => ({
@@ -41,25 +39,28 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
     setHidden(true);
     if (selectedVars.length === 0) {
       notificationController.error({ message: t('dataset.standard.descriptive.selectVarNotify') });
-    } else if (varTypes.length !== selectedVars.length) {
-      notificationController.error({ message: t('dataset.standard.descriptive.selectVarTypeNotify') });
     } else if (calculations.length === 0) {
       notificationController.error({ message: t('dataset.standard.descriptive.selectCalcNotify') });
     } else {
-      const analysis: DescriptiveAnalysis = {
-        id: id ?? '',
-        variables: varTypes,
-        calculate: calculations,
-      };
-      getDescriptive(analysis)
-        .then((res) => {
-          console.log(res);
-          setOutput(res);
-          setHidden(false);
-        })
-        .catch(() => {
-          notificationController.error({ message: t('dataset.standard.descriptive.failNotify') });
-        });
+      const filteredVarTypes = varTypes.filter((varType) => selectedVars.includes(varType.name));
+
+      if (filteredVarTypes.length !== selectedVars.length) {
+        notificationController.error({ message: t('dataset.standard.descriptive.selectVarTypeNotify') });
+      } else {
+        const analysis: DescriptiveAnalysis = {
+          id: id ?? '',
+          variables: filteredVarTypes,
+          calculate: calculations,
+        };
+        getDescriptive(analysis)
+          .then((res) => {
+            setOutput(res);
+            setHidden(false);
+          })
+          .catch(() => {
+            notificationController.error({ message: t('dataset.standard.descriptive.failNotify') });
+          });
+      }
     }
   };
 

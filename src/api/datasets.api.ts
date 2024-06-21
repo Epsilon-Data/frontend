@@ -194,196 +194,27 @@ export const getAnalysisColumns = async (userRequestId: string | undefined): Pro
 };
 
 export const getDescriptive = async (analysis: DescriptiveAnalysis): Promise<string> => {
-  // const { csrfHeaderName, csrf } = getCsrfHeader();
-  // const response = await httpClient.post(DATASET_API_URL + 'descriptive', analysis, {
-  //   headers: { [csrfHeaderName]: `${csrf}` },
-  // });
-  const SAMPLE = [
-    {
-      name: 'health_11',
-      frequency: {
-        good: 40,
-        moderate: 50,
-        bad: 10,
-        invalid: 0,
-      },
-      mean: 50.2,
-      median: 51,
-      mode: 52,
-      sd: 4.5,
-      var: 20.25,
-      min: 40,
-      max: 60,
-    },
-    {
-      name: 'school_4f',
-      frequency: {
-        yes: 60,
-        no: 30,
-        invalid: 10,
-      },
-      mean: 45.3,
-      median: 45,
-      mode: 44,
-      sd: 3.8,
-      var: 14.44,
-      min: 37,
-      max: 52,
-    },
-    {
-      name: 'illness_3',
-      frequency: {
-        yes: 60,
-        no: 30,
-        invalid: 10,
-      },
-      mean: 30.1,
-      median: 30,
-      mode: 29,
-      sd: 2.7,
-      var: 7.29,
-      min: 25,
-      max: 35,
-    },
-    {
-      name: 'residents_language',
-      frequency: {
-        english: 60,
-        malay: 40,
-        mandarin: 30,
-        invalid: 0,
-      },
-      mean: 20.5,
-      median: 21,
-      mode: 22,
-      sd: 3.0,
-      var: 9.0,
-      min: 15,
-      max: 26,
-    },
-    {
-      name: 'health_13a',
-      frequency: {
-        good: 40,
-        moderate: 50,
-        bad: 10,
-        invalid: 0,
-      },
-      mean: 60.7,
-      median: 61,
-      mode: 62,
-      sd: 5.2,
-      var: 27.04,
-      min: 50,
-      max: 70,
-    },
-    {
-      name: 'diabetes_2',
-      frequency: {
-        yes: 60,
-        no: 30,
-        invalid: 10,
-      },
-      mean: 35.8,
-      median: 36,
-      mode: 35,
-      sd: 2.9,
-      var: 8.41,
-      min: 30,
-      max: 40,
-    },
-    {
-      name: 'tech_4',
-      frequency: {
-        yes: 60,
-        no: 30,
-        invalid: 10,
-      },
-      mean: 25.4,
-      median: 25,
-      mode: 26,
-      sd: 3.3,
-      var: 10.89,
-      min: 20,
-      max: 31,
-    },
-    {
-      name: 'cr_ch_01',
-      frequency: {
-        yes: 60,
-        no: 30,
-        invalid: 10,
-      },
-      mean: 15.9,
-      median: 16,
-      mode: 16,
-      sd: 2.5,
-      var: 6.25,
-      min: 12,
-      max: 20,
-    },
-    {
-      name: 'ethnicity',
-      frequency: {
-        malay: 50,
-        chinese: 25,
-        indian: 15,
-        others: 10,
-        invalid: 0,
-      },
-      mean: 15.9,
-      median: 16,
-      mode: 16,
-      sd: 2.5,
-      var: 6.25,
-      min: 12,
-      max: 20,
-    },
-    {
-      name: 'age',
-      frequency: {
-        30: 5,
-        31: 5,
-        33: 6,
-        34: 6,
-        39: 2,
-        40: 1,
-        invalid: 5,
-      },
-      mean: 35.6,
-      median: 34,
-      mode: 33.5,
-      sd: 2.5,
-      var: 6.25,
-      min: 30,
-      max: 40,
-    },
-  ];
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post(DATASET_API_URL + 'descriptive', analysis, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
 
   let rmdString = '';
 
-  analysis.variables.forEach((variable) => {
-    const item: any = SAMPLE.find((item) => item.name === variable.name);
-
-    if (!item) {
-      return null;
-    }
-
-    if (variable.type === 'ord') {
-      rmdString += `#### ${variable.name} (Ordinal)\n\n`;
-      rmdString += '|        | ' + variable.name + ' |\n';
-      rmdString += '|:-------|:-----:|\n';
+  response.data.forEach((output: any) => {
+    if (output.type === 'ord') {
+      rmdString += `#### ${output.name} (Ordinal)\n\n`;
+      rmdString += '|        | ' + output.name + ' |\n';
+      rmdString += '|:-------|---------:|\n';
       analysis.calculate.forEach((calc) => {
-        if (item.hasOwnProperty(calc)) {
-          rmdString += `| ${t(`dataset.standard.descriptive.calculate.${calc}`)} | ${item[calc]} |\n`;
-        }
+        rmdString += `| ${t(`dataset.standard.descriptive.calculate.${calc}`)} | ${output[calc]} |\n`;
       });
       rmdString += '\n&nbsp;\n';
-    } else if (variable.type === 'nom') {
-      rmdString += `#### ${variable.name} (Nominal)\n\n`;
-      rmdString += '|         | ' + variable.name + ' |\n';
-      rmdString += '|:--------|:-----:|\n';
-      const frequency = item.frequency || {};
+    } else if (output.type === 'nom') {
+      rmdString += `#### ${output.name} (Nominal)\n\n`;
+      rmdString += '|         | ' + output.name + ' |\n';
+      rmdString += '|:--------|--------:|\n';
+      const frequency = output.frequency || {};
       let totalFrequency = 0;
       let invalidFrequency = 0;
       Object.keys(frequency).forEach((category) => {

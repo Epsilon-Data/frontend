@@ -130,6 +130,18 @@ export const createAnalysis = async (userRequestId: string | undefined, name: st
   return response.data;
 };
 
+export const deleteAnalysis = async (analysisId: string | undefined): Promise<string> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.delete(DATASET_API_URL + 'delete-analysis', {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      analysisId: analysisId,
+    },
+  });
+
+  return response.data;
+};
+
 export const uploadScript = async (analysisId: string | undefined, file: string | Blob | RcFile): Promise<Buffer> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const formData = new FormData();
@@ -231,4 +243,21 @@ export const getDescriptive = async (analysis: DescriptiveAnalysis): Promise<str
     }
   });
   return rmdString;
+};
+
+export const getScriptMapping = async (scriptId: string | undefined): Promise<any> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(DATASET_API_URL + 'get-script-mapping', {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      scriptId: scriptId,
+    },
+  });
+
+  if (response.data.script) {
+    const content = Uint8Array.from(response.data.script.data);
+    response.data.script = URL.createObjectURL(new Blob([content.buffer], { type: 'text/plain' }));
+  }
+
+  return response.data;
 };

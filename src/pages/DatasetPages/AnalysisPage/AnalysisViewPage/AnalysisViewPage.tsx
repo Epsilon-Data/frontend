@@ -2,22 +2,24 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './AnalysisViewPage.styles';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { useMounted } from '@app/hooks/useMounted';
-import { AnalysisInfo, getAnalysisDetails } from '@app/api/datasets.api';
+import { AnalysisInfo, deleteAnalysis, getAnalysisDetails } from '@app/api/datasets.api';
 import { INITIAL_DETAIL_VALUES } from '@app/constants/datasets';
 import { MdDeleteOutline, MdOutlineModeEdit } from 'react-icons/md';
 import { Flex, Tabs } from 'antd';
 import { Specifications } from './Specifications/Specifications';
 import { Utilities } from './Utilities/Utilities';
+import { notificationController } from '@app/controllers/notificationController';
 
 const AnalysisViewPage: React.FC = () => {
-  const { analysisId } = useParams();
+  const { id, analysisId } = useParams();
   const { t } = useTranslation();
   const { isMounted } = useMounted();
   const [analysisDetails, setAnalysisDetails] = useState<AnalysisInfo>(INITIAL_DETAIL_VALUES);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const fetch = useCallback(
     (id: string | undefined) => {
@@ -49,6 +51,12 @@ const AnalysisViewPage: React.FC = () => {
     },
   ];
 
+  const handleDelete = () => {
+    deleteAnalysis(analysisId);
+    notificationController.success({ message: t('dataset.analysis.view.deleteSuccess') });
+    navigate('/datasets/analysis/' + id, { state: { fromDelete: true } });
+  };
+
   return (
     <>
       <PageTitle>{analysisDetails.name}</PageTitle>
@@ -61,7 +69,7 @@ const AnalysisViewPage: React.FC = () => {
               <S.HeaderButton type="primary" icon={<MdOutlineModeEdit size={20} />}>
                 {t('dataset.analysis.view.edit')}
               </S.HeaderButton>
-              <S.HeaderButton type="primary" danger icon={<MdDeleteOutline size={20} />}>
+              <S.HeaderButton type="primary" danger icon={<MdDeleteOutline size={20} />} onClick={handleDelete}>
                 {t('dataset.analysis.view.delete')}
               </S.HeaderButton>
             </Flex>

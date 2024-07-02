@@ -55,6 +55,9 @@ const AnalysisPage = React.lazy(() => import('@app/pages/DatasetPages/AnalysisPa
 const AnalysisViewPage = React.lazy(
   () => import('@app/pages/DatasetPages/AnalysisPage/AnalysisViewPage/AnalysisViewPage'),
 );
+const AnalysisUploadPage = React.lazy(
+  () => import('@app/pages/DatasetPages/AnalysisPage/AnalysisUploadPage/AnalysisUploadPage'),
+);
 const StandardAnalysesPage = React.lazy(
   () => import('@app/pages/DatasetPages/StandardAnalysesPage/StandardAnalysesPage'),
 );
@@ -89,6 +92,7 @@ const OtherSettings = withLoading(OtherSettingsPage);
 const DatasetList = withLoading(DatasetListPage);
 const Analysis = withLoading(AnalysisPage);
 const AnalysisView = withLoading(AnalysisViewPage);
+const AnalysisUpload = withLoading(AnalysisUploadPage);
 const StandardAnalyses = withLoading(StandardAnalysesPage);
 
 const BrowseDatasets = withLoading(BrowseDatasetPage);
@@ -136,7 +140,8 @@ export const AppRouter: React.FC = () => {
           <Route path="database-sources/other-settings/:id" element={<OtherSettings />} />
           <Route path="datasets" element={<DatasetList />} />
           <Route path="datasets/analysis/:id" element={<Analysis />} />
-          <Route path="datasets/analysis/view/:analysisId" element={<AnalysisView />} />
+          <Route path="datasets/analysis/:id/view/:analysisId" element={<AnalysisView />} />
+          <Route path="datasets/analysis/:id/view/:analysisId/upload/:scriptId" element={<AnalysisUpload />} />
           <Route path="datasets/standard/:id" element={<StandardAnalyses />} />
           <Route path="browse" element={<BrowseDatasets />} />
           <Route path="browse/summary/:id" element={<DatasetInfo />} />

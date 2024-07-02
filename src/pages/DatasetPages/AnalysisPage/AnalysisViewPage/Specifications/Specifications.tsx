@@ -12,7 +12,7 @@ import { FaRegCircleCheck, FaRegCircleXmark } from 'react-icons/fa6';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { ExecutionSettings } from './ExecutionSettings/ExecutionSettings';
 import { notificationController } from '@app/controllers/notificationController';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { MdPending } from 'react-icons/md';
 
 const initialPagination: Pagination = {
@@ -34,6 +34,7 @@ export const Specifications: React.FC<{ info: any; isLoading: boolean; fetch: (i
   });
   const { t } = useTranslation();
   const { Paragraph } = Typography;
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTableData((tableData) => ({ ...tableData, data: info.scripts, loading: isLoading }));
@@ -44,9 +45,9 @@ export const Specifications: React.FC<{ info: any; isLoading: boolean; fetch: (i
       case 1:
         return <MdPending style={{ color: 'var(--warning-color)', top: '1.8rem', position: 'absolute' }} />;
       case 2:
-        return <FaRegCircleXmark style={{ color: 'var(--error-color)', top: '1rem' }} />;
+        return <FaRegCircleXmark style={{ color: 'var(--error-color)', top: '1.25rem', position: 'absolute' }} />;
       case 3:
-        return <FaRegCircleCheck style={{ color: 'var(--success-color)' }} />;
+        return <FaRegCircleCheck style={{ color: 'var(--success-color)', top: '1.25rem', position: 'absolute' }} />;
       default:
         return null;
     }
@@ -144,10 +145,8 @@ export const Specifications: React.FC<{ info: any; isLoading: boolean; fetch: (i
                 uploadScript(analysisId, file)
                   .then((response) => {
                     onSuccess(response);
-                    notificationController.success({
-                      message: t('dataset.analysis.view.scriptAddSuccess'),
-                    });
                     fetch(analysisId);
+                    navigate('upload/' + response);
                   })
                   .catch(() => {
                     notificationController.error({ message: t('dataset.analysis.view.scriptAddFail') });

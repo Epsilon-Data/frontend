@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { AnalysisTableRow, Pagination } from '@app/api/datasets.api';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { ColumnsType } from 'antd/es/table';
@@ -11,18 +11,13 @@ import { FilterDropdownProps } from 'antd/es/table/interface';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
-const initialPagination: Pagination = {
-  current: 1,
-  pageSize: 5,
-};
-
 export const AnalysisTable: React.FC<{
   fetch: (pagination: Pagination) => void;
   tableData: { data: AnalysisTableRow[]; pagination: Pagination; loading: boolean };
-}> = ({ fetch, tableData }) => {
+  userRequestId: string;
+}> = ({ fetch, tableData, userRequestId }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof AnalysisTableRow>();
   const searchInput = useRef<InputRef>(null);
@@ -115,10 +110,6 @@ export const AnalysisTable: React.FC<{
       ),
   });
 
-  useEffect(() => {
-    fetch(initialPagination);
-  }, [fetch]);
-
   const handleTableChange = (pagination: Pagination) => {
     fetch(pagination);
   };
@@ -159,7 +150,10 @@ export const AnalysisTable: React.FC<{
       render: (text: string, record: { id: string }) => {
         return (
           <BaseSpace>
-            <BaseButton type="primary" onClick={() => navigate(`/datasets/analysis/view/${record.id}`)}>
+            <BaseButton
+              type="primary"
+              onClick={() => navigate(`/datasets/analysis/${userRequestId}/view/${record.id}`)}
+            >
               {t('tables.view')}
             </BaseButton>
           </BaseSpace>

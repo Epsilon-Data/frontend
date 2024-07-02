@@ -37,30 +37,29 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
 
   const handleOnClick = () => {
     setHidden(true);
+    const filteredVarTypes = varTypes.filter((varType) => selectedVars.includes(varType.name));
+    const containsOrd = filteredVarTypes.some((varType) => varType.type === 'ord');
+
     if (selectedVars.length === 0) {
       notificationController.error({ message: t('dataset.standard.descriptive.selectVarNotify') });
-    } else if (calculations.length === 0) {
+    } else if (filteredVarTypes.length !== selectedVars.length) {
+      notificationController.error({ message: t('dataset.standard.descriptive.selectVarTypeNotify') });
+    } else if (calculations.length === 0 && containsOrd) {
       notificationController.error({ message: t('dataset.standard.descriptive.selectCalcNotify') });
     } else {
-      const filteredVarTypes = varTypes.filter((varType) => selectedVars.includes(varType.name));
-
-      if (filteredVarTypes.length !== selectedVars.length) {
-        notificationController.error({ message: t('dataset.standard.descriptive.selectVarTypeNotify') });
-      } else {
-        const analysis: DescriptiveAnalysis = {
-          id: id ?? '',
-          variables: filteredVarTypes,
-          calculate: calculations,
-        };
-        getDescriptive(analysis)
-          .then((res) => {
-            setOutput(res);
-            setHidden(false);
-          })
-          .catch(() => {
-            notificationController.error({ message: t('dataset.standard.descriptive.failNotify') });
-          });
-      }
+      const analysis: DescriptiveAnalysis = {
+        id: id ?? '',
+        variables: filteredVarTypes,
+        calculate: calculations,
+      };
+      getDescriptive(analysis)
+        .then((res) => {
+          setOutput(res);
+          setHidden(false);
+        })
+        .catch(() => {
+          notificationController.error({ message: t('dataset.standard.descriptive.failNotify') });
+        });
     }
   };
 

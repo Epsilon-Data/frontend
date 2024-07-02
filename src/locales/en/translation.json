@@ -1081,6 +1081,7 @@
       "view": {
         "title": "Analysis Details",
         "delete": "Delete Analysis",
+        "deleteSuccess": "Analysis deleted successfully.",
         "edit": "Edit Analysis Details",
         "specs": "Specifications",
         "util": "Utilities",
@@ -1096,6 +1097,13 @@
         "executionSettings": "Execution Settings",
         "packageName": "Package/Report Name: ",
         "generate": "Generate Package/Report"
+      },
+      "upload": {
+        "title": "Script Upload Settings",
+        "instructions": "Select the CSV that is being read into these variables.",
+        "csvPlaceholder": "Select CSV File",
+        "missingError": "Database missing template and/or access permissions. Please contact the database owner.",
+        "proceed": "Proceed"
       }
     }
   },

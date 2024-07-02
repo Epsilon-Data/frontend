@@ -1,10 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './AnalysisPage.styles';
 import { AnalysisTable } from '@app/components/tables/AnalysisTable/AnalysisTable';
 import { FaCirclePlus } from 'react-icons/fa6';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { CreateModal } from './CreateModal/CreateModal';
 import { notificationController } from '@app/controllers/notificationController';
 import { AnalysisTableRow, Pagination, createAnalysis, getAnalysisTableData } from '@app/api/datasets.api';
@@ -21,6 +21,7 @@ const AnalysisPage: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isSubmitLoading, setSubmitLoading] = useState(false);
   const { isMounted } = useMounted();
+  const location = useLocation();
   const [tableData, setTableData] = useState<{ data: AnalysisTableRow[]; pagination: Pagination; loading: boolean }>({
     data: [],
     pagination: initialPagination,
@@ -38,6 +39,17 @@ const AnalysisPage: React.FC = () => {
     },
     [id, isMounted],
   );
+
+  useEffect(() => {
+    fetch(initialPagination);
+  }, [fetch]);
+
+  useEffect(() => {
+    if (location.state && location.state?.fromDelete) {
+      fetch(initialPagination);
+      location.state.fromDelete = false;
+    }
+  }, [fetch, location.state]);
 
   const handleCreate = (name: string) => {
     setSubmitLoading(true);
@@ -72,7 +84,7 @@ const AnalysisPage: React.FC = () => {
             </S.CreateButton>
           }
         >
-          <AnalysisTable fetch={fetch} tableData={tableData} />
+          {id && <AnalysisTable fetch={fetch} tableData={tableData} userRequestId={id} />}
         </S.Card>
         <CreateModal
           isModalOpen={isCreateModalOpen}

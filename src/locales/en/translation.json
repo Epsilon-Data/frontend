@@ -1103,7 +1103,8 @@
         "instructions": "Select the CSV that is being read into these variables.",
         "csvPlaceholder": "Select CSV File",
         "missingError": "Database missing template and/or access permissions. Please contact the database owner.",
-        "proceed": "Proceed"
+        "proceed": "Proceed",
+        "locate": "Locate Line"
       }
     }
   },

@@ -11,6 +11,8 @@ export const INITIAL_DETAIL_VALUES: AnalysisInfo = {
   scripts: [],
 };
 
+export const CSV_REGEX = /(\w+)\s*<-\s*(read\.csv|read_csv|read\.csv2)\(.+\)/g;
+
 export const PARAMETRIC = [
   {
     value: true,

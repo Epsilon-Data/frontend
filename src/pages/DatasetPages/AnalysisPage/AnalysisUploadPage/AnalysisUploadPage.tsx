@@ -13,18 +13,21 @@ import 'highlight.js/styles/night-owl.min.css';
 import { getScriptMapping } from '@app/api/datasets.api';
 import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
+import { CSV_REGEX } from '@app/constants/datasets';
 
-hljs.registerLanguage('r-language', r);
+hljs.registerLanguage('r-lang', r);
 
 const AnalysisUploadPage: React.FC = () => {
   const { scriptId } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isMounted } = useMounted();
-  const codeRef = useRef(null);
+  const codeRef = useRef<HTMLDivElement>(null);
   const [mapping, setMapping] = useState<any>();
   const [script, setScript] = useState<string>();
+  const [lines, setLines] = useState<string[]>([]);
   const [csvNames, setCsvNames] = useState<string[]>([]);
+  const [highlightedLines, setHighlightedLines] = useState<number[]>([]);
 
   const getMapping = useCallback(
     (id: string | undefined) => {
@@ -64,14 +67,43 @@ const AnalysisUploadPage: React.FC = () => {
     return;
   }, []);
 
+  useEffect(() => {
+    if (script) {
+      const splitLines = script.split('\n');
+      setLines(splitLines);
+      const highlighted = splitLines
+        .map((line, index) => (CSV_REGEX.test(line) ? index : -1))
+        .filter((index) => index !== -1);
+      setHighlightedLines(highlighted);
+    }
+  }, [script]);
+
   const conditions = csvNames.length > 0 && mapping;
+
+  const scrollToLine = (lineNumber: number) => {
+    const lineElement = document.getElementById(`line-${lineNumber}`);
+    if (lineElement && codeRef.current) {
+      const elementOffsetTop = lineElement.offsetTop;
+      const codeContainerHeight = codeRef.current.clientHeight;
+      const lineElementHeight = lineElement.clientHeight;
+      const scrollPosition = elementOffsetTop - codeContainerHeight / 4 + lineElementHeight / 2;
+      codeRef.current.scrollTop = scrollPosition;
+    }
+  };
+
+  const handleLocateClick = (item: string) => {
+    const lineIndex = highlightedLines.find((index) => lines[index].includes(item));
+    if (lineIndex !== undefined && lineIndex !== -1) {
+      scrollToLine(lineIndex);
+    }
+  };
 
   return (
     <>
       <PageTitle>{t('dataset.analysis.upload.title')}</PageTitle>
       <S.CardWrapper>
         <S.Card id="metadata" title={t('dataset.analysis.upload.title')} padding="1.25rem 1.25rem 0">
-          <BaseRow gutter={[50, 50]}>
+          <BaseRow gutter={[50, 30]}>
             <BaseCol span={10}>
               <S.InputHeader>
                 {t('dataset.analysis.upload.' + (conditions ? 'instructions' : 'missingError'))}
@@ -80,31 +112,56 @@ const AnalysisUploadPage: React.FC = () => {
                 {conditions &&
                   Object.keys(mapping).map((item, index) => {
                     return (
-                      <BaseRow key={index} style={{ marginBottom: '2rem' }}>
-                        <BaseForm.Item name={item} label={item} rules={[{ required: false }]} style={{ width: '80%' }}>
-                          <S.CSVSelect
-                            showSearch
-                            placeholder={t('dataset.analysis.upload.csvPlaceholder')}
-                            optionFilterProp="label"
-                            onChange={onSelectChange(item)}
-                            options={csvNames.map((item) => ({
-                              value: item,
-                              label: item,
-                            }))}
-                          />
-                        </BaseForm.Item>
+                      <BaseRow key={index} style={{ marginBottom: '1.5rem' }}>
+                        <BaseCol span={14}>
+                          <BaseForm.Item
+                            name={item}
+                            label={item}
+                            rules={[{ required: false }]}
+                            style={{ width: '100%' }}
+                          >
+                            <S.CSVSelect
+                              showSearch
+                              placeholder={t('dataset.analysis.upload.csvPlaceholder')}
+                              optionFilterProp="label"
+                              onChange={onSelectChange(item)}
+                              options={csvNames.map((item) => ({
+                                value: item,
+                                label: item,
+                              }))}
+                            />
+                          </BaseForm.Item>
+                        </BaseCol>
+                        <BaseCol span={9} offset={1}>
+                          <BaseButton
+                            type="default"
+                            block
+                            style={{ marginTop: '2.5rem' }}
+                            onClick={() => handleLocateClick(item)}
+                          >
+                            {t('dataset.analysis.upload.locate')}
+                          </BaseButton>
+                        </BaseCol>
                       </BaseRow>
                     );
                   })}
               </BaseForm>
-              <BaseButton type="primary" block style={{ width: '80%' }} onClick={() => navigate(-1)}>
+              <BaseButton type="primary" block style={{ width: '50%' }} onClick={() => navigate(-1)}>
                 {t('dataset.analysis.upload.proceed')}
               </BaseButton>
             </BaseCol>
             <BaseCol span={14}>
               <pre>
-                <code className="r-language" ref={codeRef} style={{ borderRadius: '10px', maxHeight: '600px' }}>
-                  {script}
+                <code className="r-lang" ref={codeRef} style={{ borderRadius: '10px', maxHeight: '600px' }}>
+                  {lines.map((line, index) => (
+                    <div
+                      key={index}
+                      id={`line-${index}`}
+                      style={{ backgroundColor: highlightedLines.includes(index) ? 'green' : 'transparent' }}
+                    >
+                      {line}
+                    </div>
+                  ))}
                 </code>
               </pre>
             </BaseCol>

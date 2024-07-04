@@ -4,6 +4,7 @@ import { BaseSelect } from '@app/components/common/selects/BaseSelect/BaseSelect
 import { FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
 import { Typography } from 'antd/lib';
 import { styled } from 'styled-components';
+import { Tag as AntTag } from 'antd';
 
 export const MultiSelect = styled(BaseSelect)`
   .ant-select-arrow {
@@ -25,6 +26,18 @@ export const GroupCheckbox = styled(BaseCheckbox.Group)`
 export const RadioGroup = styled(BaseRadio.Group)`
   .ant-radio-inner {
     margin-top: -0.5rem;
+  }
+`;
+
+export const Tag = styled(AntTag)`
+  .ant-radio-inner {
+    margin-top: -0.5rem;
+  }
+  &:hover {
+    background-color: #cfd8ff; /* Change this to your desired hover background color */
+  }
+  &.selected {
+    background-color: #cfd8ff; /* Color when tag is selected */
   }
 `;
 

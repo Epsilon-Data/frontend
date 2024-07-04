@@ -5,9 +5,8 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
 import { useTranslation } from 'react-i18next';
 import { CALC_OPTIONS, VAR_OPTIONS } from '@app/constants/datasets';
-import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
-import { RadioChangeEvent, Space } from 'antd';
+import { Space, Table } from 'antd';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { notificationController } from '@app/controllers/notificationController';
 import { DescriptiveAnalysis } from '@app/interfaces/interfaces';
@@ -29,6 +28,22 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
     setSelectedVars(value);
   };
 
+  const compileTableVar = (value: any) => {
+    return value.map((item: string, index: number) => ({
+      key: index + 1,
+      name: item,
+      description: 'Testing for the description value',
+    }));
+  };
+
+  const findVarType = (name: string) => {
+    const filteredVarTypes = varTypes.filter((varType) => selectedVars.includes(varType.name));
+    for (let i = 0; i < filteredVarTypes.length; i++) {
+      if (filteredVarTypes[i].name == name) return filteredVarTypes[i].type;
+    }
+    return '';
+  };
+
   const options = Object.keys(lookup).map((item) => ({
     value: item,
     label: item,
@@ -47,25 +62,30 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
     } else if (calculations.length === 0 && containsOrd) {
       notificationController.error({ message: t('dataset.standard.descriptive.selectCalcNotify') });
     } else {
-      const analysis: DescriptiveAnalysis = {
-        id: id ?? '',
-        variables: filteredVarTypes,
-        calculate: calculations,
-      };
-      getDescriptive(analysis)
-        .then((res) => {
-          setOutput(res);
-          setHidden(false);
-        })
-        .catch(() => {
-          notificationController.error({ message: t('dataset.standard.descriptive.failNotify') });
-        });
+      const filteredVarTypes = varTypes.filter((varType) => selectedVars.includes(varType.name));
+      if (filteredVarTypes.length !== selectedVars.length) {
+        notificationController.error({ message: t('dataset.standard.descriptive.selectVarTypeNotify') });
+      } else {
+        const analysis: DescriptiveAnalysis = {
+          id: id ?? '',
+          variables: filteredVarTypes,
+          calculate: calculations,
+        };
+        getDescriptive(analysis)
+          .then((res) => {
+            setOutput(res);
+            setHidden(false);
+          })
+          .catch(() => {
+            notificationController.error({ message: t('dataset.standard.descriptive.failNotify') });
+          });
+      }
     }
   };
 
-  const handleTypeChange = (e: RadioChangeEvent) => {
-    const column = e.target.name;
-    const columnType = e.target.value;
+  const handleTypeChange = (columnName: string, columnT: string) => {
+    const column = columnName;
+    const columnType = columnT;
     const table = lookup[column as any];
 
     if (column) {
@@ -85,6 +105,72 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
   const handleCalculateChange = (list: CheckboxValueType[]) => {
     setCalculations(list as string[]);
   };
+
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text: any) => <span>{text}</span>,
+    },
+
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+      render: (text: any) => <span>{text}</span>,
+    },
+    {
+      title: 'Type',
+      key: 'type',
+      dataIndex: 'type',
+      render: (type: any, record: any) => (
+        <>
+          {VAR_OPTIONS.map((item: any) => (
+            <S.Tag
+              key={item.label}
+              className={findVarType(record['name']) == item.label.slice(0, 3).toLowerCase() ? 'selected' : ''}
+              onClick={() => {
+                handleTypeChange(record['name'], item.label.slice(0, 3).toLowerCase());
+              }}
+            >
+              {item.label}
+            </S.Tag>
+          ))}
+
+          {/* {type.map((tag: any) => {
+            let color = tag.length > 5 ? 'geekblue' : 'green';
+            if (tag === 'loser') {
+              color = 'volcano';
+            }
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })} */}
+        </>
+      ),
+    },
+  ];
+
+  // const data: any = [
+  //   {
+  //     key: '1',
+  //     name: 'Variable Name 1',
+  //     description: 'This the description for variable name 1 ',
+  //   },
+  //   {
+  //     key: '2',
+  //     name: 'Variable Name 2',
+  //     description: 'This the description for variable name 1 ',
+  //   },
+  //   {
+  //     key: '3',
+  //     name: 'Variable Name 3',
+  //     description: 'This the description for variable name 1 ',
+  //   },
+  // ];
 
   return (
     <>
@@ -114,7 +200,8 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
           </BaseForm.Item>
           {selectedVars.length > 0 && (
             <>
-              <S.InputHeader>{t('dataset.standard.descriptive.varType')}</S.InputHeader>
+              <Table columns={columns} dataSource={compileTableVar(selectedVars)} />;
+              {/* <S.InputHeader>{t('dataset.standard.descriptive.varType')}</S.InputHeader>
               <BaseRow style={{ marginBottom: '2rem', width: '80%' }}>
                 {selectedVars.map((item, index) => {
                   return (
@@ -125,7 +212,7 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
                     </BaseCol>
                   );
                 })}
-              </BaseRow>
+              </BaseRow> */}
             </>
           )}
           <BaseForm.Item

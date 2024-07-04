@@ -8,7 +8,7 @@ import { Pagination, ScriptInfo, deleteScript, uploadScript } from '@app/api/dat
 import { ColumnsType } from 'antd/lib/table';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
-import { FaRegCircleCheck, FaRegCircleXmark } from 'react-icons/fa6';
+import { FaRegCircleCheck, FaRegCircleXmark, FaCircleExclamation } from 'react-icons/fa6';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { ExecutionSettings } from './ExecutionSettings/ExecutionSettings';
 import { notificationController } from '@app/controllers/notificationController';
@@ -48,6 +48,8 @@ export const Specifications: React.FC<{ info: any; isLoading: boolean; fetch: (i
         return <FaRegCircleXmark style={{ color: 'var(--error-color)', top: '1.25rem', position: 'absolute' }} />;
       case 3:
         return <FaRegCircleCheck style={{ color: 'var(--success-color)', top: '1.25rem', position: 'absolute' }} />;
+      case 4:
+        return <FaCircleExclamation style={{ color: 'var(--secondary-color)', top: '1.8rem', position: 'absolute' }} />;
       default:
         return null;
     }
@@ -102,6 +104,9 @@ export const Specifications: React.FC<{ info: any; isLoading: boolean; fetch: (i
           <BaseSpace>
             <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>
               {t('tables.delete')}
+            </BaseButton>
+            <BaseButton type="primary" onClick={() => navigate('upload/' + record.id)}>
+              {t('common.edit')}
             </BaseButton>
           </BaseSpace>
         );

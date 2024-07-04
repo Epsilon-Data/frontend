@@ -10,8 +10,7 @@ import { useMounted } from '@app/hooks/useMounted';
 import hljs from 'highlight.js/lib/core';
 import r from 'highlight.js/lib/languages/r';
 import 'highlight.js/styles/night-owl.min.css';
-import { getScriptMapping } from '@app/api/datasets.api';
-import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
+import { addScriptMapping, getScriptMapping } from '@app/api/datasets.api';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { CSV_REGEX } from '@app/constants/datasets';
 
@@ -34,6 +33,7 @@ const AnalysisUploadPage: React.FC = () => {
       getScriptMapping(id).then(async (res) => {
         if (isMounted.current) {
           setMapping(res.mapping);
+          setCsvNames(res.csv);
           await fetch(res.script)
             .then((response) => response.blob())
             .then((blob) => {
@@ -46,8 +46,6 @@ const AnalysisUploadPage: React.FC = () => {
               reader.readAsText(blob);
             })
             .catch((error) => console.error('Error fetching the blob:', error));
-
-          setCsvNames(res.csv);
         }
       });
     },
@@ -87,7 +85,28 @@ const AnalysisUploadPage: React.FC = () => {
       const codeContainerHeight = codeRef.current.clientHeight;
       const lineElementHeight = lineElement.clientHeight;
       const scrollPosition = elementOffsetTop - codeContainerHeight / 4 + lineElementHeight / 2;
-      codeRef.current.scrollTop = scrollPosition;
+      const start = codeRef.current.scrollTop;
+      const distance = scrollPosition - start;
+      const duration = 600; // Duration of the animation
+      let startTime: number | null = null;
+
+      const animateScroll = (currentTime: number) => {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1); // Ensure progress does not exceed 1
+        const easeInOutQuad = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+        const easedProgress = easeInOutQuad(progress);
+
+        if (codeRef.current) {
+          codeRef.current.scrollTop = start + distance * easedProgress;
+        }
+
+        if (progress < 1) {
+          window.requestAnimationFrame(animateScroll);
+        }
+      };
+
+      window.requestAnimationFrame(animateScroll);
     }
   };
 
@@ -96,6 +115,11 @@ const AnalysisUploadPage: React.FC = () => {
     if (lineIndex !== undefined && lineIndex !== -1) {
       scrollToLine(lineIndex);
     }
+  };
+
+  const handleProceedClick = () => {
+    addScriptMapping(scriptId, mapping);
+    navigate(-1);
   };
 
   return (
@@ -108,45 +132,38 @@ const AnalysisUploadPage: React.FC = () => {
               <S.InputHeader>
                 {t('dataset.analysis.upload.' + (conditions ? 'instructions' : 'missingError'))}
               </S.InputHeader>
-              <BaseForm>
-                {conditions &&
-                  Object.keys(mapping).map((item, index) => {
-                    return (
-                      <BaseRow key={index} style={{ marginBottom: '1.5rem' }}>
-                        <BaseCol span={14}>
-                          <BaseForm.Item
-                            name={item}
-                            label={item}
-                            rules={[{ required: false }]}
-                            style={{ width: '100%' }}
-                          >
-                            <S.CSVSelect
-                              showSearch
-                              placeholder={t('dataset.analysis.upload.csvPlaceholder')}
-                              optionFilterProp="label"
-                              onChange={onSelectChange(item)}
-                              options={csvNames.map((item) => ({
-                                value: item,
-                                label: item,
-                              }))}
-                            />
-                          </BaseForm.Item>
-                        </BaseCol>
-                        <BaseCol span={9} offset={1}>
-                          <BaseButton
-                            type="default"
-                            block
-                            style={{ marginTop: '2.5rem' }}
-                            onClick={() => handleLocateClick(item)}
-                          >
-                            {t('dataset.analysis.upload.locate')}
-                          </BaseButton>
-                        </BaseCol>
-                      </BaseRow>
-                    );
-                  })}
-              </BaseForm>
-              <BaseButton type="primary" block style={{ width: '50%' }} onClick={() => navigate(-1)}>
+              {conditions &&
+                Object.keys(mapping).map((item, index) => {
+                  return (
+                    <BaseRow key={index} style={{ marginBottom: '1.5rem' }}>
+                      <BaseCol span={14}>
+                        <S.InputHeader>{item}</S.InputHeader>
+                        <S.CSVSelect
+                          defaultValue={mapping[item]}
+                          showSearch
+                          placeholder={t('dataset.analysis.upload.csvPlaceholder')}
+                          optionFilterProp="label"
+                          onChange={onSelectChange(item)}
+                          options={csvNames.map((item) => ({
+                            value: item,
+                            label: item,
+                          }))}
+                        />
+                      </BaseCol>
+                      <BaseCol span={9} offset={1}>
+                        <BaseButton
+                          type="default"
+                          block
+                          style={{ marginTop: '2.8rem' }}
+                          onClick={() => handleLocateClick(item)}
+                        >
+                          {t('dataset.analysis.upload.locate')}
+                        </BaseButton>
+                      </BaseCol>
+                    </BaseRow>
+                  );
+                })}
+              <BaseButton type="primary" block style={{ width: '50%' }} onClick={handleProceedClick}>
                 {t('dataset.analysis.upload.proceed')}
               </BaseButton>
             </BaseCol>
@@ -157,7 +174,7 @@ const AnalysisUploadPage: React.FC = () => {
                     <div
                       key={index}
                       id={`line-${index}`}
-                      style={{ backgroundColor: highlightedLines.includes(index) ? 'green' : 'transparent' }}
+                      style={{ backgroundColor: highlightedLines.includes(index) ? '#7e67dc' : 'transparent' }}
                     >
                       {line}
                     </div>

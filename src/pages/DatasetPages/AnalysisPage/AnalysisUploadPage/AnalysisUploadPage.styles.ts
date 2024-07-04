@@ -19,7 +19,8 @@ export const InputHeader = styled(Typography.Paragraph)`
 `;
 
 export const CSVSelect = styled(Select)`
+  width: 100%;
   .ant-select-arrow {
-    margin-top: 0.1rem;
+    margin-top: 0.2rem;
   }
 `;

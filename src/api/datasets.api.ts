@@ -261,3 +261,19 @@ export const getScriptMapping = async (scriptId: string | undefined): Promise<an
 
   return response.data;
 };
+
+export const addScriptMapping = async (scriptId: string | undefined, mapping: any): Promise<any> => {
+  const jsonMapping = JSON.stringify(mapping);
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post(
+    DATASET_API_URL + 'add-script-mapping',
+    { data: jsonMapping },
+    {
+      headers: { [csrfHeaderName]: `${csrf}` },
+      params: {
+        scriptId: scriptId,
+      },
+    },
+  );
+  return response.data;
+};

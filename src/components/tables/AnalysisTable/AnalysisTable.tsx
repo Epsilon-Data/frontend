@@ -15,7 +15,8 @@ export const AnalysisTable: React.FC<{
   fetch: (pagination: Pagination) => void;
   tableData: { data: AnalysisTableRow[]; pagination: Pagination; loading: boolean };
   userRequestId: string;
-}> = ({ fetch, tableData, userRequestId }) => {
+  handleDeleteRow: (analysisId: string) => void;
+}> = ({ fetch, tableData, userRequestId, handleDeleteRow }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState('');
@@ -155,6 +156,9 @@ export const AnalysisTable: React.FC<{
               onClick={() => navigate(`/datasets/analysis/${userRequestId}/view/${record.id}`)}
             >
               {t('tables.view')}
+            </BaseButton>
+            <BaseButton type="primary" danger onClick={() => handleDeleteRow(record.id)}>
+              {t('tables.delete')}
             </BaseButton>
           </BaseSpace>
         );

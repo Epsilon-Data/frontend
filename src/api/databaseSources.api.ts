@@ -171,7 +171,8 @@ export const addColumnMapping = async (
   return response.data;
 };
 
-export const getDbColumns = async (projectId: string | undefined): Promise<string[]> => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getDbColumns = async (projectId: string | undefined): Promise<any> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'columns', {
     headers: { [csrfHeaderName]: `${csrf}` },

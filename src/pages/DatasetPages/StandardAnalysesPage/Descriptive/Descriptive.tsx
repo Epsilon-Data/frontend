@@ -137,40 +137,10 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
               {item.label}
             </S.Tag>
           ))}
-
-          {/* {type.map((tag: any) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })} */}
         </>
       ),
     },
   ];
-
-  // const data: any = [
-  //   {
-  //     key: '1',
-  //     name: 'Variable Name 1',
-  //     description: 'This the description for variable name 1 ',
-  //   },
-  //   {
-  //     key: '2',
-  //     name: 'Variable Name 2',
-  //     description: 'This the description for variable name 1 ',
-  //   },
-  //   {
-  //     key: '3',
-  //     name: 'Variable Name 3',
-  //     description: 'This the description for variable name 1 ',
-  //   },
-  // ];
 
   return (
     <>
@@ -200,19 +170,7 @@ export const Descriptive: React.FC<{ lookup: any[] }> = ({ lookup }) => {
           </BaseForm.Item>
           {selectedVars.length > 0 && (
             <>
-              <Table columns={columns} dataSource={compileTableVar(selectedVars)} />;
-              {/* <S.InputHeader>{t('dataset.standard.descriptive.varType')}</S.InputHeader>
-              <BaseRow style={{ marginBottom: '2rem', width: '80%' }}>
-                {selectedVars.map((item, index) => {
-                  return (
-                    <BaseCol key={index} span={6}>
-                      <BaseForm.Item name={item} label={item} rules={[{ required: false }]}>
-                        <S.RadioGroup name={item} onChange={handleTypeChange} options={VAR_OPTIONS} />
-                      </BaseForm.Item>
-                    </BaseCol>
-                  );
-                })}
-              </BaseRow> */}
+              <Table columns={columns} dataSource={compileTableVar(selectedVars)} />
             </>
           )}
           <BaseForm.Item

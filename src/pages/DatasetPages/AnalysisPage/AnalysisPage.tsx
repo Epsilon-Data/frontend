@@ -4,11 +4,20 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './AnalysisPage.styles';
 import { AnalysisTable } from '@app/components/tables/AnalysisTable/AnalysisTable';
 import { FaCirclePlus } from 'react-icons/fa6';
+import { RiDownloadCloudFill } from 'react-icons/ri';
 import { useLocation, useParams } from 'react-router-dom';
 import { CreateModal } from './CreateModal/CreateModal';
 import { notificationController } from '@app/controllers/notificationController';
-import { AnalysisTableRow, Pagination, createAnalysis, getAnalysisTableData } from '@app/api/datasets.api';
+import {
+  AnalysisTableRow,
+  Pagination,
+  createAnalysis,
+  deleteAnalysis,
+  downloadDataset,
+  getAnalysisTableData,
+} from '@app/api/datasets.api';
 import { useMounted } from '@app/hooks/useMounted';
+import { Flex } from 'antd';
 
 const initialPagination: Pagination = {
   current: 1,
@@ -33,11 +42,23 @@ const AnalysisPage: React.FC = () => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
       getAnalysisTableData(pagination, id).then((res) => {
         if (isMounted.current) {
-          setTableData({ data: res.data, pagination: res.pagination, loading: false });
+          if (!location.state) {
+            setTableData({ data: res.data, pagination: res.pagination, loading: false });
+          } else {
+            setTableData({
+              data: res.data.filter((item) => item.id !== location.state.analysisId),
+              pagination: {
+                ...res.pagination,
+                total: res.pagination.total ? res.pagination.total - 1 : res.pagination.total,
+              },
+              loading: false,
+            });
+            location.state = undefined;
+          }
         }
       });
     },
-    [id, isMounted],
+    [id, isMounted, location],
   );
 
   useEffect(() => {
@@ -45,11 +66,18 @@ const AnalysisPage: React.FC = () => {
   }, [fetch]);
 
   useEffect(() => {
-    if (location.state && location.state?.fromDelete) {
-      fetch(initialPagination);
-      location.state.fromDelete = false;
+    if (location.state) {
+      setTableData({
+        ...tableData,
+        data: tableData.data.filter((item) => item.id !== location.state.analysisId),
+        pagination: {
+          ...tableData.pagination,
+          total: tableData.pagination.total ? tableData.pagination.total - 1 : tableData.pagination.total,
+        },
+      });
+      location.state = undefined;
     }
-  }, [fetch, location.state]);
+  }, [location, tableData]);
 
   const handleCreate = (name: string) => {
     setSubmitLoading(true);
@@ -70,6 +98,28 @@ const AnalysisPage: React.FC = () => {
     setIsCreateModalOpen(false);
   };
 
+  const handleDeleteRow = (analysisId: string) => {
+    setTableData({
+      ...tableData,
+      data: tableData.data.filter((item) => item.id !== analysisId),
+      pagination: {
+        ...tableData.pagination,
+        total: tableData.pagination.total ? tableData.pagination.total - 1 : tableData.pagination.total,
+      },
+    });
+    deleteAnalysis(analysisId);
+  };
+
+  const handleDownload = () => {
+    downloadDataset(id)
+      .then(() => {
+        notificationController.info({ message: t('dataset.analysis.download.inProgressNotify') });
+      })
+      .catch(() => {
+        notificationController.error({ message: t('dataset.analysis.download.failNotify') });
+      });
+  };
+
   return (
     <>
       <PageTitle>{t('dataset.analysis.title')}</PageTitle>
@@ -79,12 +129,24 @@ const AnalysisPage: React.FC = () => {
           title={t('dataset.analysis.title')}
           padding="1.25rem 1.25rem 0"
           extra={
-            <S.CreateButton type="primary" icon={<FaCirclePlus />} onClick={() => setIsCreateModalOpen(true)}>
-              {t('dataset.analysis.create.title')}
-            </S.CreateButton>
+            <Flex gap="4px 15px" wrap="wrap">
+              <S.HeaderButton type="primary" icon={<RiDownloadCloudFill size={15} />} onClick={handleDownload}>
+                {t('dataset.analysis.download.title')}
+              </S.HeaderButton>
+              <S.HeaderButton
+                type="primary"
+                icon={<FaCirclePlus size={15} />}
+                style={{ background: 'var(--black)' }}
+                onClick={() => setIsCreateModalOpen(true)}
+              >
+                {t('dataset.analysis.create.title')}
+              </S.HeaderButton>
+            </Flex>
           }
         >
-          {id && <AnalysisTable fetch={fetch} tableData={tableData} userRequestId={id} />}
+          {id && (
+            <AnalysisTable fetch={fetch} tableData={tableData} userRequestId={id} handleDeleteRow={handleDeleteRow} />
+          )}
         </S.Card>
         <CreateModal
           isModalOpen={isCreateModalOpen}

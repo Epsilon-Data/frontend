@@ -1078,6 +1078,11 @@
         "successNotify": "Analysis created successfully.",
         "failNotify": "Failed to create analysis. Please try again."
       },
+      "download": {
+        "title": "Download Dataset",
+        "inProgressNotify": "Dataset download in progress.",
+        "failNotify":"Failed to provide dataset. Please try again."
+      },
       "view": {
         "title": "Analysis Details",
         "delete": "Delete Analysis",

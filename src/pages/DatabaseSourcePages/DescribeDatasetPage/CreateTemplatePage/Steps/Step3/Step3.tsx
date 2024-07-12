@@ -50,6 +50,21 @@ function createNodeColumnMapping(nodes: Node[], edges: Edge[]) {
   return result;
 }
 
+function transformColumns(nodeMap: any[], tableMap: { [key: string]: string }) {
+  return nodeMap.map((category) => {
+    const transformedColumns = category.columns.map((column: string) => {
+      return {
+        name: column,
+        table: tableMap[column],
+      };
+    });
+    return {
+      ...category,
+      columns: transformedColumns,
+    };
+  });
+}
+
 export const Step3: React.FC<{
   id: string | undefined;
   nodes: Node[];
@@ -69,7 +84,8 @@ export const Step3: React.FC<{
   setStep: (value: number) => void;
   columnCount: number;
   templateId: string;
-}> = ({ id, nodes, edges, setNodes, setEdges, setSaveDescription, setStep, columnCount, templateId }) => {
+  corrTables: any;
+}> = ({ id, nodes, edges, setNodes, setEdges, setSaveDescription, setStep, columnCount, templateId, corrTables }) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [mappingSuccess, setMappingSuccess] = useState(false);
@@ -131,7 +147,8 @@ export const Step3: React.FC<{
       setMessage(t('databaseSources.describeDataset.message.catCriteria'));
       setSaveDescription(t('databaseSources.describeDataset.step3Description.fail'));
     } else {
-      addColumnMapping(id, JSON.stringify(result), templateId)
+      const formattedResult = transformColumns(result, corrTables);
+      addColumnMapping(id, JSON.stringify(formattedResult), templateId)
         .then(() => {
           setMappingSuccess(true);
           setMessage(t('databaseSources.describeDataset.message.mappingSuccess'));
@@ -147,7 +164,7 @@ export const Step3: React.FC<{
     }
     setLoading(false);
     return;
-  }, [nodes, edges, t, id, setSaveDescription, columnCount, subcategoryNodes, categoryNodes, templateId]);
+  }, [nodes, edges, t, id, setSaveDescription, columnCount, subcategoryNodes, categoryNodes, templateId, corrTables]);
 
   const handleBackToStep = (stepNum: number) => {
     setNodes(nodes.filter((node) => node.type !== 'column'));

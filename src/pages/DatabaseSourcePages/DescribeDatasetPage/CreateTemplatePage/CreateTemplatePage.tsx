@@ -26,6 +26,8 @@ const CreateTemplatePage: React.FC = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [columnCount, setColumnCount] = useState(0);
   const [templateId, setTemplateId] = useState('');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [corrTables, setCorrTables] = useState<any>();
   const steps = [
     {
       title: t('databaseSources.describeDataset.step1'),
@@ -60,6 +62,8 @@ const CreateTemplatePage: React.FC = () => {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           setColumnCount={setColumnCount}
+          corrTables={corrTables}
+          setCorrTables={setCorrTables}
         />
       ),
     },
@@ -77,6 +81,7 @@ const CreateTemplatePage: React.FC = () => {
           setStep={setCurrentStep}
           columnCount={columnCount}
           templateId={templateId}
+          corrTables={corrTables}
         />
       ),
     },

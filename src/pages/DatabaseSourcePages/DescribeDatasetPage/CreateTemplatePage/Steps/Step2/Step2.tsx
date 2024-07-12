@@ -46,6 +46,8 @@ export const Step2: React.FC<{
   onNodesChange: (value: NodeChange[]) => void;
   onEdgesChange: (value: EdgeChange[]) => void;
   setColumnCount: (value: number) => void;
+  corrTables: any[];
+  setCorrTables: (value: any[]) => void;
 }> = ({
   id,
   setStep,
@@ -57,13 +59,14 @@ export const Step2: React.FC<{
   onNodesChange,
   onEdgesChange,
   setColumnCount,
+  corrTables,
+  setCorrTables,
 }) => {
   const { t } = useTranslation();
   const { isMounted } = useMounted();
   const [initialColumns, setInitialColumns] = useState<string[]>([]);
   const [columns, setColumns] = useState<string[]>([]);
   const [filteredColumns, setFilteredColumns] = useState<string[]>([]);
-  const [corrTables, setCorrTables] = useState<any[]>([]);
   const [reset, setReset] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
   const templateEdges = edges.filter((edge) => !edge.source.includes('column_') && !edge.target.includes('column_'));
@@ -88,7 +91,7 @@ export const Step2: React.FC<{
         }
       });
     },
-    [isMounted, setColumnCount],
+    [isMounted, setColumnCount, setCorrTables],
   );
 
   useEffect(() => {

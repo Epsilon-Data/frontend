@@ -54,7 +54,7 @@ const AnalysisViewPage: React.FC = () => {
   const handleDelete = () => {
     deleteAnalysis(analysisId);
     notificationController.success({ message: t('dataset.analysis.view.deleteSuccess') });
-    navigate('/datasets/analysis/' + id, { state: { fromDelete: true } });
+    navigate(`/datasets/analysis/${id}`, { state: { analysisId } });
   };
 
   return (

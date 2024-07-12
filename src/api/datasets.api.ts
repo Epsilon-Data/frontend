@@ -277,3 +277,22 @@ export const addScriptMapping = async (scriptId: string | undefined, mapping: an
   );
   return response.data;
 };
+
+export const downloadDataset = async (userRequestId: string | undefined): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(DATASET_API_URL + 'download-dataset', {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      userRequestId: userRequestId,
+    },
+    responseType: 'blob',
+  });
+
+  const url = window.URL.createObjectURL(new Blob([response.data]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'dataset.zip'); // or the file name you expect from the server
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+};

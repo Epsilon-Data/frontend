@@ -42,7 +42,7 @@ export const RequestDatabaseInfo: React.FC<{
   const [showMessage, setShowMessage] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState<boolean>(false);
   const [keywords, setKeywords] = useState(initialValues.dataKeywords);
-  const [isSubmitLoading, setSubmitLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
   const navigate = useNavigate();
 
   const [form] = BaseButtonsForm.useForm();
@@ -126,16 +126,17 @@ export const RequestDatabaseInfo: React.FC<{
         notificationController.success({
           message: t('connectionRequests.create.successNotify'),
         });
+        setSubmitLoading(false);
       })
       .catch(() => {
         notificationController.error({
           message: t('connectionRequests.create.failNotify'),
         });
+        setSubmitLoading(false);
       });
 
     setFormLoading(false);
     setFieldsChanged(false);
-    setSubmitLoading(false);
   };
 
   return (
@@ -211,7 +212,7 @@ export const RequestDatabaseInfo: React.FC<{
           isModalOpen={isFormModalOpen}
           setIsModalOpen={setIsFormModalOpen}
           onSubmit={handleSubmit}
-          loading={isSubmitLoading}
+          loading={submitLoading}
         />
       </BaseRow>
     </BaseButtonsForm>

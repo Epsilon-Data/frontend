@@ -105,7 +105,10 @@ const LogoutFallback = withLoading(Logout);
 const LoginFallback = withLoading(Login);
 
 export const AppRouter: React.FC = () => {
-  const researcher = useAppSelector((state) => state.user.user?.roles.includes('research') || false);
+  const researcher = useAppSelector((state) => {
+    const user = state.user.user;
+    return user?.roles?.includes('research') || false;
+  });
 
   const protectedLayout = (
     <RequireAuth>

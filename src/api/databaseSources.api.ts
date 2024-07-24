@@ -220,15 +220,13 @@ export const getProjectSettings = async (projectId: string | undefined): Promise
   });
 
   if (response.data.cover) {
-    const content = Uint8Array.from(response.data.cover.data);
-    const imageURL = URL.createObjectURL(new Blob([content.buffer], { type: 'image/jpg' }));
     response.data.cover = [
       {
         uid: '1',
         name: 'cover.jpg',
         status: 'done',
-        url: imageURL,
-        thumbUrl: imageURL,
+        url: response.data.cover,
+        thumbUrl: response.data.cover,
       },
     ];
   } else {

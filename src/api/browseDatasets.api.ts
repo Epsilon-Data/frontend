@@ -46,15 +46,6 @@ export const getProjects = async (isSearch: boolean): Promise<ProjectSummaryInfo
       isSearch: isSearch,
     },
   });
-
-  if (!isSearch) {
-    for (const item of response.data) {
-      if (item.cover) {
-        const content = Uint8Array.from(item.cover.data);
-        item.cover = URL.createObjectURL(new Blob([content.buffer], { type: 'image/jpg' }));
-      }
-    }
-  }
   return response.data;
 };
 

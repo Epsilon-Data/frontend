@@ -69,6 +69,10 @@ const ViewRequestPage: React.FC = () => {
       navigate(-1);
     };
 
+    const handleViewDataset = () => {
+      navigate(`/datasets/analysis/${id}`);
+    };
+
     const handleProceedClick = (isApproved: boolean) => {
       let actionSuccess = 'approved';
       let actionFail = 'approve';
@@ -110,7 +114,7 @@ const ViewRequestPage: React.FC = () => {
           ]);
         case RequestStatus.APPROVED:
           return React.Children.toArray([
-            <S.ActionButton type="primary" key="dataset">
+            <S.ActionButton type="primary" key="dataset" onClick={handleViewDataset}>
               {t('connectionRequests.viewDataset')}
             </S.ActionButton>,
             <S.ActionButton type="default" key="back" onClick={handleBackClick}>

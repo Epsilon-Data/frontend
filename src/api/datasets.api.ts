@@ -254,10 +254,7 @@ export const getScriptMapping = async (scriptId: string | undefined): Promise<an
     },
   });
 
-  if (response.data.script) {
-    const content = Uint8Array.from(response.data.script.data);
-    response.data.script = URL.createObjectURL(new Blob([content.buffer], { type: 'text/plain' }));
-  }
+  console.log(response.data.script);
 
   return response.data;
 };

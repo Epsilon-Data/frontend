@@ -49,7 +49,9 @@ export const Specifications: React.FC<{ info: any; isLoading: boolean; fetch: (i
       case 3:
         return <FaRegCircleCheck style={{ color: 'var(--success-color)', top: '1.25rem', position: 'absolute' }} />;
       case 4:
-        return <FaCircleExclamation style={{ color: 'var(--secondary-color)', top: '1.8rem', position: 'absolute' }} />;
+        return (
+          <FaCircleExclamation style={{ color: 'var(--secondary-color)', top: '1.25rem', position: 'absolute' }} />
+        );
       default:
         return null;
     }

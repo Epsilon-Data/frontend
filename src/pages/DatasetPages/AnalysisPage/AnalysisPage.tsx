@@ -131,7 +131,7 @@ const AnalysisPage: React.FC = () => {
           extra={
             <Flex gap="4px 15px" wrap="wrap">
               <S.HeaderButton type="primary" icon={<RiDownloadCloudFill size={15} />} onClick={handleDownload}>
-                {t('dataset.analysis.download.title')}
+                {t('dataset.analysis.download.dataset')}
               </S.HeaderButton>
               <S.HeaderButton
                 type="primary"

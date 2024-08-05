@@ -8,9 +8,8 @@ import { useMounted } from '@app/hooks/useMounted';
 import { AnalysisInfo, deleteAnalysis, getAnalysisDetails } from '@app/api/datasets.api';
 import { INITIAL_DETAIL_VALUES } from '@app/constants/datasets';
 import { MdDeleteOutline, MdOutlineModeEdit } from 'react-icons/md';
-import { Flex, Tabs } from 'antd';
+import { Flex } from 'antd';
 import { Specifications } from './Specifications/Specifications';
-import { Utilities } from './Utilities/Utilities';
 import { notificationController } from '@app/controllers/notificationController';
 
 const AnalysisViewPage: React.FC = () => {
@@ -38,19 +37,6 @@ const AnalysisViewPage: React.FC = () => {
     fetch(analysisId);
   }, [analysisId, fetch]);
 
-  const tabItems = [
-    {
-      label: t('dataset.analysis.view.specs'),
-      children: <Specifications info={analysisDetails} isLoading={isLoading} fetch={fetch} />,
-      key: 'specs',
-    },
-    {
-      label: t('dataset.analysis.view.util'),
-      children: <Utilities info={analysisDetails} isLoading={isLoading} />,
-      key: 'util',
-    },
-  ];
-
   const handleDelete = () => {
     deleteAnalysis(analysisId);
     notificationController.success({ message: t('dataset.analysis.view.deleteSuccess') });
@@ -77,7 +63,7 @@ const AnalysisViewPage: React.FC = () => {
           padding="1.25rem 1.25rem 0"
         >
           <BaseRow style={{ display: 'flex', flexDirection: 'column' }}>
-            <Tabs defaultActiveKey="1" tabPosition="top" items={tabItems} />
+            <Specifications info={analysisDetails} isLoading={isLoading} fetch={fetch} />
           </BaseRow>
         </S.Card>
       </S.CardWrapper>

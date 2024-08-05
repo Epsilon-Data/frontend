@@ -1079,9 +1079,10 @@
         "failNotify": "Failed to create analysis. Please try again."
       },
       "download": {
-        "title": "Download Dataset",
-        "inProgressNotify": "Dataset download in progress.",
-        "failNotify":"Failed to provide dataset. Please try again."
+        "dataset": "Download Dataset",
+        "inProgressNotify": "Download in progress.",
+        "failNotify":"Failed to download content. Please try again.",
+        "report": "Download Report"
       },
       "view": {
         "title": "Analysis Details",

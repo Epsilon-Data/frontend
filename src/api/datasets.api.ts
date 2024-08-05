@@ -193,6 +193,23 @@ export const deleteScript = async (scriptId: string | undefined): Promise<string
   return response.data;
 };
 
+export const downloadReport = async (scriptId: string | undefined): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(DATASET_API_URL + 'download-report', {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      scriptId: scriptId,
+    },
+  });
+
+  const link = document.createElement('a');
+  link.href = response.data;
+  link.setAttribute('download', 'report.html');
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+};
+
 export const getAnalysisColumns = async (userRequestId: string | undefined): Promise<string[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATASET_API_URL + 'columns', {
@@ -253,8 +270,6 @@ export const getScriptMapping = async (scriptId: string | undefined): Promise<an
       scriptId: scriptId,
     },
   });
-
-  console.log(response.data.script);
 
   return response.data;
 };

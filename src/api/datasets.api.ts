@@ -193,9 +193,9 @@ export const deleteScript = async (scriptId: string | undefined): Promise<string
   return response.data;
 };
 
-export const downloadReport = async (scriptId: string | undefined): Promise<void> => {
+export const viewReport = async (scriptId: string | undefined): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATASET_API_URL + 'download-report', {
+  const response = await httpClient.get(DATASET_API_URL + 'view-report', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       scriptId: scriptId,

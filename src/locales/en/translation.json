@@ -1081,8 +1081,7 @@
       "download": {
         "dataset": "Download Dataset",
         "inProgressNotify": "Download in progress.",
-        "failNotify":"Failed to download content. Please try again.",
-        "report": "Download Report"
+        "failNotify":"Failed to download content. Please try again."
       },
       "view": {
         "title": "Analysis Details",
@@ -1099,10 +1098,7 @@
         "scriptName": "Script Name",
         "checkValidation": "Check Validation",
         "lastUpdated": "Last Updated",
-        "reviewAndGenerate": "Review and Generate Result Package/Report",
-        "executionSettings": "Execution Settings",
-        "packageName": "Package/Report Name: ",
-        "generate": "Generate Package/Report"
+        "report": "View Report"
       },
       "upload": {
         "title": "Script Upload Settings",

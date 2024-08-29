@@ -45,10 +45,10 @@ const DescribeDatasetPage: React.FC = () => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
       getTemplates(id).then((res) => {
         if (isMounted.current && res) {
-          const mapped = res.map((obj: { name: string; id: string }, index: number) => ({
+          const mapped = res.map((item: string[], index: number) => ({
             key: index,
-            name: obj.name,
-            id: obj.id,
+            name: item[2],
+            id: item[1],
           }));
           const pagination = { ...initialPagination, total: res.length };
           setTableData({ data: mapped, pagination: pagination, loading: false });

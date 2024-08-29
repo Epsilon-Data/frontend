@@ -96,7 +96,13 @@ const TableInfoPage: React.FC = () => {
                 <S.Header>{t('databaseSources.metadata.tableInfo.schema')}</S.Header>
                 <S.Content>{tableInfo.schema}</S.Content>
               </S.InfoArea>
-              <BaseTable columns={columns} dataSource={tableInfo.columns} pagination={false} style={{ width: '80%' }} />
+              <BaseTable
+                columns={columns}
+                dataSource={tableInfo.columns}
+                pagination={false}
+                style={{ width: '80%' }}
+                rowKey={(row) => row.name}
+              />
             </BaseCol>
           </BaseRow>
         </S.Card>

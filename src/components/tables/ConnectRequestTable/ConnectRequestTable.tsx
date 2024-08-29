@@ -12,7 +12,7 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { Priority } from '@app/constants/enums/priorities';
 import { useNavigate } from 'react-router-dom';
-import { SourceStatus } from '@app/constants/enums/sourceStatus';
+import { CrawlStatus } from '@app/constants/enums/crawlStatus';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const initialPagination: Pagination = {
@@ -140,7 +140,7 @@ export const ConnectRequestTable: React.FC = () => {
                     <BaseButton
                       type="primary"
                       onClick={() => {
-                        if (record.dbStatus == SourceStatus.ACTIVE) {
+                        if (record.dbStatus == CrawlStatus.ACTIVE) {
                           navigate('/database-sources/metadata/' + record.projectId);
                         } else {
                           navigate('/database-sources');

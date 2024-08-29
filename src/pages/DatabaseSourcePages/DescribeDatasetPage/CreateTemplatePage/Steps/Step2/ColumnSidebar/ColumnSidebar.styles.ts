@@ -24,9 +24,10 @@ export const Column = styled.div`
     border-left: 2px solid var(--black);
     border-right: 2px solid var(--black);
     margin: 0 1rem;
-    padding: 0.5rem;
+    padding: 0.2rem 0.5rem;
     height: 100%;
     word-break: break-all;
+    justify-content: space-between;
   }
 
   .text span {

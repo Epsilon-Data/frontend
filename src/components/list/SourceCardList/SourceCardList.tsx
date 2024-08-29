@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseList } from '@app/components/common/BaseList/BaseList';
-import { SourceListItem, getSourceList, Pagination } from '@app/api/databaseSources.api';
+import { SourceListItem, getSourceList, Pagination, Tag, updateCrawlStatus } from '@app/api/databaseSources.api';
 import { useTranslation } from 'react-i18next';
 import { useMounted } from '@app/hooks/useMounted';
 import { useCallback, useState, useEffect } from 'react';
@@ -21,8 +22,7 @@ const initialPagination: Pagination = {
 };
 
 export const SourceCardList: React.FC = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [crawlingStatuses, setCrawlingStatuses] = useState<any>([]);
+  const [statusData, setStatusData] = useState<Record<string, { crawlStatus: Tag; percent: number; msg: string }>>({});
   const [listData, setListData] = useState<{ data: SourceListItem[]; pagination: Pagination; loading: boolean }>({
     data: [],
     pagination: initialPagination,
@@ -38,6 +38,19 @@ export const SourceCardList: React.FC = () => {
       getSourceList(pagination).then((res) => {
         if (isMounted.current) {
           setListData({ data: res.data, pagination: res.pagination, loading: false });
+          const updatedStatusData = res.data.reduce(
+            (acc, item) => {
+              acc[item.dbId] = {
+                crawlStatus: item.crawlStatus,
+                percent: item.statusPercent,
+                msg: item.statusMsg,
+              };
+              return acc;
+            },
+            {} as Record<string, { crawlStatus: Tag; percent: number; msg: string }>,
+          );
+
+          setStatusData(updatedStatusData);
         }
       });
     },
@@ -50,10 +63,22 @@ export const SourceCardList: React.FC = () => {
 
   useEffect(() => {
     WebSocketService.listenToDatabaseStatuses((data) => {
-      setCrawlingStatuses(data.results);
-      console.log(data);
+      const updatedStatusData = listData.data.reduce(
+        (acc, item) => {
+          const status = data.results.find((status: { id: any }) => status.id === item.dbId);
+          acc[item.dbId] = {
+            crawlStatus: status ? updateCrawlStatus(status.crawlStatus) : item.crawlStatus,
+            percent: status ? status.statusPercent : 0,
+            msg: status ? status.statusMsg : null,
+          };
+          return acc;
+        },
+        {} as Record<string, { crawlStatus: Tag; percent: number; msg: string }>,
+      );
+
+      setStatusData(updatedStatusData);
     });
-  }, []);
+  }, [listData.data]);
 
   const handlePaginationChange = (page: number) => {
     setListData((listData) => ({ ...listData, pagination: { ...listData.pagination, current: page } }));
@@ -78,37 +103,29 @@ export const SourceCardList: React.FC = () => {
               <p>{`Connect Date: ${item.connectDate}`}</p>
               <p>Status:</p>
               <BaseRow gutter={[10, 10]}>
-                <BaseCol key={item.sourceStatus.value} style={{ flex: 0.3 }}>
+                <BaseCol key={item.dbId} style={{ flex: 0.3 }}>
                   <Status
-                    color={defineColorByPriority(item.sourceStatus.priority)}
-                    text={item.sourceStatus.value.toUpperCase()}
+                    color={defineColorByPriority(statusData[item.dbId].crawlStatus.priority)}
+                    text={statusData[item.dbId].crawlStatus.value.toUpperCase()}
                   />
                 </BaseCol>
               </BaseRow>
             </div>
-            {item.sourceStatus.value === 'Crawling' && (
+            {statusData[item.dbId].crawlStatus.value == 'Crawling' && (
               <>
                 <BaseProgress
-                  percent={
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    crawlingStatuses.find((status: { id: any }) => status.id === item.dbId)?.status_percent
-                  }
+                  percent={statusData[item.dbId].percent}
                   status="active"
                   strokeColor={'var(--collapse-background-color)'}
                 />
-                <p>
-                  {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    crawlingStatuses.find((status: { id: any }) => status.id === item.dbId)?.status_msg
-                  }
-                </p>
+                <p>{statusData[item.dbId].msg}</p>
               </>
             )}
             <BaseButton
               style={{ marginTop: '1rem', float: 'right' }}
               type="primary"
               onClick={() => navigate('/database-sources/metadata/' + item.projectId)}
-              disabled={item.sourceStatus?.value !== 'Active'}
+              disabled={statusData[item.dbId].crawlStatus.value !== 'Active'}
             >
               {t('databaseSources.manage')}
             </BaseButton>

@@ -104,7 +104,7 @@ export const Step3: React.FC<{
     let metSubcatCriteria = true;
     let metCatCriteria = true;
 
-    if (result != null) {
+    if (result != null && loading) {
       // Check subcategory nodes
       for (const subcategoryNode of subcategoryNodes) {
         const subcategoryNodeResult = result.find(
@@ -154,17 +154,30 @@ export const Step3: React.FC<{
           setMessage(t('databaseSources.describeDataset.message.mappingSuccess'));
           setMessageDescription(t('databaseSources.describeDataset.message.mappingSuccessDescription'));
           setSaveDescription(t('databaseSources.describeDataset.step3Description.success'));
+          setLoading(false);
         })
         .catch(() => {
           setMappingSuccess(false);
           setMessage(t('databaseSources.describeDataset.message.saveFailed'));
           setMessageDescription(t('databaseSources.describeDataset.message.saveFailedDescription'));
           setSaveDescription(t('databaseSources.describeDataset.step3Description.fail'));
+          setLoading(false);
         });
     }
-    setLoading(false);
     return;
-  }, [nodes, edges, t, id, setSaveDescription, columnCount, subcategoryNodes, categoryNodes, templateId, corrTables]);
+  }, [
+    nodes,
+    edges,
+    t,
+    id,
+    setSaveDescription,
+    columnCount,
+    subcategoryNodes,
+    categoryNodes,
+    templateId,
+    corrTables,
+    loading,
+  ]);
 
   const handleBackToStep = (stepNum: number) => {
     setNodes(nodes.filter((node) => node.type !== 'column'));

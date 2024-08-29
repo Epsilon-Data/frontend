@@ -22,10 +22,12 @@ const CustomToolbar: React.FC<{
 export const ERD: React.FC<{ diagramCode: string }> = ({ diagramCode }) => {
   const [svgContent, setSvgContent] = useState<string | null>(null);
   useEffect(() => {
-    mermaid.initialize({ startOnLoad: true });
-    mermaid.render('erd-container', diagramCode).then((res) => {
-      setSvgContent(res.svg);
-    });
+    if (diagramCode) {
+      mermaid.initialize({ startOnLoad: true });
+      mermaid.render('erd-container', diagramCode).then((res) => {
+        setSvgContent(res.svg);
+      });
+    }
   }, [diagramCode]);
 
   return (

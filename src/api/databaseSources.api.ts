@@ -1,6 +1,6 @@
-import { OverallDatabaseInfoValues, ProjectSettings, Template, TemplatePermissions } from '@app/interfaces/interfaces';
+import { OverallDatabaseInfoValues, ProjectSettings, TemplatePermissions } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
-import { SourceStatus } from '@app/constants/enums/sourceStatus';
+import { CrawlStatus } from '@app/constants/enums/crawlStatus';
 import { DATE_FORMAT, DATABASE_SOURCE_API_URL } from '@app/constants/databaseSource';
 import { format } from 'date-fns';
 import { httpClient, getCsrfHeader } from './http.api';
@@ -25,7 +25,9 @@ export interface SourceListItem {
   dbId: string;
   databaseName: string;
   connectDate: Date;
-  sourceStatus: Tag;
+  crawlStatus: Tag;
+  statusMsg: string;
+  statusPercent: number;
 }
 
 export interface SourceListData {
@@ -52,28 +54,38 @@ export interface ColumnTableRow {
   primary: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const updateCrawlStatus = (status: number) => {
+  let statusTag = { value: 'Pending', priority: Priority.INFO, status: CrawlStatus.PENDING };
+
+  switch (status) {
+    case CrawlStatus.PENDING:
+      break;
+    case CrawlStatus.CRAWL:
+      statusTag = { value: 'Crawling', priority: Priority.DISABLED, status: CrawlStatus.CRAWL };
+      break;
+    case CrawlStatus.ACTIVE:
+      statusTag = { value: 'Active', priority: Priority.LOW, status: CrawlStatus.ACTIVE };
+      break;
+    // Add more cases if needed
+    default:
+      break;
+  }
+
+  return statusTag;
+};
+
 export const getSourceList = async (pagination: Pagination): Promise<SourceListData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'list', {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
-  const formattedData = response.data.map((item: { connectDate: Date; sourceStatus: number }) => {
-    let statusTag = { value: 'Pending', priority: Priority.INFO };
-    switch (item.sourceStatus) {
-      case SourceStatus.PENDING:
-        break;
-      case SourceStatus.CRAWL:
-        statusTag = { value: 'Crawling', priority: Priority.DISABLED };
-        break;
-      case SourceStatus.ACTIVE:
-        statusTag = { value: 'Active', priority: Priority.LOW };
-        break;
-    }
+  const formattedData = response.data.map((item: { connectDate: Date; crawlStatus: number }) => {
     return {
       ...item,
       connectDate: item.connectDate ? format(item.connectDate, DATE_FORMAT) : '-',
-      sourceStatus: statusTag,
+      crawlStatus: updateCrawlStatus(item.crawlStatus),
     };
   });
 
@@ -126,7 +138,7 @@ export const addTemplate = async (projectId: string | undefined, template: strin
   return response.data;
 };
 
-export const getTemplates = async (projectId: string | undefined): Promise<Template[]> => {
+export const getTemplates = async (projectId: string | undefined): Promise<string[][]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'templates', {
     headers: { [csrfHeaderName]: `${csrf}` },

@@ -5,7 +5,7 @@ import * as S from './DescribeDatasetPage.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { useMounted } from '@app/hooks/useMounted';
-import { Pagination, deleteTemplate, getProjectId, getTemplates } from '@app/api/databaseSources.api';
+import { Pagination, deleteTemplate, getProjectId, getTemplateNames } from '@app/api/databaseSources.api';
 import { FaCirclePlus } from 'react-icons/fa6';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
@@ -43,7 +43,7 @@ const DescribeDatasetPage: React.FC = () => {
         }
       });
       setTableData((tableData) => ({ ...tableData, loading: true }));
-      getTemplates(id).then((res) => {
+      getTemplateNames(id).then((res) => {
         if (isMounted.current && res) {
           const mapped = res.map((item: string[], index: number) => ({
             key: index,

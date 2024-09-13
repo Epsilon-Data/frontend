@@ -1,4 +1,4 @@
-import { OverallDatabaseInfoValues, ProjectSettings, TemplatePermissions } from '@app/interfaces/interfaces';
+import { OverallDatabaseInfoValues, ProjectSettings, Template, TemplatePermissions } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 import { CrawlStatus } from '@app/constants/enums/crawlStatus';
 import { DATE_FORMAT, DATABASE_SOURCE_API_URL } from '@app/constants/databaseSource';
@@ -138,7 +138,19 @@ export const addTemplate = async (projectId: string | undefined, template: strin
   return response.data;
 };
 
-export const getTemplates = async (projectId: string | undefined): Promise<string[][]> => {
+export const getTemplateNames = async (projectId: string | undefined): Promise<string[][]> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'template-names', {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      projectId: projectId,
+    },
+  });
+
+  return response.data;
+};
+
+export const getTemplates = async (projectId: string | undefined): Promise<Template[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'templates', {
     headers: { [csrfHeaderName]: `${csrf}` },

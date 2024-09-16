@@ -1,6 +1,11 @@
 # Start with a node 18 image with package info
 # Installs *all* pnpm packages and runs build script
 FROM node:18.12.1-alpine as workspace
+
+# private git packages
+ARG GITHUB_NPM_TOKEN
+ENV GITHUB_NPM_TOKEN=${GITHUB_NPM_TOKEN}
+
 WORKDIR /app
 RUN npm install -g pnpm
 COPY [".", "/app/"]

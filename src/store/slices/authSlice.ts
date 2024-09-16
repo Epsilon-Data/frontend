@@ -26,7 +26,7 @@ const initialState: AuthSlice = {
 };
 
 export const doLogin = createAsyncThunk('auth/doLogin', async () =>
-  login(window.location.href).then((res) => {
+  login(window.location.hostname).then((res) => {
     return res;
   }),
 );

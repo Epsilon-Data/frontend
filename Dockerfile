@@ -4,7 +4,7 @@ FROM node:18.12.1-alpine as workspace
 WORKDIR /app
 RUN npm install -g pnpm
 COPY [".", "/app/"]
-RUN pnpm install --prod --no-optional
+RUN pnpm install
 
 FROM workspace as build
 WORKDIR /app

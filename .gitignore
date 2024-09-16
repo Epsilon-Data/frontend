@@ -32,4 +32,4 @@ yarn-error.log*
 .idea
 
 # generated files
-/public/themes/*
+

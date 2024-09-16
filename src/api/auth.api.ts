@@ -33,6 +33,7 @@ export interface NewPasswordData {
 }
 
 export const login = async (currentPath: string) => {
+  console.log(window.location);
   return await getLoginUrl(currentPath);
 };
 

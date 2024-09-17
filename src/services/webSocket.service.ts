@@ -1,10 +1,11 @@
 import io, { Socket } from 'socket.io-client';
+import config from '@app/config/config';
 
 let socket: Socket;
 
 const getSocket = () => {
   if (!socket) {
-    socket = io('http://localhost');
+    socket = io(config.baseUrl);
     console.log('Created socket');
   }
   return socket;

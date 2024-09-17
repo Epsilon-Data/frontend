@@ -11,7 +11,7 @@ console.error = (errObj, ...args) => {
 export default {
   // TODO: change to general API gateway for all APIs
   isDev: process.env.NODE_ENV === 'development' ? true : false,
-  baseUrl: process.env.VITE_EPSILON_BASE_URL || 'http://localhost',
+  baseUrl: import.meta.env.VITE_EPSILON_BASE_URL || 'http://localhost',
   apiPrefix: import.meta.env.VITE_EPSILON_API_PREFIX || 'http://localhost/api/v1',
   cookiePrefix: import.meta.env.VITE_EPSILON_COOKIE_PREFIX || 'epsilon',
 };

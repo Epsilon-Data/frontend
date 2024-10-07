@@ -12,23 +12,29 @@ const homeNavigation: SidebarNavigationItem[] = [];
 
 const connectNavigation: SidebarNavigationItem[] = [
   {
-    title: 'connectionRequests.dbRequest',
+    title: 'connectionRequests.dbRequestSidebar.main',
     key: 'requests/database',
-    url: '/requests/database',
+    children: [
+      {
+        title: 'connectionRequests.dbRequestSidebar.sent',
+        key: 'requests/database/sent',
+        url: '/requests/database/sent',
+      },
+    ],
   },
   {
     title: 'connectionRequests.accessRequestSidebar.main',
     key: 'requests/user',
     children: [
       {
-        title: 'connectionRequests.accessRequestSidebar.received',
-        key: 'received',
-        url: '/requests/user/receive',
+        title: 'connectionRequests.accessRequestSidebar.sent',
+        key: 'requests/user/sent',
+        url: '/requests/user/sent',
       },
       {
-        title: 'connectionRequests.accessRequestSidebar.sent',
-        key: 'sent',
-        url: '/requests/user/sent',
+        title: 'connectionRequests.accessRequestSidebar.receive',
+        key: 'requests/user/receive',
+        url: '/requests/user/receive',
       },
     ],
   },
@@ -46,9 +52,25 @@ const datasetNavigation: SidebarNavigationItem[] = [
   { title: 'dataset.standard.title', key: 'standard' },
 ];
 
-export function returnCurrentNav(key: string): SidebarNavigationItem[] {
-  if (key === 'connect') {
+export function returnCurrentNav(key: string, admin: boolean): SidebarNavigationItem[] {
+  if (key === 'connect' && !admin) {
     return connectNavigation;
+  } else if (key === 'connect' && admin) {
+    const receiveChild = {
+      title: 'connectionRequests.dbRequestSidebar.receive',
+      key: 'requests/database/receive',
+      url: '/requests/database/receive',
+    };
+    const updatedNav = connectNavigation.map((item) => {
+      if (item.key === 'requests/database') {
+        return {
+          ...item,
+          children: item.children ? [...item.children, receiveChild] : [receiveChild],
+        };
+      }
+      return item;
+    });
+    return updatedNav;
   } else if (key === 'home') {
     return homeNavigation;
   } else if (key === 'database') {
@@ -59,9 +81,9 @@ export function returnCurrentNav(key: string): SidebarNavigationItem[] {
   return [];
 }
 
-export function updateUrlById(id: string, selectedKey: string): void {
+export function updateUrlById(id: string, selectedKey: string, admin: boolean): void {
   let prefixUrl = '';
-  const currentNav = returnCurrentNav(selectedKey);
+  const currentNav = returnCurrentNav(selectedKey, admin);
   if (selectedKey == 'database') {
     prefixUrl = '/database-sources/';
   } else if (selectedKey == 'dataset') {

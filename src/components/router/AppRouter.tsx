@@ -123,9 +123,9 @@ export const AppRouter: React.FC = () => {
           <Route index element={<Dashboard />} />
           <Route
             path="requests"
-            element={<Navigate to={`/requests/${researcher ? 'user/sent' : 'database'}`} replace />}
+            element={<Navigate to={`/requests/${researcher ? 'user/sent' : 'database/sent'}`} replace />}
           />
-          <Route path="requests/database" element={<ConnectionRequests />} />
+          <Route path="requests/database/:page" element={<ConnectionRequests />} />
           <Route path="requests/database/create/:page" element={<CreateRequest />} />
           <Route path="requests/database/view/:id" element={<ViewRequest />} />
           <Route path="requests/database/edit/:id/:page" element={<EditRequest />} />

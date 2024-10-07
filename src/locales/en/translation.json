@@ -577,18 +577,6 @@
     "small": "Small",
     "square": "Square"
   },
-  "spinners": {
-    "alertDescription": "Further details about the context of this alert.",
-    "alertMessage": "Alert message title",
-    "customDescription": "Spinner with custom description",
-    "customIndicator": "Spinner with custom indicator",
-    "customLoading": "Spinner with custom loading",
-    "customLoadingDelay": "Spinner with custom delay",
-    "globalAppSpinner": "Global application spinner",
-    "loading": "Loading...",
-    "loadingState": "Loading state：",
-    "sizes": "Spinner sizes"
-  },
   "steps": {
     "basic": "Basic steps",
     "clickable": "Clickable steps",
@@ -662,12 +650,16 @@
     "requestor": "Requestor",
     "requestorProject": "Requestor's Project",
     "requestingProject": "Requesting Project Dataset",
-    "dbRequest": "Database Request",
+    "dbRequestSidebar": {
+      "main": "Database Request",
+      "receive": "Requests Received",
+      "sent": "Requests Sent"
+    },
     "dbRequestList" : "Database Request List",
     "accessRequestList": "{{action}}Access Request List",
     "accessRequestSidebar": {
       "main": "Access Request",
-      "received": "Requests Received",
+      "receive": "Requests Received",
       "sent": "Requests Sent"
     },
     "viewSource": "View Source",

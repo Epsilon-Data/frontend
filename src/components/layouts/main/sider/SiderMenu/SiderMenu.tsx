@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import * as S from './SiderMenu.styles';
 import { SidebarNavigationItem, returnCurrentNav } from '../sidebarNavigation';
 import { useTranslation } from 'react-i18next';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 interface SiderContentProps {
   selectedNav: string;
@@ -12,7 +13,8 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
   const location = useLocation();
   const [current, setCurrent] = useState(location.pathname);
   const { t } = useTranslation();
-  const currentNav = returnCurrentNav(selectedNav);
+  const admin = useAppSelector((state) => state.user.user?.roles.includes('admin') || false);
+  const currentNav = returnCurrentNav(selectedNav, admin);
 
   const sidebarNavFlat = currentNav.reduce(
     (result: SidebarNavigationItem[], current) =>

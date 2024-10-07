@@ -49,7 +49,7 @@ const MainLayout: React.FC = () => {
       if (location.pathname.includes('/browse/')) {
         setIsHidden(true);
       } else {
-        if ((admin || researcher) && location.pathname.includes('/requests')) {
+        if (researcher && location.pathname.includes('/requests')) {
           setIsHidden(true);
         } else {
           setIsHidden(false);
@@ -58,16 +58,16 @@ const MainLayout: React.FC = () => {
     }
 
     if (selectedKey == 'database' && id) {
-      updateUrlById(id, selectedKey);
+      updateUrlById(id, selectedKey, admin);
       setTitle(t('databaseSources.sidebarTitle', { id: projectId }));
     } else if (selectedKey == 'dataset' && id) {
-      updateUrlById(id, selectedKey);
+      updateUrlById(id, selectedKey, admin);
       setTitle(t('topNavigation.' + selectedKey));
     } else {
       setTitle(t('topNavigation.' + selectedKey));
     }
     setUrl(findUrlByKey(selectedKey));
-  }, [location.pathname, isDesktop, selectedKey, id, t, fetch, projectId, admin, researcher]);
+  }, [location.pathname, isDesktop, selectedKey, id, t, fetch, projectId, researcher, admin]);
 
   const userTopNav = returnUserTopNav(researcher);
   return (

@@ -4,9 +4,10 @@ import { ConnectRequestTable } from '@app/components/tables/ConnectRequestTable/
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './ConnectionRequestsPage.styles';
 import { FaCirclePlus } from 'react-icons/fa6';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ConnectionRequestsPage: React.FC = () => {
+  const { page } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ const ConnectionRequestsPage: React.FC = () => {
           }
           padding="1.25rem 1.25rem 0"
         >
-          <ConnectRequestTable />
+          <ConnectRequestTable page={page} />
         </S.Card>
       </S.TablesWrapper>
     </>

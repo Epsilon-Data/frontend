@@ -20,7 +20,7 @@ const initialPagination: Pagination = {
   pageSize: 5,
 };
 
-export const ConnectRequestTable: React.FC = () => {
+export const ConnectRequestTable: React.FC<{ page: string | undefined }> = ({ page }) => {
   const [tableData, setTableData] = useState<{ data: RequestTableRow[]; pagination: Pagination; loading: boolean }>({
     data: [],
     pagination: initialPagination,
@@ -75,7 +75,7 @@ export const ConnectRequestTable: React.FC = () => {
       key: 'projectName',
       render: (text: string) => <span>{text}</span>,
     },
-    ...(admin
+    ...(page == 'receive'
       ? [
           {
             title: t('connectionRequests.requestor'),
@@ -105,7 +105,7 @@ export const ConnectRequestTable: React.FC = () => {
         </BaseRow>
       ),
     },
-    ...(admin
+    ...(page == 'receive'
       ? [
           {
             title: t('tables.actions'),

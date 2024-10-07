@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { OverallDatabaseInfoValues, ProjectSettings, Template, TemplatePermissions } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 import { CrawlStatus } from '@app/constants/enums/crawlStatus';
@@ -125,19 +126,6 @@ export const getDbTableInfo = async (projectId: string | undefined): Promise<Dat
   return response.data;
 };
 
-export const addTemplate = async (projectId: string | undefined, template: string): Promise<string> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(
-    DATABASE_SOURCE_API_URL + 'add-template',
-    { projectId: projectId, template: template },
-    {
-      headers: { [csrfHeaderName]: `${csrf}` },
-    },
-  );
-
-  return response.data;
-};
-
 export const getTemplateNames = async (projectId: string | undefined): Promise<string[][]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'template-names', {
@@ -162,40 +150,32 @@ export const getTemplates = async (projectId: string | undefined): Promise<Templ
   return response.data;
 };
 
-export const deleteTemplate = async (
-  projectId: string | undefined,
-  templateId: string,
-): Promise<{ projectId: string; templates: string }> => {
+export const deleteTemplate = async (projectId: string | undefined, templateId: string): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(
+  await httpClient.post(
     DATABASE_SOURCE_API_URL + 'delete-template',
     { projectId: projectId, templateId: templateId },
     {
       headers: { [csrfHeaderName]: `${csrf}` },
     },
   );
-
-  return response.data;
 };
 
-export const addColumnMapping = async (
+export const addArchetype = async (
   projectId: string | undefined,
   columnMapping: string,
-  templateId: string | undefined,
-): Promise<{ projectId: string; columnMapping: string }> => {
+  template: string,
+): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(
-    DATABASE_SOURCE_API_URL + 'add-column-mapping',
-    { projectId: projectId, columnMapping: columnMapping, templateId: templateId },
+  await httpClient.post(
+    DATABASE_SOURCE_API_URL + 'add-archetype',
+    { projectId: projectId, columnMapping: columnMapping, template: template },
     {
       headers: { [csrfHeaderName]: `${csrf}` },
     },
   );
-
-  return response.data;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getDbColumns = async (projectId: string | undefined): Promise<any> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'columns', {

@@ -21,9 +21,10 @@ import { useTranslation } from 'react-i18next';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import * as S from './Step1.styles';
 import { notificationController } from '@app/controllers/notificationController';
-import { addTemplate } from '@app/api/databaseSources.api';
 import { ElementSidebar } from './ElementSidebar/ElementSidebar';
 import { BaseInput } from '@app/components/common/inputs/BaseInput/BaseInput';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 function checkDuplicateNames(nodes: Node[]) {
   const nameSet = new Set();
@@ -98,9 +99,7 @@ function filterNodesEdges(nodes: Node[], edges: Edge[]) {
 }
 
 export const Step1: React.FC<{
-  id: string | undefined;
   setStep: (value: number) => void;
-  setTemplateId: (value: string) => void;
   setIsFormModalOpen: (value: boolean) => void;
   nodes: Node[];
   edges: Edge[];
@@ -117,18 +116,8 @@ export const Step1: React.FC<{
   setEdges: React.Dispatch<React.SetStateAction<Edge<any>[]>>;
   onNodesChange: (value: NodeChange[]) => void;
   onEdgesChange: (value: EdgeChange[]) => void;
-}> = ({
-  id,
-  setStep,
-  setTemplateId,
-  setIsFormModalOpen,
-  nodes,
-  edges,
-  setNodes,
-  setEdges,
-  onNodesChange,
-  onEdgesChange,
-}) => {
+  setTemplate: (value: string) => void;
+}> = ({ setStep, setIsFormModalOpen, nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange, setTemplate }) => {
   const { t } = useTranslation();
   const nodeTypes = useMemo(() => ({ object: TextNode, category: TextNode, subcategory: TextNode }), []);
   const edgeTypes = useMemo(() => ({ default: MapEdge }), []);
@@ -136,6 +125,7 @@ export const Step1: React.FC<{
   let nodeId = nodes.length;
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
   const [templateName, setTemplateName] = useState('');
+  const [saveLoading, setSaveLoading] = useState(false);
 
   const onConnect = useCallback(
     (params: Edge | Connection) => {
@@ -234,62 +224,53 @@ export const Step1: React.FC<{
     [nodeId, reactFlowInstance, setNodes, t],
   );
 
+  const handleSaveError = (message: string, obj?: any) => {
+    notificationController.error({
+      message: t(`databaseSources.describeDataset.notify.${message}`, obj).toString(),
+    });
+    setSaveLoading(false);
+  };
+
   const onSaveTemplate = () => {
+    setSaveLoading(true);
     const containsEmptyLabel = hasEmptyLabel(nodes);
     const duplicateNames = checkDuplicateNames(nodes);
 
     if (!templateName) {
-      notificationController.error({
-        message: t('databaseSources.describeDataset.notify.specifyTemplateName'),
-      });
+      handleSaveError('specifyTemplateName');
       return;
     }
 
     if (containsEmptyLabel) {
-      notificationController.error({
-        message: t('databaseSources.describeDataset.notify.emptyLabels'),
-      });
+      handleSaveError('emptyLabels');
       return;
     }
 
     if (duplicateNames) {
-      notificationController.error({
-        message: t('databaseSources.describeDataset.notify.duplicateElements', { names: duplicateNames }),
-      });
+      handleSaveError('duplicateElements', { names: duplicateNames });
       return;
     }
 
     const template = filterNodesEdges(nodes, edges);
     if (template.filteredNodes.length === 0) {
-      notificationController.error({
-        message: t('databaseSources.describeDataset.notify.noObject'),
-      });
+      handleSaveError('noObject');
       return;
     }
 
     if (template.haveMultipleObjects) {
-      notificationController.error({
-        message: t('databaseSources.describeDataset.notify.onlyOneObject'),
-      });
+      handleSaveError('onlyOneObject');
       return;
     }
 
     if (template.objectWithoutCategory) {
-      notificationController.error({
-        message: t('databaseSources.describeDataset.notify.specifyCategory'),
-      });
+      handleSaveError('specifyCategory');
       return;
     }
 
-    addTemplate(
-      id,
-      JSON.stringify({ name: templateName, nodes: template.filteredNodes, edges: template.filteredEdges }),
-    ).then((res) => {
-      setTemplateId(res);
-      setStep(1);
-      setNodes(template.filteredNodes);
-      setEdges(template.filteredEdges);
-    });
+    setTemplate(JSON.stringify({ name: templateName, nodes: template.filteredNodes, edges: template.filteredEdges }));
+    setStep(1);
+    setNodes(template.filteredNodes);
+    setEdges(template.filteredEdges);
   };
 
   return (
@@ -304,67 +285,74 @@ export const Step1: React.FC<{
           </S.ExampleLink>
         </S.InstructionCard>
       </BaseRow>
-      <BaseRow style={{ padding: '0 2rem' }} justify="space-between">
-        <S.SidebarCol span={6}>
-          <ElementSidebar />
-        </S.SidebarCol>
-        <S.ViewportCol span={17}>
-          <BaseRow style={{ margin: '0.5rem 1rem 1rem' }}>
-            <BaseCol
-              style={{ paddingRight: '0.7rem', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              span={5}
-            >
-              <S.InputHeader>{t('databaseSources.describeDataset.templateName')}</S.InputHeader>
-            </BaseCol>
-            <BaseCol span={19}>
-              <BaseInput value={templateName} onChange={(e) => setTemplateName(e.target.value)} />
-            </BaseCol>
-          </BaseRow>
-          <BaseRow>
-            <ReactFlowProvider>
-              <S.MapWrapper>
-                <ReactFlow
-                  nodes={nodes}
-                  edges={edges}
-                  onNodesChange={onNodesChange}
-                  onEdgesChange={onEdgesChange}
-                  onConnect={onConnect}
-                  onInit={setReactFlowInstance}
-                  onDrop={onDrop}
-                  onDragOver={onDragOver}
-                  nodeTypes={nodeTypes}
-                  edgeTypes={edgeTypes}
-                  nodeOrigin={[0.5, 0.5]}
-                  fitView
-                  fitViewOptions={{ maxZoom: 1.2 }}
-                >
-                  <Controls />
-                  <Background color="#f1f1f1" variant={BackgroundVariant.Cross} />
-                </ReactFlow>
-              </S.MapWrapper>
-            </ReactFlowProvider>
-          </BaseRow>
-          <BaseRow style={{ padding: '1rem' }} wrap={false} hidden={nodes.length == 0}>
-            <BaseCol span={12} style={{ paddingRight: '1rem' }}>
-              <BaseButton
-                block
-                type="default"
-                onClick={() => {
-                  setNodes([]);
-                  setEdges([]);
-                }}
+      <Spin
+        spinning={saveLoading}
+        indicator={<LoadingOutlined spin rev={undefined} />}
+        size="large"
+        style={{ width: '100%' }}
+      >
+        <BaseRow style={{ padding: '0 2rem' }} justify="space-between">
+          <S.SidebarCol span={6}>
+            <ElementSidebar />
+          </S.SidebarCol>
+          <S.ViewportCol span={17}>
+            <BaseRow style={{ margin: '0.5rem 1rem 1rem' }}>
+              <BaseCol
+                style={{ paddingRight: '0.7rem', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                span={5}
               >
-                {t('databaseSources.describeDataset.clear')}
-              </BaseButton>
-            </BaseCol>
-            <BaseCol span={12} style={{ paddingLeft: '1rem' }}>
-              <BaseButton block type="primary" onClick={onSaveTemplate}>
-                {t('databaseSources.describeDataset.saveTemplate')}
-              </BaseButton>
-            </BaseCol>
-          </BaseRow>
-        </S.ViewportCol>
-      </BaseRow>
+                <S.InputHeader>{t('databaseSources.describeDataset.templateName')}</S.InputHeader>
+              </BaseCol>
+              <BaseCol span={19}>
+                <BaseInput value={templateName} onChange={(e) => setTemplateName(e.target.value)} />
+              </BaseCol>
+            </BaseRow>
+            <BaseRow>
+              <ReactFlowProvider>
+                <S.MapWrapper>
+                  <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onConnect={onConnect}
+                    onInit={setReactFlowInstance}
+                    onDrop={onDrop}
+                    onDragOver={onDragOver}
+                    nodeTypes={nodeTypes}
+                    edgeTypes={edgeTypes}
+                    nodeOrigin={[0.5, 0.5]}
+                    fitView
+                    fitViewOptions={{ maxZoom: 1.2 }}
+                  >
+                    <Controls />
+                    <Background color="#f1f1f1" variant={BackgroundVariant.Cross} />
+                  </ReactFlow>
+                </S.MapWrapper>
+              </ReactFlowProvider>
+            </BaseRow>
+            <BaseRow style={{ padding: '1rem' }} wrap={false} hidden={nodes.length == 0}>
+              <BaseCol span={12} style={{ paddingRight: '1rem' }}>
+                <BaseButton
+                  block
+                  type="default"
+                  onClick={() => {
+                    setNodes([]);
+                    setEdges([]);
+                  }}
+                >
+                  {t('databaseSources.describeDataset.clear')}
+                </BaseButton>
+              </BaseCol>
+              <BaseCol span={12} style={{ paddingLeft: '1rem' }}>
+                <BaseButton block type="primary" onClick={onSaveTemplate}>
+                  {t('databaseSources.describeDataset.saveTemplate')}
+                </BaseButton>
+              </BaseCol>
+            </BaseRow>
+          </S.ViewportCol>
+        </BaseRow>
+      </Spin>
     </>
   );
 };

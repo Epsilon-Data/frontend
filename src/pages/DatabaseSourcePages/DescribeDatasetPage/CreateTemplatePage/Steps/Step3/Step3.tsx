@@ -6,7 +6,7 @@ import { BaseSpin } from '@app/components/common/BaseSpin/BaseSpin';
 import { Edge, Node } from 'reactflow';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { addColumnMapping } from '@app/api/databaseSources.api';
+import { addArchetype } from '@app/api/databaseSources.api';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { useNavigate } from 'react-router-dom';
@@ -83,9 +83,9 @@ export const Step3: React.FC<{
   setSaveDescription: (value: string) => void;
   setStep: (value: number) => void;
   columnCount: number;
-  templateId: string;
   corrTables: any;
-}> = ({ id, nodes, edges, setNodes, setEdges, setSaveDescription, setStep, columnCount, templateId, corrTables }) => {
+  template: string;
+}> = ({ id, nodes, edges, setNodes, setEdges, setSaveDescription, setStep, columnCount, corrTables, template }) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [mappingSuccess, setMappingSuccess] = useState(false);
@@ -98,13 +98,14 @@ export const Step3: React.FC<{
   const categoryNodes = nodes.filter((node) => node.type == 'category');
 
   useEffect(() => {
+    if (!loading) return;
     setSaveDescription(t('databaseSources.describeDataset.step3Description.loading'));
     const result = createNodeColumnMapping(nodes, edges);
     const totalColumns = result?.reduce((total, obj) => total + obj.columns.length, 0);
     let metSubcatCriteria = true;
     let metCatCriteria = true;
 
-    if (result != null && loading) {
+    if (result != null) {
       // Check subcategory nodes
       for (const subcategoryNode of subcategoryNodes) {
         const subcategoryNodeResult = result.find(
@@ -148,7 +149,7 @@ export const Step3: React.FC<{
       setSaveDescription(t('databaseSources.describeDataset.step3Description.fail'));
     } else {
       const formattedResult = transformColumns(result, corrTables);
-      addColumnMapping(id, JSON.stringify(formattedResult), templateId)
+      addArchetype(id, JSON.stringify(formattedResult), template)
         .then(() => {
           setMappingSuccess(true);
           setMessage(t('databaseSources.describeDataset.message.mappingSuccess'));
@@ -156,7 +157,8 @@ export const Step3: React.FC<{
           setSaveDescription(t('databaseSources.describeDataset.step3Description.success'));
           setLoading(false);
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e);
           setMappingSuccess(false);
           setMessage(t('databaseSources.describeDataset.message.saveFailed'));
           setMessageDescription(t('databaseSources.describeDataset.message.saveFailedDescription'));
@@ -174,9 +176,9 @@ export const Step3: React.FC<{
     columnCount,
     subcategoryNodes,
     categoryNodes,
-    templateId,
     corrTables,
     loading,
+    template,
   ]);
 
   const handleBackToStep = (stepNum: number) => {

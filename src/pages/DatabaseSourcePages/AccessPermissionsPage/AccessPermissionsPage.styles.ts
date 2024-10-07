@@ -31,7 +31,7 @@ export const PermissionsPopover = styled(AntdCard)`
   transform: translate(-50%, -50%);
 
   .ant-card-head-title {
-    font-size: ${FONT_SIZE.md};
+    font-size: ${FONT_SIZE.xs};
     font-weight: ${FONT_WEIGHT.semibold};
     margin-top: -1rem;
   }
@@ -46,10 +46,14 @@ export const PermissionsCheckboxGroup = styled(Checkbox.Group)`
   .ant-checkbox {
     margin-top: -0.4rem;
   }
+
+  .ant-checkbox + span {
+    font-size: ${FONT_SIZE.xs};
+  }
 `;
 
 export const PermissionsMessage = styled(Text)`
-  font-size: ${FONT_SIZE.md};
+  font-size: ${FONT_SIZE.xs};
   font-weight: ${FONT_WEIGHT.medium};
   margin-left: 0.3rem;
   color: var(--secondary-color);

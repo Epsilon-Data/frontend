@@ -19,6 +19,8 @@ import { RolePermissions, Template, TemplatePermissions } from '@app/interfaces/
 import { PermissionsModal } from './PermissionsModal/PermissionsModal';
 import { ClearModal } from './ClearModal/ClearModal';
 import { TemplateModal } from './TemplateModal/TemplateModal';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const initialPermissions = [
   { role: 'research', access: [] },
@@ -136,7 +138,7 @@ export const AccessPermissionsPage: React.FC = () => {
 
     const offsets = e.target.getBoundingClientRect();
     const scrolled = document.getElementById('main-content')?.scrollTop || 0;
-    setPosition({ top: offsets.top + scrolled - 170, left: offsets.left - offsets.width });
+    setPosition({ top: offsets.top + scrolled - 310, left: offsets.left - offsets.width - 20 });
     setClickedNode(node);
 
     if (node.type == 'subcategory') {
@@ -174,13 +176,13 @@ export const AccessPermissionsPage: React.FC = () => {
   };
 
   const handleSubmit = (selectedRole: string, checkedRoles: Array<CheckboxValueType>) => {
+    setIsPermissionsModalOpen(false);
     setSubmitLoading(true);
     if (permissions.every((permission) => permission.access.length === 0)) {
       notificationController.error({
         message: t('databaseSources.accessPermissions.notify.noPermissionsSet'),
       });
       setSubmitLoading(false);
-      setIsPermissionsModalOpen(false);
       return;
     }
 
@@ -216,14 +218,14 @@ export const AccessPermissionsPage: React.FC = () => {
             template: templates.find((template) => template.id == templateId)?.name,
           }),
         });
+        setSubmitLoading(false);
       })
       .catch(() => {
         notificationController.error({
           message: t('databaseSources.accessPermissions.notify.saveFailed'),
         });
+        setSubmitLoading(false);
       });
-    setSubmitLoading(false);
-    setIsPermissionsModalOpen(false);
   };
 
   const handleClear = (checkedRoles: Array<CheckboxValueType>) => {
@@ -273,75 +275,80 @@ export const AccessPermissionsPage: React.FC = () => {
           tabProps={{ size: 'middle' }}
           loading={cardLoading}
         >
-          <BaseRow>
-            <ReactFlowProvider>
-              <S.MapWrapper>
-                <ReactFlow
-                  nodes={nodes}
-                  edges={edges}
-                  onNodesChange={onNodesChange}
-                  onEdgesChange={onEdgesChange}
-                  onNodeClick={handleNodeClick}
-                  edgesUpdatable={false}
-                  edgesFocusable={false}
-                  nodesDraggable={false}
-                  nodesConnectable={false}
-                  nodesFocusable={false}
-                  draggable={false}
-                  zoomOnScroll={false}
-                  panOnDrag={false}
-                  zoomOnDoubleClick={false}
-                  deleteKeyCode={[]}
-                  nodeTypes={nodeTypes}
-                  edgeTypes={edgeTypes}
-                  nodeOrigin={[0.5, 0.5]}
-                  fitView
-                  fitViewOptions={{ maxZoom: 1.2 }}
-                ></ReactFlow>
-              </S.MapWrapper>
-            </ReactFlowProvider>
-            <S.PermissionsPopover
-              title={t('databaseSources.accessPermissions.permission.title', {
-                node: clickedNode?.data.label,
-              })}
-              style={{ top: position?.top, left: position?.left }}
-              hidden={!showPermissions}
-            >
-              {isForbidSetting ? (
-                <S.PermissionsMessage>
-                  {t('databaseSources.accessPermissions.permission.message', { node: encapsulatingNode })}
-                </S.PermissionsMessage>
-              ) : (
-                <S.PermissionsCheckboxGroup
-                  options={permissionOptions}
-                  value={selectedPermissions}
-                  onChange={handleCheckboxChange}
-                />
-              )}
-            </S.PermissionsPopover>
-          </BaseRow>
-          <BaseRow style={{ padding: '1rem' }}>
-            <BaseCol span={12} offset={12} style={{ display: 'flex' }}>
-              <BaseButton block type="default" onClick={() => setIsClearModalOpen(true)}>
-                {t('databaseSources.accessPermissions.clear')}
-              </BaseButton>
-              <BaseButton
-                block
-                type="primary"
-                onClick={() => setIsPermissionsModalOpen(true)}
-                style={{ marginLeft: '2rem' }}
+          <Spin
+            spinning={isSubmitLoading}
+            indicator={<LoadingOutlined spin rev={undefined} />}
+            style={{ width: '100%' }}
+          >
+            <BaseRow>
+              <ReactFlowProvider>
+                <S.MapWrapper>
+                  <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onNodeClick={handleNodeClick}
+                    draggable={false}
+                    zoomOnScroll={false}
+                    panOnDrag={false}
+                    edgesUpdatable={false}
+                    edgesFocusable={false}
+                    nodesDraggable={false}
+                    nodesConnectable={false}
+                    nodesFocusable={false}
+                    zoomOnDoubleClick={false}
+                    deleteKeyCode={[]}
+                    nodeTypes={nodeTypes}
+                    edgeTypes={edgeTypes}
+                    nodeOrigin={[0.5, 0.5]}
+                    fitView
+                    fitViewOptions={{ maxZoom: 1.2 }}
+                  ></ReactFlow>
+                </S.MapWrapper>
+              </ReactFlowProvider>
+              <S.PermissionsPopover
+                title={t('databaseSources.accessPermissions.permission.title', {
+                  node: clickedNode?.data.label,
+                })}
+                style={{ top: isForbidSetting ? (position?.top ?? 0) + 13 : position?.top ?? 0, left: position?.left }}
+                hidden={!showPermissions}
               >
-                {t('databaseSources.accessPermissions.save')}
-              </BaseButton>
-            </BaseCol>
-          </BaseRow>
-          <PermissionsModal
-            isModalOpen={isPermissionsModalOpen}
-            setIsModalOpen={setIsPermissionsModalOpen}
-            onSubmit={handleSubmit}
-            loading={isSubmitLoading}
-          />
-          <ClearModal isModalOpen={isClearModalOpen} setIsModalOpen={setIsClearModalOpen} onClear={handleClear} />
+                {isForbidSetting ? (
+                  <S.PermissionsMessage>
+                    {t('databaseSources.accessPermissions.permission.message', { node: encapsulatingNode })}
+                  </S.PermissionsMessage>
+                ) : (
+                  <S.PermissionsCheckboxGroup
+                    options={permissionOptions}
+                    value={selectedPermissions}
+                    onChange={handleCheckboxChange}
+                  />
+                )}
+              </S.PermissionsPopover>
+            </BaseRow>
+            <BaseRow style={{ padding: '1rem' }}>
+              <BaseCol span={12} offset={12} style={{ display: 'flex' }}>
+                <BaseButton block type="default" onClick={() => setIsClearModalOpen(true)}>
+                  {t('databaseSources.accessPermissions.clear')}
+                </BaseButton>
+                <BaseButton
+                  block
+                  type="primary"
+                  onClick={() => setIsPermissionsModalOpen(true)}
+                  style={{ marginLeft: '2rem' }}
+                >
+                  {t('databaseSources.accessPermissions.save')}
+                </BaseButton>
+              </BaseCol>
+            </BaseRow>
+            <PermissionsModal
+              isModalOpen={isPermissionsModalOpen}
+              setIsModalOpen={setIsPermissionsModalOpen}
+              onSubmit={handleSubmit}
+            />
+            <ClearModal isModalOpen={isClearModalOpen} setIsModalOpen={setIsClearModalOpen} onClear={handleClear} />
+          </Spin>
         </S.Card>
         <TemplateModal
           templateNames={templates.map((template) => ({ label: template.name, value: template.id }))}

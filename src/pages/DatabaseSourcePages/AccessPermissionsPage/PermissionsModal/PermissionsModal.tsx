@@ -10,8 +10,7 @@ export const PermissionsModal: React.FC<{
   isModalOpen: boolean;
   setIsModalOpen: (value: boolean) => void;
   onSubmit: (selectedRole: string, checkedValues: Array<CheckboxValueType>) => void;
-  loading: boolean;
-}> = ({ isModalOpen, setIsModalOpen, onSubmit, loading }) => {
+}> = ({ isModalOpen, setIsModalOpen, onSubmit }) => {
   const { t } = useTranslation();
   const [checkedValues, setCheckedValues] = useState<Array<CheckboxValueType>>([]);
   const [selectedRole, setSelectedRole] = useState('research');
@@ -45,7 +44,6 @@ export const PermissionsModal: React.FC<{
         <BaseButton
           type={checkedValues.length > 0 ? 'primary' : 'default'}
           onClick={() => onSubmit(selectedRole, checkedValues)}
-          loading={loading}
         >
           {checkedValues.length > 0
             ? t('databaseSources.accessPermissions.permissionModal.copyPermissions')

@@ -19,7 +19,11 @@ const ConnectionRequestsPage: React.FC = () => {
           id="request-table"
           title={t('connectionRequests.dbRequestList')}
           extra={
-            <S.CreateButton type="primary" onClick={() => navigate(`create/project-info`)} icon={<FaCirclePlus />}>
+            <S.CreateButton
+              type="primary"
+              onClick={() => navigate(`/requests/database/create/project-info`)}
+              icon={<FaCirclePlus />}
+            >
               {t('connectionRequests.create.altTitle')}
             </S.CreateButton>
           }

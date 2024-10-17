@@ -30,16 +30,21 @@ export const ConnectRequestTable: React.FC<{ page: string | undefined }> = ({ pa
   const { isMounted } = useMounted();
   const navigate = useNavigate();
   const admin = useAppSelector((state) => state.user.user?.roles.includes('admin') || false);
+  const user = useAppSelector((state) => state.user.user);
   const fetch = useCallback(
     (pagination: Pagination) => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
-      getRequestTableData(pagination, admin).then((res) => {
+      getRequestTableData(pagination, admin, user?.id, user?.email.name).then((res) => {
         if (isMounted.current) {
-          setTableData({ data: res.data, pagination: res.pagination, loading: false });
+          if (page === 'sent') {
+            setTableData({ data: res.sent.data, pagination: res.sent.pagination, loading: false });
+          } else {
+            setTableData({ data: res.receive.data, pagination: res.receive.pagination, loading: false });
+          }
         }
       });
     },
-    [admin, isMounted],
+    [admin, user?.id, user?.email, isMounted, page],
   );
 
   useEffect(() => {

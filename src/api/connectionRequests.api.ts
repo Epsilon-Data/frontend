@@ -35,10 +35,19 @@ export interface RequestTableData {
   pagination: Pagination;
 }
 
-export const getRequestTableData = async (pagination: Pagination, isAdmin: boolean): Promise<RequestTableData> => {
+export const getRequestTableData = async (
+  pagination: Pagination,
+  isAdmin: boolean,
+  userId?: string,
+  userEmail?: string,
+): Promise<{ sent: RequestTableData; receive: RequestTableData }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(CONNECTION_REQUEST_API_URL + 'summary', {
     headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      userId: userId,
+      email: userEmail,
+    },
   });
 
   let users: any[] = [];
@@ -51,48 +60,60 @@ export const getRequestTableData = async (pagination: Pagination, isAdmin: boole
     });
   }
 
-  const formattedData = response.data.requests.map(
-    (
-      item: {
-        id: number;
-        requestor?: string;
-        dbStatus?: number;
-        status: number;
-        createdDate: Date;
-        Project: { id?: string; customId: string; name: string };
+  const formatRequests = (requests: any[], users: any[]) => {
+    return requests.map(
+      (
+        item: {
+          id: string;
+          requestor?: string;
+          dbStatus?: number;
+          status: number;
+          createdDate: Date;
+          Project: { id?: string; customId: string; name: string };
+        },
+        index: number,
+      ) => {
+        let statusTag = { value: 'Pending', priority: Priority.INFO };
+        switch (item.status) {
+          case RequestStatus.PENDING:
+            break;
+          case RequestStatus.REVISION:
+            statusTag = { value: 'Requires Revision', priority: Priority.HIGH };
+            break;
+          case RequestStatus.APPROVED:
+            statusTag = { value: 'Approved', priority: Priority.LOW };
+            break;
+        }
+
+        const userFullName = users.find((user) => user.id === item.requestor)?.fullName;
+
+        return {
+          key: index + 1,
+          id: item.id,
+          requestor: userFullName,
+          projectId: item.Project.id,
+          projectCustomId: item.Project.customId,
+          dbStatus: item.dbStatus,
+          statusTag: statusTag,
+          createdDate: format(item.createdDate, DATE_FORMAT),
+          projectName: item.Project.name,
+        };
       },
-      index: number,
-    ) => {
-      let statusTag = { value: 'Pending', priority: Priority.INFO };
-      switch (item.status) {
-        case RequestStatus.PENDING:
-          break;
-        case RequestStatus.REVISION:
-          statusTag = { value: 'Requires Revision', priority: Priority.HIGH };
-          break;
-        case RequestStatus.APPROVED:
-          statusTag = { value: 'Approved', priority: Priority.LOW };
-          break;
-      }
+    );
+  };
 
-      const userFullName = users.find((user) => user.id === item.requestor)?.fullName;
+  const formattedReceiveData = formatRequests(response.data.requests.receive, users);
+  const formattedSentData = formatRequests(response.data.requests.sent, users);
 
-      return {
-        key: index + 1,
-        id: item.id,
-        requestor: userFullName,
-        projectId: item.Project.id,
-        projectCustomId: item.Project.customId,
-        dbStatus: item.dbStatus,
-        statusTag: statusTag,
-        createdDate: format(item.createdDate, DATE_FORMAT),
-        projectName: item.Project.name,
-      };
-    },
-  );
   return {
-    data: formattedData,
-    pagination: { ...pagination, total: formattedData.length },
+    sent: {
+      data: formattedSentData,
+      pagination: { ...pagination, total: formattedSentData.length },
+    },
+    receive: {
+      data: formattedReceiveData,
+      pagination: { ...pagination, total: formattedReceiveData.length },
+    },
   };
 };
 

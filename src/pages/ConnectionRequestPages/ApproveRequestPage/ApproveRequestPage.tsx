@@ -45,7 +45,7 @@ const ApproveRequestPage: React.FC = () => {
           .then(() => {
             setFormLoading(false);
             setFieldsChanged(false);
-            navigate('/requests/database');
+            navigate('/requests/database/receive');
             notificationController.success({
               message: t('connectionRequests.approve.successNotify'),
             });

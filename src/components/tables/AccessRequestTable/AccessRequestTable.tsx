@@ -33,7 +33,7 @@ export const AccessRequestTable: React.FC<{ page: string | undefined }> = ({ pag
   const { isMounted } = useMounted();
   const navigate = useNavigate();
   const researcher = useAppSelector((state) => state.user.user?.roles.includes('research') || false);
-
+  const user = useAppSelector((state) => state.user.user);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof RequestTableRow>();
   const searchInput = useRef<InputRef>(null);
@@ -129,13 +129,17 @@ export const AccessRequestTable: React.FC<{ page: string | undefined }> = ({ pag
   const fetch = useCallback(
     (pagination: Pagination) => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
-      getRequestTableData(pagination, page).then((res) => {
+      getRequestTableData(pagination, user?.id).then((res) => {
         if (isMounted.current) {
-          setTableData({ data: res.data, pagination: res.pagination, loading: false });
+          if (page === 'sent') {
+            setTableData({ data: res.sent.data, pagination: res.sent.pagination, loading: false });
+          } else {
+            setTableData({ data: res.receive.data, pagination: res.receive.pagination, loading: false });
+          }
         }
       });
     },
-    [isMounted, page],
+    [isMounted, page, user?.id],
   );
 
   useEffect(() => {

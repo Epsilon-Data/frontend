@@ -35,58 +35,62 @@ export interface RequestTableData {
 
 export const getRequestTableData = async (
   pagination: Pagination,
-  page: string | undefined,
-): Promise<RequestTableData> => {
+  userId?: string,
+): Promise<{ sent: RequestTableData; receive: RequestTableData }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(ACCESS_REQUEST_API_URL + 'summary', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
-      mode: page,
+      userId: userId,
     },
   });
 
-  const formattedData = response.data.requests.map(
-    (
-      item: {
-        id: number;
-        requestorName: string;
-        status: number;
-        createdDate: Date;
-        projectName: string;
-        Project: { id: string; name: string };
+  const formatRequests = (requests: any[]) => {
+    return requests.map(
+      (
+        item: {
+          id: string;
+          requestorName: string;
+          status: number;
+          createdDate: Date;
+          projectName: string;
+          Project: { id: string; name: string };
+        },
+        index: number,
+      ) => {
+        let statusTag = { value: 'Pending', priority: Priority.INFO };
+        switch (item.status) {
+          case RequestStatus.PENDING:
+            break;
+          case RequestStatus.REVISION:
+            statusTag = { value: 'Requires Revision', priority: Priority.HIGH };
+            break;
+          case RequestStatus.APPROVED:
+            statusTag = { value: 'Approved', priority: Priority.LOW };
+            break;
+          case RequestStatus.REJECTED:
+            statusTag = { value: 'Rejected', priority: Priority.DISABLED };
+            break;
+        }
+        return {
+          key: index + 1,
+          id: item.id,
+          requestor: item.requestorName,
+          statusTag: statusTag,
+          createdDate: format(item.createdDate, DATE_FORMAT),
+          projectName: item.projectName,
+          requestingProjectId: item.Project.id,
+          requestingProject: item.Project.name,
+        };
       },
-      index: number,
-    ) => {
-      let statusTag = { value: 'Pending', priority: Priority.INFO };
-      switch (item.status) {
-        case RequestStatus.PENDING:
-          break;
-        case RequestStatus.REVISION:
-          statusTag = { value: 'Requires Revision', priority: Priority.HIGH };
-          break;
-        case RequestStatus.APPROVED:
-          statusTag = { value: 'Approved', priority: Priority.LOW };
-          break;
-        case RequestStatus.REJECTED:
-          statusTag = { value: 'Rejected', priority: Priority.DISABLED };
-          break;
-      }
+    );
+  };
 
-      return {
-        key: index + 1,
-        id: item.id,
-        requestor: item.requestorName,
-        statusTag: statusTag,
-        createdDate: format(item.createdDate, DATE_FORMAT),
-        projectName: item.projectName,
-        requestingProjectId: item.Project.id,
-        requestingProject: item.Project.name,
-      };
-    },
-  );
+  const formattedReceiveData = formatRequests(response.data.requests.receive);
+  const formattedSentData = formatRequests(response.data.requests.sent);
   return {
-    data: formattedData,
-    pagination: { ...pagination, total: formattedData.length },
+    sent: { data: formattedSentData, pagination: { ...pagination, total: formattedSentData.length } },
+    receive: { data: formattedReceiveData, pagination: { ...pagination, total: formattedReceiveData.length } },
   };
 };
 

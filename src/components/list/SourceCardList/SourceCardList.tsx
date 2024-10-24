@@ -14,6 +14,7 @@ import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseProgress } from '@app/components/common/BaseProgress/BaseProgress';
 import { useNavigate } from 'react-router-dom';
 import WebSocketService from '@app/services/webSocket.service';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const { Meta } = Card;
 const initialPagination: Pagination = {
@@ -31,11 +32,12 @@ export const SourceCardList: React.FC = () => {
   const { t } = useTranslation();
   const { isMounted } = useMounted();
   const navigate = useNavigate();
+  const user = useAppSelector((state) => state.user.user);
 
   const fetch = useCallback(
     (pagination: Pagination) => {
       setListData((listData) => ({ ...listData, loading: true }));
-      getSourceList(pagination).then((res) => {
+      getSourceList(user?.id, pagination).then((res) => {
         if (isMounted.current) {
           setListData({ data: res.data, pagination: res.pagination, loading: false });
           const updatedStatusData = res.data.reduce(
@@ -54,7 +56,7 @@ export const SourceCardList: React.FC = () => {
         }
       });
     },
-    [isMounted],
+    [isMounted, user?.id],
   );
 
   useEffect(() => {

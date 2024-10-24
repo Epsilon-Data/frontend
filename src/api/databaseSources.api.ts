@@ -76,10 +76,13 @@ export const updateCrawlStatus = (status: number) => {
   return statusTag;
 };
 
-export const getSourceList = async (pagination: Pagination): Promise<SourceListData> => {
+export const getSourceList = async (userId: string | undefined, pagination: Pagination): Promise<SourceListData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'list', {
     headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      userId: userId,
+    },
   });
 
   const formattedData = response.data.map((item: { connectDate: Date; crawlStatus: number }) => {
@@ -98,7 +101,7 @@ export const getProjectId = async (id: string | undefined): Promise<string> => {
   const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'project-id', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
-      id: id,
+      projectId: id,
     },
   });
   return response.data.customId;

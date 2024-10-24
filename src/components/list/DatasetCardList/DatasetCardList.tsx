@@ -7,6 +7,7 @@ import * as S from './DatasetCardList.styles';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { useNavigate } from 'react-router-dom';
 import { useMounted } from '@app/hooks/useMounted';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const { Meta } = Card;
 const initialPagination: Pagination = {
@@ -23,17 +24,18 @@ export const DatasetCardList: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isMounted } = useMounted();
+  const user = useAppSelector((state) => state.user.user);
 
   const fetch = useCallback(
     (pagination: Pagination) => {
       setListData((listData) => ({ ...listData, loading: true }));
-      getDatasetList(pagination).then((res) => {
+      getDatasetList(user?.id, pagination).then((res) => {
         if (isMounted.current) {
           setListData({ data: res.data, pagination: res.pagination, loading: false });
         }
       });
     },
-    [isMounted],
+    [isMounted, user?.id],
   );
 
   useEffect(() => {

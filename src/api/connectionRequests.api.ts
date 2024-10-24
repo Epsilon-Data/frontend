@@ -128,11 +128,12 @@ export const getRequestDetails = async (requestId: string | undefined): Promise<
   return response.data;
 };
 
-export const isValidProjectId = async (projectId: string): Promise<boolean> => {
+export const isValidProjectId = async (userId: string | undefined, projectId: string): Promise<boolean> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(CONNECTION_REQUEST_API_URL + 'valid-project-id', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
+      userId: userId,
       projectId: projectId,
     },
   });
@@ -178,12 +179,17 @@ export const reviseRequest = async (data: {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const approveRequest = async (data: DatabaseInfoFormValues, id: string | undefined): Promise<RequestDetails> => {
+export const approveRequest = async (
+  userId: string | undefined,
+  data: DatabaseInfoFormValues,
+  requestId: string | undefined,
+): Promise<RequestDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.patch(CONNECTION_REQUEST_API_URL + 'approve', data, {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
-      requestId: id,
+      userId: userId,
+      requestId: requestId,
     },
   });
   return response.data;

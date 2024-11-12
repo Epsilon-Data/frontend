@@ -11,6 +11,10 @@ export const Modal = styled(BaseModal)`
     margin-top: 0.2rem;
     margin-right: 2rem;
   }
+
+  div[aria-hidden='true'] {
+    display: none;
+  }
 `;
 
 export const GroupCheckbox = styled(BaseCheckbox.Group)`

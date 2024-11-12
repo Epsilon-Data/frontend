@@ -88,7 +88,7 @@ export const getSourceList = async (userId: string | undefined, pagination: Pagi
   const formattedData = response.data.map((item: { connectDate: Date; crawlStatus: number }) => {
     return {
       ...item,
-      connectDate: item.connectDate ? format(item.connectDate, DATE_FORMAT) : '-',
+      connectDate: item.connectDate ? format(new Date(item.connectDate), DATE_FORMAT) : '-',
       crawlStatus: updateCrawlStatus(item.crawlStatus),
     };
   });

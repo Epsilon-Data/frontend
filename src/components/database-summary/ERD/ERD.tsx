@@ -21,6 +21,7 @@ const CustomToolbar: React.FC<{
 
 export const ERD: React.FC<{ diagramCode: string }> = ({ diagramCode }) => {
   const [svgContent, setSvgContent] = useState<string | null>(null);
+
   useEffect(() => {
     if (diagramCode) {
       mermaid.initialize({ startOnLoad: true });
@@ -33,7 +34,7 @@ export const ERD: React.FC<{ diagramCode: string }> = ({ diagramCode }) => {
   return (
     <>
       {svgContent !== null ? (
-        <TransformWrapper initialScale={1} initialPositionX={200} initialPositionY={0}>
+        <TransformWrapper initialScale={2} initialPositionX={50} initialPositionY={0}>
           {({ zoomIn, zoomOut, resetTransform }) => (
             <React.Fragment>
               <CustomToolbar

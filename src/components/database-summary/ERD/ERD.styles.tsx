@@ -6,6 +6,7 @@ export const DiagramArea = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  min-height: 35rem;
 `;
 
 export const ToolbarWrapper = styled.div`

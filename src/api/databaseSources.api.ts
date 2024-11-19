@@ -25,7 +25,7 @@ export interface SourceListItem {
   projectName: string;
   dbId: string;
   databaseName: string;
-  connectDate: Date;
+  connectDate: Date | string;
   crawlStatus: Tag;
   statusMsg: string;
   statusPercent: number;
@@ -85,13 +85,17 @@ export const getSourceList = async (userId: string | undefined, pagination: Pagi
     },
   });
 
-  const formattedData = response.data.map((item: { connectDate: Date; crawlStatus: number }) => {
-    return {
+  let formattedData = response.data.map((item: any) => {
+    const result = {
       ...item,
-      connectDate: item.connectDate ? format(new Date(item.connectDate), DATE_FORMAT) : '-',
-      crawlStatus: updateCrawlStatus(item.crawlStatus),
+      connectDate: item && item.connectDate ? format(new Date(item.connectDate), DATE_FORMAT) : '-',
+      crawlStatus:
+        item && item.crawlStatus ? updateCrawlStatus(item.crawlStatus) : { value: 'Pending', priority: Priority.INFO },
     };
+    return result;
   });
+
+  formattedData = formattedData.filter((item: any) => item.databaseName);
 
   return { data: formattedData, pagination: { ...pagination, total: formattedData.length } };
 };

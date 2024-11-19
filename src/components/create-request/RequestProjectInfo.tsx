@@ -37,7 +37,7 @@ export const RequestProjectInfo: React.FC<{
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [members, setMembers] = useState(initialValues.members);
-  const user = useAppSelector((state) => state.user.user);
+  const user = useAppSelector((state) => state.user?.user);
 
   const [form] = BaseButtonsForm.useForm();
 
@@ -64,9 +64,8 @@ export const RequestProjectInfo: React.FC<{
           navigate('/requests/database/create/org-admin-info');
         }
       } else {
-        form.setFields([{ name: 'id', errors: [t('connectionRequests.details.projectInfo.invalidId')] }]);
-        form.scrollToField('id');
-        setFieldsChanged(false);
+        form.setFields([{ name: 'customId', errors: [t('connectionRequests.details.projectInfo.invalidId')] }]);
+        form.scrollToField('customId');
         setLoading(false);
       }
     },

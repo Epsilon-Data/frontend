@@ -69,9 +69,16 @@ const AnalysisUploadPage: React.FC = () => {
     if (script) {
       const splitLines = script.split('\n');
       setLines(splitLines);
-      const highlighted = splitLines
-        .map((line, index) => (CSV_REGEX.test(line) ? index : -1))
-        .filter((index) => index !== -1);
+      const highlighted = [];
+
+      for (let i = 0; i < splitLines.length; i++) {
+        CSV_REGEX.lastIndex = 0;
+        const isMatch = CSV_REGEX.test(splitLines[i]);
+        if (isMatch) {
+          highlighted.push(i);
+        }
+      }
+
       setHighlightedLines(highlighted);
     }
   }, [script]);

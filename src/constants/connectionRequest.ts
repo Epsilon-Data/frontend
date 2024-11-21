@@ -2,7 +2,7 @@ import { RequestDetails } from '@app/interfaces/interfaces';
 import { t } from 'i18next';
 
 export const DATE_FORMAT = 'dd/MM/yyyy';
-export const CONNECTION_REQUEST_API_URL = '/hub/connection-request/';
+export const CONNECTION_REQUEST_API_URL = '/hub/connection-request';
 
 export const INITIAL_REQUEST_VALUES: RequestDetails = {
   projectInfo: {

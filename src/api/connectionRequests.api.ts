@@ -39,15 +39,10 @@ export const getRequestTableData = async (
   pagination: Pagination,
   isAdmin: boolean,
   userId?: string,
-  userEmail?: string,
 ): Promise<{ sent: RequestTableData; receive: RequestTableData }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(CONNECTION_REQUEST_API_URL + 'summary', {
-    headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userId: userId,
-      email: userEmail,
-    },
+  const response = await httpClient.get(CONNECTION_REQUEST_API_URL, {
+    headers: { [csrfHeaderName]: `${csrf}`, 'X-User-ID': userId },
   });
 
   let users: any[] = [];
@@ -117,52 +112,45 @@ export const getRequestTableData = async (
   };
 };
 
-export const getRequestDetails = async (requestId: string | undefined): Promise<RequestDetails> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(CONNECTION_REQUEST_API_URL + 'details', {
-    headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      requestId: requestId,
-    },
-  });
-  return response.data;
-};
-
-export const isValidProjectId = async (userId: string | undefined, projectId: string): Promise<boolean> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(CONNECTION_REQUEST_API_URL + 'valid-project-id', {
-    headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userId: userId,
-      projectId: projectId,
-    },
-  });
-  return response.data;
-};
-
 export const createRequest = async (data: RequestDetails): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.post(CONNECTION_REQUEST_API_URL + 'create', data, {
+  await httpClient.post(CONNECTION_REQUEST_API_URL, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
+};
+
+export const getRequestDetails = async (requestId: string | undefined): Promise<RequestDetails> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`${CONNECTION_REQUEST_API_URL}/${requestId}`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  return response.data;
 };
 
 export const editRequest = async (data: RequestDetails): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.patch(CONNECTION_REQUEST_API_URL + 'edit', data, {
+  await httpClient.put(`${CONNECTION_REQUEST_API_URL}/${data.id}`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 };
 
 export const deleteRequest = async (requestId: string | undefined): Promise<RequestDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.delete(CONNECTION_REQUEST_API_URL + 'delete', {
+  const response = await httpClient.delete(`${CONNECTION_REQUEST_API_URL}/${requestId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      requestId: requestId,
-    },
   });
   return response.data;
+};
+
+export const approveRequest = async (
+  userId: string | undefined,
+  data: DatabaseInfoFormValues,
+  requestId: string | undefined,
+): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  await httpClient.patch(`${CONNECTION_REQUEST_API_URL}/${requestId}`, data, {
+    headers: { [csrfHeaderName]: `${csrf}`, 'X-User-ID': userId },
+  });
 };
 
 export const reviseRequest = async (data: {
@@ -170,32 +158,24 @@ export const reviseRequest = async (data: {
   revisionInfo: string;
 }): Promise<RequestDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch(CONNECTION_REQUEST_API_URL + 'revision', data, {
+  const response = await httpClient.put(`${CONNECTION_REQUEST_API_URL}/${data.requestId}/revision`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const approveRequest = async (
-  userId: string | undefined,
-  data: DatabaseInfoFormValues,
-  requestId: string | undefined,
-): Promise<void> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.patch(CONNECTION_REQUEST_API_URL + 'approve', data, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userId: userId,
-      requestId: requestId,
-    },
-  });
-};
-
 export const testConnection = async (data: DatabaseConnectionDetails): Promise<unknown> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(CONNECTION_REQUEST_API_URL + 'test-connection', data, {
+  const response = await httpClient.post(`${CONNECTION_REQUEST_API_URL}/test`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  return response.data;
+};
+
+export const isValidProjectId = async (userId: string | undefined, projectId: string): Promise<boolean> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post(`${CONNECTION_REQUEST_API_URL}/${projectId}`, null, {
+    headers: { [csrfHeaderName]: `${csrf}`, 'X-User-ID': userId },
   });
   return response.data;
 };

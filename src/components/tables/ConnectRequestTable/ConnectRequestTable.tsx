@@ -34,7 +34,7 @@ export const ConnectRequestTable: React.FC<{ page: string | undefined }> = ({ pa
   const fetch = useCallback(
     (pagination: Pagination) => {
       setTableData((tableData) => ({ ...tableData, loading: true }));
-      getRequestTableData(pagination, admin, user?.id, user?.email.name).then((res) => {
+      getRequestTableData(pagination, admin, user?.id).then((res) => {
         if (isMounted.current) {
           if (page === 'sent') {
             setTableData({ data: res.sent.data, pagination: res.sent.pagination, loading: false });
@@ -44,7 +44,7 @@ export const ConnectRequestTable: React.FC<{ page: string | undefined }> = ({ pa
         }
       });
     },
-    [admin, user?.id, user?.email, isMounted, page],
+    [admin, user?.id, isMounted, page],
   );
 
   useEffect(() => {

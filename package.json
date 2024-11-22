@@ -86,14 +86,13 @@
     "typescript": "^5.2.2"
   },
   "scripts": {
-    "start": "pnpm buildThemes && set \"VITE_CJS_TRACE=true\" && vite",
-    "build": "pnpm buildThemes && vite build",
+    "start": "pnpm set \"VITE_CJS_TRACE=true\" && vite",
+    "build": "pnpm vite build",
     "serve": "vite preview",
     "test": "vitest",
     "lint": "eslint \"*/**/*.{js,ts,tsx}\" --fix",
     "lint:styles": "stylelint '*/**/*.{js,ts,tsx}'",
     "prepare": "husky install",
-    "buildThemes": "cp src/styles/themes/main.css public/themes/main.css",
     "clean": "pnpm i && pnpm prune && pnpm store prune"
   },
   "browserslist": [

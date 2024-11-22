@@ -42,7 +42,10 @@ export const getRequestTableData = async (
 ): Promise<{ sent: RequestTableData; receive: RequestTableData }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(CONNECTION_REQUEST_API_URL, {
-    headers: { [csrfHeaderName]: `${csrf}`, 'X-User-ID': userId },
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      userId: userId,
+    },
   });
 
   let users: any[] = [];
@@ -149,7 +152,10 @@ export const approveRequest = async (
 ): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   await httpClient.patch(`${CONNECTION_REQUEST_API_URL}/${requestId}`, data, {
-    headers: { [csrfHeaderName]: `${csrf}`, 'X-User-ID': userId },
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      userId: userId,
+    },
   });
 };
 
@@ -175,7 +181,10 @@ export const testConnection = async (data: DatabaseConnectionDetails): Promise<u
 export const isValidProjectId = async (userId: string | undefined, projectId: string): Promise<boolean> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.post(`${CONNECTION_REQUEST_API_URL}/${projectId}`, null, {
-    headers: { [csrfHeaderName]: `${csrf}`, 'X-User-ID': userId },
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      userId: userId,
+    },
   });
   return response.data;
 };

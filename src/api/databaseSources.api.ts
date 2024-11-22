@@ -78,7 +78,7 @@ export const updateCrawlStatus = (status: number) => {
 
 export const getSourceList = async (userId: string | undefined, pagination: Pagination): Promise<SourceListData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'list', {
+  const response = await httpClient.get(DATABASE_SOURCE_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       userId: userId,
@@ -100,46 +100,34 @@ export const getSourceList = async (userId: string | undefined, pagination: Pagi
   return { data: formattedData, pagination: { ...pagination, total: formattedData.length } };
 };
 
-export const getProjectId = async (id: string | undefined): Promise<string> => {
+export const getProjectId = async (projectId: string | undefined): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'project-id', {
+  const response = await httpClient.get(`${DATABASE_SOURCE_API_URL}/${projectId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      projectId: id,
-    },
   });
   return response.data.customId;
 };
 
 export const getDbSummary = async (projectId: string | undefined): Promise<DatabaseSummaryInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'summary', {
+  const response = await httpClient.get(`${DATABASE_SOURCE_API_URL}/${projectId}/summary`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      projectId: projectId,
-    },
   });
   return response.data;
 };
 
 export const getDbTableInfo = async (projectId: string | undefined): Promise<DatabaseTableInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'tables', {
+  const response = await httpClient.get(`${DATABASE_SOURCE_API_URL}/${projectId}/tables`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      projectId: projectId,
-    },
   });
   return response.data;
 };
 
-export const getTemplateNames = async (projectId: string | undefined): Promise<string[][]> => {
+export const getTemplateNames = async (projectId: string | undefined): Promise<{ guid: string; name: string }[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'template-names', {
+  const response = await httpClient.get(`${DATABASE_SOURCE_API_URL}/${projectId}/template-names`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      projectId: projectId,
-    },
   });
 
   return response.data;
@@ -147,11 +135,8 @@ export const getTemplateNames = async (projectId: string | undefined): Promise<s
 
 export const getTemplates = async (projectId: string | undefined): Promise<Template[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'templates', {
+  const response = await httpClient.get(`${DATABASE_SOURCE_API_URL}/${projectId}/templates`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      projectId: projectId,
-    },
   });
 
   return response.data;
@@ -159,23 +144,22 @@ export const getTemplates = async (projectId: string | undefined): Promise<Templ
 
 export const deleteTemplate = async (projectId: string | undefined, templateId: string): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.post(
-    DATABASE_SOURCE_API_URL + 'delete-template',
-    { projectId: projectId, templateId: templateId },
-    {
-      headers: { [csrfHeaderName]: `${csrf}` },
+  await httpClient.delete(`${DATABASE_SOURCE_API_URL}/${projectId}/template`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+    params: {
+      templateId: templateId,
     },
-  );
+  });
 };
 
-export const addArchetype = async (
+export const createTemplate = async (
   projectId: string | undefined,
   columnMapping: string,
   template: string,
 ): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   await httpClient.post(
-    DATABASE_SOURCE_API_URL + 'add-archetype',
+    `${DATABASE_SOURCE_API_URL}/${projectId}/template`,
     { projectId: projectId, columnMapping: columnMapping, template: template },
     {
       headers: { [csrfHeaderName]: `${csrf}` },
@@ -185,11 +169,8 @@ export const addArchetype = async (
 
 export const getDbColumns = async (projectId: string | undefined): Promise<any> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'columns', {
+  const response = await httpClient.get(`${DATABASE_SOURCE_API_URL}/${projectId}/columns`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      projectId: projectId,
-    },
   });
 
   return response.data;
@@ -197,11 +178,8 @@ export const getDbColumns = async (projectId: string | undefined): Promise<any> 
 
 export const getAccessPermissions = async (projectId: string | undefined): Promise<TemplatePermissions[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'permissions', {
+  const response = await httpClient.get(`${DATABASE_SOURCE_API_URL}/${projectId}/permissions`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      projectId: projectId,
-    },
   });
   return response.data;
 };
@@ -211,19 +189,15 @@ export const addAccessPermissions = async (
   permissions: string,
 ): Promise<{ projectId: string; permissions: string }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(
-    DATABASE_SOURCE_API_URL + 'add-permissions',
-    { projectId: projectId, permissions: permissions },
-    {
-      headers: { [csrfHeaderName]: `${csrf}` },
-    },
-  );
+  const response = await httpClient.post(`${DATABASE_SOURCE_API_URL}/${projectId}/permissions`, permissions, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
   return response.data;
 };
 
 export const getProjectSettings = async (projectId: string | undefined): Promise<ProjectSettings> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATABASE_SOURCE_API_URL + 'settings', {
+  const response = await httpClient.get(DATABASE_SOURCE_API_URL + '/settings', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       projectId: projectId,
@@ -265,7 +239,7 @@ export const uploadProjectCover = async (
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const formData = new FormData();
   formData.append('file', file);
-  const response = await httpClient.post(DATABASE_SOURCE_API_URL + 'upload-cover', formData, {
+  const response = await httpClient.post(DATABASE_SOURCE_API_URL + '/upload-cover', formData, {
     headers: { [csrfHeaderName]: `${csrf}`, 'Content-Type': 'multipart/form-data' },
     params: {
       projectId: projectId,
@@ -289,7 +263,7 @@ export const uploadVis = async (projectId: string | undefined, visList: string):
 
 export const deleteCover = async (projectId: string | undefined): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.delete(DATABASE_SOURCE_API_URL + 'delete-cover', {
+  const response = await httpClient.delete(DATABASE_SOURCE_API_URL + '/delete-cover', {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       projectId: projectId,

@@ -6,7 +6,7 @@ import { BaseSpin } from '@app/components/common/BaseSpin/BaseSpin';
 import { Edge, Node } from 'reactflow';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { addArchetype } from '@app/api/databaseSources.api';
+import { createTemplate } from '@app/api/databaseSources.api';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { useNavigate } from 'react-router-dom';
@@ -149,7 +149,7 @@ export const Step3: React.FC<{
       setSaveDescription(t('databaseSources.describeDataset.step3Description.fail'));
     } else {
       const formattedResult = transformColumns(result, corrTables);
-      addArchetype(id, JSON.stringify(formattedResult), template)
+      createTemplate(id, JSON.stringify(formattedResult), template)
         .then(() => {
           setMappingSuccess(true);
           setMessage(t('databaseSources.describeDataset.message.mappingSuccess'));

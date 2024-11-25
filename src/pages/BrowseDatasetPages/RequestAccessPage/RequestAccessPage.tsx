@@ -21,7 +21,7 @@ const RequestAccessPage: React.FC<{ mode: string }> = ({ mode }) => {
   const navigate = useNavigate();
   const { isMounted } = useMounted();
   const [isLoading, setLoading] = useState(false);
-  const user = useAppSelector((state) => state.user.user);
+  const user = useAppSelector((state) => state.user?.user);
   const [details, setDetails] = useState<AccessDetails>(INITIAL_ACCESS_VALUES);
 
   const fetch = useCallback(

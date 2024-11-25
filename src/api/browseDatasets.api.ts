@@ -14,9 +14,9 @@ export interface ProjectSummaryInfo {
   name: string;
   organisation: string;
   createdDate: Date;
-  description?: string;
-  keywords?: string[];
-  cover?: string | null;
+  description: string;
+  keywords: string[];
+  cover: string | null;
 }
 
 export interface ProjectInfo {
@@ -38,13 +38,10 @@ export interface ProjectInfo {
   lastUpdated: string;
 }
 
-export const getProjects = async (isSearch: boolean): Promise<ProjectSummaryInfo[]> => {
+export const getProjects = async (): Promise<ProjectSummaryInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(BROWSE_DATASET_API_URL + 'projects', {
+  const response = await httpClient.get(BROWSE_DATASET_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      isSearch: isSearch,
-    },
   });
   return response.data;
 };
@@ -54,11 +51,10 @@ export const getProjectDetails = async (
   projectId: string | undefined,
 ): Promise<ProjectInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(BROWSE_DATASET_API_URL + 'project-details', {
+  const response = await httpClient.get(`${BROWSE_DATASET_API_URL}/${projectId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       userId: userId,
-      projectId: projectId,
     },
   });
 
@@ -74,18 +70,15 @@ export const getProjectDetails = async (
 
 export const getProjectSummary = async (projectId: string | undefined): Promise<ProjectSummaryInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(BROWSE_DATASET_API_URL + 'project-summary', {
+  const response = await httpClient.get(`${BROWSE_DATASET_API_URL}/projects/${projectId}/summary`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      projectId: projectId,
-    },
   });
   return response.data;
 };
 
 export const requestAccess = async (data: AccessDetails): Promise<AccessDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(BROWSE_DATASET_API_URL + 'apply-request', data, {
+  const response = await httpClient.post(BROWSE_DATASET_API_URL, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;

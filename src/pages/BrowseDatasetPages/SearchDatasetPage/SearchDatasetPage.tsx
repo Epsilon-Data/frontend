@@ -75,7 +75,7 @@ const SearchDatasetPage: React.FC = () => {
   const selectAll = selectedKeywords.length == keywordsData.length && keywordsData.length > 0;
 
   useEffect(() => {
-    getProjects(true).then((res) => {
+    getProjects().then((res) => {
       if (isMounted.current) {
         setProjects(res);
         const filteredSearchList = initialQuery ? filterProjectsByValue(res, initialQuery, initialField) : res;

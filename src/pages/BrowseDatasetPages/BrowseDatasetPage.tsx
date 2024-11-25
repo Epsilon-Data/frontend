@@ -36,13 +36,15 @@ const BrowseDatasetPage: React.FC = () => {
   const { isMounted } = useMounted();
 
   useEffect(() => {
-    getProjects(false).then((res) => {
+    getProjects().then((res) => {
       if (isMounted.current) {
         setExploreData(shuffleArray(res).slice(0, 4));
         const recentRes = res
           .sort((a, b) => {
-            if (a.createdDate > b.createdDate) return -1;
-            if (a.createdDate < b.createdDate) return 1;
+            const aDate = a.createdDate ?? 0;
+            const bDate = b.createdDate ?? 0;
+            if (aDate > bDate) return -1;
+            if (aDate < bDate) return 1;
             return 0;
           })
           .slice(0, 4);

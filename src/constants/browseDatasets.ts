@@ -3,7 +3,7 @@ import { AccessDetails } from '@app/interfaces/interfaces';
 import { t } from 'i18next';
 
 export const DATE_FORMAT = 'dd/MM/yyyy';
-export const BROWSE_DATASET_API_URL = '/hub/browse-dataset/';
+export const BROWSE_DATASET_API_URL = '/hub/browse-dataset';
 
 export const INITIAL_DETAIL_VALUES: ProjectInfo = {
   name: '',

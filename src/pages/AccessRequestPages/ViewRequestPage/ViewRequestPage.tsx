@@ -4,7 +4,7 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './ViewRequestPage.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AccessDetails } from '@app/interfaces/interfaces';
-import { getRequestDetails, proceedRequest, reviseRequest } from '@app/api/accessRequests.api';
+import { getRequestDetails, approveRequest, reviseRequest } from '@app/api/accessRequests.api';
 import { useMounted } from '@app/hooks/useMounted';
 import { InfoItem } from '@app/components/display-info/InfoItem';
 import { InfoSectionHeader } from '@app/components/display-info/InfoSectionHeader';
@@ -81,7 +81,7 @@ const ViewRequestPage: React.FC = () => {
         actionFail = 'reject';
       }
 
-      proceedRequest({ requestId: id, isApproved: isApproved })
+      approveRequest({ requestId: id, isApproved: isApproved })
         .then(() => {
           notificationController.success({
             message: t('connectionRequests.approve.userRequest.successNotify', { action: actionSuccess }),

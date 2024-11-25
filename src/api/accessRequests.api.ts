@@ -33,12 +33,20 @@ export interface RequestTableData {
   pagination: Pagination;
 }
 
+export const getRequestDetails = async (requestId: string | undefined): Promise<AccessDetails> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`${ACCESS_REQUEST_API_URL}/${requestId}`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  return response.data;
+};
+
 export const getRequestTableData = async (
   pagination: Pagination,
   userId?: string,
 ): Promise<{ sent: RequestTableData; receive: RequestTableData }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(ACCESS_REQUEST_API_URL + 'summary', {
+  const response = await httpClient.get(ACCESS_REQUEST_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       userId: userId,
@@ -94,28 +102,30 @@ export const getRequestTableData = async (
   };
 };
 
-export const getRequestDetails = async (requestId: string | undefined): Promise<AccessDetails> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(ACCESS_REQUEST_API_URL + 'details', {
-    headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      requestId: requestId,
-    },
-  });
-  return response.data;
-};
-
 export const reviseRequest = async (data: { requestId: string | undefined; revisionInfo: string }): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch(ACCESS_REQUEST_API_URL + 'revision', data, {
+  const response = await httpClient.put(`${ACCESS_REQUEST_API_URL}/${data.requestId}/revision`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
 };
 
-export const proceedRequest = async (data: { requestId: string | undefined; isApproved: boolean }): Promise<string> => {
+export const approveRequest = async (data: { requestId: string | undefined; isApproved: boolean }): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch(ACCESS_REQUEST_API_URL + 'proceed', data, {
+  const response = await httpClient.patch(
+    `${ACCESS_REQUEST_API_URL}/${data.requestId}`,
+    { isApproved: data.isApproved },
+    {
+      headers: { [csrfHeaderName]: `${csrf}` },
+    },
+  );
+  return response.data;
+};
+
+export const editRequest = async (data: AccessDetails): Promise<AccessDetails> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  console.log(JSON.stringify(data));
+  const response = await httpClient.put(`${ACCESS_REQUEST_API_URL}/${data.id}`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
@@ -123,18 +133,7 @@ export const proceedRequest = async (data: { requestId: string | undefined; isAp
 
 export const deleteRequest = async (requestId: string | undefined): Promise<AccessDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.delete(ACCESS_REQUEST_API_URL + 'delete', {
-    headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      requestId: requestId,
-    },
-  });
-  return response.data;
-};
-
-export const editRequest = async (data: AccessDetails): Promise<AccessDetails> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch(ACCESS_REQUEST_API_URL + 'edit', data, {
+  const response = await httpClient.delete(`${ACCESS_REQUEST_API_URL}/${requestId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;

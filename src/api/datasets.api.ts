@@ -63,7 +63,7 @@ export interface AnalysisInfo {
 }
 export const getDatasetList = async (userId: string | undefined, pagination: Pagination): Promise<DatasetListData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATASET_API_URL + 'list', {
+  const response = await httpClient.get(DATASET_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
     params: {
       userId: userId,
@@ -87,11 +87,8 @@ export const getAnalysisTableData = async (
   userRequestId: string | undefined,
 ): Promise<AnalysisTableData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATASET_API_URL + 'analysis-list', {
+  const response = await httpClient.get(`${DATASET_API_URL}/${userRequestId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userRequestId: userRequestId,
-    },
   });
 
   const formattedData = response.data.map(
@@ -124,7 +121,7 @@ export const getAnalysisTableData = async (
 export const createAnalysis = async (userRequestId: string | undefined, name: string): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.post(
-    DATASET_API_URL + 'create-analysis',
+    DATASET_API_URL,
     { userRequestId: userRequestId, name: name },
     {
       headers: { [csrfHeaderName]: `${csrf}` },
@@ -133,38 +130,21 @@ export const createAnalysis = async (userRequestId: string | undefined, name: st
   return response.data;
 };
 
-export const deleteAnalysis = async (analysisId: string | undefined): Promise<string> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.delete(DATASET_API_URL + 'delete-analysis', {
-    headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      analysisId: analysisId,
-    },
-  });
-
-  return response.data;
-};
-
-export const uploadScript = async (analysisId: string | undefined, file: string | Blob | RcFile): Promise<Buffer> => {
+export const uploadScript = async (analysisId: string | undefined, file: string | Blob | RcFile): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const formData = new FormData();
   formData.append('file', file);
-  const response = await httpClient.post(DATASET_API_URL + 'upload-script', formData, {
+  const response = await httpClient.post(`${DATASET_API_URL}/scripts/${analysisId}`, formData, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      analysisId: analysisId,
-    },
   });
+
   return response.data;
 };
 
 export const getAnalysisDetails = async (analysisId: string | undefined): Promise<AnalysisInfo | undefined> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATASET_API_URL + 'analysis-details', {
+  const response = await httpClient.get(`${DATASET_API_URL}/analysis/${analysisId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      analysisId: analysisId,
-    },
   });
 
   return {
@@ -186,40 +166,17 @@ export const getAnalysisDetails = async (analysisId: string | undefined): Promis
 
 export const deleteScript = async (scriptId: string | undefined): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.delete(DATASET_API_URL + 'delete-script', {
+  const response = await httpClient.delete(`${DATASET_API_URL}/scripts/${scriptId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      scriptId: scriptId,
-    },
   });
 
   return response.data;
 };
 
-export const viewReport = async (scriptId: string | undefined): Promise<void> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATASET_API_URL + 'view-report', {
-    headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      scriptId: scriptId,
-    },
-  });
-
-  const link = document.createElement('a');
-  link.href = response.data;
-  link.setAttribute('download', 'report.html');
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-};
-
 export const getAnalysisColumns = async (userRequestId: string | undefined): Promise<string[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATASET_API_URL + 'columns', {
+  const response = await httpClient.get(`${DATASET_API_URL}/columns/${userRequestId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userRequestId: userRequestId,
-    },
   });
 
   return response.data;
@@ -227,7 +184,7 @@ export const getAnalysisColumns = async (userRequestId: string | undefined): Pro
 
 export const getDescriptive = async (analysis: DescriptiveAnalysis): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(DATASET_API_URL + 'descriptive', analysis, {
+  const response = await httpClient.post(`${DATASET_API_URL}/descriptive`, analysis, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
@@ -267,11 +224,17 @@ export const getDescriptive = async (analysis: DescriptiveAnalysis): Promise<str
 
 export const getScriptMapping = async (scriptId: string | undefined): Promise<any> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATASET_API_URL + 'get-script-mapping', {
+  const response = await httpClient.get(`${DATASET_API_URL}/scripts/${scriptId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      scriptId: scriptId,
-    },
+  });
+
+  return response.data;
+};
+
+export const deleteAnalysis = async (analysisId: string | undefined): Promise<string> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.delete(`${DATASET_API_URL}/analysis/${analysisId}`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
   });
 
   return response.data;
@@ -281,13 +244,10 @@ export const addScriptMapping = async (scriptId: string | undefined, mapping: an
   const jsonMapping = JSON.stringify(mapping);
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.post(
-    DATASET_API_URL + 'add-script-mapping',
+    `${DATASET_API_URL}/scripts/${scriptId}/mapping`,
     { data: jsonMapping },
     {
       headers: { [csrfHeaderName]: `${csrf}` },
-      params: {
-        scriptId: scriptId,
-      },
     },
   );
   return response.data;
@@ -295,11 +255,8 @@ export const addScriptMapping = async (scriptId: string | undefined, mapping: an
 
 export const downloadDataset = async (userRequestId: string | undefined): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATASET_API_URL + 'download-dataset', {
+  const response = await httpClient.get(`${DATASET_API_URL}/download/${userRequestId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userRequestId: userRequestId,
-    },
     responseType: 'blob',
   });
 
@@ -307,6 +264,20 @@ export const downloadDataset = async (userRequestId: string | undefined): Promis
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', 'dataset.zip'); // or the file name you expect from the server
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+};
+
+export const viewReport = async (scriptId: string | undefined): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`${DATASET_API_URL}/reports/${scriptId}`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+
+  const link = document.createElement('a');
+  link.href = response.data;
+  link.setAttribute('download', 'report.html');
   document.body.appendChild(link);
   link.click();
   link.remove();

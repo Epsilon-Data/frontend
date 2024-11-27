@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { OverallDatabaseInfoValues, ProjectSettings, Template, TemplatePermissions } from '@app/interfaces/interfaces';
+import { OverallDatabaseInfoValues, ProjectSettings, TemplatePermissions } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 import { CrawlStatus } from '@app/constants/enums/crawlStatus';
 import { DATE_FORMAT, DATABASE_SOURCE_API_URL } from '@app/constants/databaseSource';
@@ -122,49 +122,6 @@ export const getDbTableInfo = async (projectId: string | undefined): Promise<Dat
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
-};
-
-export const getTemplateNames = async (projectId: string | undefined): Promise<{ guid: string; name: string }[]> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(`${DATABASE_SOURCE_API_URL}/${projectId}/template-names`, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-
-  return response.data;
-};
-
-export const getTemplates = async (projectId: string | undefined): Promise<Template[]> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(`${DATABASE_SOURCE_API_URL}/${projectId}/templates`, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-
-  return response.data;
-};
-
-export const deleteTemplate = async (projectId: string | undefined, templateId: string): Promise<void> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.delete(`${DATABASE_SOURCE_API_URL}/${projectId}/template`, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      templateId: templateId,
-    },
-  });
-};
-
-export const createTemplate = async (
-  projectId: string | undefined,
-  columnMapping: string,
-  template: string,
-): Promise<void> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.post(
-    `${DATABASE_SOURCE_API_URL}/${projectId}/template`,
-    { projectId: projectId, columnMapping: columnMapping, template: template },
-    {
-      headers: { [csrfHeaderName]: `${csrf}` },
-    },
-  );
 };
 
 export const getDbColumns = async (projectId: string | undefined): Promise<any> => {

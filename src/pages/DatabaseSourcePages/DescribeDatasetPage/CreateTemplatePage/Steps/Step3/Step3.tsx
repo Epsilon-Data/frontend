@@ -6,11 +6,11 @@ import { BaseSpin } from '@app/components/common/BaseSpin/BaseSpin';
 import { Edge, Node } from 'reactflow';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createTemplate } from '@app/api/databaseSources.api';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { useNavigate } from 'react-router-dom';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
+import { createTemplate } from '@app/api/templates.api';
 
 function createNodeColumnMapping(nodes: Node[], edges: Edge[]) {
   const columnNodeId = nodes.filter((node) => node.type == 'column').map((node) => node.id);

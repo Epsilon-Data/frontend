@@ -5,13 +5,14 @@ import * as S from './DescribeDatasetPage.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { useMounted } from '@app/hooks/useMounted';
-import { Pagination, deleteTemplate, getProjectId, getTemplateNames } from '@app/api/databaseSources.api';
+import { Pagination, getProjectId } from '@app/api/databaseSources.api';
 import { FaCirclePlus } from 'react-icons/fa6';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { ColumnsType } from 'antd/es/table';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
+import { deleteTemplate, getTemplateNames } from '@app/api/templates.api';
 
 interface TemplateTableRow {
   key: number;

@@ -5,7 +5,7 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './AccessPermissionsPage.styles';
 import { useParams } from 'react-router-dom';
 import { useMounted } from '@app/hooks/useMounted';
-import { addAccessPermissions, getAccessPermissions, getProjectId, getTemplates } from '@app/api/databaseSources.api';
+import { addAccessPermissions, getAccessPermissions, getProjectId } from '@app/api/databaseSources.api';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
@@ -21,6 +21,7 @@ import { ClearModal } from './ClearModal/ClearModal';
 import { TemplateModal } from './TemplateModal/TemplateModal';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+import { getTemplates } from '@app/api/templates.api';
 
 const initialPermissions = [
   { role: 'research', access: [] },

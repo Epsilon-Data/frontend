@@ -3,7 +3,6 @@ import { DATASET_API_URL, DATE_FORMAT } from '@app/constants/datasets';
 import { Priority } from '@app/constants/enums/priorities';
 import { format } from 'date-fns';
 import { getCsrfHeader, httpClient } from './http.api';
-import { RcFile } from 'antd/lib/upload';
 import { DescriptiveAnalysis } from '@app/interfaces/interfaces';
 import { t } from 'i18next';
 
@@ -130,17 +129,6 @@ export const createAnalysis = async (userRequestId: string | undefined, name: st
   return response.data;
 };
 
-export const uploadScript = async (analysisId: string | undefined, file: string | Blob | RcFile): Promise<void> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const formData = new FormData();
-  formData.append('file', file);
-  const response = await httpClient.post(`${DATASET_API_URL}/scripts/${analysisId}`, formData, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-
-  return response.data;
-};
-
 export const getAnalysisDetails = async (analysisId: string | undefined): Promise<AnalysisInfo | undefined> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${DATASET_API_URL}/analysis/${analysisId}`, {
@@ -162,15 +150,6 @@ export const getAnalysisDetails = async (analysisId: string | undefined): Promis
       executionSettings: script.executionSettings,
     })),
   };
-};
-
-export const deleteScript = async (scriptId: string | undefined): Promise<string> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.delete(`${DATASET_API_URL}/scripts/${scriptId}`, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-
-  return response.data;
 };
 
 export const getAnalysisColumns = async (userRequestId: string | undefined): Promise<string[]> => {
@@ -222,34 +201,12 @@ export const getDescriptive = async (analysis: DescriptiveAnalysis): Promise<str
   return rmdString;
 };
 
-export const getScriptMapping = async (scriptId: string | undefined): Promise<any> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(`${DATASET_API_URL}/scripts/${scriptId}`, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-
-  return response.data;
-};
-
 export const deleteAnalysis = async (analysisId: string | undefined): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.delete(`${DATASET_API_URL}/analysis/${analysisId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
-  return response.data;
-};
-
-export const addScriptMapping = async (scriptId: string | undefined, mapping: any): Promise<any> => {
-  const jsonMapping = JSON.stringify(mapping);
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(
-    `${DATASET_API_URL}/scripts/${scriptId}/mapping`,
-    { data: jsonMapping },
-    {
-      headers: { [csrfHeaderName]: `${csrf}` },
-    },
-  );
   return response.data;
 };
 

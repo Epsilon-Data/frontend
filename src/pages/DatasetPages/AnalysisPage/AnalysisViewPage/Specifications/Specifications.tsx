@@ -4,7 +4,7 @@ import * as S from './Specifications.styles';
 import { Typography, Upload } from 'antd/lib';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { FaPlus } from 'react-icons/fa';
-import { Pagination, ScriptInfo, deleteScript, viewReport, uploadScript } from '@app/api/datasets.api';
+import { Pagination, ScriptInfo, viewReport } from '@app/api/datasets.api';
 import { ColumnsType } from 'antd/lib/table';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
@@ -12,6 +12,7 @@ import { FaRegCircleCheck, FaRegCircleXmark, FaCircleExclamation } from 'react-i
 import { notificationController } from '@app/controllers/notificationController';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MdPending } from 'react-icons/md';
+import { deleteScript, uploadScript } from '@app/api/scripts.api';
 
 const initialPagination: Pagination = {
   current: 1,

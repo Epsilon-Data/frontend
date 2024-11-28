@@ -10,7 +10,7 @@ import { useMounted } from '@app/hooks/useMounted';
 import hljs from 'highlight.js/lib/core';
 import r from 'highlight.js/lib/languages/r';
 import 'highlight.js/styles/night-owl.min.css';
-import { addScriptMapping, getScriptMapping } from '@app/api/datasets.api';
+import { addScriptMapping, getScriptMapping } from '@app/api/scripts.api';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { CSV_REGEX } from '@app/constants/datasets';
 

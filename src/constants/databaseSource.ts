@@ -2,7 +2,7 @@ import { DatabaseTableInfo } from '@app/api/databaseSources.api';
 import { OverallDatabaseInfoValues } from '@app/interfaces/interfaces';
 
 export const DATE_FORMAT = 'dd/MM/yyyy';
-export const DATABASE_SOURCE_API_URL = '/hub/database-source';
+export const DATASOURCE_API_URL = '/hub/datasource';
 
 export const INITIAL_OVERALL_DB_INFO: OverallDatabaseInfoValues = {
   schemaCount: 0,

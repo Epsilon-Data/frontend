@@ -1,4 +1,3 @@
-import { UploadFile } from 'antd';
 import { Node, Edge } from 'reactflow';
 import { NumericLiteral } from 'typescript';
 
@@ -116,15 +115,6 @@ export interface Template {
   name: string;
   nodes: Node[];
   edges: Edge[];
-}
-
-export interface ProjectSettings {
-  projectId: string;
-  cover: UploadFile[];
-  visualisations: {
-    title: string;
-    url: string;
-  }[];
 }
 
 export interface AccessDetails {

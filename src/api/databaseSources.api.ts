@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { OverallDatabaseInfoValues, ProjectSettings, TemplatePermissions } from '@app/interfaces/interfaces';
+import { OverallDatabaseInfoValues, TemplatePermissions } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 import { CrawlStatus } from '@app/constants/enums/crawlStatus';
 import { DATE_FORMAT, DATABASE_SOURCE_API_URL } from '@app/constants/databaseSource';
@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { httpClient, getCsrfHeader } from './http.api';
 import { AxiosProgressEvent } from 'axios';
 import { RcFile } from 'antd/es/upload';
+import { ProjectDetails } from '@app/store/slices/projectSlice';
 
 export interface Tag {
   value: string;
@@ -100,12 +101,37 @@ export const getSourceList = async (userId: string | undefined, pagination: Pagi
   return { data: formattedData, pagination: { ...pagination, total: formattedData.length } };
 };
 
-export const getProjectId = async (projectId: string | undefined): Promise<string> => {
+export const getProjectDetails = async (projectId: string | undefined): Promise<ProjectDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${DATABASE_SOURCE_API_URL}/${projectId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-  return response.data.customId;
+
+  if (response.data.cover) {
+    response.data.cover = [
+      {
+        uid: '1',
+        name: 'cover.jpg',
+        status: 'done',
+        url: response.data.cover,
+        thumbUrl: response.data.cover,
+      },
+    ];
+  } else {
+    response.data.cover = [];
+  }
+
+  if (response.data.visualisations) {
+    response.data.visualisations = JSON.parse(response.data.visualisations);
+    response.data.visualisations = response.data.visualisations.map((item: { url: string }) => ({
+      ...item,
+      url: item.url.replace('https://', ''),
+    }));
+  } else {
+    response.data.visualisations = [];
+  }
+
+  return response.data;
 };
 
 export const getDbSummary = async (projectId: string | undefined): Promise<DatabaseSummaryInfo> => {
@@ -149,42 +175,6 @@ export const addAccessPermissions = async (
   const response = await httpClient.post(`${DATABASE_SOURCE_API_URL}/${projectId}/permissions`, permissions, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-  return response.data;
-};
-
-export const getProjectSettings = async (projectId: string | undefined): Promise<ProjectSettings> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATABASE_SOURCE_API_URL + '/settings', {
-    headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      projectId: projectId,
-    },
-  });
-
-  if (response.data.cover) {
-    response.data.cover = [
-      {
-        uid: '1',
-        name: 'cover.jpg',
-        status: 'done',
-        url: response.data.cover,
-        thumbUrl: response.data.cover,
-      },
-    ];
-  } else {
-    response.data.cover = [];
-  }
-
-  if (response.data.visualisations) {
-    response.data.visualisations = JSON.parse(response.data.visualisations);
-    response.data.visualisations = response.data.visualisations.map((item: { url: string }) => ({
-      ...item,
-      url: item.url.replace('https://', ''),
-    }));
-  } else {
-    response.data.visualisations = [];
-  }
-
   return response.data;
 };
 

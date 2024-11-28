@@ -5,7 +5,7 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './AccessPermissionsPage.styles';
 import { useParams } from 'react-router-dom';
 import { useMounted } from '@app/hooks/useMounted';
-import { addAccessPermissions, getAccessPermissions, getProjectId } from '@app/api/databaseSources.api';
+import { addAccessPermissions, getAccessPermissions } from '@app/api/databaseSources.api';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
@@ -22,6 +22,7 @@ import { TemplateModal } from './TemplateModal/TemplateModal';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { getTemplates } from '@app/api/templates.api';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const initialPermissions = [
   { role: 'research', access: [] },
@@ -52,6 +53,7 @@ export const AccessPermissionsPage: React.FC = () => {
   const [cardLoading, setCardLoading] = useState(true);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [templateId, setTemplateId] = useState('');
+  const projectDetails = useAppSelector((state: { project: { details: any } }) => state.project.details);
 
   const nodeTypes = useMemo(
     () => ({ object: PermissionNode, category: PermissionNode, subcategory: PermissionNode }),
@@ -61,11 +63,9 @@ export const AccessPermissionsPage: React.FC = () => {
 
   const fetch = useCallback(
     (id: string | undefined) => {
-      getProjectId(id).then((res) => {
-        if (isMounted.current) {
-          setProjectId(res);
-        }
-      });
+      if (isMounted.current) {
+        setProjectId(projectDetails.customId);
+      }
       getTemplates(id).then((res) => {
         if (res) {
           setTemplates(res);
@@ -77,7 +77,7 @@ export const AccessPermissionsPage: React.FC = () => {
         }
       });
     },
-    [isMounted],
+    [projectDetails.customId, isMounted],
   );
 
   useEffect(() => {

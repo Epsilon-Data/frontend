@@ -7,13 +7,14 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { FaMinusCircle, FaPlus } from 'react-icons/fa';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { useParams } from 'react-router-dom';
-import { deleteCover, getProjectSettings, uploadProjectCover, uploadVis } from '@app/api/databaseSources.api';
+import { deleteCover, uploadProjectCover, uploadVis } from '@app/api/databaseSources.api';
 import { useMounted } from '@app/hooks/useMounted';
 import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
 import { Typography, Upload, UploadFile } from 'antd';
 import { LuUpload } from 'react-icons/lu';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { notificationController } from '@app/controllers/notificationController';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 function isValidTableauUrl(url: string) {
   return url.startsWith('https://public.tableau.com/views/');
@@ -27,22 +28,18 @@ const OtherSettingsPage: React.FC = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [visList, setVisList] = useState<{ title: string; url: string }[]>([]);
   const [isGetSettings, setIsGetSettings] = useState(false);
+  const projectDetails = useAppSelector((state: { project: { details: any } }) => state.project.details);
 
-  const fetch = useCallback(
-    (id: string | undefined) => {
-      getProjectSettings(id).then((res) => {
-        if (isMounted.current) {
-          setVisList(res.visualisations);
-          setFileList(res.cover);
-          setIsGetSettings(true);
-        }
-      });
-    },
-    [isMounted],
-  );
+  const fetch = useCallback(() => {
+    if (isMounted.current) {
+      setVisList(projectDetails?.visualisations);
+      setFileList(projectDetails?.cover);
+      setIsGetSettings(true);
+    }
+  }, [projectDetails?.cover, projectDetails?.visualisations, isMounted]);
 
   useEffect(() => {
-    fetch(id);
+    fetch();
   }, [fetch, id]);
 
   const onChange = (info: UploadChangeParam<UploadFile<any>>) => {

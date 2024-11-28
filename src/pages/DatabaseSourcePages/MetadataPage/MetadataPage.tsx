@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
@@ -7,7 +8,7 @@ import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { ClusterOutlined, TableOutlined } from '@ant-design/icons';
 import { useMounted } from '@app/hooks/useMounted';
-import { getProjectId } from '@app/api/databaseSources.api';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const MetadataPage: React.FC = () => {
   const { id } = useParams();
@@ -15,19 +16,15 @@ const MetadataPage: React.FC = () => {
   const navigate = useNavigate();
   const { isMounted } = useMounted();
   const [projectId, setProjectId] = useState('');
-  const fetch = useCallback(
-    (id: string | undefined) => {
-      getProjectId(id).then((res) => {
-        if (isMounted.current) {
-          setProjectId(res);
-        }
-      });
-    },
-    [isMounted],
-  );
+  const projectDetails = useAppSelector((state: { project: { details: any } }) => state.project.details);
+  const fetch = useCallback(() => {
+    if (isMounted.current) {
+      setProjectId(projectDetails?.customId);
+    }
+  }, [projectDetails?.customId, isMounted]);
 
   useEffect(() => {
-    fetch(id);
+    fetch();
   }, [id, fetch]);
 
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
@@ -5,7 +6,7 @@ import * as S from './DescribeDatasetPage.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { useMounted } from '@app/hooks/useMounted';
-import { Pagination, getProjectId } from '@app/api/databaseSources.api';
+import { Pagination } from '@app/api/databaseSources.api';
 import { FaCirclePlus } from 'react-icons/fa6';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
@@ -13,6 +14,7 @@ import { ColumnsType } from 'antd/es/table';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { deleteTemplate, getTemplateNames } from '@app/api/templates.api';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 interface TemplateTableRow {
   key: number;
@@ -36,13 +38,13 @@ const DescribeDatasetPage: React.FC = () => {
     pagination: initialPagination,
     loading: false,
   });
+  const projectDetails = useAppSelector((state: { project: { details: any } }) => state.project.details);
   const fetch = useCallback(
     (id: string | undefined) => {
-      getProjectId(id).then((res) => {
-        if (isMounted.current) {
-          setProjectId(res);
-        }
-      });
+      if (isMounted.current) {
+        setProjectId(projectDetails?.customId);
+      }
+
       setTableData((tableData) => ({ ...tableData, loading: true }));
       getTemplateNames(id).then((res) => {
         if (isMounted.current && res) {
@@ -57,7 +59,7 @@ const DescribeDatasetPage: React.FC = () => {
       });
       setTableData((tableData) => ({ ...tableData, loading: false }));
     },
-    [isMounted],
+    [projectDetails?.customId, isMounted],
   );
 
   const handleDelete = (templateId: string) => {

@@ -9,13 +9,14 @@ import { findKeyByUrl, findUrlByKey, returnUserTopNav } from '../topNavigation';
 import { useTranslation } from 'react-i18next';
 import MainSider from '../sider/MainSider/MainSider';
 import { updateUrlById } from '../sider/sidebarNavigation';
-import { getProjectId } from '@app/api/databaseSources.api';
 import { BiSolidUserCircle } from 'react-icons/bi';
-import { useAppSelector } from '@app/hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '@app/hooks/reduxHooks';
+import { fetchProjectDetails } from '@app/store/slices/projectSlice';
 
 const sidebarDisabled = ['/database-sources', '/browse', '/datasets'];
 
 const MainLayout: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [isTwoColumnsLayout, setIsTwoColumnsLayout] = useState(true);
   const { isDesktop } = useResponsive();
   const location = useLocation();
@@ -27,20 +28,25 @@ const MainLayout: React.FC = () => {
   const [url, setUrl] = useState('');
   const navigate = useNavigate();
   const [projectId, setProjectId] = useState('');
+  const details = useAppSelector((state) => state.project.details);
   const user = useAppSelector((state) => state.user.user);
   const admin = useAppSelector((state) => state.user.user?.roles.includes('admin') || false);
   const researcher = useAppSelector((state) => state.user.user?.roles.includes('research') || false);
 
   const fetch = useCallback(() => {
     if (id && location.pathname.includes('/database-sources')) {
-      getProjectId(id).then((res) => {
-        setProjectId(res);
-      });
+      dispatch(fetchProjectDetails(id));
     }
-  }, [id, location.pathname]);
+  }, [dispatch, location.pathname, id]);
 
   useEffect(() => {
     fetch();
+    if (details?.customId) {
+      setProjectId(details?.customId);
+    }
+  }, [details?.customId, fetch, id]);
+
+  useEffect(() => {
     setIsTwoColumnsLayout([DASHBOARD_PATH].includes(location.pathname) && isDesktop);
     setSelectedKey(findKeyByUrl(location.pathname));
     if (sidebarDisabled.includes(location.pathname)) {
@@ -67,7 +73,7 @@ const MainLayout: React.FC = () => {
       setTitle(t('topNavigation.' + selectedKey));
     }
     setUrl(findUrlByKey(selectedKey));
-  }, [location.pathname, isDesktop, selectedKey, id, t, fetch, projectId, researcher, admin]);
+  }, [location.pathname, isDesktop, selectedKey, id, t, projectId, researcher, admin]);
 
   const userTopNav = returnUserTopNav(researcher);
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
@@ -11,8 +12,8 @@ import { Step1 } from './Steps/Step1/Step1';
 import { Step2 } from './Steps/Step2/Step2';
 import { Step3 } from './Steps/Step3/Step3';
 import { useEdgesState, useNodesState } from 'reactflow';
-import { getProjectId } from '@app/api/databaseSources.api';
 import { useMounted } from '@app/hooks/useMounted';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const initialNodes = [{ id: 'node_0', position: { x: 320, y: 200 }, data: { label: 'Object' }, type: 'object' }];
 
@@ -85,22 +86,18 @@ const CreateTemplatePage: React.FC = () => {
       ),
     },
   ];
-
   const [projectId, setProjectId] = useState('');
   const { isMounted } = useMounted();
-  const fetch = useCallback(
-    (id: string | undefined) => {
-      getProjectId(id).then((res) => {
-        if (isMounted.current) {
-          setProjectId(res);
-        }
-      });
-    },
-    [isMounted],
-  );
+  const projectDetails = useAppSelector((state: { project: { details: any } }) => state.project.details);
+
+  const fetch = useCallback(() => {
+    if (isMounted.current) {
+      setProjectId(projectDetails?.customId);
+    }
+  }, [projectDetails?.customId, isMounted]);
 
   useEffect(() => {
-    fetch(id);
+    fetch();
   }, [fetch, id]);
 
   return (

@@ -212,7 +212,7 @@ export const AccessPermissionsPage: React.FC = () => {
       });
     }
 
-    addAccessPermissions(id, JSON.stringify(templatePermissions))
+    addAccessPermissions(id, templatePermissions)
       .then(() => {
         notificationController.success({
           message: t('databaseSources.accessPermissions.notify.saveSuccess', {

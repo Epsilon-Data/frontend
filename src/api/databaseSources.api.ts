@@ -169,8 +169,8 @@ export const getAccessPermissions = async (projectId: string | undefined): Promi
 
 export const addAccessPermissions = async (
   projectId: string | undefined,
-  permissions: string,
-): Promise<{ projectId: string; permissions: string }> => {
+  permissions: TemplatePermissions[],
+): Promise<{ projectId: string; permissions: TemplatePermissions[] }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.post(`${DATABASE_SOURCE_API_URL}/${projectId}/permissions`, permissions, {
     headers: { [csrfHeaderName]: `${csrf}` },

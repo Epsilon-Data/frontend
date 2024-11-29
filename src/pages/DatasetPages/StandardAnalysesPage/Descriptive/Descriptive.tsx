@@ -11,7 +11,7 @@ import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { notificationController } from '@app/controllers/notificationController';
 import { DescriptiveAnalysis } from '@app/interfaces/interfaces';
 import { useParams } from 'react-router-dom';
-import { getDescriptive } from '@app/api/datasets.api';
+import { getDescriptive } from '@app/api/analysis.api';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 

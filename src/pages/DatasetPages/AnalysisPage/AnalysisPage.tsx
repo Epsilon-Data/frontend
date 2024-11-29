@@ -8,14 +8,8 @@ import { RiDownloadCloudFill } from 'react-icons/ri';
 import { useLocation, useParams } from 'react-router-dom';
 import { CreateModal } from './CreateModal/CreateModal';
 import { notificationController } from '@app/controllers/notificationController';
-import {
-  AnalysisTableRow,
-  Pagination,
-  createAnalysis,
-  deleteAnalysis,
-  downloadDataset,
-  getAnalysisTableData,
-} from '@app/api/datasets.api';
+import { AnalysisTableRow, Pagination, downloadDataset, getAnalysisTableData } from '@app/api/datasets.api';
+import { createAnalysis, deleteAnalysis } from '@app/api/analysis.api';
 import { useMounted } from '@app/hooks/useMounted';
 import { Flex } from 'antd';
 

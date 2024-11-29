@@ -20,7 +20,7 @@ import ReactFlow, {
 import { useTranslation } from 'react-i18next';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import * as S from './Step2.styles';
-import { getDbColumns } from '@app/api/databaseSources.api';
+import { getDbColumns } from '@app/api/datasources.api';
 import { ColumnSidebar } from './ColumnSidebar/ColumnSidebar';
 import { useMounted } from '@app/hooks/useMounted';
 import { ColumnNode } from '@app/components/reactflow-components/ColumnNode/ColumnNode';

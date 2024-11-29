@@ -31,24 +31,22 @@ const ApproveRequestPage = React.lazy(
 const AccessRequestsPage = React.lazy(() => import('@app/pages/AccessRequestPages/AccessRequestsPage'));
 const ViewAccessRequestPage = React.lazy(() => import('@app/pages/AccessRequestPages/ViewRequestPage/ViewRequestPage'));
 
-const SourceListPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/SourceListPage'));
-const MetadataPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/MetadataPage/MetadataPage'));
+const SourceListPage = React.lazy(() => import('@app/pages/DatasourcePages/SourceListPage'));
+const MetadataPage = React.lazy(() => import('@app/pages/DatasourcePages/MetadataPage/MetadataPage'));
 const DatabaseSummaryPage = React.lazy(
-  () => import('@app/pages/DatabaseSourcePages/DatabaseSummaryPage/DatabaseSummaryPage'),
+  () => import('@app/pages/DatasourcePages/DatabaseSummaryPage/DatabaseSummaryPage'),
 );
-const TableInfoPage = React.lazy(() => import('@app/pages/DatabaseSourcePages/TableInfoPage/TableInfoPage'));
+const TableInfoPage = React.lazy(() => import('@app/pages/DatasourcePages/TableInfoPage/TableInfoPage'));
 const DescribeDatasetPage = React.lazy(
-  () => import('@app/pages/DatabaseSourcePages/DescribeDatasetPage/DescribeDatasetPage'),
+  () => import('@app/pages/DatasourcePages/DescribeDatasetPage/DescribeDatasetPage'),
 );
 const CreateTemplatePage = React.lazy(
-  () => import('@app/pages/DatabaseSourcePages/DescribeDatasetPage/CreateTemplatePage/CreateTemplatePage'),
+  () => import('@app/pages/DatasourcePages/DescribeDatasetPage/CreateTemplatePage/CreateTemplatePage'),
 );
 const AccessPermissionsPage = React.lazy(
-  () => import('@app/pages/DatabaseSourcePages/AccessPermissionsPage/AccessPermissionsPage'),
+  () => import('@app/pages/DatasourcePages/AccessPermissionsPage/AccessPermissionsPage'),
 );
-const OtherSettingsPage = React.lazy(
-  () => import('@app/pages/DatabaseSourcePages/OtherSettingsPage/OtherSettingsPage'),
-);
+const OtherSettingsPage = React.lazy(() => import('@app/pages/DatasourcePages/OtherSettingsPage/OtherSettingsPage'));
 
 const DatasetListPage = React.lazy(() => import('@app/pages/DatasetPages/DatasetListPage'));
 const AnalysisPage = React.lazy(() => import('@app/pages/DatasetPages/AnalysisPage/AnalysisPage'));

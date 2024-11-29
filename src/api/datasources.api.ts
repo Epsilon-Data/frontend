@@ -2,7 +2,7 @@
 import { OverallDatabaseInfoValues, TemplatePermissions } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 import { CrawlStatus } from '@app/constants/enums/crawlStatus';
-import { DATE_FORMAT, DATASOURCE_API_URL } from '@app/constants/databaseSource';
+import { DATE_FORMAT, DATASOURCE_API_URL } from '@app/constants/datasource';
 import { format } from 'date-fns';
 import { httpClient, getCsrfHeader } from './http.api';
 import { AxiosProgressEvent } from 'axios';
@@ -106,6 +106,8 @@ export const getProjectDetails = async (projectId: string | undefined): Promise<
   const response = await httpClient.get(`${DATASOURCE_API_URL}/${projectId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
+
+  console.log(JSON.stringify(response.data));
 
   if (response.data.cover) {
     response.data.cover = [

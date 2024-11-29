@@ -1,4 +1,4 @@
-import { DatabaseTableInfo } from '@app/api/databaseSources.api';
+import { DatabaseTableInfo } from '@app/api/datasources.api';
 import { OverallDatabaseInfoValues } from '@app/interfaces/interfaces';
 
 export const DATE_FORMAT = 'dd/MM/yyyy';

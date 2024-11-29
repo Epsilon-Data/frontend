@@ -6,7 +6,7 @@ import * as S from './DescribeDatasetPage.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { useMounted } from '@app/hooks/useMounted';
-import { Pagination } from '@app/api/databaseSources.api';
+import { Pagination } from '@app/api/datasources.api';
 import { FaCirclePlus } from 'react-icons/fa6';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseTable } from '@app/components/common/BaseTable/BaseTable';

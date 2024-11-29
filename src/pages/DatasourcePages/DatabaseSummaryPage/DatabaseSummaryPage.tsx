@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './DatabaseSummaryPage.styles';
 import { OverallDescription } from '@app/components/database-summary/OverallDescription/OverallDescription';
-import { getDbSummary } from '@app/api/databaseSources.api';
+import { getDbSummary } from '@app/api/datasources.api';
 import { useParams } from 'react-router-dom';
 import { OverallDatabaseInfoValues } from '@app/interfaces/interfaces';
 import { useMounted } from '@app/hooks/useMounted';

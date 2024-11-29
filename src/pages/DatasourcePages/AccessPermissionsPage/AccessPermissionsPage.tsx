@@ -5,7 +5,7 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './AccessPermissionsPage.styles';
 import { useParams } from 'react-router-dom';
 import { useMounted } from '@app/hooks/useMounted';
-import { addAccessPermissions, getAccessPermissions } from '@app/api/databaseSources.api';
+import { addAccessPermissions, getAccessPermissions } from '@app/api/datasources.api';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';

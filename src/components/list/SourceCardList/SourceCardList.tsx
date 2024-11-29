@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseList } from '@app/components/common/BaseList/BaseList';
-import { SourceListItem, getSourceList, Pagination, Tag, updateCrawlStatus } from '@app/api/databaseSources.api';
+import { SourceListItem, getSourceList, Pagination, Tag, updateCrawlStatus } from '@app/api/datasources.api';
 import { useTranslation } from 'react-i18next';
 import { useMounted } from '@app/hooks/useMounted';
 import { useCallback, useState, useEffect } from 'react';

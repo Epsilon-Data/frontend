@@ -38,14 +38,10 @@ export interface RequestTableData {
 export const getRequestTableData = async (
   pagination: Pagination,
   isAdmin: boolean,
-  userId?: string,
 ): Promise<{ sent: RequestTableData; receive: RequestTableData }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(CONNECTION_REQUEST_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userId: userId,
-    },
   });
 
   let users: any[] = [];
@@ -145,17 +141,10 @@ export const deleteRequest = async (requestId: string | undefined): Promise<Requ
   return response.data;
 };
 
-export const approveRequest = async (
-  userId: string | undefined,
-  data: DatabaseInfoFormValues,
-  requestId: string | undefined,
-): Promise<void> => {
+export const approveRequest = async (data: DatabaseInfoFormValues, requestId: string | undefined): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   await httpClient.patch(`${CONNECTION_REQUEST_API_URL}/${requestId}`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userId: userId,
-    },
   });
 };
 
@@ -178,13 +167,10 @@ export const testConnection = async (data: DatabaseConnectionDetails): Promise<u
   return response.data;
 };
 
-export const isValidProjectId = async (userId: string | undefined, projectId: string): Promise<boolean> => {
+export const isValidProjectId = async (projectId: string): Promise<boolean> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.post(`${CONNECTION_REQUEST_API_URL}/${projectId}`, null, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userId: userId,
-    },
   });
   return response.data;
 };

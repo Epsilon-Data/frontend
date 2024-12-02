@@ -14,7 +14,6 @@ import dayjs from 'dayjs';
 import { AppDate } from '@app/constants/Dates';
 import { isValidProjectId } from '@app/api/connectionRequests.api';
 import config from '@app/config/config';
-import { useAppSelector } from '@app/hooks/reduxHooks';
 
 export const RequestProjectInfo: React.FC<{
   formValue: RequestDetails;
@@ -37,7 +36,6 @@ export const RequestProjectInfo: React.FC<{
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [members, setMembers] = useState(initialValues.members);
-  const user = useAppSelector((state) => state.user?.user);
 
   const [form] = BaseButtonsForm.useForm();
 
@@ -49,7 +47,7 @@ export const RequestProjectInfo: React.FC<{
       setLoading(true);
       values.duration = values.duration.map((appDate: AppDate) => dayjs(appDate).toDate());
       values.members = members;
-      const validId = await isValidProjectId(user?.id, values.customId);
+      const validId = await isValidProjectId(values.customId);
 
       if (validId) {
         const updatedRequest = {
@@ -69,7 +67,7 @@ export const RequestProjectInfo: React.FC<{
         setLoading(false);
       }
     },
-    [form, formValue, members, navigate, setFormValue, t, user?.id],
+    [form, formValue, members, navigate, setFormValue, t],
   );
 
   return (

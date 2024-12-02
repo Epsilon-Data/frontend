@@ -18,7 +18,6 @@ import { useMounted } from '@app/hooks/useMounted';
 import { ProjectInfo, getProjectDetails } from '@app/api/browseDatasets.api';
 import { DATE_FORMAT, INITIAL_DETAIL_VALUES } from '@app/constants/browseDatasets';
 import { format } from 'date-fns';
-import { useAppSelector } from '@app/hooks/reduxHooks';
 
 declare global {
   interface Window {
@@ -36,7 +35,6 @@ const DatasetSummaryPage: React.FC = () => {
   const navigate = useNavigate();
   const [visList, setVisList] = useState<{ title: string; url: string }[]>([]);
   const [projectDetails, setProjectDetails] = useState<ProjectInfo>(INITIAL_DETAIL_VALUES);
-  const user = useAppSelector((state) => state.user.user);
 
   const nodeTypes = useMemo(
     () => ({ object: PermissionNode, category: PermissionNode, subcategory: PermissionNode }),
@@ -50,13 +48,13 @@ const DatasetSummaryPage: React.FC = () => {
   ];
 
   useEffect(() => {
-    getProjectDetails(user?.id, id).then((res) => {
+    getProjectDetails(id).then((res) => {
       if (isMounted.current) {
         setProjectDetails(res);
         setVisList(res.visualisations);
       }
     });
-  }, [isMounted, id, user?.id]);
+  }, [isMounted, id]);
 
   useEffect(() => {
     const urls = visList.map((item) => item.url);

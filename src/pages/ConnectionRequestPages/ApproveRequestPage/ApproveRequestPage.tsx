@@ -15,7 +15,6 @@ import { notificationController } from '@app/controllers/notificationController'
 import { approveRequest, testConnection } from '@app/api/connectionRequests.api';
 import config from '@app/config/config';
 import { DatabaseConnectionDetails, DatabaseInfoFormValues } from '@app/interfaces/interfaces';
-import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const ApproveRequestPage: React.FC = () => {
   const { id } = useParams();
@@ -35,7 +34,6 @@ const ApproveRequestPage: React.FC = () => {
   const navigate = useNavigate();
   const [form] = BaseButtonsForm.useForm();
   const { t } = useTranslation();
-  const user = useAppSelector((state) => state.user.user);
 
   const onFinish = useCallback(
     (values: DatabaseInfoFormValues) => {
@@ -43,7 +41,7 @@ const ApproveRequestPage: React.FC = () => {
       setFormLoading(true);
 
       if (isConnected) {
-        approveRequest(user?.id, values, id)
+        approveRequest(values, id)
           .then(() => {
             setFormLoading(false);
             setFieldsChanged(false);
@@ -59,7 +57,7 @@ const ApproveRequestPage: React.FC = () => {
           });
       }
     },
-    [id, isConnected, navigate, t, user?.id],
+    [id, isConnected, navigate, t],
   );
 
   const onTestConnection = async () => {

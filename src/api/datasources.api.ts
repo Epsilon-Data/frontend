@@ -77,13 +77,10 @@ export const updateCrawlStatus = (status: number) => {
   return statusTag;
 };
 
-export const getSourceList = async (userId: string | undefined, pagination: Pagination): Promise<SourceListData> => {
+export const getSourceList = async (pagination: Pagination): Promise<SourceListData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATASOURCE_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userId: userId,
-    },
   });
 
   let formattedData = response.data.map((item: any) => {

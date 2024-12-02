@@ -46,16 +46,10 @@ export const getProjects = async (): Promise<ProjectSummaryInfo[]> => {
   return response.data;
 };
 
-export const getProjectDetails = async (
-  userId: string | undefined,
-  projectId: string | undefined,
-): Promise<ProjectInfo> => {
+export const getProjectDetails = async (projectId: string | undefined): Promise<ProjectInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${BROWSE_DATASET_API_URL}/${projectId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userId: userId,
-    },
   });
 
   response.data.visualisations = JSON.parse(response.data.visualisations);

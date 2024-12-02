@@ -42,13 +42,10 @@ export interface AnalysisTableData {
   pagination: Pagination;
 }
 
-export const getDatasetList = async (userId: string | undefined, pagination: Pagination): Promise<DatasetListData> => {
+export const getDatasetList = async (pagination: Pagination): Promise<DatasetListData> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(DATASET_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userId: userId,
-    },
   });
 
   const formattedData = response.data.map(

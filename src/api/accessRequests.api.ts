@@ -43,14 +43,10 @@ export const getRequestDetails = async (requestId: string | undefined): Promise<
 
 export const getRequestTableData = async (
   pagination: Pagination,
-  userId?: string,
 ): Promise<{ sent: RequestTableData; receive: RequestTableData }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(ACCESS_REQUEST_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
-    params: {
-      userId: userId,
-    },
   });
 
   const formatRequests = (requests: any[]) => {

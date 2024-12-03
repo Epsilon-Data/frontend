@@ -48,12 +48,6 @@ export const getDatasetList = async (pagination: Pagination): Promise<DatasetLis
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
-  const test = await httpClient.get(`${DATASET_API_URL}/download/user`, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-
-  console.log(JSON.stringify(test.data));
-
   const formattedData = response.data.map(
     (item: { id: string; projectId: string; projectCustomId: string; projectName: string; connectDate: Date }) => {
       return {

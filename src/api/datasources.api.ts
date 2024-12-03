@@ -104,8 +104,6 @@ export const getProjectDetails = async (projectId: string | undefined): Promise<
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
-  console.log(JSON.stringify(response.data));
-
   if (response.data.cover) {
     response.data.cover = [
       {

@@ -120,7 +120,6 @@ export const approveRequest = async (data: { requestId: string | undefined; isAp
 
 export const editRequest = async (data: AccessDetails): Promise<AccessDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  console.log(JSON.stringify(data));
   const response = await httpClient.put(`${ACCESS_REQUEST_API_URL}/${data.id}`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });

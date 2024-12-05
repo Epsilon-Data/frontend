@@ -780,7 +780,8 @@
       "title": "Describe Dataset",
       "projectTitle": "Describe Dataset Project {{id}}",
       "listCols": {
-        "templateName": "Template Name"
+        "templateName": "Template Name",
+        "setupProgress": "Setup Progress"
       },
       "createTemplate": "Create New Template",
       "createTemplateTitle": "Create Template Project {{id}}",

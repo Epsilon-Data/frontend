@@ -7,7 +7,7 @@ import { getDbSummary } from '@app/api/datasources.api';
 import { useParams } from 'react-router-dom';
 import { OverallDatabaseInfoValues } from '@app/interfaces/interfaces';
 import { useMounted } from '@app/hooks/useMounted';
-import { INITIAL_OVERALL_DB_INFO } from '@app/constants/databaseSource';
+import { INITIAL_OVERALL_DB_INFO } from '@app/constants/datasource';
 import { ERD } from '@app/components/database-summary/ERD/ERD';
 
 const DatabaseSummaryPage: React.FC = () => {

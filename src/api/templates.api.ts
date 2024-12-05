@@ -2,7 +2,9 @@ import { TEMPLATE_API_URL } from '@app/constants/template';
 import { httpClient, getCsrfHeader } from './http.api';
 import { Template } from '@app/interfaces/interfaces';
 
-export const getTemplateNames = async (projectId: string | undefined): Promise<{ guid: string; name: string }[]> => {
+export const getTemplateNames = async (
+  projectId: string | undefined,
+): Promise<{ guid: string; name: string; progress: string }[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${TEMPLATE_API_URL}/${projectId}/names`, {
     headers: { [csrfHeaderName]: `${csrf}` },

@@ -15,8 +15,8 @@ import { PermissionNode } from '@app/components/reactflow-components/PermissionN
 import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import 'reactflow/dist/style.css';
 import { useMounted } from '@app/hooks/useMounted';
-import { ProjectInfo, getProjectDetails } from '@app/api/browseDatasets.api';
-import { DATE_FORMAT, INITIAL_DETAIL_VALUES } from '@app/constants/browseDatasets';
+import { ProjectInfo, getProjectDetails } from '@app/api/projects.api';
+import { DATE_FORMAT, INITIAL_DETAIL_VALUES } from '@app/constants/projects';
 import { format } from 'date-fns';
 
 declare global {

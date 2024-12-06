@@ -1,9 +1,9 @@
-import { ProjectInfo } from '@app/api/browseDatasets.api';
+import { ProjectInfo } from '@app/api/projects.api';
 import { AccessDetails } from '@app/interfaces/interfaces';
 import { t } from 'i18next';
 
 export const DATE_FORMAT = 'dd/MM/yyyy';
-export const BROWSE_DATASET_API_URL = '/hub/browse-dataset';
+export const PROJECT_API_URL = '/hub/project';
 
 export const INITIAL_DETAIL_VALUES: ProjectInfo = {
   name: '',

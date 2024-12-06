@@ -9,10 +9,10 @@ import defaultCover from '@app/assets/images/default-cover.png';
 import { useNavigate } from 'react-router-dom';
 import { SearchProps } from 'antd/es/input';
 import { RadioChangeEvent } from 'antd/lib';
-import { SEARCH_FIELDS } from '@app/constants/browseDatasets';
+import { SEARCH_FIELDS } from '@app/constants/projects';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import { ProjectSummaryInfo, getProjects } from '@app/api/browseDatasets.api';
+import { ProjectSummaryInfo, getProjects } from '@app/api/projects.api';
 import { useMounted } from '@app/hooks/useMounted';
 
 const { Meta } = Card;

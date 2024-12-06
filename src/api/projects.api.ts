@@ -1,4 +1,4 @@
-import { BROWSE_DATASET_API_URL } from '@app/constants/browseDatasets';
+import { PROJECT_API_URL } from '@app/constants/projects';
 import { getCsrfHeader, httpClient } from './http.api';
 import { AccessDetails, Template } from '@app/interfaces/interfaces';
 import { format } from 'date-fns';
@@ -40,7 +40,7 @@ export interface ProjectInfo {
 
 export const getProjects = async (): Promise<ProjectSummaryInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(BROWSE_DATASET_API_URL, {
+  const response = await httpClient.get(PROJECT_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
@@ -48,7 +48,7 @@ export const getProjects = async (): Promise<ProjectSummaryInfo[]> => {
 
 export const getProjectDetails = async (projectId: string | undefined): Promise<ProjectInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(`${BROWSE_DATASET_API_URL}/${projectId}`, {
+  const response = await httpClient.get(`${PROJECT_API_URL}/${projectId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
@@ -64,7 +64,7 @@ export const getProjectDetails = async (projectId: string | undefined): Promise<
 
 export const getProjectSummary = async (projectId: string | undefined): Promise<ProjectSummaryInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(`${BROWSE_DATASET_API_URL}/projects/${projectId}/summary`, {
+  const response = await httpClient.get(`${PROJECT_API_URL}/${projectId}/summary`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
@@ -72,7 +72,7 @@ export const getProjectSummary = async (projectId: string | undefined): Promise<
 
 export const requestAccess = async (data: AccessDetails): Promise<AccessDetails> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(BROWSE_DATASET_API_URL, data, {
+  const response = await httpClient.post(PROJECT_API_URL, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;

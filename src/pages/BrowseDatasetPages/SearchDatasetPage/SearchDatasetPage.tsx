@@ -12,8 +12,8 @@ import { SearchProps } from 'antd/es/input';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { RiFileSearchLine } from 'react-icons/ri';
-import { SEARCH_FIELDS } from '@app/constants/browseDatasets';
-import { Pagination, ProjectSummaryInfo, getProjects } from '@app/api/browseDatasets.api';
+import { SEARCH_FIELDS } from '@app/constants/projects';
+import { Pagination, ProjectSummaryInfo, getProjects } from '@app/api/projects.api';
 import { useMounted } from '@app/hooks/useMounted';
 
 const { Meta } = Card;

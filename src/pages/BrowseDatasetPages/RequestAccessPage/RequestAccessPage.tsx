@@ -10,8 +10,8 @@ import { RequestNav } from './RequestNav/RequestNav';
 import { RequestFormNav } from './RequestFormNav/RequestFormNav';
 import { notificationController } from '@app/controllers/notificationController';
 import { AccessDetails } from '@app/interfaces/interfaces';
-import { getProjectSummary, requestAccess } from '@app/api/browseDatasets.api';
-import { INITIAL_ACCESS_VALUES } from '@app/constants/browseDatasets';
+import { getProjectSummary, requestAccess } from '@app/api/projects.api';
+import { INITIAL_ACCESS_VALUES } from '@app/constants/projects';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { editRequest, getRequestDetails } from '@app/api/accessRequests.api';
 

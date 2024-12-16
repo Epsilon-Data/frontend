@@ -7,7 +7,7 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { FaMinusCircle, FaPlus } from 'react-icons/fa';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { useParams } from 'react-router-dom';
-import { deleteCover, uploadProjectCover, uploadVis } from '@app/api/datasources.api';
+import { deleteCover, uploadProjectCover, uploadVis, syncDatasource } from '@app/api/datasources.api';
 import { useMounted } from '@app/hooks/useMounted';
 import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
 import { Typography, Upload, UploadFile } from 'antd';
@@ -74,6 +74,16 @@ const OtherSettingsPage: React.FC = () => {
     } else {
       notificationController.error({ message: t('databaseSources.otherSettings.urlInvalid') });
     }
+  };
+
+  const onSync = () => {
+    syncDatasource(id)
+      .then(() => {
+        notificationController.success({ message: t('databaseSources.otherSettings.syncSuccess') });
+      })
+      .catch(() => {
+        notificationController.error({ message: t('databaseSources.otherSettings.syncFail') });
+      });
   };
 
   return (
@@ -175,6 +185,11 @@ const OtherSettingsPage: React.FC = () => {
                       </>
                     )}
                   </BaseForm.List>
+                </BaseCol>
+                <BaseCol span={24}>
+                  <BaseForm.Item label={t('databaseSources.otherSettings.syncDb')}>
+                    <BaseButton onClick={() => onSync()}>{t('databaseSources.otherSettings.update')}</BaseButton>
+                  </BaseForm.Item>
                 </BaseCol>
               </>
             )}

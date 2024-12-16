@@ -924,7 +924,11 @@
       "upload": "Upload Cover Photo",
       "uploadInfo": "Only JPG, JPEG and PNG files less than 2MB are allowed.",
       "uploadSuccess": "Cover photo uploaded successfully.",
-      "uploadFail": "Failed to upload cover photo. Please try again."
+      "uploadFail": "Failed to upload cover photo. Please try again.",
+      "syncDb": "Sync Datasource",
+      "update": "Update",
+      "syncSuccess": "Datasource synced successfully.",
+      "syncFail": "Failed to sync datasource. Please try again."
     }
   },
   "browse": {

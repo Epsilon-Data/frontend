@@ -216,3 +216,11 @@ export const deleteCover = async (projectId: string | undefined): Promise<string
 
   return response.data;
 };
+
+export const syncDatasource = async (projectId: string | undefined): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post(`${DATASOURCE_API_URL}/${projectId}/sync`, null, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  return response.data;
+};

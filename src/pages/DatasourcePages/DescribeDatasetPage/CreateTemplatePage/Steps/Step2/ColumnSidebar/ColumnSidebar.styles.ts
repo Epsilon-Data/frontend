@@ -17,12 +17,12 @@ export const Column = styled.div`
   background: var(--white);
   margin: 0 1.5rem 2rem;
   border-radius: 0.5rem;
-  border: 2px solid var(--black);
+  border: 1px solid var(--black);
   width: 80%;
   .text {
     display: flex;
-    border-left: 2px solid var(--black);
-    border-right: 2px solid var(--black);
+    border-left: 1px solid var(--black);
+    border-right: 1px solid var(--black);
     margin: 0 1rem;
     padding: 0.2rem 0.5rem;
     height: 100%;

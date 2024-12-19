@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Position, NodeProps, Handle } from 'reactflow';
+import { Position, NodeProps } from 'reactflow';
 import * as S from './TextNode.styles';
 import { useState } from 'react';
 
@@ -32,14 +32,14 @@ export function TextNode({ data, type }: NodeProps<NodeData>) {
   };
 
   return (
-    <S.TextNodeWrapper style={{ background: typeColor }}>
+    <S.TextNodeWrapper style={{ background: typeColor }} className="text-node">
       {isEditing ? (
         <S.TextNodeInput defaultValue={data.label} onChange={handleChange} onBlur={handleBlur} autoFocus />
       ) : (
         <S.TextDisplay onDoubleClick={handleDoubleClick}>{data.label}</S.TextDisplay>
       )}
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Top} />
+      <S.TextHandle type="target" position={Position.Top} />
+      <S.TextHandle type="source" position={Position.Top} />
     </S.TextNodeWrapper>
   );
 }

@@ -5,10 +5,10 @@ export function MapEdge(props: EdgeProps) {
 
   const [edgePath] = getStraightPath({
     sourceX,
-    sourceY: sourceY + 30,
+    sourceY: sourceY + 5,
     targetX,
-    targetY,
+    targetY: targetY + 5,
   });
 
-  return <BaseEdge path={edgePath} {...props} style={{ stroke: 'var(--gray)', strokeWidth: '3px' }} />;
+  return <BaseEdge path={edgePath} {...props} style={{ stroke: 'var(--gray)', strokeWidth: '1.5px' }} />;
 }

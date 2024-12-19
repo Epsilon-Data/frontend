@@ -1,4 +1,5 @@
 import { FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
+import { Handle } from 'reactflow';
 import styled from 'styled-components';
 
 export const PermissionNodeWrapper = styled.div`
@@ -19,4 +20,10 @@ export const TextDisplay = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
+`;
+
+export const PermissionHandle = styled(Handle)`
+  && {
+    visibility: hidden;
+  }
 `;

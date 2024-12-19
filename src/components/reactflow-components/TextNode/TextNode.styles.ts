@@ -1,5 +1,6 @@
 import { FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
 import styled from 'styled-components';
+import { Handle } from 'reactflow';
 
 export const TextNodeWrapper = styled.div`
   border-radius: 0.5rem;
@@ -35,4 +36,22 @@ export const TextDisplay = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
+`;
+
+export const TextHandle = styled(Handle)`
+  && {
+    visibility: hidden;
+    border: none;
+    background: var(--gray);
+    height: 10px;
+    width: 10px;
+    transition:
+      height 0.3s ease,
+      width 0.3s ease;
+    &:hover {
+      background: var(--secondary-color);
+      height: 13px;
+      width: 13px;
+    }
+  }
 `;

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Position, NodeProps, Handle } from 'reactflow';
+import { Position, NodeProps } from 'reactflow';
 import * as S from './ColumnNode.styles';
 
 export type NodeData = {
@@ -8,10 +8,10 @@ export type NodeData = {
 
 export function ColumnNode({ data }: NodeProps<NodeData>) {
   return (
-    <S.ColumnNodeWrapper>
+    <S.ColumnNodeWrapper className="column-node">
       <S.ColumnDisplay>{data.label}</S.ColumnDisplay>
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Top} />
+      <S.ColumnHandle type="target" position={Position.Top} />
+      <S.ColumnHandle type="source" position={Position.Top} />
     </S.ColumnNodeWrapper>
   );
 }

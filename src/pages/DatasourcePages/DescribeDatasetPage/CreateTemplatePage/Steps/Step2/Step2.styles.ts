@@ -42,6 +42,29 @@ export const ExampleLink = styled.a`
 export const MapWrapper = styled.div`
   height: 40rem;
   width: 100%;
+
+  .react-flow {
+    .react-flow__nodes {
+      .react-flow__node.selected {
+        .column-node {
+          border: 1px solid var(--secondary-color);
+
+          div {
+            border-left: 1px solid var(--secondary-color);
+            border-right: 1px solid var(--secondary-color);
+          }
+        }
+        .react-flow__handle {
+          visibility: visible;
+        }
+      }
+      .react-flow__node:hover {
+        .react-flow__handle {
+          visibility: visible;
+        }
+      }
+    }
+  }
 `;
 
 export const SidebarCol = styled(BaseCol)`

@@ -12,12 +12,12 @@ import { InfoItem } from '@app/components/display-info/InfoItem';
 import { ProjectDetails } from './ProjectDetails/ProjectDetails';
 import ReactFlow, { ReactFlowProvider } from 'reactflow';
 import { PermissionNode } from '@app/components/reactflow-components/PermissionNode/PermissionNode';
-import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import 'reactflow/dist/style.css';
 import { useMounted } from '@app/hooks/useMounted';
 import { ProjectInfo, getProjectDetails } from '@app/api/projects.api';
 import { DATE_FORMAT, INITIAL_DETAIL_VALUES } from '@app/constants/projects';
 import { format } from 'date-fns';
+import { createNodeTypes, EDGE_TYPES, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
 
 declare global {
   interface Window {
@@ -36,11 +36,8 @@ const DatasetSummaryPage: React.FC = () => {
   const [visList, setVisList] = useState<{ title: string; url: string }[]>([]);
   const [projectDetails, setProjectDetails] = useState<ProjectInfo>(INITIAL_DETAIL_VALUES);
 
-  const nodeTypes = useMemo(
-    () => ({ object: PermissionNode, category: PermissionNode, subcategory: PermissionNode }),
-    [],
-  );
-  const edgeTypes = useMemo(() => ({ default: MapEdge }), []);
+  const nodeTypes = useMemo(() => createNodeTypes(PermissionNode), []);
+  const edgeTypes = useMemo(() => EDGE_TYPES, []);
 
   const tabItems = [
     { label: t('browse.info.details.title'), children: <ProjectDetails info={projectDetails} />, key: 'details' },
@@ -175,9 +172,9 @@ const DatasetSummaryPage: React.FC = () => {
                     deleteKeyCode={[]}
                     nodeTypes={nodeTypes}
                     edgeTypes={edgeTypes}
-                    nodeOrigin={[0.5, 0.5]}
-                    fitView
-                    fitViewOptions={{ maxZoom: 1.2 }}
+                    nodeOrigin={REACT_FLOW_OPTIONS.nodeOrigin as [number, number]}
+                    fitView={REACT_FLOW_OPTIONS.fitView}
+                    fitViewOptions={REACT_FLOW_OPTIONS.fitViewOptions}
                   ></ReactFlow>
                 </S.MapWrapper>
               </ReactFlowProvider>

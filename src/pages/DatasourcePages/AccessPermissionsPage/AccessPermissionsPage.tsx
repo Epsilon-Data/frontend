@@ -11,7 +11,6 @@ import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import ReactFlow, { Node, ReactFlowProvider, useEdgesState, useNodesState } from 'reactflow';
 import { PermissionNode } from '@app/components/reactflow-components/PermissionNode/PermissionNode';
-import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import { notificationController } from '@app/controllers/notificationController';
 import 'reactflow/dist/style.css';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
@@ -23,6 +22,7 @@ import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { getTemplates } from '@app/api/templates.api';
 import { useAppSelector } from '@app/hooks/reduxHooks';
+import { createNodeTypes, EDGE_TYPES, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
 
 const initialPermissions = [
   { role: 'research', access: [] },
@@ -55,11 +55,8 @@ export const AccessPermissionsPage: React.FC = () => {
   const [templateId, setTemplateId] = useState('');
   const projectDetails = useAppSelector((state: { project: { details: any } }) => state.project.details);
 
-  const nodeTypes = useMemo(
-    () => ({ object: PermissionNode, category: PermissionNode, subcategory: PermissionNode }),
-    [],
-  );
-  const edgeTypes = useMemo(() => ({ default: MapEdge }), []);
+  const nodeTypes = useMemo(() => createNodeTypes(PermissionNode), []);
+  const edgeTypes = useMemo(() => EDGE_TYPES, []);
 
   const fetch = useCallback(
     (id: string | undefined) => {
@@ -302,9 +299,9 @@ export const AccessPermissionsPage: React.FC = () => {
                     deleteKeyCode={[]}
                     nodeTypes={nodeTypes}
                     edgeTypes={edgeTypes}
-                    nodeOrigin={[0.5, 0.5]}
-                    fitView
-                    fitViewOptions={{ maxZoom: 1.2 }}
+                    nodeOrigin={REACT_FLOW_OPTIONS.nodeOrigin as [number, number]}
+                    fitView={REACT_FLOW_OPTIONS.fitView}
+                    fitViewOptions={REACT_FLOW_OPTIONS.fitViewOptions}
                   ></ReactFlow>
                 </S.MapWrapper>
               </ReactFlowProvider>

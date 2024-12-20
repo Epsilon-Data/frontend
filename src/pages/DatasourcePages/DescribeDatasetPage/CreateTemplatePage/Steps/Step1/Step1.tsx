@@ -2,8 +2,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import { TextNode } from '@app/components/reactflow-components/TextNode/TextNode';
-import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import ReactFlow, {
   Connection,
   Edge,
@@ -13,7 +11,6 @@ import ReactFlow, {
   ReactFlowProvider,
   Controls,
   Background,
-  BackgroundVariant,
   NodeChange,
   EdgeChange,
 } from 'reactflow';
@@ -25,6 +22,17 @@ import { ElementSidebar } from './ElementSidebar/ElementSidebar';
 import { BaseInput } from '@app/components/common/inputs/BaseInput/BaseInput';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+import {
+  BG_COLOR,
+  BG_VARIANT,
+  createNodeTypes,
+  EDGE_TYPES,
+  FlowProps,
+  nodeDrag,
+  nodeDragStop,
+  REACT_FLOW_OPTIONS,
+} from '@app/constants/reactflow';
+import { t } from 'i18next';
 
 function checkDuplicateNames(nodes: Node[]) {
   const nameSet = new Set();
@@ -46,6 +54,51 @@ function checkDuplicateNames(nodes: Node[]) {
 
 function hasEmptyLabel(nodes: Node[]): boolean {
   return nodes.some((node) => node.data.label.trim() === '');
+}
+
+function isValidEdge(source: Node, target: Node, nodes: Node[], edges: Edge[]) {
+  if (!source || !target || source.type === target.type) return false;
+
+  const isCategory = (node: Node) => node?.type === 'category';
+  const isObject = (node: Node) => node?.type === 'object';
+  const isSubcategory = (node: Node) => node?.type === 'subcategory';
+
+  if ((isObject(source) || isObject(target)) && (isSubcategory(source) || isSubcategory(target))) {
+    return false;
+  }
+
+  const isInvalidEdge = (edgeSource: Node, edgeTarget: Node, node: Node) => {
+    if (edgeSource?.type != node.type && edgeTarget?.type != node.type) {
+      return false;
+    }
+    if (edgeSource.id === node.id || edgeTarget.id === node.id) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const relatedEdges = edges.filter(
+    (edge) =>
+      edge.source === source.id || edge.target === target.id || edge.source === target.id || edge.target === source.id,
+  );
+
+  for (let i = 0; i < relatedEdges.length; i++) {
+    const edgeSource = nodes.find((n) => n.id === relatedEdges[i].source);
+    const edgeTarget = nodes.find((n) => n.id === relatedEdges[i].target);
+
+    if (edgeSource && edgeTarget) {
+      if ((isCategory(source) || isCategory(target)) && (isObject(source) || isObject(target))) {
+        if (isObject(source) && isInvalidEdge(edgeSource, edgeTarget, source)) return false;
+        if (isObject(target) && isInvalidEdge(edgeSource, edgeTarget, target)) return false;
+      } else if ((isCategory(source) || isCategory(target)) && (isSubcategory(source) || isSubcategory(target))) {
+        if (isCategory(source) && isInvalidEdge(edgeSource, edgeTarget, source)) return false;
+        if (isCategory(target) && isInvalidEdge(edgeSource, edgeTarget, target)) return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 function filterNodesEdges(nodes: Node[], edges: Edge[]) {
@@ -98,89 +151,19 @@ function filterNodesEdges(nodes: Node[], edges: Edge[]) {
   return { objectWithoutCategory, haveMultipleObjects, filteredNodes, filteredEdges };
 }
 
-export const Step1: React.FC<{
-  setStep: (value: number) => void;
-  setIsFormModalOpen: (value: boolean) => void;
-  nodes: Node[];
-  edges: Edge[];
-  setNodes: React.Dispatch<
-    React.SetStateAction<
-      Node<
-        {
-          label: string;
-        },
-        string | undefined
-      >[]
-    >
-  >;
-  setEdges: React.Dispatch<React.SetStateAction<Edge<any>[]>>;
-  onNodesChange: (value: NodeChange[]) => void;
-  onEdgesChange: (value: EdgeChange[]) => void;
-  setTemplate: (value: string) => void;
-}> = ({ setStep, setIsFormModalOpen, nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange, setTemplate }) => {
-  const { t } = useTranslation();
-  const nodeTypes = useMemo(() => ({ object: TextNode, category: TextNode, subcategory: TextNode }), []);
-  const edgeTypes = useMemo(() => ({ default: MapEdge }), []);
+const Flow: React.FC<FlowProps> = ({ nodes, edges, setEdges, setNodes, onEdgesChange, onNodesChange }) => {
+  const nodeTypes = useMemo(() => createNodeTypes(), []);
+  const edgeTypes = useMemo(() => EDGE_TYPES, []);
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
 
   let nodeId = nodes.length;
-  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
-  const [templateName, setTemplateName] = useState('');
-  const [saveLoading, setSaveLoading] = useState(false);
-
   const onConnect = useCallback(
     (params: Edge | Connection) => {
-      function isValidEdge(source: Node, target: Node) {
-        if (!source || !target || source.type === target.type) return false;
-
-        const isCategory = (node: Node) => node?.type === 'category';
-        const isObject = (node: Node) => node?.type === 'object';
-        const isSubcategory = (node: Node) => node?.type === 'subcategory';
-
-        if ((isObject(source) || isObject(target)) && (isSubcategory(source) || isSubcategory(target))) {
-          return false;
-        }
-
-        const isInvalidEdge = (edgeSource: Node, edgeTarget: Node, node: Node) => {
-          if (edgeSource?.type != node.type && edgeTarget?.type != node.type) {
-            return false;
-          }
-          if (edgeSource.id === node.id || edgeTarget.id === node.id) {
-            return false;
-          }
-
-          return true;
-        };
-
-        const relatedEdges = edges.filter(
-          (edge) =>
-            edge.source === source.id ||
-            edge.target === target.id ||
-            edge.source === target.id ||
-            edge.target === source.id,
-        );
-
-        for (let i = 0; i < relatedEdges.length; i++) {
-          const edgeSource = nodes.find((n) => n.id === relatedEdges[i].source);
-          const edgeTarget = nodes.find((n) => n.id === relatedEdges[i].target);
-
-          if (edgeSource && edgeTarget) {
-            if ((isCategory(source) || isCategory(target)) && (isObject(source) || isObject(target))) {
-              if (isObject(source) && isInvalidEdge(edgeSource, edgeTarget, source)) return false;
-              if (isObject(target) && isInvalidEdge(edgeSource, edgeTarget, target)) return false;
-            } else if ((isCategory(source) || isCategory(target)) && (isSubcategory(source) || isSubcategory(target))) {
-              if (isCategory(source) && isInvalidEdge(edgeSource, edgeTarget, source)) return false;
-              if (isCategory(target) && isInvalidEdge(edgeSource, edgeTarget, target)) return false;
-            }
-          }
-        }
-
-        return true;
-      }
       const sourceNode = nodes.find((n) => n.id == params.source);
       const targetNode = nodes.find((n) => n.id == params.target);
 
-      if (sourceNode && targetNode && isValidEdge(sourceNode, targetNode)) {
-        setEdges((eds: Edge[]) => addEdge(params, eds));
+      if (sourceNode && targetNode && isValidEdge(sourceNode, targetNode, nodes, edges)) {
+        setEdges(addEdge(params, edges));
       }
     },
     [edges, nodes, setEdges],
@@ -218,11 +201,72 @@ export const Step1: React.FC<{
           data: { label: t('databaseSources.describeDataset.elementSidebar.' + type) },
         };
 
-        setNodes((nds: Node[]) => nds.concat(newNode));
+        setNodes(nodes.concat(newNode));
       }
     },
-    [nodeId, reactFlowInstance, setNodes, t],
+    [nodeId, nodes, reactFlowInstance, setNodes],
   );
+
+  const onNodeDrag = useCallback(
+    (_: any, node: any) => {
+      nodeDrag(_, node, nodes, setEdges, isValidEdge, edges);
+    },
+    [edges, nodes, setEdges],
+  );
+
+  const onNodeDragStop = useCallback(
+    (_: any, node: any) => {
+      nodeDragStop(_, node, nodes, setEdges);
+    },
+    [nodes, setEdges],
+  );
+  return (
+    <ReactFlow
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onNodeDrag={onNodeDrag}
+      onNodeDragStop={onNodeDragStop}
+      onConnect={onConnect}
+      onInit={setReactFlowInstance}
+      onDrop={onDrop}
+      onDragOver={onDragOver}
+      nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
+      nodeOrigin={REACT_FLOW_OPTIONS.nodeOrigin as [number, number]}
+      fitView={REACT_FLOW_OPTIONS.fitView}
+      fitViewOptions={REACT_FLOW_OPTIONS.fitViewOptions}
+    >
+      <Controls />
+      <Background color={BG_COLOR} variant={BG_VARIANT} />
+    </ReactFlow>
+  );
+};
+
+export const Step1: React.FC<{
+  setStep: (value: number) => void;
+  setIsFormModalOpen: (value: boolean) => void;
+  nodes: Node[];
+  edges: Edge[];
+  setNodes: React.Dispatch<
+    React.SetStateAction<
+      Node<
+        {
+          label: string;
+        },
+        string | undefined
+      >[]
+    >
+  >;
+  setEdges: React.Dispatch<React.SetStateAction<Edge<any>[]>>;
+  onNodesChange: (value: NodeChange[]) => void;
+  onEdgesChange: (value: EdgeChange[]) => void;
+  setTemplate: (value: string) => void;
+}> = ({ setStep, setIsFormModalOpen, nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange, setTemplate }) => {
+  const { t } = useTranslation();
+  const [templateName, setTemplateName] = useState('');
+  const [saveLoading, setSaveLoading] = useState(false);
 
   const handleSaveError = (message: string, obj?: any) => {
     notificationController.error({
@@ -310,24 +354,14 @@ export const Step1: React.FC<{
             <BaseRow>
               <ReactFlowProvider>
                 <S.MapWrapper>
-                  <ReactFlow
+                  <Flow
                     nodes={nodes}
                     edges={edges}
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
-                    onInit={setReactFlowInstance}
-                    onDrop={onDrop}
-                    onDragOver={onDragOver}
-                    nodeTypes={nodeTypes}
-                    edgeTypes={edgeTypes}
-                    nodeOrigin={[0.5, 0.5]}
-                    fitView
-                    fitViewOptions={{ maxZoom: 1.2 }}
-                  >
-                    <Controls />
-                    <Background color="#f1f1f1" variant={BackgroundVariant.Cross} />
-                  </ReactFlow>
+                    setNodes={setNodes}
+                    setEdges={setEdges}
+                  />
                 </S.MapWrapper>
               </ReactFlowProvider>
             </BaseRow>

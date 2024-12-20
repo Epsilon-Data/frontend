@@ -44,6 +44,10 @@ export const MapWrapper = styled.div`
   width: 100%;
 
   .react-flow {
+    .react-flow__edge.temp {
+      stroke: #bbb;
+      stroke-dasharray: 5 5;
+    }
     .react-flow__nodes {
       .react-flow__node.selected {
         .column-node {

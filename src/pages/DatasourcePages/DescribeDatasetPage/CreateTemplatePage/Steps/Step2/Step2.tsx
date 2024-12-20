@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { TextNode } from '@app/components/reactflow-components/TextNode/TextNode';
-import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import ReactFlow, {
   Connection,
   Edge,
@@ -13,7 +12,6 @@ import ReactFlow, {
   ReactFlowProvider,
   Controls,
   Background,
-  BackgroundVariant,
   NodeChange,
   EdgeChange,
 } from 'reactflow';
@@ -25,116 +23,77 @@ import { ColumnSidebar } from './ColumnSidebar/ColumnSidebar';
 import { useMounted } from '@app/hooks/useMounted';
 import { ColumnNode } from '@app/components/reactflow-components/ColumnNode/ColumnNode';
 import { notificationController } from '@app/controllers/notificationController';
+import {
+  BG_COLOR,
+  BG_VARIANT,
+  createNodeTypes,
+  EDGE_TYPES,
+  FlowProps,
+  nodeDrag,
+  nodeDragStop,
+  REACT_FLOW_OPTIONS,
+} from '@app/constants/reactflow';
 
-export const Step2: React.FC<{
-  id: string | undefined;
-  setStep: (value: number) => void;
-  setIsFormModalOpen: (value: boolean) => void;
-  nodes: Node[];
-  edges: Edge[];
-  setNodes: React.Dispatch<
-    React.SetStateAction<
-      Node<
-        {
-          label: string;
-        },
-        string | undefined
-      >[]
-    >
-  >;
-  setEdges: React.Dispatch<React.SetStateAction<Edge<any>[]>>;
-  onNodesChange: (value: NodeChange[]) => void;
-  onEdgesChange: (value: EdgeChange[]) => void;
-  setColumnCount: (value: number) => void;
-  corrTables: any[];
-  setCorrTables: (value: any[]) => void;
-}> = ({
-  id,
-  setStep,
-  setIsFormModalOpen,
+function isValidEdge(source: Node, target: Node, nodes: Node[], edges: Edge[]) {
+  if (!source || !target || source.type === target.type) return false;
+
+  const isObject = (node: Node) => node?.type == 'object';
+  const isColumn = (node: Node) => node?.type == 'column';
+
+  if (isObject(source) || isObject(target) || !(isColumn(source) || isColumn(target))) {
+    return false;
+  }
+
+  const relatedEdges = edges.filter(
+    (edge) =>
+      edge.source === source.id || edge.target === target.id || edge.source === target.id || edge.target === source.id,
+  );
+
+  for (let i = 0; i < relatedEdges.length; i++) {
+    const edgeSource = nodes.find((n) => n.id === relatedEdges[i].source);
+    const edgeTarget = nodes.find((n) => n.id === relatedEdges[i].target);
+    if (edgeSource && edgeTarget) {
+      if (isColumn(edgeSource) || isColumn(edgeTarget)) {
+        if (isColumn(source) && (edgeSource.id == source.id || edgeTarget.id == source.id)) return false;
+        if (isColumn(target) && (edgeSource.id == target.id || edgeTarget.id == target.id)) return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+const Flow: React.FC<
+  FlowProps & {
+    columns: string[];
+    filteredColumns: string[];
+    setColumns: (value: string[]) => void;
+    setFilteredColumns: (value: string[]) => void;
+    setSearchValue: (value: string) => void;
+  }
+> = ({
   nodes,
   edges,
-  setNodes,
   setEdges,
-  onNodesChange,
+  setNodes,
   onEdgesChange,
-  setColumnCount,
-  corrTables,
-  setCorrTables,
+  onNodesChange,
+  columns,
+  filteredColumns,
+  setColumns,
+  setFilteredColumns,
+  setSearchValue,
 }) => {
-  const { t } = useTranslation();
-  const { isMounted } = useMounted();
-  const [initialColumns, setInitialColumns] = useState<string[]>([]);
-  const [columns, setColumns] = useState<string[]>([]);
-  const [filteredColumns, setFilteredColumns] = useState<string[]>([]);
-  const [reset, setReset] = useState<boolean>(false);
-  const [searchValue, setSearchValue] = useState<string>('');
-  const templateEdges = edges.filter((edge) => !edge.source.includes('column_') && !edge.target.includes('column_'));
-
-  const nodeTypes = useMemo(
-    () => ({ object: TextNode, category: TextNode, subcategory: TextNode, column: ColumnNode }),
-    [],
-  );
-  const edgeTypes = useMemo(() => ({ default: MapEdge }), []);
-
+  const nodeTypes = useMemo(() => createNodeTypes(TextNode, { column: ColumnNode }), []);
+  const edgeTypes = useMemo(() => EDGE_TYPES, []);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
-  const fetch = useCallback(
-    (id: string | undefined) => {
-      getDbColumns(id).then((res) => {
-        if (isMounted.current) {
-          const resCols = Object.keys(res);
-          setCorrTables(res);
-          setColumns(resCols);
-          setInitialColumns(resCols);
-          setFilteredColumns(resCols);
-          setColumnCount(resCols.length);
-        }
-      });
-    },
-    [isMounted, setColumnCount, setCorrTables],
-  );
-
-  useEffect(() => {
-    fetch(id);
-  }, [fetch, id]);
 
   const onConnect = useCallback(
     (params: Edge | Connection) => {
-      function isValidEdge(source: Node, target: Node) {
-        if (!source || !target || source.type === target.type) return false;
-
-        const isObject = (node: Node) => node?.type == 'object';
-        const isColumn = (node: Node) => node?.type == 'column';
-
-        if (isObject(source) || isObject(target) || !(isColumn(source) || isColumn(target))) {
-          return false;
-        }
-
-        const relatedEdges = edges.filter(
-          (edge) =>
-            edge.source === source.id ||
-            edge.target === target.id ||
-            edge.source === target.id ||
-            edge.target === source.id,
-        );
-
-        for (let i = 0; i < relatedEdges.length; i++) {
-          const edgeSource = nodes.find((n) => n.id === relatedEdges[i].source);
-          const edgeTarget = nodes.find((n) => n.id === relatedEdges[i].target);
-          if (edgeSource && edgeTarget) {
-            if (isColumn(edgeSource) || isColumn(edgeTarget)) {
-              if (isColumn(source) && (edgeSource.id == source.id || edgeTarget.id == source.id)) return false;
-              if (isColumn(target) && (edgeSource.id == target.id || edgeTarget.id == target.id)) return false;
-            }
-          }
-        }
-
-        return true;
-      }
       const sourceNode = nodes.find((n) => n.id == params.source);
       const targetNode = nodes.find((n) => n.id == params.target);
 
-      if (sourceNode && targetNode && isValidEdge(sourceNode, targetNode)) {
+      if (sourceNode && targetNode && isValidEdge(sourceNode, targetNode, nodes, edges)) {
         setEdges((eds: Edge[]) => addEdge(params, eds));
       }
     },
@@ -194,8 +153,120 @@ export const Step2: React.FC<{
         }
       }
     },
-    [columns, filteredColumns, nodes.length, reactFlowInstance, setNodes],
+    [
+      columns,
+      filteredColumns,
+      nodes.length,
+      reactFlowInstance,
+      setColumns,
+      setFilteredColumns,
+      setNodes,
+      setSearchValue,
+    ],
   );
+
+  const onNodeDrag = useCallback(
+    (_: any, node: any) => {
+      nodeDrag(_, node, nodes, setEdges, isValidEdge, edges);
+    },
+    [edges, nodes, setEdges],
+  );
+
+  const onNodeDragStop = useCallback(
+    (_: any, node: any) => {
+      nodeDragStop(_, node, nodes, setEdges);
+    },
+    [nodes, setEdges],
+  );
+
+  return (
+    <ReactFlow
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onNodeDrag={onNodeDrag}
+      onNodeDragStop={onNodeDragStop}
+      onConnect={onConnect}
+      onInit={setReactFlowInstance}
+      onDrop={onDrop}
+      onDragOver={onDragOver}
+      nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
+      nodeOrigin={REACT_FLOW_OPTIONS.nodeOrigin as [number, number]}
+      fitView={REACT_FLOW_OPTIONS.fitView}
+      fitViewOptions={REACT_FLOW_OPTIONS.fitViewOptions}
+    >
+      <Controls />
+      <Background color={BG_COLOR} variant={BG_VARIANT} />
+    </ReactFlow>
+  );
+};
+
+export const Step2: React.FC<{
+  id: string | undefined;
+  setStep: (value: number) => void;
+  setIsFormModalOpen: (value: boolean) => void;
+  nodes: Node[];
+  edges: Edge[];
+  setNodes: React.Dispatch<
+    React.SetStateAction<
+      Node<
+        {
+          label: string;
+        },
+        string | undefined
+      >[]
+    >
+  >;
+  setEdges: React.Dispatch<React.SetStateAction<Edge<any>[]>>;
+  onNodesChange: (value: NodeChange[]) => void;
+  onEdgesChange: (value: EdgeChange[]) => void;
+  setColumnCount: (value: number) => void;
+  corrTables: any[];
+  setCorrTables: (value: any[]) => void;
+}> = ({
+  id,
+  setStep,
+  setIsFormModalOpen,
+  nodes,
+  edges,
+  setNodes,
+  setEdges,
+  onNodesChange,
+  onEdgesChange,
+  setColumnCount,
+  corrTables,
+  setCorrTables,
+}) => {
+  const { t } = useTranslation();
+  const { isMounted } = useMounted();
+  const [initialColumns, setInitialColumns] = useState<string[]>([]);
+  const [columns, setColumns] = useState<string[]>([]);
+  const [filteredColumns, setFilteredColumns] = useState<string[]>([]);
+  const [reset, setReset] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>('');
+  const templateEdges = edges.filter((edge) => !edge.source.includes('column_') && !edge.target.includes('column_'));
+
+  const fetch = useCallback(
+    (id: string | undefined) => {
+      getDbColumns(id).then((res) => {
+        if (isMounted.current) {
+          const resCols = Object.keys(res);
+          setCorrTables(res);
+          setColumns(resCols);
+          setInitialColumns(resCols);
+          setFilteredColumns(resCols);
+          setColumnCount(resCols.length);
+        }
+      });
+    },
+    [isMounted, setColumnCount, setCorrTables],
+  );
+
+  useEffect(() => {
+    fetch(id);
+  }, [fetch, id]);
 
   function handleNodesChange(changes: NodeChange[]) {
     const nextChanges = changes.reduce((acc, change) => {
@@ -279,24 +350,19 @@ export const Step2: React.FC<{
           <BaseRow>
             <ReactFlowProvider>
               <S.MapWrapper>
-                <ReactFlow
+                <Flow
                   nodes={nodes}
                   edges={edges}
                   onNodesChange={handleNodesChange}
                   onEdgesChange={handleEdgesChange}
-                  onConnect={onConnect}
-                  onInit={setReactFlowInstance}
-                  onDrop={onDrop}
-                  onDragOver={onDragOver}
-                  nodeTypes={nodeTypes}
-                  edgeTypes={edgeTypes}
-                  nodeOrigin={[0.5, 0.5]}
-                  fitView
-                  fitViewOptions={{ maxZoom: 1.2 }}
-                >
-                  <Controls />
-                  <Background color="#f1f1f1" variant={BackgroundVariant.Cross} />
-                </ReactFlow>
+                  setNodes={setNodes}
+                  setEdges={setEdges}
+                  columns={columns}
+                  filteredColumns={filteredColumns}
+                  setColumns={setColumns}
+                  setFilteredColumns={setFilteredColumns}
+                  setSearchValue={setSearchValue}
+                />
               </S.MapWrapper>
             </ReactFlowProvider>
           </BaseRow>

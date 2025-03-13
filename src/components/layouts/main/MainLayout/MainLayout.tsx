@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import MainContent from '../MainContent/MainContent';
 import * as S from './MainLayout.styles';
 import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { DASHBOARD_PATH } from '@app/components/router/AppRouter';
 import { useResponsive } from '@app/hooks/useResponsive';
 import { References } from '@app/components/common/References/References';
 import { findKeyByUrl, findUrlByKey, returnUserTopNav } from '../topNavigation';
@@ -17,7 +16,6 @@ const sidebarDisabled = ['/database-sources', '/browse', '/datasets'];
 
 const MainLayout: React.FC = () => {
   const dispatch = useAppDispatch();
-  const [isTwoColumnsLayout, setIsTwoColumnsLayout] = useState(true);
   const { isDesktop } = useResponsive();
   const location = useLocation();
   const { t } = useTranslation();
@@ -47,7 +45,6 @@ const MainLayout: React.FC = () => {
   }, [details?.customId, fetch, id]);
 
   useEffect(() => {
-    setIsTwoColumnsLayout([DASHBOARD_PATH].includes(location.pathname) && isDesktop);
     setSelectedKey(findKeyByUrl(location.pathname));
     if (sidebarDisabled.includes(location.pathname)) {
       setIsHidden(true);
@@ -95,16 +92,16 @@ const MainLayout: React.FC = () => {
           <BiSolidUserCircle size={23} style={{ marginRight: '0.6rem', top: '0.35rem', position: 'relative' }} />
           {user?.userName}
         </S.Username>
-        <S.LogoutBtn onClick={() => navigate('/logout')}>{t('sidebarNavigation.logout')}</S.LogoutBtn>
+        <S.LogoutBtn onClick={() => navigate('/logout')}>{t('topNavigation.logout')}</S.LogoutBtn>
       </S.Header>
       <S.LayoutWrapper>
         <MainSider title={title} titleUrl={url} selectedNav={selectedKey} hidden={isHidden} />
         <S.LayoutMain>
-          <MainContent id="main-content" $isTwoColumnsLayout={isTwoColumnsLayout}>
+          <MainContent id="main-content">
             <div>
               <Outlet />
             </div>
-            {!isTwoColumnsLayout && <References />}
+            <References />
           </MainContent>
         </S.LayoutMain>
       </S.LayoutWrapper>

@@ -18,6 +18,7 @@ import DashboardPage from '@app/pages/DashboardPages/DashboardPage';
 const Logout = React.lazy(() => import('./Logout'));
 const Login = React.lazy(() => import('./Login'));
 
+const AccessTokensPage = React.lazy(() => import('@app/pages/DashboardPages/AccessTokensPage/AccessTokensPage'));
 const ConnectionRequestsPage = React.lazy(() => import('@app/pages/ConnectionRequestPages/ConnectionRequestsPage'));
 const CreateRequestPage = React.lazy(
   () => import('@app/pages/ConnectionRequestPages/CreateRequestPage/CreateRequestPage'),
@@ -68,6 +69,7 @@ const SearchDatasetPage = React.lazy(() => import('@app/pages/BrowseDatasetPages
 export const DASHBOARD_PATH = '/';
 
 const Dashboard = withLoading(DashboardPage);
+const AccessTokens = withLoading(AccessTokensPage);
 
 const ConnectionRequests = withLoading(ConnectionRequestsPage);
 const CreateRequest = withLoading(CreateRequestPage);
@@ -123,6 +125,7 @@ export const AppRouter: React.FC = () => {
             path="requests"
             element={<Navigate to={`/requests/${researcher ? 'user/sent' : 'database/sent'}`} replace />}
           />
+          <Route path="settings/pat" element={<AccessTokens />} />
           <Route path="requests/database/:page" element={<ConnectionRequests />} />
           <Route path="requests/database/create/:page" element={<CreateRequest />} />
           <Route path="requests/database/view/:id" element={<ViewRequest />} />

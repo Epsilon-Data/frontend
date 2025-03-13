@@ -8,7 +8,19 @@ export interface SidebarNavigationItem {
   icon?: React.ReactNode;
 }
 
-const homeNavigation: SidebarNavigationItem[] = [];
+const homeNavigation: SidebarNavigationItem[] = [
+  {
+    title: 'dashboard.dashboardSidebar.settings.title',
+    key: 'settings',
+    children: [
+      {
+        title: 'dashboard.dashboardSidebar.settings.tokens',
+        key: 'settings/pat',
+        url: '/settings/pat',
+      },
+    ],
+  },
+];
 
 const connectNavigation: SidebarNavigationItem[] = [
   {

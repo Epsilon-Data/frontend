@@ -87,8 +87,7 @@ export const nodeDrag = (_: any, node: any, nodes: any, setEdges: any, isValidEd
       !nextEdges.find((ne: any) => ne.source === closeEdge.source && ne.target === closeEdge.target) &&
       isValidEdge(edgeSource, edgeTarget, nodes, edges)
     ) {
-      closeEdge.className = 'temp';
-      nextEdges.push(closeEdge);
+      return [...nextEdges, { ...closeEdge, className: 'temp' }];
     }
 
     return nextEdges;
@@ -107,7 +106,7 @@ export const nodeDragStop = (_: any, node: any, nodes: any, setEdges: any) => {
       !nextEdges.find((ne: any) => ne.source === closeEdge.source && ne.target === closeEdge.target) &&
       isTempEdge
     ) {
-      nextEdges.push(closeEdge);
+      return [...nextEdges, closeEdge];
     }
 
     return nextEdges;

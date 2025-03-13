@@ -555,7 +555,28 @@
     "successUpload": "{{name}} file uploaded successfully."
   },
   "dashboard": {
-    "title": "Dashboard"
+    "title": "Dashboard",
+    "dashboardSidebar": {
+      "settings": {
+        "title": "Settings",
+        "tokens": "Tokens"
+      }
+    },
+    "pat": {
+      "title": "Personal Access Tokens",
+      "generate": {
+        "title": "Generate New Token",
+        "successNotify": "Token generated successfully.",
+        "failNotify": "Unable to generate token. Please try again.",
+        "modal": {
+          "title": "New personal access token",
+          "prompt": "Note (What's this token for?)",
+          "submit": "Generate token"
+        }
+      },
+      "instructions": "Tokens you have generated that can be used to access the EPSILON API."
+
+    } 
   },
   "connectionRequests" : {
     "rTitle": "Connection Requests",
@@ -1027,9 +1048,7 @@
     "connect": "Connect",
     "database": "My Databases",
     "browse": "Browse",
-    "dataset": "Datasets"
-  },
-  "sidebarNavigation" : {
+    "dataset": "Datasets",
     "logout": "Logout"
   }
 }

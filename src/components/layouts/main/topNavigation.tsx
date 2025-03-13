@@ -20,7 +20,7 @@ export function findUrlByKey(key: string): string {
 export function findKeyByUrl(url: string): string {
   const selectedUrl = getSelectedUrl(url);
   const item = topNavigation.find((navItem) => navItem.url === selectedUrl);
-  return item && item.key ? item.key : '';
+  return item && item.key ? item.key : 'home';
 }
 
 const getSelectedUrl = (pathname: string) => {

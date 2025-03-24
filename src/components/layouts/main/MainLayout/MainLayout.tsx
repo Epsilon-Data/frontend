@@ -28,8 +28,8 @@ const MainLayout: React.FC = () => {
   const [projectId, setProjectId] = useState('');
   const details = useAppSelector((state) => state.project.details);
   const user = useAppSelector((state) => state.user.user);
-  const admin = useAppSelector((state) => state.user.user?.roles.includes('admin') || false);
-  const researcher = useAppSelector((state) => state.user.user?.roles.includes('research') || false);
+  const admin = useAppSelector((state) => state.user.user?.roles?.includes('admin') || false);
+  const researcher = useAppSelector((state) => state.user.user?.roles?.includes('research') || false);
 
   const fetch = useCallback(() => {
     if (id && location.pathname.includes('/database-sources')) {

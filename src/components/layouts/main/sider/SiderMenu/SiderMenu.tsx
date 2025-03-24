@@ -13,7 +13,7 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
   const location = useLocation();
   const [current, setCurrent] = useState(location.pathname);
   const { t } = useTranslation();
-  const admin = useAppSelector((state) => state.user.user?.roles.includes('admin') || false);
+  const admin = useAppSelector((state) => state.user.user?.roles?.includes('admin') || false);
   const currentNav = returnCurrentNav(selectedNav, admin);
 
   const sidebarNavFlat = currentNav.reduce(

@@ -1,51 +1,6 @@
 import { shadeColor } from '@app/utils/utils';
-import { graphic } from 'echarts';
 import { BASE_COLORS } from '../constants';
 import { ITheme } from '../types';
-
-const chartColors = {
-  chartTooltipLabel: '#6A7985',
-  chartColor1: '#01509A',
-  chartColor1Tint: '#2983D8',
-  chartColor2: '#35A0DC',
-  chartColor2Tint: '#67C5FA',
-  chartColor3: '#FFB155',
-  chartColor3Tint: '#FFA800',
-  chartColor4: '#31A652',
-  chartColor4Tint: '#89DCA0',
-  chartColor5: '#FF5252',
-  chartColor5Tint: '#FFC1C1',
-  chartPrimaryGradient: new graphic.LinearGradient(0, 0, 0, 1, [
-    {
-      offset: 0,
-      color: 'rgba(0, 110, 211, 0.5)',
-    },
-    {
-      offset: 1,
-      color: 'rgba(255, 225, 255, 0)',
-    },
-  ]),
-  chartSecondaryGradient: new graphic.LinearGradient(0, 0, 0, 1, [
-    {
-      offset: 0,
-      color: 'rgba(255, 82, 82, 0.5)',
-    },
-    {
-      offset: 1,
-      color: 'rgba(255, 255, 255, 0)',
-    },
-  ]),
-  chartSecondaryGradientSpecular: new graphic.LinearGradient(0, 0, 0, 1, [
-    {
-      offset: 0,
-      color: 'rgba(255, 255, 255, 0)',
-    },
-    {
-      offset: 1,
-      color: 'rgba(255, 82, 82, 0.5)',
-    },
-  ]),
-};
 
 export const lightColorsTheme: ITheme = {
   primary: '#01509A',
@@ -66,7 +21,6 @@ export const lightColorsTheme: ITheme = {
   spinnerBase: '#f42f25',
   scroll: '#c5d3e0',
   border: '#cce1f4',
-  borderNft: '#79819A',
   textMain: '#404040',
   textLight: '#9A9B9F',
   textSuperLight: '#BEC0C6',
@@ -79,9 +33,6 @@ export const lightColorsTheme: ITheme = {
   shadow: 'rgba(0, 0, 0, 0.07)',
   boxShadow: '0 2px 8px 0 rgba(0, 0, 0, 0.07)',
   boxShadowHover: '0 4px 16px 0 rgba(0, 0, 0, 0.2)',
-  boxShadowNft: '0px 16px 24px rgba(0, 0, 0, 0.06), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04)',
-  boxShadowNftSecondary:
-    '0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04)',
   dashboardMapBackground: '#EAF5FF',
   dashboardMapCircleColor: '#9BC2E7',
   dashboardMapControlDisabledBackground: '#c5d3e0',
@@ -104,5 +55,4 @@ export const lightColorsTheme: ITheme = {
   breadcrumb: 'rgba(0, 0, 0, 0.45)',
   icon: '#a9a9a9',
   iconHover: 'rgba(0, 0, 0, 0.75)',
-  ...chartColors,
 };

@@ -2,17 +2,16 @@ import { ThemeType } from '@app/interfaces/interfaces';
 import { hexToRGB } from '@app/utils/utils';
 import { css } from 'styled-components';
 import { BASE_COLORS } from './constants';
-import { darkColorsTheme, antDarkColorsTheme } from './dark/darkTheme';
 import { lightColorsTheme } from './light/lightTheme';
 
 export const themeObject = {
   light: lightColorsTheme,
-  dark: darkColorsTheme,
+  dark: lightColorsTheme,
 };
 
 export const antThemeObject = {
   light: {},
-  dark: antDarkColorsTheme,
+  dark: {},
 };
 
 const getThemeVariables = (theme: ThemeType) => css`
@@ -35,7 +34,6 @@ const getThemeVariables = (theme: ThemeType) => css`
   --sider-background-color: ${themeObject[theme].siderBackground};
   --shadow-color: ${themeObject[theme].shadow};
   --border-color: ${themeObject[theme].border};
-  --border-nft-color: ${themeObject[theme].borderNft};
   --scroll-color: ${themeObject[theme].scroll};
 
   --primary-rgb-color: ${hexToRGB(themeObject[theme].primary)};
@@ -60,20 +58,6 @@ const getThemeVariables = (theme: ThemeType) => css`
   --dashboard-map-circle-color: ${themeObject[theme].dashboardMapCircleColor};
   --dashboard-map-control-disabled-background-color: ${themeObject[theme].dashboardMapControlDisabledBackground};
 
-  --chart-tooltip-label-color: ${themeObject[theme].chartTooltipLabel};
-  --chart-color1: ${themeObject[theme].chartColor1};
-  --chart-rgb-color1: ${hexToRGB(themeObject[theme].chartColor1)};
-  --chart-color1-tint: ${themeObject[theme].chartColor1Tint};
-  --chart-color2: ${themeObject[theme].chartColor2};
-  --chart-color2-tint: ${themeObject[theme].chartColor2Tint};
-  --chart-color3: ${themeObject[theme].chartColor3};
-  --chart-color3-tint: ${themeObject[theme].chartColor3Tint};
-  --chart-color4: ${themeObject[theme].chartColor4};
-  --chart-color4-tint: ${themeObject[theme].chartColor4Tint};
-  --chart-color5: ${themeObject[theme].chartColor5};
-  --chart-rgb-color5: ${hexToRGB(themeObject[theme].chartColor5)};
-  --chart-color5-tint: ${themeObject[theme].chartColor5Tint};
-
   --notification-success-color: ${themeObject[theme].notificationSuccess};
   --notification-primary-color: ${themeObject[theme].notificationPrimary};
   --notification-warning-color: ${themeObject[theme].notificationWarning};
@@ -83,8 +67,6 @@ const getThemeVariables = (theme: ThemeType) => css`
   --icon-hover-color: ${themeObject[theme].iconHover};
   --box-shadow: ${themeObject[theme].boxShadow};
   --box-shadow-hover: ${themeObject[theme].boxShadowHover};
-  --box-shadow-nft-color: ${themeObject[theme].boxShadowNft};
-  --box-shadow-nft-secondary-color: ${themeObject[theme].boxShadowNftSecondary};
 
   --heading-color: ${themeObject[theme].heading};
   --item-hover-bg: ${themeObject[theme].itemHoverBg};
@@ -103,12 +85,6 @@ const getThemeVariables = (theme: ThemeType) => css`
 
 export const lightThemeVariables = css`
   ${getThemeVariables('light')}
-`;
-
-export const darkThemeVariables = css`
-  ${getThemeVariables('dark')}
-  --ant-success-color-deprecated-bg: ${antThemeObject['dark'].successBg} !important;
-  --ant-success-color-deprecated-border: ${antThemeObject['dark'].successBorder} !important;
 `;
 
 export const commonThemeVariables = css`

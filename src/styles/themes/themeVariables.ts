@@ -16,6 +16,7 @@ export const antThemeObject = {
 
 const getThemeVariables = (theme: ThemeType) => css`
   color-scheme: ${theme};
+  --header-color: ${themeObject[theme].header};
   --primary-color: ${themeObject[theme].primary};
   --primary1-color: ${themeObject[theme].primary1};
   --primary-gradient-color: ${themeObject[theme].primaryGradient};
@@ -31,7 +32,11 @@ const getThemeVariables = (theme: ThemeType) => css`
   --collapse-background-color: ${themeObject[theme].collapseBackground};
   --timeline-background-color: ${themeObject[theme].timelineBackground};
   --spinner-base-color: ${themeObject[theme].spinnerBase};
-  --sider-background-color: ${themeObject[theme].siderBackground};
+  --grey1: ${themeObject[theme].grey1};
+  --grey2: ${themeObject[theme].grey2};
+  --grey3: ${themeObject[theme].grey3};
+  --grey4: ${themeObject[theme].grey4};
+  --blue-dark: ${themeObject[theme].blueDark};
   --shadow-color: ${themeObject[theme].shadow};
   --border-color: ${themeObject[theme].border};
   --scroll-color: ${themeObject[theme].scroll};
@@ -49,7 +54,6 @@ const getThemeVariables = (theme: ThemeType) => css`
   --text-superLight-color: ${themeObject[theme].textSuperLight};
   --text-secondary-color: ${themeObject[theme].textSecondary};
   --text-dark-color: ${themeObject[theme].textDark};
-  --text-nft-light-color: ${themeObject[theme].textNftLight};
   --text-sider-primary-color: ${themeObject[theme].textSiderPrimary};
   --text-sider-secondary-color: ${themeObject[theme].textSiderSecondary};
   --subtext-color: ${themeObject[theme].subText};

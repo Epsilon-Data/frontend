@@ -31,8 +31,8 @@ export const LAYOUT = {
 } as const;
 
 export const FONT_FAMILY = {
-  main: 'Montserrat',
-  secondary: 'Lato',
+  main: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+  secondary: '"Inter", sans-serif',
 } as const;
 
 export const FONT_SIZE = {

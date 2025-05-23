@@ -14,10 +14,16 @@ export const Menu = styled(BaseMenu)`
   .ant-menu-item,
   .ant-menu-submenu {
     font-size: ${FONT_SIZE.xs};
+    padding: 0;
   }
 
   .ant-menu-item-icon {
     width: 1.25rem;
+  }
+
+  .ant-menu-submenu-title {
+    color: var(--text-sider-secondary-color);
+    fill: var(--text-sider-secondary-color);
   }
 
   .ant-menu-submenu-expand-icon,
@@ -66,6 +72,17 @@ export const Menu = styled(BaseMenu)`
     a {
       color: var(--text-sider-primary-color);
       fill: var(--text-sider-primary-color);
+    }
+
+    .menu-indicator {
+      position: absolute;
+      right: 0;
+      top: 0.2rem;
+      bottom: 0.2rem;
+      width: 10px;
+      background-color: var(--text-sider-primary-color);
+      border-radius: 6px;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
     }
   }
 

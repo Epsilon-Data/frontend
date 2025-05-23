@@ -6,12 +6,10 @@ import { BaseLayout } from '@app/components/common/BaseLayout/BaseLayout';
 
 export const Sider = styled(BaseLayout.Sider)`
   right: 0;
-  margin: 2rem;
-  border-radius: 1rem;
+  margin-top: 0.5rem;
   overflow: hidden;
-  height: 80vh;
-
-  color: var(--text-secondary-color);
+  height: 100%;
+  box-shadow: inset 4px 0 10px rgba(0, 0, 0, 0.8);
 
   @media only screen and ${media.md} {
     right: unset;

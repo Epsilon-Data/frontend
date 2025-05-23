@@ -1,6 +1,6 @@
 import { PROJECT_API_URL } from '@app/constants/projects';
 import { getCsrfHeader, httpClient } from './http.api';
-import { AccessDetails, Template } from '@app/interfaces/interfaces';
+import { AccessDetails } from '@app/interfaces/interfaces';
 import { format } from 'date-fns';
 
 export interface Pagination {
@@ -10,33 +10,47 @@ export interface Pagination {
 }
 
 export interface ProjectSummaryInfo {
-  id: string;
+  projectId: string;
+  customId: string;
   name: string;
-  organisation: string;
   createdDate: Date;
-  description: string;
-  keywords: string[];
-  cover: string | null;
+  status: string;
+}
+
+export interface ConnectionInfo {
+  requestId?: string;
+  orgAdminEmail?: string;
+  tempDbDetails?: string;
+  additionalInfo?: string;
 }
 
 export interface ProjectInfo {
+  projectId?: string;
+  customId?: string;
+  ownerId: string;
   name: string;
-  duration: Date[];
   lead: string;
   members: string[];
   university: string;
   faculty: string;
   ethicsId: string;
   description: string;
-  dataDescription?: string;
-  collectionDuration: Date[];
-  dataKeywords: string[];
-  dataParticipantsNum: number;
-  archetype: Template | null;
-  isOwnProject: boolean;
-  visualisations: { title: string; url: string }[];
-  lastUpdated: string;
+  startDate: Date;
+  endDate: Date;
+  dbCollectionStartDate: Date;
+  dbCollectionEndDate: Date;
+  dbParticipantsNum: string;
+  dbKeywords?: string[];
+  dbDescription?: string;
+  connection: ConnectionInfo;
 }
+
+export const createProject = async (data: ProjectInfo): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  await httpClient.post(PROJECT_API_URL, data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+};
 
 export const getProjects = async (): Promise<ProjectSummaryInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();

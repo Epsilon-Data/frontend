@@ -1,16 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import MainContent from '../MainContent/MainContent';
 import * as S from './MainLayout.styles';
-import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 import { useResponsive } from '@app/hooks/useResponsive';
-import { References } from '@app/components/common/References/References';
-import { findKeyByUrl, findUrlByKey, returnUserTopNav } from '../topNavigation';
+import { findKeyByUrl, findUrlByKey } from '../topNavigation';
 import { useTranslation } from 'react-i18next';
 import MainSider from '../sider/MainSider/MainSider';
-import { updateUrlById } from '../sider/sidebarNavigation';
-import { BiSolidUserCircle } from 'react-icons/bi';
 import { useAppDispatch, useAppSelector } from '@app/hooks/reduxHooks';
 import { fetchProjectDetails } from '@app/store/slices/projectSlice';
+import { Logo } from '@app/components/common/Logo/Logo';
 
 const sidebarDisabled = ['/database-sources', '/browse', '/datasets'];
 
@@ -22,14 +20,12 @@ const MainLayout: React.FC = () => {
   const [selectedKey, setSelectedKey] = useState(findKeyByUrl(location.pathname));
   const [isHidden, setIsHidden] = useState(false);
   const { id } = useParams();
-  const [title, setTitle] = useState('');
+  // const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [projectId, setProjectId] = useState('');
   const details = useAppSelector((state) => state.project.details);
-  const user = useAppSelector((state) => state.user.user);
-  const admin = useAppSelector((state) => state.user.user?.roles?.includes('admin') || false);
-  const researcher = useAppSelector((state) => state.user.user?.roles?.includes('research') || false);
+  // const user = useAppSelector((state) => state.user.user);
 
   const fetch = useCallback(() => {
     if (id && location.pathname.includes('/database-sources')) {
@@ -52,7 +48,7 @@ const MainLayout: React.FC = () => {
       if (location.pathname.includes('/browse/')) {
         setIsHidden(true);
       } else {
-        if (researcher && location.pathname.includes('/requests')) {
+        if (location.pathname.includes('/requests')) {
           setIsHidden(true);
         } else {
           setIsHidden(false);
@@ -60,23 +56,18 @@ const MainLayout: React.FC = () => {
       }
     }
 
-    if (selectedKey == 'database' && id) {
-      updateUrlById(id, selectedKey, admin);
-      setTitle(t('databaseSources.sidebarTitle', { id: projectId }));
-    } else if (selectedKey == 'dataset' && id) {
-      updateUrlById(id, selectedKey, admin);
-      setTitle(t('topNavigation.' + selectedKey));
-    } else {
-      setTitle(t('topNavigation.' + selectedKey));
-    }
     setUrl(findUrlByKey(selectedKey));
-  }, [location.pathname, isDesktop, selectedKey, id, t, projectId, researcher, admin]);
+  }, [location.pathname, isDesktop, selectedKey, id, t, projectId]);
 
-  const userTopNav = returnUserTopNav(researcher);
+  // const userTopNav = returnUserTopNav(researcher);
   return (
     <S.LayoutMaster>
       <S.Header>
-        <S.TopNav
+        <S.HeaderLink to={url} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Logo />
+          <span style={{ marginBottom: '0.2rem' }}>epsilon</span>
+        </S.HeaderLink>
+        {/* <S.TopNav
           mode="horizontal"
           selectedKeys={[selectedKey]}
           defaultSelectedKeys={[selectedKey]}
@@ -92,16 +83,15 @@ const MainLayout: React.FC = () => {
           <BiSolidUserCircle size={23} style={{ marginRight: '0.6rem', top: '0.35rem', position: 'relative' }} />
           {user?.userName}
         </S.Username>
-        <S.LogoutBtn onClick={() => navigate('/logout')}>{t('topNavigation.logout')}</S.LogoutBtn>
+        <S.LogoutBtn onClick={() => navigate('/logout')}>{t('topNavigation.logout')}</S.LogoutBtn> */}
       </S.Header>
       <S.LayoutWrapper>
-        <MainSider title={title} titleUrl={url} selectedNav={selectedKey} hidden={isHidden} />
+        <MainSider selectedNav={selectedKey} hidden={isHidden} />
         <S.LayoutMain>
           <MainContent id="main-content">
             <div>
               <Outlet />
             </div>
-            <References />
           </MainContent>
         </S.LayoutMain>
       </S.LayoutWrapper>

@@ -555,30 +555,88 @@
     "successUpload": "{{name}} file uploaded successfully."
   },
   "dashboard": {
-    "title": "Dashboard",
-    "dashboardSidebar": {
-      "settings": {
-        "title": "Settings",
-        "tokens": "Tokens"
+    "title": "My projects",
+    "sidebar": {
+      "projects": "My projects",
+      "browserHub": {
+        "title": "Browser hub",
+        "browseProjects": "Browse projects",
+        "trackRequests": "Track requests"
+      },
+      "profile": "My profile"
+    },
+    "main": {
+      "personalProjects": {
+        "title": "Personal projects",
+        "description": "View and manage all your personal projects in one place"
+      },
+      "sharedProjects": {
+        "title": "Shared projects",
+        "description": "View, use and analyse datasets"
       }
     },
-    "pat": {
-      "title": "Personal Access Tokens",
-      "generate": {
-        "title": "Generate New Token",
-        "successNotify": "Token generated successfully.",
-        "failNotify": "Unable to generate token. Please try again.",
-        "modal": {
-          "title": "New personal access token",
-          "prompt": "Note (What's this token for?)",
-          "submit": "Generate token"
+    "createProject": {
+      "title": "New project",
+      "form": {
+        "saveDraft": "Save draft",
+        "step1": {
+          "title": "Step 1: Name your template",
+          "name": {
+            "title": "Choose a name for your project",
+            "description": "Pick a clear and descriptive name to help identify your project easily"
+          }
+        },
+        "step2": {
+          "title": "Step 2: Provide information about your project",
+          "duration": {
+            "title": "1. What is the duration of your project?",
+            "description": "Set your project's duration — you can update it anytime from the project details page"
+          },
+          "description": {
+            "title": "2. Give a brief description about your project",
+            "description": "Share a brief summary of your project's purpose, goals, and key details"
+          },
+          "participantsNum": {
+            "title": "3. How many participants are involved in your project?",
+            "description": "Please specify the total number of individuals involved in the project"
+          },
+          "members": {
+            "title": "4. Add team members to this project",
+            "description": "Type individual emails to invite team members and assign their roles"
+          },
+          "dbKeywords": {
+            "title": "5. Which keywords best describe your project?",
+            "description": "Use 2-5 word phrases that help other reseachers understand the focus and content of your project and its database"
+          }
+        },
+        "step3": {
+          "title": "Step 3: Provide information about your university",
+          "university": "1. What is your university name?",
+          "faculty": "2. What is the name of faculty which this project will be carried out?",
+          "ethicsId": "3. What is your project's ethics approval ID?"
+        },
+        "step4": {
+          "title": "Step 4: Database connection",
+          "dbName": "1. What is the name of your database?",
+          "dbType": "2. What is the nature of your database?",
+          "dbUrl": {
+            "title": "3. Provide database connection URL",
+            "description": "Enter your database URL and test the connection to ensure it's reachable",
+            "testSuccess": "Connection successful",
+            "testFailed": "Connection failed"
+          },
+          "dbCred": {
+            "title": "Database credentials",
+            "description": "Provide your database username and password"
+          }
+        },
+        "step5": {
+          "title": "Step 5: ---"
         }
-      },
-      "instructions": "Tokens you have generated that can be used to access the EPSILON API."
-
-    } 
+      }
+    }
   },
-  "connectionRequests" : {
+  "connectionRequests": {
     "rTitle": "Connection Requests",
     "oaTitle": "Connection Requests",
     "title": "Connection Requests",
@@ -591,7 +649,7 @@
       "receive": "Requests Received",
       "sent": "Requests Sent"
     },
-    "dbRequestList" : "Database Request List",
+    "dbRequestList": "Database Request List",
     "accessRequestList": "{{action}}Access Request List",
     "accessRequestSidebar": {
       "main": "Access Request",
@@ -702,15 +760,15 @@
       "failNotify": "Unable to add revision information to connection request. Please try again."
     }
   },
-  "databaseSources" : {
+  "databaseSources": {
     "title": "Database Sources",
     "id": "Source ID",
     "projectName": "Project Name",
     "dbName": "Database Name",
     "date": "Connect Date",
     "provider": "Provider",
-    "sourceList"  : "Source List",
-    "manage" : "Manage",
+    "sourceList": "Source List",
+    "manage": "Manage",
     "sidebarTitle": "Project {{id}}",
     "describeDataset": {
       "title": "Describe Dataset",
@@ -765,7 +823,7 @@
         "mapSingleColumn": "Please map at least a column to your archetype.",
         "specifyTemplateName": "Please specify a template name."
       },
-      "message" : {
+      "message": {
         "columnsNotConnected": "Some columns are not connected to your template.",
         "subcatCriteria": "Each sub-category should have at least two columns connected.",
         "catCriteria": "Categories that does not contain any sub-categories should have at least one column connected.",
@@ -837,7 +895,7 @@
         "colCount": "Column Count",
         "schema": "Table Schema",
         "column": "Column",
-        "dataType" : "Data Type",
+        "dataType": "Data Type",
         "isNullable": "Is Nullable"
       }
     },
@@ -905,7 +963,7 @@
       "details": {
         "title": "Details",
         "altTitle": "Project Details",
-        "duration":"Project Duration",
+        "duration": "Project Duration",
         "lead": "Project Lead",
         "members": "Project Team Members/Affiliations",
         "university": "University",
@@ -941,7 +999,7 @@
       },
       "project": {
         "title": "Project Details",
-        "name":"Project Name",
+        "name": "Project Name",
         "duration": "Project Duration",
         "background": "Project Background",
         "objective": "Project Objective",
@@ -962,7 +1020,7 @@
     "analyseData": "Analyse Data",
     "standard": {
       "title": "Standard Analyses",
-      "descriptive":{
+      "descriptive": {
         "title": "Descriptive",
         "guide": "Guide",
         "table": "Table",
@@ -983,7 +1041,7 @@
           "max": "Maximum"
         },
         "output": "Output",
-        "generate":"Generate Output",
+        "generate": "Generate Output",
         "failNotify": "Unable to generate output. Please try again.",
         "selectVarNotify": "Please select at least one variable.",
         "selectVarTypeNotify": "Please select the variable type for each variable.",
@@ -1002,7 +1060,7 @@
     "analysis": {
       "title": "Analyse Data",
       "name": "Analysis Name",
-      "createdDate":"Created Date",
+      "createdDate": "Created Date",
       "updatedDate": "Updated Date",
       "lastUpdated": "Last Updated By",
       "create": {
@@ -1014,7 +1072,7 @@
       "download": {
         "dataset": "Download Dataset",
         "inProgressNotify": "Download in progress.",
-        "failNotify":"Failed to download content. Please try again."
+        "failNotify": "Failed to download content. Please try again."
       },
       "view": {
         "title": "Analysis Details",
@@ -1043,7 +1101,7 @@
       }
     }
   },
-  "topNavigation" : {
+  "topNavigation": {
     "home": "Home",
     "connect": "Connect",
     "database": "My Databases",

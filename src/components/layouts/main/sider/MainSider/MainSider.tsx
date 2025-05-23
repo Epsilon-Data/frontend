@@ -1,21 +1,16 @@
 import React from 'react';
 import * as S from './MainSider.styles';
-import { SiderLogo } from '../SiderLogo';
 import SiderMenu from '../SiderMenu/SiderMenu';
 
 interface MainSiderProps {
-  title: string;
-  titleUrl: string;
   selectedNav: string;
   hidden: boolean;
 }
 
-const MainSider: React.FC<MainSiderProps> = ({ title, titleUrl, selectedNav, hidden }) => {
+const MainSider: React.FC<MainSiderProps> = ({ selectedNav, hidden }) => {
   return (
     <>
-      <S.Sider trigger={null} width={260} hidden={hidden}>
-        <SiderLogo title={title} url={titleUrl} />
-        <S.HorizontalDivider />
+      <S.Sider trigger={null} width={260} hidden={hidden} style={{ background: 'var(--grey1)' }}>
         <S.SiderContent>
           <SiderMenu selectedNav={selectedNav} />
         </S.SiderContent>

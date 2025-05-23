@@ -1,4 +1,7 @@
 import React from 'react';
+import { PiCirclesThreeBold } from 'react-icons/pi';
+import { TiPointOfInterest } from 'react-icons/ti';
+import { FaRegUser } from 'react-icons/fa6';
 
 export interface SidebarNavigationItem {
   title: string;
@@ -10,15 +13,33 @@ export interface SidebarNavigationItem {
 
 const homeNavigation: SidebarNavigationItem[] = [
   {
-    title: 'dashboard.dashboardSidebar.settings.title',
-    key: 'settings',
+    title: 'dashboard.sidebar.projects',
+    key: 'projects',
+    url: '/',
+    icon: <PiCirclesThreeBold size={17} />,
+  },
+  {
+    title: 'dashboard.sidebar.browserHub.title',
+    key: 'browser-hub',
     children: [
       {
-        title: 'dashboard.dashboardSidebar.settings.tokens',
-        key: 'settings/pat',
-        url: '/settings/pat',
+        title: 'dashboard.sidebar.browserHub.browseProjects',
+        key: 'browser-hub',
+        url: '/browse-projects',
+      },
+      {
+        title: 'dashboard.sidebar.browserHub.trackRequests',
+        key: 'browser-hub/track-requests',
+        url: '/track-requests',
       },
     ],
+    icon: <TiPointOfInterest size={17} />,
+  },
+  {
+    title: 'dashboard.sidebar.profile',
+    key: 'profile',
+    url: '/profile',
+    icon: <FaRegUser size={17} />,
   },
 ];
 

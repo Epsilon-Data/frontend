@@ -195,5 +195,10 @@ export default createGlobalStyle`
   .ant-menu-inline, .ant-menu-vertical {
     border-right: 0;
   }
+
+  .ant-modal-mask {
+    backdrop-filter: blur(6px);
+    background-color: rgba(0, 0, 0, 0.3); /* Optional for dark overlay */
+  }
   // notifications end
 `;

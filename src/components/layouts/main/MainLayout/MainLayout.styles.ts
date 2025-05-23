@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FONT_SIZE, FONT_WEIGHT, media } from '@app/styles/themes/constants';
+import { FONT_FAMILY, FONT_SIZE, FONT_WEIGHT, media } from '@app/styles/themes/constants';
 import { BaseLayout } from '@app/components/common/BaseLayout/BaseLayout';
 import { Layout, Menu } from 'antd';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
@@ -33,8 +33,16 @@ export const TopNav = styled(Menu)`
 
 export const Header = styled(Layout)`
   width: 100vw;
-  height: 3rem;
+  height: 3.5rem;
   position: fixed;
+  padding: 0.3rem 2rem;
+  background: var(--header-color);
+  display: flex;
+  justify-content: flex-start;
+  font-size: ${FONT_SIZE.xxxl};
+  font-weight: ${FONT_WEIGHT.semibold};
+  font-family: ${FONT_FAMILY.main};
+  font-color: var(--white);
 `;
 
 export const LogoutBtn = styled(BaseButton)`
@@ -63,4 +71,12 @@ export const Username = styled(Link)`
   position: absolute;
   top: 0.3rem;
   right: 9rem;
+`;
+
+export const HeaderLink = styled(Link)`
+  color: var(--white);
+
+  &:hover {
+    color: var(--white);
+  }
 `;

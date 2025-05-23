@@ -1,4 +1,5 @@
 export interface ITheme {
+  header: string;
   primary: string;
   primary1: string;
   primaryGradient: string;
@@ -11,7 +12,11 @@ export interface ITheme {
   secondaryBackground: string;
   secondaryBackgroundSelected: string;
   spinnerBase: string;
-  siderBackground: string;
+  grey1: string;
+  grey2: string;
+  grey3: string;
+  grey4: string;
+  blueDark: string;
   collapseBackground: string;
   scroll: string;
   border: string;
@@ -20,7 +25,6 @@ export interface ITheme {
   textSuperLight: string;
   textSecondary: string;
   textDark: string;
-  textNftLight: string;
   textSiderPrimary: string;
   textSiderSecondary: string;
   subText: string;

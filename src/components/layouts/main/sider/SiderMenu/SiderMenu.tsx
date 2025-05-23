@@ -55,7 +55,16 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
         return {
           key: nav.key,
           title: t(nav.title),
-          label: isSubMenu ? t(nav.title) : <Link to={nav.url || ''}>{t(nav.title)}</Link>,
+          label: isSubMenu ? (
+            t(nav.title)
+          ) : (
+            <span style={{ display: 'flex', alignItems: 'center', position: 'relative', height: '100%' }}>
+              <Link to={nav.url || ''} style={{ flex: 1 }}>
+                {t(nav.title)}
+              </Link>
+              {current === nav.url && <div className="menu-indicator" />}
+            </span>
+          ),
           icon: nav.icon,
           children:
             isSubMenu &&

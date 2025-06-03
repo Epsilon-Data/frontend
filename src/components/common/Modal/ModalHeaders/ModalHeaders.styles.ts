@@ -42,7 +42,9 @@ export const DraftButton = styled(Button)`
   display: flex;
   align-items: center;
   height: 2.2rem;
-  color: var(--secondary-color);
+  border: 1px solid var(--grey3);
+  background-color: var(--white);
+  color: var(--blue-dark);
   font-size: ${FONT_SIZE.xs};
   font-weight: ${FONT_WEIGHT.medium};
   font-family: ${FONT_FAMILY.secondary};
@@ -52,7 +54,7 @@ export const DraftButton = styled(Button)`
 export const BackButton = styled(Button)`
   display: flex;
   background-color: var(--grey3);
-  color: var(--secondary-color);
+  color: var(--blue-dark);
   border: none;
   border-radius: 0 2rem 2rem 0;
   align-items: center;

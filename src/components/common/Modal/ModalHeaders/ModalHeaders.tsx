@@ -1,9 +1,9 @@
 import React from 'react';
-import * as S from './ModalHeader.styles';
+import * as S from './ModalHeaders.styles';
 import { useTranslation } from 'react-i18next';
 import { IoChevronBack } from 'react-icons/io5';
 
-export const ModalHeader: React.FC<{
+export const ModalStepHeader: React.FC<{
   setModalStep: React.Dispatch<React.SetStateAction<number>>;
   modalStep: number;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -52,5 +52,17 @@ export const ModalHeader: React.FC<{
         </S.DraftButton>
       </div>
     </S.StepHeader>
+  );
+};
+
+export const ModalAccessHeader: React.FC<{ setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>> }> = ({
+  setIsModalOpen,
+}) => {
+  return (
+    <div>
+      <S.BackButton onClick={() => setIsModalOpen(false)} style={{ zIndex: '1' }}>
+        <IoChevronBack />
+      </S.BackButton>
+    </div>
   );
 };

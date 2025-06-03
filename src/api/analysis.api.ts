@@ -10,7 +10,7 @@ export interface ScriptInfo {
   name: string;
   status: number;
   statusMsg: string;
-  lastUpdated: string;
+  lastModified: string;
   executionSettings: string | null;
 }
 
@@ -50,7 +50,7 @@ export const getAnalysisDetails = async (analysisId: string | undefined): Promis
       name: script.name,
       status: script.status,
       statusMsg: script.statusMsg,
-      lastUpdated: format(script.lastUpdated, DATE_FORMAT) + ', ' + script.lastUpdatedUser,
+      lastModified: format(script.lastModified, DATE_FORMAT) + ', ' + script.lastModifiedUser,
       executionSettings: script.executionSettings,
     })),
   };

@@ -2,6 +2,22 @@ import styled from 'styled-components';
 import { FONT_SIZE } from '@app/styles/themes/constants';
 import { BaseMenu } from '@app/components/common/BaseMenu/BaseMenu';
 
+export const MenuWrapper = styled.div`
+  position: relative;
+  padding-top: 2rem;
+
+  .menu-indicator {
+    position: absolute;
+    right: -0.5rem;
+    width: 1rem;
+    height: 3rem;
+    background-color: var(--text-sider-primary-color);
+    border-radius: 6px;
+    transition: transform 0.3s ease;
+    z-index: 1;
+  }
+`;
+
 export const Menu = styled(BaseMenu)`
   background: transparent;
   border-right: 0;
@@ -15,6 +31,7 @@ export const Menu = styled(BaseMenu)`
   .ant-menu-submenu {
     font-size: ${FONT_SIZE.xs};
     padding: 0;
+    position: relative;
   }
 
   .ant-menu-item-icon {
@@ -49,16 +66,14 @@ export const Menu = styled(BaseMenu)`
     }
   }
 
-  .ant-menu-submenu-selected {
-    .ant-menu-submenu-title {
-      color: var(--text-sider-primary-color);
+  .ant-menu-submenu-selected .ant-menu-submenu-title {
+    color: var(--text-sider-primary-color);
 
-      .ant-menu-submenu-expand-icon,
-      .ant-menu-submenu-arrow,
-      span[role='img'] {
-        color: var(--text-sider-primary-color);
-        fill: var(--text-sider-primary-color);
-      }
+    .ant-menu-submenu-expand-icon,
+    .ant-menu-submenu-arrow,
+    span[role='img'] {
+      color: var(--text-sider-primary-color);
+      fill: var(--text-sider-primary-color);
     }
   }
 
@@ -72,17 +87,6 @@ export const Menu = styled(BaseMenu)`
     a {
       color: var(--text-sider-primary-color);
       fill: var(--text-sider-primary-color);
-    }
-
-    .menu-indicator {
-      position: absolute;
-      right: 0;
-      top: 0.2rem;
-      bottom: 0.2rem;
-      width: 10px;
-      background-color: var(--text-sider-primary-color);
-      border-radius: 6px;
-      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
     }
   }
 

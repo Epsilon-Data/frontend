@@ -20,16 +20,16 @@ const homeNavigation: SidebarNavigationItem[] = [
   },
   {
     title: 'dashboard.sidebar.browserHub.title',
-    key: 'browser-hub',
+    key: 'browse',
     children: [
       {
         title: 'dashboard.sidebar.browserHub.browseProjects',
-        key: 'browser-hub',
-        url: '/browse-projects',
+        key: 'browse/projects',
+        url: '/browse',
       },
       {
         title: 'dashboard.sidebar.browserHub.trackRequests',
-        key: 'browser-hub/track-requests',
+        key: 'browse/track-requests',
         url: '/track-requests',
       },
     ],

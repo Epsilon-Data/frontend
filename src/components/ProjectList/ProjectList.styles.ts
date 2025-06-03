@@ -30,10 +30,10 @@ export const Cover = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f0f2f5;
+  background-color: var(--cover-bg-color);
   font-size: 48px;
   font-weight: bold;
-  color: #595959;
+  color: var(--cover-text-color);
   border-radius: 4px 4px 0 0;
   overflow: hidden;
 
@@ -53,7 +53,7 @@ export const CoverOverlay = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 54%;
+  height: 55%;
   background: rgba(0, 0, 0, 0.5);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -73,8 +73,31 @@ export const ViewButton = styled(Button)`
   font-weight: ${FONT_WEIGHT.medium};
   font-family: ${FONT_FAMILY.secondary};
 
-  background-color: var(--secondary-color);
+  background: var(--primary-gradient-color);
   border: none;
   color: var(--white);
   width: 60%;
+
+  span,
+  .ant-btn-icon {
+    transition: transform 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: var(--primary-gradient-color) !important;
+    color: var(--white) !important;
+    box-shadow: none;
+  }
+
+  &:hover span {
+    transform: translateX(-4px);
+  }
+
+  &:hover .ant-btn-icon {
+    transform: translateX(4px);
+  }
 `;

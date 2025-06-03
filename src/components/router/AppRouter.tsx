@@ -1,6 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useAppSelector } from '@app/hooks/reduxHooks';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // no lazy loading for auth pages to avoid flickering
 const AuthLayout = React.lazy(() => import('@app/components/layouts/AuthLayout/AuthLayout'));
@@ -105,11 +104,6 @@ const LogoutFallback = withLoading(Logout);
 const LoginFallback = withLoading(Login);
 
 export const AppRouter: React.FC = () => {
-  const researcher = useAppSelector((state) => {
-    const user = state.user.user;
-    return user?.roles?.includes('research') || false;
-  });
-
   const protectedLayout = (
     <RequireAuth>
       <MainLayout />
@@ -121,10 +115,6 @@ export const AppRouter: React.FC = () => {
       <Routes>
         <Route path={DASHBOARD_PATH} element={protectedLayout}>
           <Route index element={<Dashboard />} />
-          <Route
-            path="requests"
-            element={<Navigate to={`/requests/${researcher ? 'user/sent' : 'database/sent'}`} replace />}
-          />
           <Route path="settings/pat" element={<AccessTokens />} />
           <Route path="requests/database/:page" element={<ConnectionRequests />} />
           <Route path="requests/database/create/:page" element={<CreateRequest />} />

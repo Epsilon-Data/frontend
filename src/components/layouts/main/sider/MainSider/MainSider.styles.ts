@@ -6,7 +6,6 @@ import { BaseLayout } from '@app/components/common/BaseLayout/BaseLayout';
 
 export const Sider = styled(BaseLayout.Sider)`
   right: 0;
-  margin-top: 0.5rem;
   overflow: hidden;
   height: 100%;
   box-shadow: inset 4px 0 10px rgba(0, 0, 0, 0.8);

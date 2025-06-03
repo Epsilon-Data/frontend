@@ -10,8 +10,6 @@ import { useAppDispatch, useAppSelector } from '@app/hooks/reduxHooks';
 import { fetchProjectDetails } from '@app/store/slices/projectSlice';
 import { Logo } from '@app/components/common/Logo/Logo';
 
-const sidebarDisabled = ['/database-sources', '/browse', '/datasets'];
-
 const MainLayout: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isDesktop } = useResponsive();
@@ -42,18 +40,10 @@ const MainLayout: React.FC = () => {
 
   useEffect(() => {
     setSelectedKey(findKeyByUrl(location.pathname));
-    if (sidebarDisabled.includes(location.pathname)) {
+    if (location.pathname.includes('/requests')) {
       setIsHidden(true);
     } else {
-      if (location.pathname.includes('/browse/')) {
-        setIsHidden(true);
-      } else {
-        if (location.pathname.includes('/requests')) {
-          setIsHidden(true);
-        } else {
-          setIsHidden(false);
-        }
-      }
+      setIsHidden(false);
     }
 
     setUrl(findUrlByKey(selectedKey));

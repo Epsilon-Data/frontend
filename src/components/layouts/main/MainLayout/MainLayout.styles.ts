@@ -10,12 +10,11 @@ export const LayoutMaster = styled(BaseLayout)`
   width: 100vw;
 
   .ant-layout-has-sider {
-    margin-top: 3rem;
+    margin-top: 3.5rem;
   }
 `;
 
 export const LayoutMain = styled(BaseLayout)`
-  margin-top: 2rem;
   @media only screen and ${media.md} {
     margin-left: 80px;
   }
@@ -62,15 +61,6 @@ export const LogoutBtn = styled(BaseButton)`
 
 export const LayoutWrapper = styled(Layout)`
   overflow-y: hidden;
-`;
-
-export const Username = styled(Link)`
-  color: var(--text-main-color);
-  font-size: ${FONT_SIZE.md};
-  font-weight: ${FONT_WEIGHT.medium};
-  position: absolute;
-  top: 0.3rem;
-  right: 9rem;
 `;
 
 export const HeaderLink = styled(Link)`

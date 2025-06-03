@@ -1,8 +1,9 @@
 import { FONT_FAMILY, FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
-import { Button, Input, Modal, Radio } from 'antd';
+import { Button, Input, Modal, Radio, Select } from 'antd';
 import styled from 'styled-components';
 
 export const HeaderWrapper = styled.div`
+  margin-top: 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -22,6 +23,9 @@ export const HeaderWrapper = styled.div`
     color: var(--grey2) !important;
     margin-right: 0.5rem;
   }
+
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--grey3);
 `;
 
 export const Title = styled.div`
@@ -93,7 +97,7 @@ export const LayoutSelector = styled(Radio.Group)`
   }
 
   .ant-radio-button-wrapper::before {
-    display: none !important; // remove the default inset border
+    display: none !important;
   }
 `;
 
@@ -105,6 +109,12 @@ export const AddProjectButton = styled(Button)`
   font-size: ${FONT_SIZE.xs};
   font-weight: ${FONT_WEIGHT.medium};
   font-family: ${FONT_FAMILY.secondary};
+  background: var(--primary-gradient-color);
+
+  &:hover {
+    background: var(--primary-gradient-color) !important;
+    color: var(--white) !important;
+  }
 `;
 
 export const ProjectsWrapper = styled.div`
@@ -164,9 +174,41 @@ export const ModalButton = styled(Button)`
   font-size: ${FONT_SIZE.xs};
   font-weight: ${FONT_WEIGHT.medium};
   font-family: ${FONT_FAMILY.secondary};
+
+  background: var(--primary-gradient-color);
+  color: var(--white);
+
+  span,
+  .ant-btn-icon {
+    transition: transform 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: var(--primary-gradient-color) !important;
+    color: var(--white) !important;
+    box-shadow: none;
+  }
+
+  &:hover span {
+    transform: translateX(-4px);
+  }
+
+  &:hover .ant-btn-icon {
+    transform: translateX(4px);
+  }
 `;
 
 export const ModalBody = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+export const SortingSelect = styled(Select)`
+  .ant-select-selector {
+    border: 1px solid var(--grey2) !important;
+  }
 `;

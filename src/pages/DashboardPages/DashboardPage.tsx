@@ -4,13 +4,13 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import * as S from './DashboardPage.styles';
 import { IoSearch } from 'react-icons/io5';
-import { Form, Radio, Select, Space } from 'antd';
+import { Form, Radio, Space } from 'antd';
 import { IoIosArrowDown } from 'react-icons/io';
 import { HiOutlineViewGrid } from 'react-icons/hi';
 import { HiMiniListBullet } from 'react-icons/hi2';
 import { FaPlus } from 'react-icons/fa6';
 import { IoChevronForwardOutline } from 'react-icons/io5';
-import { ModalHeader } from '@app/components/common/Modal/ModalHeader/ModalHeader';
+import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { ModalInput } from '@app/components/common/Modal/ModalInput/ModalInput';
 import { ModalDatePicker } from '@app/components/common/Modal/ModalDatePicker/ModalDatePicker';
 import { ModalTextArea } from '@app/components/common/Modal/ModalTextArea/ModalTextArea';
@@ -22,6 +22,45 @@ import { TestConnectionGroup } from '@app/components/common/Modal/TestConnection
 import { testConnection } from '@app/api/connectionRequests.api';
 import { createProject, getProjects, ProjectSummaryInfo } from '@app/api/projects.api';
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
+import { LAYOUT } from '@app/styles/themes/constants';
+import config from '@app/config/config';
+import dayjs from 'dayjs';
+
+const getInitialFormValues = () => {
+  if (config.isDev) {
+    return {
+      name: 'Test Project',
+      lead: 'John Doe',
+      university: 'Test University',
+      faculty: 'Computer Science',
+      ethicsId: 'ETH12345',
+      description: 'This is a test project description',
+      startDate: '2025-01-01',
+      endDate: '2025-12-31',
+      participantsNum: 100,
+      dbType: 'postgres',
+      dbUrl: 'postgresql://test_admin:supersecret@localhost:5433/test',
+      username: 'test_admin',
+      password: 'supersecret',
+    };
+  }
+
+  return {
+    name: '',
+    lead: '',
+    university: '',
+    faculty: '',
+    ethicsId: '',
+    description: '',
+    startDate: '',
+    endDate: '',
+    participantsNum: '',
+    dbType: '',
+    dbUrl: '',
+    username: '',
+    password: '',
+  };
+};
 
 const DashboardPage: React.FC = () => {
   const [step1] = Form.useForm();
@@ -88,8 +127,34 @@ const DashboardPage: React.FC = () => {
   };
 
   const showModal = () => {
-    setModalStep(0);
+    const initialValues = getInitialFormValues();
+
+    step1.setFieldsValue({
+      name: initialValues.name,
+    });
+
+    step2.setFieldsValue({
+      description: initialValues.description,
+      startDate: dayjs(initialValues.startDate),
+      endDate: dayjs(initialValues.endDate),
+      participantsNum: initialValues.participantsNum,
+    });
+
+    step3.setFieldsValue({
+      university: initialValues.university,
+      faculty: initialValues.faculty,
+      ethicsId: initialValues.ethicsId,
+    });
+
+    step4.setFieldsValue({
+      dbName: initialValues.name,
+      dbType: initialValues.dbType,
+      dbUrl: initialValues.dbUrl,
+      username: initialValues.username,
+      password: initialValues.password,
+    });
     setIsModalOpen(true);
+    setModalStep(0);
   };
 
   const handleCreate = async () => {
@@ -97,7 +162,7 @@ const DashboardPage: React.FC = () => {
     const formData = {
       ownerId: user?.id ?? '',
       name: step1.getFieldValue('name'),
-      lead: user?.id ?? '',
+      lead: (user?.firstName ?? '') + ' ' + (user?.lastName ?? ''),
       university: step3.getFieldValue('university'),
       faculty: step3.getFieldValue('faculty'),
       ethicsId: step3.getFieldValue('ethicsId'),
@@ -105,10 +170,7 @@ const DashboardPage: React.FC = () => {
       startDate: step2.getFieldValue('startDate'),
       endDate: step2.getFieldValue('endDate'),
       members: members.map((m) => JSON.stringify(m)),
-      dbCollectionStartDate: new Date(),
-      dbCollectionEndDate: new Date(),
       dbParticipantsNum: step2.getFieldValue('participantsNum'),
-      dbDescription: '',
       dbKeywords: dbKeywords,
       connection: {
         orgAdminEmail: '',
@@ -126,10 +188,6 @@ const DashboardPage: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
   const fetch = useCallback(() => {
     getProjects().then((res) => {
       setProjects(res);
@@ -142,21 +200,23 @@ const DashboardPage: React.FC = () => {
 
   const handleDraft = () => {};
 
+  const handleProjectClick = (projectId: string) => {
+    console.log(projectId);
+  };
+
   return (
-    <>
+    <div style={{ padding: LAYOUT.desktop.paddingVertical + ' ' + LAYOUT.desktop.paddingHorizontal }}>
       <PageTitle>{t('dashboard.title')}</PageTitle>
       <S.HeaderWrapper>
         <S.Title>{user?.firstName + "'s workspace"}</S.Title>
         <S.ToolsWrapper>
-          <Space.Compact>
+          <Space.Compact style={{ border: '1px solid var(--grey2)', borderRadius: '0.5rem' }}>
             <S.SearchBar
               prefix={<IoSearch style={{ marginRight: '0.5rem', color: 'var(--grey1)' }} />}
               placeholder="Search projects..."
             />
-            <></>
           </Space.Compact>
-          <Select
-            styles={{ root: { marginBottom: '0.12rem' } }}
+          <S.SortingSelect
             className="sort-select"
             prefix="Sort by: "
             defaultValue="date-created"
@@ -180,24 +240,23 @@ const DashboardPage: React.FC = () => {
             </S.LayoutSelector>
           </Space>
           <S.AddProjectButton type="primary" icon={<FaPlus />} onClick={showModal}>
-            {t('dashboard.createProject.title')}
+            {t('dashboard.main.newProject')}
           </S.AddProjectButton>
         </S.ToolsWrapper>
       </S.HeaderWrapper>
       <S.ProjectsWrapper>
         <S.ProjectsHeader>{t('dashboard.main.personalProjects.title')}</S.ProjectsHeader>
         <S.ProjectsDescription>{t('dashboard.main.personalProjects.description')}</S.ProjectsDescription>
-        <ProjectList projects={projects} mode="personal" layout={layout} />
+        <ProjectList projects={projects} mode="personal" layout={layout} onProjectClick={handleProjectClick} />
       </S.ProjectsWrapper>
       <S.ProjectsWrapper>
         <S.ProjectsHeader>{t('dashboard.main.sharedProjects.title')}</S.ProjectsHeader>
         <S.ProjectsDescription>{t('dashboard.main.sharedProjects.description')}</S.ProjectsDescription>
-        <ProjectList projects={projects} mode="shared" layout={layout} />
+        <ProjectList projects={projects} mode="shared" layout={layout} onProjectClick={handleProjectClick} />
       </S.ProjectsWrapper>
       <S.AddProjectModal
         open={isModalOpen}
-        width={'80%'}
-        onCancel={handleCancel}
+        width={'60%'}
         footer={[
           modalStep < 4 ? (
             <S.ModalButton
@@ -207,7 +266,7 @@ const DashboardPage: React.FC = () => {
               icon={<IoChevronForwardOutline />}
               iconPosition="end"
             >
-              Next
+              {t('common.next')}
             </S.ModalButton>
           ) : (
             <S.ModalButton
@@ -218,17 +277,16 @@ const DashboardPage: React.FC = () => {
               iconPosition="end"
               loading={isFormLoading}
             >
-              Create project
+              {t('dashboard.createProject.title')}
             </S.ModalButton>
           ),
         ]}
         closable={false}
         mask
-        maskClosable={true}
       >
         {modalStep === 0 && (
           <S.ModalBody>
-            <ModalHeader
+            <ModalStepHeader
               setModalStep={setModalStep}
               modalStep={modalStep}
               setIsModalOpen={setIsModalOpen}
@@ -248,7 +306,7 @@ const DashboardPage: React.FC = () => {
         )}
         {modalStep === 1 && (
           <S.ModalBody>
-            <ModalHeader
+            <ModalStepHeader
               setModalStep={setModalStep}
               modalStep={modalStep}
               setIsModalOpen={setIsModalOpen}
@@ -294,7 +352,7 @@ const DashboardPage: React.FC = () => {
         )}
         {modalStep === 2 && (
           <S.ModalBody>
-            <ModalHeader
+            <ModalStepHeader
               setModalStep={setModalStep}
               modalStep={modalStep}
               setIsModalOpen={setIsModalOpen}
@@ -311,7 +369,7 @@ const DashboardPage: React.FC = () => {
         )}
         {modalStep === 3 && (
           <S.ModalBody>
-            <ModalHeader
+            <ModalStepHeader
               setModalStep={setModalStep}
               modalStep={modalStep}
               setIsModalOpen={setIsModalOpen}
@@ -339,7 +397,7 @@ const DashboardPage: React.FC = () => {
         )}
         {modalStep === 4 && (
           <>
-            <ModalHeader
+            <ModalStepHeader
               setModalStep={setModalStep}
               modalStep={modalStep}
               setIsModalOpen={setIsModalOpen}
@@ -349,7 +407,7 @@ const DashboardPage: React.FC = () => {
           </>
         )}
       </S.AddProjectModal>
-    </>
+    </div>
   );
 };
 

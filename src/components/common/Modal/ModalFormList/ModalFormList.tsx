@@ -39,7 +39,7 @@ export const ModalFormList: React.FC<{
         <Col span={17} style={{ flex: 1 }}>
           <p style={{ marginBottom: '0.3rem', fontSize: FONT_SIZE.xs }}>Email address</p>
           <FormItem name="email">
-            <S.EmailInput />
+            <S.EmailInput style={{ border: '1px solid var(--black)', background: 'var(--grey4)' }} />
           </FormItem>
         </Col>
         <S.HorizontalLine />

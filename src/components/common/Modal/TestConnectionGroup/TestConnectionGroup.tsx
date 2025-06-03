@@ -25,18 +25,20 @@ export const TestConnectionGroup: React.FC<{
         <S.InputDescription>{inputDescription}</S.InputDescription>
       </div>
       <S.UrlWrapper>
-        <Col span={19} style={{ flex: 1 }}>
-          <Row align={'middle'}>
-            <span style={{ fontSize: FONT_SIZE.md, marginBottom: '0.7rem' }}>URL link:</span>&nbsp;&nbsp;
-            <FormItem name="dbUrl" style={{ width: '80%' }}>
-              <S.UrlInput />
-            </FormItem>
+        <Col span={18}>
+          <Row>
+            <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+              <span style={{ fontSize: FONT_SIZE.md, marginBottom: '0.7rem' }}>URL link:</span>&nbsp;&nbsp;
+              <FormItem name="dbUrl" style={{ flex: '1' }}>
+                <S.UrlInput />
+              </FormItem>
+            </div>
           </Row>
         </Col>
-        <Col span={5}>
+        <Col span={5} style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <S.TestConnectionButton loading={loading} onClick={onClick}>
             Test connection
-            <IoChevronForwardOutline style={{ marginLeft: '0.5rem' }} />
+            <IoChevronForwardOutline />
           </S.TestConnectionButton>
         </Col>
       </S.UrlWrapper>
@@ -64,13 +66,13 @@ export const TestConnectionGroup: React.FC<{
       <div style={{ flex: 1 }}>
         <p style={{ marginBottom: '0.3rem', fontSize: FONT_SIZE.xs }}>Enter database username</p>
         <FormItem name="username">
-          <Input />
+          <Input style={{ border: '1px solid var(--black)', background: 'var(--grey4)' }} />
         </FormItem>
       </div>
       <div style={{ flex: 1 }}>
         <p style={{ marginBottom: '0.3rem', fontSize: FONT_SIZE.xs }}>Enter database password</p>
         <FormItem name="password">
-          <Input.Password />
+          <Input.Password style={{ border: '1px solid var(--black)', background: 'var(--grey4)' }} />
         </FormItem>
       </div>
     </div>

@@ -9,7 +9,6 @@ export const topNavigation: TopNavigationItem[] = [
   { key: 'connect', label: 'topNavigation.connect', url: '/requests' },
   { key: 'database', label: 'topNavigation.database', url: '/database-sources' },
   { key: 'dataset', label: 'topNavigation.dataset', url: '/datasets' },
-  { key: 'browse', label: 'topNavigation.browse', url: '/browse' },
 ];
 
 export function findUrlByKey(key: string): string {

@@ -15,6 +15,10 @@ export const InputDescription = styled.div`
 `;
 
 export const Selection = styled(Select)`
+  .ant-select-selector {
+    border: 1px solid var(--black) !important;
+  }
+
   .ant-select-arrow {
     color: var(--black);
     margin-top: 0.2rem;

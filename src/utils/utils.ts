@@ -1,7 +1,6 @@
 import { NotificationType } from '@app/components/common/BaseNotification/BaseNotification';
 import { Priority } from '@app//constants/enums/priorities';
-import { CurrencyTypeEnum, Severity } from '@app/interfaces/interfaces';
-import { BaseBadgeProps } from '@app/components/common/BaseBadge/BaseBadge';
+import { CurrencyTypeEnum } from '@app/interfaces/interfaces';
 import { currencies } from '@app/constants/config/currencies';
 
 export const camelize = (string: string): string => {
@@ -179,12 +178,4 @@ export const getPaymentCardTypeIcon = (type: string): string | null => {
     default:
       return null;
   }
-};
-
-export const mapBadgeStatus = (status: BaseBadgeProps['status']): Severity => {
-  if (!status || status === 'default' || status === 'processing') {
-    return 'info';
-  }
-
-  return status;
 };

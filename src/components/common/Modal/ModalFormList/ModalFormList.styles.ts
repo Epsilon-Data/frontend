@@ -27,6 +27,10 @@ export const EmailInput = styled(Input)`
 export const RoleSelect = styled(Select)`
   width: 100%;
 
+  .ant-select-selector {
+    border: 1px solid var(--black) !important;
+  }
+
   .ant-select-arrow {
     margin-top: 0.2rem;
     color: var(--black);
@@ -39,6 +43,13 @@ export const AddButton = styled(Button)`
   background-color: var(--black);
   border: none;
   color: var(--white);
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: var(--black) !important;
+    color: var(--white) !important;
+  }
 `;
 
 export const HorizontalLine = styled.div`

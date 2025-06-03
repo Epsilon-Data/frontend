@@ -18,10 +18,12 @@ export const InputDescription = styled.div`
 
 export const UrlWrapper = styled(Row)`
   display: flex;
+  justify-content: space-between;
 `;
 
 export const UrlInput = styled(Input)`
   width: 100%;
+  border: 1px solid var(--black) !important;
 `;
 
 export const RoleSelect = styled(Select)`
@@ -37,10 +39,29 @@ export const TestConnectionButton = styled(Button)`
   background-color: var(--black);
   border: none;
   color: var(--white);
-  margin-top: 0.1rem;
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+
+  span,
+  svg {
+    transition: transform 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: var(--black) !important;
+    color: var(--white) !important;
+  }
+
+  &:hover span {
+    transform: translateX(-4px);
+  }
+
+  &:hover svg {
+    transform: translateX(4px);
+  }
 `;
 
 export const TestMessage = styled.div`

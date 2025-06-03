@@ -22,7 +22,11 @@ export const ModalInput: React.FC<{
         </S.InputDescription>
       </div>
       <FormItem name={name} style={{ ...style }}>
-        <Input suffix={suffix} disabled={disabled} />
+        <Input
+          suffix={suffix}
+          disabled={disabled}
+          style={{ border: '1px solid var(--black)', background: 'var(--grey4)' }}
+        />
       </FormItem>
     </div>
   );

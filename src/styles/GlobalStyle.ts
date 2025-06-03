@@ -198,7 +198,11 @@ export default createGlobalStyle`
 
   .ant-modal-mask {
     backdrop-filter: blur(6px);
-    background-color: rgba(0, 0, 0, 0.3); /* Optional for dark overlay */
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .ant-select-dropdown {
+    background-color: var(--white);
   }
   // notifications end
 `;

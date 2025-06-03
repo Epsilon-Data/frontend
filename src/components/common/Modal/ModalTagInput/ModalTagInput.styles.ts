@@ -5,10 +5,12 @@ import styled from 'styled-components';
 export const TagSelect = styled(Select)`
   .ant-select-selector {
     height: 2.5rem !important;
+    border: 1px solid var(--black) !important;
+    background-color: var(--grey4) !important;
 
     .ant-select-selection-overflow-item .ant-select-selection-item {
       border-radius: 1rem;
-      background: var(--secondary-color);
+      background: var(--blue-dark);
 
       .ant-select-selection-item-content {
         font-size: ${FONT_SIZE.xxs};

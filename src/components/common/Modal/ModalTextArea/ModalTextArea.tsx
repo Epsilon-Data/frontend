@@ -18,7 +18,11 @@ export const ModalTextArea: React.FC<{
         <S.InputDescription>{inputDescription}</S.InputDescription>
       </div>
       <FormItem name={name} style={{ ...style }}>
-        <TextArea rows={4} disabled={disabled} />
+        <TextArea
+          rows={4}
+          disabled={disabled}
+          style={{ border: '1px solid var(--black)', background: 'var(--grey4)' }}
+        />
       </FormItem>
     </div>
   );

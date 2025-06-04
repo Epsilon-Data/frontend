@@ -301,3 +301,8 @@ export const ShowButton = styled.button`
   align-items: center;
   gap: 0.4rem;
 `;
+
+export const MapWrapper = styled.div`
+  height: 25rem;
+  width: 100%;
+`;

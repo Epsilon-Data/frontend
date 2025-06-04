@@ -64,9 +64,9 @@ export const antOverrideCssVariables = css`
 `;
 
 export const elementMappingVariables = css`
-  --element-object-bg: #ff9898;
-  --element-category-bg: #ffa439;
-  --element-subcategory-bg: #ffe69b;
+  --element-object-bg: #ff6666;
+  --element-category-bg: #ff8833;
+  --element-subcategory-bg: #33b1ff;
   --sider-bg: #ecf1ff;
 `;
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './BrowseDatasetPage.styles';
@@ -12,8 +12,38 @@ import { getProjectDetails, getProjects, ProjectInfo, ProjectSummaryInfo } from 
 import { ModalAccessHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { FONT_FAMILY, FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
-import { Modal } from 'antd';
+import { Image } from 'antd';
 import { RxEnterFullScreen } from 'react-icons/rx';
+import { DB_TYPE_LABELS } from '@app/constants/projects';
+import ReactFlow, { Background, BackgroundVariant, ReactFlowProvider } from 'reactflow';
+import { createNodeTypes, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
+import { DefaultNode } from '@app/components/reactflow-components/DefaultNode/DefaultNode';
+
+const nodes = [
+  {
+    id: '1',
+    data: { label: 'Node 1' },
+    type: 'object',
+    position: { x: 5, y: 5 },
+  },
+  {
+    id: '2',
+    data: { label: 'Node 2' },
+    type: 'category',
+    position: { x: 35, y: 35 },
+  },
+  {
+    id: '3',
+    data: { label: 'Node 3' },
+    type: 'subcategory',
+    position: { x: 65, y: 65 },
+  },
+];
+
+const edges = [
+  { id: 'e1-2', source: '1', target: '2' },
+  { id: 'e1-3', source: '1', target: '3' },
+];
 
 const SEARCH_FIELDS = [
   { value: 'all', label: t('browse.main.search.fields.all') },
@@ -23,52 +53,52 @@ const SEARCH_FIELDS = [
 ];
 
 const ImageWithPreview: React.FC<{ src: string; alt?: string }> = ({ src, alt }) => {
-  const [open, setOpen] = useState(false);
-
+  const [visible, setVisible] = useState(false);
   return (
-    <>
-      <div
-        style={{
-          position: 'relative',
-          width: '300px',
-          height: '200px',
-          borderRadius: '8px',
-          overflow: 'hidden',
-          background: '#eee',
-        }}
-      >
-        <img
+    <div
+      style={{
+        position: 'relative',
+        width: '300px',
+        height: '200px',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        background: '#eee',
+      }}
+    >
+      <Image.PreviewGroup>
+        <Image
           src={src}
           alt={alt}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            display: 'block',
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }}
+          preview={{
+            mask: false,
+            visible,
+            onVisibleChange: (value) => {
+              console.log('visible', value);
+              setVisible(value);
+            },
+            src: src,
           }}
         />
-        <button
-          onClick={() => setOpen(true)}
-          style={{
-            position: 'absolute',
-            bottom: '10px',
-            right: '10px',
-            background: 'white',
-            borderRadius: '8px',
-            border: 'none',
-            padding: '0.5rem 0.5rem 0.3rem',
-            boxShadow: '0 0 6px rgba(0,0,0,0.2)',
-            cursor: 'pointer',
-          }}
-        >
-          <RxEnterFullScreen />
-        </button>
-      </div>
+      </Image.PreviewGroup>
 
-      <Modal open={open} footer={null} onCancel={() => setOpen(false)} centered>
-        <img src={src} alt={alt} style={{ width: '100%' }} />
-      </Modal>
-    </>
+      <button
+        onClick={() => setVisible(true)}
+        style={{
+          position: 'absolute',
+          bottom: '10px',
+          right: '10px',
+          background: 'white',
+          borderRadius: '8px',
+          border: 'none',
+          padding: '0.5rem 0.5rem 0.2rem',
+          boxShadow: '0 0 6px rgba(0,0,0,0.2)',
+          cursor: 'pointer',
+        }}
+      >
+        <RxEnterFullScreen />
+      </button>
+    </div>
   );
 };
 
@@ -105,6 +135,9 @@ const BrowseDatasetPage: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
+  const tempDbDetails = JSON.parse(project.connection?.tempDbDetails ?? '{}');
+
+  const nodeTypes = useMemo(() => createNodeTypes(DefaultNode), []);
 
   useEffect(() => {
     if (descriptionRef.current) {
@@ -155,12 +188,21 @@ const BrowseDatasetPage: React.FC = () => {
           />
           <DetailsRow
             title={t('browse.main.details.projectDetails.info.participantsNum')}
-            content={project.dbParticipantsNum}
+            content={project.participantsNum}
           />
           <DetailsRow title={t('browse.main.details.projectDetails.info.lead')} content={project.lead} />
           <DetailsRow
             title={t('browse.main.details.projectDetails.info.members')}
-            content={t('browse.main.details.projectDetails.info.notAvailable')}
+            content={
+              project.members
+                ? project.members
+                    .map((member) => {
+                      const memberObj = JSON.parse(member);
+                      return `${memberObj.email} (${memberObj.role})`;
+                    })
+                    .join(', ')
+                : t('browse.main.details.projectDetails.info.notAvailable')
+            }
           />
         </>
       ),
@@ -198,7 +240,6 @@ const BrowseDatasetPage: React.FC = () => {
       .then((res) => {
         setIsModalOpen(true);
         setProject(res);
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -310,45 +351,51 @@ const BrowseDatasetPage: React.FC = () => {
             >
               <DetailsRow
                 title={t('browse.main.details.aboutDb.info.dbName')}
-                content={project.university}
+                content={tempDbDetails.name}
                 titleWidth={6}
                 contentWidth={15}
               />
               <DetailsRow
                 title={t('browse.main.details.aboutDb.info.dbNature')}
-                content={project.university}
+                content={t(DB_TYPE_LABELS[tempDbDetails.type] ?? tempDbDetails.type)}
                 titleWidth={6}
                 contentWidth={15}
               />
             </div>
             <S.TextHeader style={{ color: 'var(--blue-dark)' }}>{t('browse.main.details.dbPreview')}</S.TextHeader>
-            {/* <Image.PreviewGroup
-              preview={{
-                visible: isPreviewVisible,
-                onVisibleChange: (visible) => setPreviewVisible(visible),
-              }}
-            >
-              <div>
-                {' '}
-                <Image
-                  width={300}
-                  height={200}
-                  style={{ objectFit: 'cover', borderRadius: '8px' }}
-                  src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-                />
-                <Image
-                  width={300}
-                  height={200}
-                  style={{ objectFit: 'cover', borderRadius: '8px' }}
-                  src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
-                />
-              </div>
-            </Image.PreviewGroup> */}
             <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2rem' }}>
               <ImageWithPreview src="https://images.unsplash.com/photo-1569521588854-9b461abc92ac?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
               <ImageWithPreview src="https://images.unsplash.com/photo-1553949345-eb786bb3f7ba?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
             </div>
             <S.TextHeader style={{ color: 'var(--blue-dark)' }}>{t('browse.main.details.dbPreview')}</S.TextHeader>
+            {project ? (
+              <ReactFlowProvider>
+                <S.MapWrapper>
+                  <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    edgesUpdatable={false}
+                    edgesFocusable={false}
+                    nodesDraggable={false}
+                    nodesConnectable={false}
+                    nodesFocusable={false}
+                    draggable={true}
+                    zoomOnScroll={true}
+                    panOnDrag={true}
+                    deleteKeyCode={[]}
+                    nodeTypes={nodeTypes}
+                    nodeOrigin={REACT_FLOW_OPTIONS.nodeOrigin as [number, number]}
+                    fitView={REACT_FLOW_OPTIONS.fitView}
+                    fitViewOptions={REACT_FLOW_OPTIONS.fitViewOptions}
+                    proOptions={{ hideAttribution: true }}
+                  >
+                    <Background variant={BackgroundVariant.Dots} />
+                  </ReactFlow>
+                </S.MapWrapper>
+              </ReactFlowProvider>
+            ) : (
+              <S.TextHeader>{t('browse.info.noArchetype')}</S.TextHeader>
+            )}
           </S.DetailsSection>
         </S.AccessContent>
       </S.DetailsModal>

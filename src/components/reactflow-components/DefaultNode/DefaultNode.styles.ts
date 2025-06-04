@@ -2,9 +2,10 @@ import { FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
 import { Handle } from 'reactflow';
 import styled from 'styled-components';
 
-export const PermissionNodeWrapper = styled.div`
+export const DefaultNodeWrapper = styled.div`
   border-radius: 0.5rem;
   padding: 0rem 0.5rem 0.5rem 0rem;
+  width: fit-content;
   height: 50px;
   padding: 0.5rem;
 `;
@@ -22,7 +23,7 @@ export const TextDisplay = styled.div`
   white-space: nowrap;
 `;
 
-export const PermissionHandle = styled(Handle)`
+export const DefaultHandle = styled(Handle)`
   && {
     visibility: hidden;
   }

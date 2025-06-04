@@ -596,5 +596,12 @@
     "browse": "Browse",
     "dataset": "Datasets",
     "logout": "Logout"
+  },
+  "dbTypeLabels": {
+    "relational": "Relational database",
+    "document": "Document database",
+    "graph": "Graph database",
+    "flatFile": "Flat file database"
+
   }
 }

@@ -39,7 +39,8 @@ export interface ProjectInfo {
   startDate: Date;
   endDate: Date;
   members: string[];
-  dbParticipantsNum: string;
+  participantsNum: string;
+  lastModified?: Date;
   dbKeywords?: string[];
   connection: ConnectionInfo;
 }
@@ -64,7 +65,6 @@ export const getProjectDetails = async (projectId: string | undefined): Promise<
   const response = await httpClient.get(`${PROJECT_API_URL}/${projectId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-
   return response.data;
 };
 

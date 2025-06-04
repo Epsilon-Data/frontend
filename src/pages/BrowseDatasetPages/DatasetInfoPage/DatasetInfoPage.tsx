@@ -27,7 +27,7 @@ const DatasetSummaryPage: React.FC = () => {
   // const [visList, setVisList] = useState<{ title: string; url: string }[]>([]);
   const [projectDetails, setProjectDetails] = useState<ProjectInfo>({} as ProjectInfo);
 
-  // const nodeTypes = useMemo(() => createNodeTypes(PermissionNode), []);
+  // const nodeTypes = useMemo(() => createNodeTypes(DefaultNode), []);
   // const edgeTypes = useMemo(() => EDGE_TYPES, []);
 
   const tabItems = [

@@ -10,7 +10,7 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import ReactFlow, { Node, ReactFlowProvider, useEdgesState, useNodesState } from 'reactflow';
-import { PermissionNode } from '@app/components/reactflow-components/PermissionNode/PermissionNode';
+import { DefaultNode } from '@app/components/reactflow-components/DefaultNode/DefaultNode';
 import { notificationController } from '@app/controllers/notificationController';
 import 'reactflow/dist/style.css';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
@@ -55,7 +55,7 @@ export const AccessPermissionsPage: React.FC = () => {
   const [templateId, setTemplateId] = useState('');
   const projectDetails = useAppSelector((state: { project: { details: any } }) => state.project.details);
 
-  const nodeTypes = useMemo(() => createNodeTypes(PermissionNode), []);
+  const nodeTypes = useMemo(() => createNodeTypes(DefaultNode), []);
   const edgeTypes = useMemo(() => EDGE_TYPES, []);
 
   const fetch = useCallback(

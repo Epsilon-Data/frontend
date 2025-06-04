@@ -170,11 +170,12 @@ const DashboardPage: React.FC = () => {
       startDate: step2.getFieldValue('startDate'),
       endDate: step2.getFieldValue('endDate'),
       members: members.map((m) => JSON.stringify(m)),
-      dbParticipantsNum: step2.getFieldValue('participantsNum'),
+      participantsNum: step2.getFieldValue('participantsNum'),
       dbKeywords: dbKeywords,
       connection: {
         orgAdminEmail: '',
         tempDbDetails: JSON.stringify({
+          name: step4.getFieldValue('dbName'),
           type: step4.getFieldValue('dbType'),
           url: step4.getFieldValue('dbUrl'),
           username: step4.getFieldValue('username'),

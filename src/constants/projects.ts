@@ -1,6 +1,5 @@
 import { AccessDetails } from '@app/interfaces/interfaces';
 
-export const DATE_FORMAT = 'dd/MM/yyyy';
 export const PROJECT_API_URL = '/hub/project';
 
 export const INITIAL_ACCESS_VALUES: AccessDetails = {
@@ -21,4 +20,12 @@ export const INITIAL_ACCESS_VALUES: AccessDetails = {
   projectMembers: [],
   ethicsId: '',
   requestor: '',
+};
+
+export const DB_TYPE_LABELS: Record<string, string> = {
+  postgres: 'dbTypeLabels.relational',
+  mysql: 'dbTypeLabels.relational',
+  mongodb: 'dbTypeLabels.document',
+  neo4j: 'dbTypeLabels.graph',
+  csv: 'dbTypeLabels.flatFile',
 };

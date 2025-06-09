@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import { BaseCard as CommonCard } from '@app/components/common/BaseCard/BaseCard';
-import { SearchInput } from '@app/components/common/inputs/SearchInput/SearchInput';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
-import { Checkbox, Tag, Typography } from 'antd';
+import { Checkbox, Input, Tag, Typography } from 'antd';
 import { FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
 
 export const CardWrapper = styled.div`
@@ -20,7 +19,7 @@ export const SearchCard = styled(CommonCard)`
   background: var(--sider-bg);
 `;
 
-export const SearchBar = styled(SearchInput)`
+export const SearchBar = styled(Input.Search)`
   width: 80%;
   align-items: center;
   justify-content: center;

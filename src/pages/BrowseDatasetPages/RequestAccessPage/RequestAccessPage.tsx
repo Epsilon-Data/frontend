@@ -35,7 +35,6 @@ const RequestAccessPage: React.FC<{ mode: string }> = ({ mode }) => {
                 ...INITIAL_ACCESS_VALUES,
                 requestor: user?.id ?? '',
                 id: id,
-                customId: res.id,
                 name: res.name,
               });
             }

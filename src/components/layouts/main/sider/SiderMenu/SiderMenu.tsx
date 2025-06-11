@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import * as S from './SiderMenu.styles';
-import { SidebarNavigationItem, returnCurrentNav } from '../sidebarNavigation';
+import { returnCurrentNav, SidebarNavigationItem } from '../sidebarNavigation';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '@app/hooks/reduxHooks';
+import { useMounted } from '@app/hooks/useMounted';
 
 interface SiderContentProps {
   selectedNav: string;
@@ -11,43 +11,79 @@ interface SiderContentProps {
 
 const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
   const location = useLocation();
-  const [current, setCurrent] = useState(location.pathname);
+  const [searchParams] = useSearchParams();
   const { t } = useTranslation();
-  const admin = useAppSelector((state) => state.user.user?.roles?.includes('admin') || false);
-  const currentNav = returnCurrentNav(selectedNav, admin);
-
+  const currentNav = returnCurrentNav(selectedNav);
+  const isMounted = useMounted();
   const itemRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const indicatorRef = useRef<HTMLDivElement | null>(null);
-
-  const sidebarNavFlat = currentNav.reduce(
-    (result: SidebarNavigationItem[], current) =>
-      result.concat(current.children && current.children.length > 0 ? current.children : current),
-    [],
-  );
-
-  const currentMenuItem = sidebarNavFlat.find(({ url }) => url === location.pathname);
-  const defaultSelectedKeys = currentMenuItem ? [currentMenuItem.key] : [];
-
-  const openedSubmenu = currentNav.find(({ children }) => children?.some(({ url }) => url === location.pathname));
-  const defaultOpenKeys = openedSubmenu ? [openedSubmenu.key] : [];
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [openKeys, setOpenKeys] = useState<string[]>([]);
 
   useEffect(() => {
-    if (location.pathname !== current) {
-      setCurrent(location.pathname);
-    }
+    const sidebarNavFlat = currentNav.reduce(
+      (result: SidebarNavigationItem[], item) => result.concat(item.children?.length ? item.children : item),
+      [],
+    );
 
-    const activeRef = Object.values(itemRefs.current).find((ref) => ref?.dataset.key === current);
+    const currentMenuItem = sidebarNavFlat.find(({ url }) => url === location.pathname);
+    const selected = currentMenuItem ? [currentMenuItem.key] : [];
 
-    if (indicatorRef.current && activeRef) {
-      const menuWrapper = indicatorRef.current.parentElement!;
-      const top = activeRef.getBoundingClientRect().top - menuWrapper.getBoundingClientRect().top - 32;
-      indicatorRef.current.style.transform = `translateY(${top}px)`;
-    }
-  }, [location, current]);
+    const parent = currentNav.find((nav) => nav.children?.some((child) => child.url === location.pathname));
+    const open = parent ? [parent.key] : [];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function handleClick(e: any) {
-    setCurrent(e.key);
+    setSelectedKeys(selected);
+    setOpenKeys(open);
+  }, [selectedNav, location.pathname, currentNav]);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    requestAnimationFrame(() => {
+      let activeRef = Object.values(itemRefs.current).find((ref) => ref?.dataset.key === location.pathname);
+
+      if (!activeRef) {
+        let matchedChild: SidebarNavigationItem | undefined;
+        for (const nav of currentNav) {
+          const child = nav.children?.find((child) => child.url === location.pathname);
+          if (child) {
+            matchedChild = child;
+            break;
+          }
+        }
+        if (matchedChild) {
+          activeRef = itemRefs.current[matchedChild.key] || null;
+        }
+      }
+
+      if (indicatorRef.current && activeRef) {
+        const menuWrapper = indicatorRef.current.parentElement!;
+        const top = activeRef.getBoundingClientRect().top - menuWrapper.getBoundingClientRect().top - 32;
+        indicatorRef.current.style.transform = `translateY(${top}px)`;
+      }
+    });
+  }, [location, currentNav, isMounted]);
+
+  function handleOpenChange(e: string[]) {
+    requestAnimationFrame(() => {
+      let activeRef: HTMLDivElement | null = null;
+
+      if (e.length === 0) {
+        const parentNav = currentNav.find((nav) => nav.children?.some((child) => child.url === location.pathname));
+        if (parentNav) {
+          activeRef = itemRefs.current[parentNav.key] || null;
+        }
+      } else {
+        activeRef = Object.values(itemRefs.current).find((ref) => ref?.dataset.key === location.pathname) || null;
+      }
+
+      const menuWrapper = indicatorRef.current?.parentElement;
+      if (indicatorRef.current && activeRef && menuWrapper) {
+        const top = activeRef.getBoundingClientRect().top - menuWrapper.getBoundingClientRect().top - 32;
+        indicatorRef.current.style.transform = `translateY(${top}px)`;
+      }
+    });
+    setOpenKeys(e);
   }
 
   return (
@@ -55,37 +91,50 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
       <div className="menu-indicator" ref={indicatorRef} />
       <S.Menu
         mode="inline"
-        defaultSelectedKeys={defaultSelectedKeys}
-        defaultOpenKeys={defaultOpenKeys}
-        selectedKeys={defaultSelectedKeys}
-        onClick={handleClick}
+        openKeys={openKeys}
+        selectedKeys={selectedKeys}
+        onOpenChange={handleOpenChange}
         disabledOverflow={true}
         items={currentNav.map((nav) => {
           const isSubMenu = nav.children?.length;
-
+          const navUrl = nav.url || '';
           return {
             key: nav.key,
             title: t(nav.title),
             label: isSubMenu ? (
-              t(nav.title)
+              <div ref={(el) => (itemRefs.current[nav.key] = el)}>{t(nav.title)}</div>
             ) : (
-              <div ref={(el) => (itemRefs.current[nav.key] = el)} data-key={nav.url || ''} style={{ flex: 1 }}>
-                <Link to={nav.url || ''}>{t(nav.title)}</Link>
+              <div
+                ref={(el) => (itemRefs.current[nav.key] = el)}
+                data-key={searchParams.size !== 0 ? `${navUrl}?${searchParams.toString()}` : navUrl}
+                style={{ flex: 1 }}
+              >
+                <Link to={searchParams.size !== 0 ? `${navUrl}?${searchParams.toString()}` : navUrl}>
+                  {t(nav.title)}
+                </Link>
               </div>
             ),
             icon: nav.icon,
             children:
               isSubMenu &&
               nav.children &&
-              nav.children.map((childNav) => ({
-                key: childNav.key,
-                label: (
-                  <div ref={(el) => (itemRefs.current[childNav.key] = el)} data-key={childNav.url || ''}>
-                    <Link to={childNav.url || ''}>{t(childNav.title)}</Link>
-                  </div>
-                ),
-                title: t(childNav.title),
-              })),
+              nav.children.map((childNav) => {
+                const childUrl = childNav.url || '';
+                return {
+                  key: childNav.key,
+                  label: (
+                    <div
+                      ref={(el) => (itemRefs.current[childNav.key] = el)}
+                      data-key={searchParams.size !== 0 ? `${childUrl}?${searchParams.toString()}` : childUrl}
+                    >
+                      <Link to={searchParams.size !== 0 ? `${childUrl}?${searchParams.toString()}` : childUrl}>
+                        {t(childNav.title)}
+                      </Link>
+                    </div>
+                  ),
+                  title: t(childNav.title),
+                };
+              }),
           };
         })}
       />

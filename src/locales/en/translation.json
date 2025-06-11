@@ -103,6 +103,26 @@
       }
     }
   },
+  "project": {
+    "title": "Project",
+    "sidebar": {
+      "projectDb": {
+        "title": "Project database",
+        "dbMapping": "Database mapping",
+        "managePermissions": "Manage permissions",
+        "metadata": "Metadata"
+      },
+      "projectAccess": "Project access",
+      "team": "Your team",
+      "settings": "Settings"
+    },
+    "main": {
+      "dbMapping": {
+        "title": "Database mapping",
+        "newTemplate": "New template"
+      }
+    }
+  },
   "connectionRequests": {
     "rTitle": "Connection Requests",
     "oaTitle": "Connection Requests",
@@ -588,14 +608,6 @@
         "locate": "Locate Line"
       }
     }
-  },
-  "topNavigation": {
-    "home": "Home",
-    "connect": "Connect",
-    "database": "My Databases",
-    "browse": "Browse",
-    "dataset": "Datasets",
-    "logout": "Logout"
   },
   "dbTypeLabels": {
     "relational": "Relational database",

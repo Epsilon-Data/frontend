@@ -14,22 +14,22 @@ export interface SidebarNavigationItem {
 const homeNavigation: SidebarNavigationItem[] = [
   {
     title: 'dashboard.sidebar.projects',
-    key: 'projects',
+    key: 'home',
     url: '/',
     icon: <PiCirclesThreeBold size={17} />,
   },
   {
     title: 'dashboard.sidebar.browserHub.title',
-    key: 'browse',
+    key: 'browse-hub',
     children: [
       {
         title: 'dashboard.sidebar.browserHub.browseProjects',
-        key: 'browse/projects',
+        key: 'browse',
         url: '/browse',
       },
       {
         title: 'dashboard.sidebar.browserHub.trackRequests',
-        key: 'browse/track-requests',
+        key: 'track-requests',
         url: '/track-requests',
       },
     ],
@@ -43,86 +43,58 @@ const homeNavigation: SidebarNavigationItem[] = [
   },
 ];
 
-const connectNavigation: SidebarNavigationItem[] = [
+const projectNavigation: SidebarNavigationItem[] = [
   {
-    title: 'connectionRequests.dbRequestSidebar.main',
-    key: 'requests/database',
+    title: 'project.sidebar.projectDb.title',
+    key: 'project',
     children: [
       {
-        title: 'connectionRequests.dbRequestSidebar.sent',
-        key: 'requests/database/sent',
-        url: '/requests/database/sent',
+        title: 'project.sidebar.projectDb.dbMapping',
+        key: 'project/db-mapping',
+        url: '/project/db-mapping',
+      },
+      {
+        title: 'project.sidebar.projectDb.managePermissions',
+        key: 'project/manage-permissions',
+        url: '/project/manage-permissions',
+      },
+      {
+        title: 'project.sidebar.projectDb.metadata',
+        key: 'project/metadata',
+        url: '/project/metadata',
       },
     ],
   },
   {
-    title: 'connectionRequests.accessRequestSidebar.main',
-    key: 'requests/user',
-    children: [
-      {
-        title: 'connectionRequests.accessRequestSidebar.sent',
-        key: 'requests/user/sent',
-        url: '/requests/user/sent',
-      },
-      {
-        title: 'connectionRequests.accessRequestSidebar.receive',
-        key: 'requests/user/receive',
-        url: '/requests/user/receive',
-      },
-    ],
+    title: 'project.sidebar.projectAccess',
+    key: 'project-access',
+    url: '/project/access',
+  },
+  {
+    title: 'project.sidebar.team',
+    key: 'team',
+    url: '/project/team',
+  },
+  {
+    title: 'project.sidebar.settings',
+    key: 'settings',
+    url: '/project/settings',
   },
 ];
 
-const sourceNavigation: SidebarNavigationItem[] = [
-  { title: 'databaseSources.metadata.title', key: 'metadata' },
-  { title: 'databaseSources.describeDataset.title', key: 'describe-dataset' },
-  { title: 'databaseSources.accessPermissions.title', key: 'access-permissions' },
-  { title: 'databaseSources.otherSettings.title', key: 'other-settings' },
-];
+const sidebarNavigation: { [key: string]: SidebarNavigationItem[] } = {
+  home: homeNavigation,
+  project: projectNavigation,
+};
 
-const datasetNavigation: SidebarNavigationItem[] = [
-  { title: 'dataset.analysis.title', key: 'analysis' },
-  { title: 'dataset.standard.title', key: 'standard' },
-];
-
-export function returnCurrentNav(key: string, admin: boolean): SidebarNavigationItem[] {
-  if (key === 'connect' && !admin) {
-    return connectNavigation;
-  } else if (key === 'connect' && admin) {
-    const receiveChild = {
-      title: 'connectionRequests.dbRequestSidebar.receive',
-      key: 'requests/database/receive',
-      url: '/requests/database/receive',
-    };
-    const updatedNav = connectNavigation.map((item) => {
-      if (item.key === 'requests/database') {
-        return {
-          ...item,
-          children: item.children ? [...item.children, receiveChild] : [receiveChild],
-        };
-      }
-      return item;
-    });
-    return updatedNav;
-  } else if (key === 'home') {
-    return homeNavigation;
-  } else if (key === 'database') {
-    return sourceNavigation;
-  } else if (key === 'dataset') {
-    return datasetNavigation;
-  }
-  return [];
+export function returnCurrentNav(selectedNav: string): SidebarNavigationItem[] {
+  return sidebarNavigation[selectedNav] || [];
 }
 
-export function updateUrlById(id: string, selectedKey: string, admin: boolean): void {
-  let prefixUrl = '';
-  const currentNav = returnCurrentNav(selectedKey, admin);
-  if (selectedKey == 'database') {
-    prefixUrl = '/database-sources/';
-  } else if (selectedKey == 'dataset') {
-    prefixUrl = '/datasets/';
+export function findKeyByUrl(url: string): string {
+  const section = url.split('/')[1];
+  if (section in sidebarNavigation) {
+    return section;
   }
-  currentNav.forEach((item: SidebarNavigationItem) => {
-    item.url = prefixUrl + item.key + '/' + id;
-  });
+  return 'home';
 }

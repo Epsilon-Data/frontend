@@ -20,11 +20,12 @@ import KeywordGuidance from '@app/components/common/Modal/KeywordGuidance/Keywor
 import { ModalSelect } from '@app/components/common/Modal/ModalSelect/ModalSelect';
 import { TestConnectionGroup } from '@app/components/common/Modal/TestConnectionGroup/TestConnectionGroup';
 import { testConnection } from '@app/api/connectionRequests.api';
-import { createProject, getProjects, ProjectSummaryInfo } from '@app/api/projects.api';
+import { createProject, getUserProjects, ProjectSummaryInfo } from '@app/api/projects.api';
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
 import { LAYOUT } from '@app/styles/themes/constants';
 import config from '@app/config/config';
 import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 
 const getInitialFormValues = () => {
   if (config.isDev) {
@@ -68,6 +69,7 @@ const DashboardPage: React.FC = () => {
   const [step3] = Form.useForm();
   const [step4] = Form.useForm();
 
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const user = useAppSelector((state) => state.user.user);
   const [layout, setLayout] = useState<'grid' | 'list'>('grid');
@@ -190,7 +192,7 @@ const DashboardPage: React.FC = () => {
   };
 
   const fetch = useCallback(() => {
-    getProjects().then((res) => {
+    getUserProjects().then((res) => {
       setProjects(res);
     });
   }, []);
@@ -202,7 +204,7 @@ const DashboardPage: React.FC = () => {
   const handleDraft = () => {};
 
   const handleProjectClick = (projectId: string) => {
-    console.log(projectId);
+    navigate(`/project/db-mapping?id=${projectId}`);
   };
 
   return (
@@ -245,12 +247,12 @@ const DashboardPage: React.FC = () => {
           </S.AddProjectButton>
         </S.ToolsWrapper>
       </S.HeaderWrapper>
-      <S.ProjectsWrapper>
+      <S.ProjectsWrapper style={{ marginTop: '3rem' }}>
         <S.ProjectsHeader>{t('dashboard.main.personalProjects.title')}</S.ProjectsHeader>
         <S.ProjectsDescription>{t('dashboard.main.personalProjects.description')}</S.ProjectsDescription>
         <ProjectList projects={projects} mode="personal" layout={layout} onProjectClick={handleProjectClick} />
       </S.ProjectsWrapper>
-      <S.ProjectsWrapper>
+      <S.ProjectsWrapper style={{ marginTop: '5rem' }}>
         <S.ProjectsHeader>{t('dashboard.main.sharedProjects.title')}</S.ProjectsHeader>
         <S.ProjectsDescription>{t('dashboard.main.sharedProjects.description')}</S.ProjectsDescription>
         <ProjectList projects={projects} mode="shared" layout={layout} onProjectClick={handleProjectClick} />

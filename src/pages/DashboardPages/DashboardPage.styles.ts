@@ -120,7 +120,6 @@ export const AddProjectButton = styled(Button)`
 export const ProjectsWrapper = styled.div`
   display: column;
   align-items: left;
-  margin-top: 5rem;
 `;
 
 export const ProjectsHeader = styled.div`

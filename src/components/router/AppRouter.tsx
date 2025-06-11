@@ -32,7 +32,7 @@ const AccessRequestsPage = React.lazy(() => import('@app/pages/AccessRequestPage
 const ViewAccessRequestPage = React.lazy(() => import('@app/pages/AccessRequestPages/ViewRequestPage/ViewRequestPage'));
 
 const SourceListPage = React.lazy(() => import('@app/pages/DatasourcePages/SourceListPage'));
-const MetadataPage = React.lazy(() => import('@app/pages/DatasourcePages/MetadataPage/MetadataPage'));
+const DatabaseMappingPage = React.lazy(() => import('@app/pages/DatasourcePages/DatabaseMapping/DatabaseMappingPage'));
 const DatabaseSummaryPage = React.lazy(
   () => import('@app/pages/DatasourcePages/DatabaseSummaryPage/DatabaseSummaryPage'),
 );
@@ -80,7 +80,7 @@ const AccessRequests = withLoading(AccessRequestsPage);
 const ViewAccessRequest = withLoading(ViewAccessRequestPage);
 
 const SourceList = withLoading(SourceListPage);
-const Metadata = withLoading(MetadataPage);
+const DatabaseMapping = withLoading(DatabaseMappingPage);
 const DatabaseSummary = withLoading(DatabaseSummaryPage);
 const TableInfo = withLoading(TableInfoPage);
 const DescribeDataset = withLoading(DescribeDatasetPage);
@@ -115,6 +115,8 @@ export const AppRouter: React.FC = () => {
       <Routes>
         <Route path={DASHBOARD_PATH} element={protectedLayout}>
           <Route index element={<Dashboard />} />
+          <Route path="browse" element={<BrowseDatasets />} />
+          <Route path="project/db-mapping" element={<DatabaseMapping />} />
           <Route path="settings/pat" element={<AccessTokens />} />
           <Route path="requests/database/:page" element={<ConnectionRequests />} />
           <Route path="requests/database/create/:page" element={<CreateRequest />} />
@@ -125,7 +127,6 @@ export const AppRouter: React.FC = () => {
           <Route path="requests/user/view/:id" element={<ViewAccessRequest />} />
           <Route path="requests/user/edit/:id/:page" element={<RequestAccess mode="edit" />} />
           <Route path="database-sources" element={<SourceList />} />
-          <Route path="database-sources/metadata/:id" element={<Metadata />} />
           <Route path="database-sources/metadata/:id/db-summary" element={<DatabaseSummary />} />
           <Route path="database-sources/metadata/:id/table-info" element={<TableInfo />} />
           <Route path="database-sources/describe-dataset/:id" element={<DescribeDataset />} />
@@ -137,7 +138,6 @@ export const AppRouter: React.FC = () => {
           <Route path="datasets/analysis/:id/view/:analysisId" element={<AnalysisView />} />
           <Route path="datasets/analysis/:id/view/:analysisId/upload/:scriptId" element={<AnalysisUpload />} />
           <Route path="datasets/standard/:id" element={<StandardAnalyses />} />
-          <Route path="browse" element={<BrowseDatasets />} />
           <Route path="browse/summary/:id" element={<DatasetInfo />} />
           <Route path="browse/access/:id/:page" element={<RequestAccess mode="create" />} />
           <Route path="browse/search" element={<SearchDatasets />} />

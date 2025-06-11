@@ -305,4 +305,6 @@ export const ShowButton = styled.button`
 export const MapWrapper = styled.div`
   height: 25rem;
   width: 100%;
+  background-color: var(--grey4);
+  border-radius: 0.5rem;
 `;

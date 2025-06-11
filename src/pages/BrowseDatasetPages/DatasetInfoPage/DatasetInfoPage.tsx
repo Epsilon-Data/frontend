@@ -9,7 +9,6 @@ import { Tabs, Typography } from 'antd';
 import { InfoSectionHeader } from '@app/components/display-info/InfoSectionHeader';
 import { InfoItem } from '@app/components/display-info/InfoItem';
 import { ProjectDetails } from './ProjectDetails/ProjectDetails';
-import 'reactflow/dist/style.css';
 import { useMounted } from '@app/hooks/useMounted';
 import { ProjectInfo, getProjectDetails } from '@app/api/projects.api';
 
@@ -91,7 +90,7 @@ const DatasetSummaryPage: React.FC = () => {
             </S.InfoHeader>
             <InfoSectionHeader text={t('browse.info.description')} />
             <S.Text>{projectDetails.description}</S.Text>
-            <InfoItem label={t('browse.info.participantsNum')} text={projectDetails.dbParticipantsNum.toString()} />
+            <InfoItem label={t('browse.info.participantsNum')} text={projectDetails.participantsNum.toString()} />
             <div style={{ display: 'flex', flexDirection: 'row' }}>
               <Typography.Text strong>{t('browse.info.tags') + ': '}</Typography.Text>
             </div>

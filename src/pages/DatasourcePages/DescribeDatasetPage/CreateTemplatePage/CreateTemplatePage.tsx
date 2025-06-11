@@ -6,7 +6,6 @@ import * as S from './CreateTemplatePage.styles';
 import { useParams } from 'react-router-dom';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseSteps } from '@app/components/common/BaseSteps/BaseSteps';
-import 'reactflow/dist/style.css';
 import { ExampleModal } from './ExampleModal/ExampleModal';
 import { Step1 } from './Steps/Step1/Step1';
 import { Step2 } from './Steps/Step2/Step2';

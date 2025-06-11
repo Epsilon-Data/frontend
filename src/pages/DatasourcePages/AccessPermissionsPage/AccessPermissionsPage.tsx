@@ -12,13 +12,11 @@ import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import ReactFlow, { Node, ReactFlowProvider, useEdgesState, useNodesState } from 'reactflow';
 import { DefaultNode } from '@app/components/reactflow-components/DefaultNode/DefaultNode';
 import { notificationController } from '@app/controllers/notificationController';
-import 'reactflow/dist/style.css';
-import { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { RolePermissions, Template, TemplatePermissions } from '@app/interfaces/interfaces';
 import { PermissionsModal } from './PermissionsModal/PermissionsModal';
 import { ClearModal } from './ClearModal/ClearModal';
 import { TemplateModal } from './TemplateModal/TemplateModal';
-import { Spin } from 'antd';
+import { CheckboxOptionType, Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { getTemplates } from '@app/api/templates.api';
 import { useAppSelector } from '@app/hooks/reduxHooks';
@@ -37,7 +35,7 @@ export const AccessPermissionsPage: React.FC = () => {
   const [activeTabKey, setActiveTabKey] = useState('research');
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [selectedPermissions, setSelectedPermissions] = useState<Array<CheckboxValueType>>([]);
+  const [selectedPermissions, setSelectedPermissions] = useState<Array<CheckboxOptionType>>([]);
   const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
   const [showPermissions, setShowPermissions] = useState(false);
   const [templatePermissions, setTemplatePermissions] = useState<TemplatePermissions[]>([]);
@@ -96,12 +94,12 @@ export const AccessPermissionsPage: React.FC = () => {
     },
   ];
 
-  const permissionOptions = [
+  const permissionOptions: CheckboxOptionType[] = [
     { label: t('databaseSources.accessPermissions.permission.viewAggregated'), value: 'viewAggregated' },
     { label: t('databaseSources.accessPermissions.permission.performAnalysis'), value: 'performAnalysis' },
   ];
 
-  const handleCheckboxChange = (checkedValues: Array<CheckboxValueType>) => {
+  const handleCheckboxChange = (checkedValues: Array<CheckboxOptionType>) => {
     let containsNode = false;
     rolePermissions?.access.map((access) => {
       if (access.nodeId == clickedNode?.id) {
@@ -165,15 +163,13 @@ export const AccessPermissionsPage: React.FC = () => {
     const nodePermissions = rolePermissions?.access.find((access) => access.nodeId == node.id)?.permissions;
     if (!nodePermissions) {
       setSelectedPermissions([]);
-    } else {
-      setSelectedPermissions(nodePermissions);
     }
 
     setIsForbidSetting(false);
     setShowPermissions(true);
   };
 
-  const handleSubmit = (selectedRole: string, checkedRoles: Array<CheckboxValueType>) => {
+  const handleSubmit = (selectedRole: string, checkedRoles: Array<CheckboxOptionType>) => {
     setIsPermissionsModalOpen(false);
     setSubmitLoading(true);
     if (permissions.every((permission) => permission.access.length === 0)) {
@@ -186,7 +182,7 @@ export const AccessPermissionsPage: React.FC = () => {
 
     const accessToBeCopied = permissions.find((permission) => permission.role == selectedRole)?.access;
     permissions.forEach((permission) => {
-      if (checkedRoles.includes(permission.role) && accessToBeCopied) {
+      if (checkedRoles.some((role) => role.value === permission.role) && accessToBeCopied) {
         permission.access = accessToBeCopied;
       }
     });
@@ -226,10 +222,10 @@ export const AccessPermissionsPage: React.FC = () => {
       });
   };
 
-  const handleClear = (checkedRoles: Array<CheckboxValueType>) => {
+  const handleClear = (checkedRoles: Array<CheckboxOptionType>) => {
     checkedRoles.forEach((role) => {
       permissions.forEach((permission) => {
-        if (role == permission.role) {
+        if (role.value == permission.role) {
           permission.access = [];
         }
       });

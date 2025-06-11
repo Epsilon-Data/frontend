@@ -8,41 +8,45 @@ import { t } from 'i18next';
 import { IoChevronForwardOutline, IoSearch } from 'react-icons/io5';
 import { IoIosArrowDown } from 'react-icons/io';
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
-import { getProjectDetails, getProjects, ProjectInfo, ProjectSummaryInfo } from '@app/api/projects.api';
+import { getProjectDetails, getAllProjects, ProjectInfo, ProjectSummaryInfo } from '@app/api/projects.api';
 import { ModalAccessHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { FONT_FAMILY, FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
-import { Image } from 'antd';
+import { FaChevronDown, FaChevronUp, FaMinus, FaPlus } from 'react-icons/fa6';
+import { Button, Image } from 'antd';
 import { RxEnterFullScreen } from 'react-icons/rx';
 import { DB_TYPE_LABELS } from '@app/constants/projects';
-import ReactFlow, { Background, BackgroundVariant, ReactFlowProvider } from 'reactflow';
+import ReactFlow, { Background, BackgroundVariant, Panel, ReactFlowProvider, useReactFlow } from 'reactflow';
 import { createNodeTypes, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
 import { DefaultNode } from '@app/components/reactflow-components/DefaultNode/DefaultNode';
 
 const nodes = [
   {
     id: '1',
-    data: { label: 'Node 1' },
-    type: 'object',
-    position: { x: 5, y: 5 },
+    type: 'subcategory',
+    data: { label: 'Subcat 1' },
+    position: { x: -150, y: 0 },
   },
   {
     id: '2',
-    data: { label: 'Node 2' },
-    type: 'category',
-    position: { x: 35, y: 35 },
-  },
-  {
-    id: '3',
-    data: { label: 'Node 3' },
     type: 'subcategory',
-    position: { x: 65, y: 65 },
+    data: { label: 'Subcat 2' },
+    position: { x: 150, y: 0 },
+  },
+  { id: '3', data: { label: 'Category 1' }, type: 'category', position: { x: 0, y: 100 } },
+  { id: '4', data: { label: 'Object 1' }, type: 'object', position: { x: 0, y: 200 } },
+  {
+    id: '5',
+    type: 'category',
+    data: { label: 'Category 2' },
+    position: { x: 0, y: 300 },
   },
 ];
 
 const edges = [
-  { id: 'e1-2', source: '1', target: '2' },
-  { id: 'e1-3', source: '1', target: '3' },
+  { id: '1->3', source: '1', target: '3' },
+  { id: '2->3', source: '2', target: '3' },
+  { id: '3->4', source: '3', target: '4' },
+  { id: '4->5', source: '4', target: '5' },
 ];
 
 const SEARCH_FIELDS = [
@@ -121,6 +125,48 @@ const DetailsRow: React.FC<{ title: string; content: string; titleWidth?: number
         {content}
       </Col>
     </Row>
+  );
+};
+
+const CustomZoomControls = () => {
+  const { zoomIn, zoomOut, getZoom } = useReactFlow();
+  const [zoomLevel, setZoomLevel] = useState<number>(Math.round(getZoom() * 100));
+
+  // Update zoom level whenever user zooms manually
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setZoomLevel(Math.round(getZoom() * 100));
+    }, 200);
+    return () => clearInterval(interval);
+  }, [getZoom]);
+
+  return (
+    <Panel position="bottom-right">
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          background: '#fff',
+          border: '1px solid #ddd',
+          borderRadius: '8px',
+          fontSize: '14px',
+        }}
+      >
+        <Button
+          icon={<FaPlus />}
+          size="small"
+          onClick={() => zoomIn()}
+          style={{ border: 'none', background: 'transparent', marginRight: '10px' }}
+        />
+        <span style={{ width: '2.5rem', textAlign: 'center', display: 'inline-block' }}>{zoomLevel}%</span>
+        <Button
+          icon={<FaMinus />}
+          size="small"
+          onClick={() => zoomOut()}
+          style={{ border: 'none', background: 'transparent', marginLeft: '10px' }}
+        />
+      </div>
+    </Panel>
   );
 };
 
@@ -210,7 +256,7 @@ const BrowseDatasetPage: React.FC = () => {
   ];
 
   const fetch = useCallback(() => {
-    getProjects().then((res) => {
+    getAllProjects().then((res) => {
       setProjects(res);
     });
   }, []);
@@ -339,6 +385,7 @@ const BrowseDatasetPage: React.FC = () => {
               paddingTop: '2rem',
               display: 'flex',
               flexDirection: 'column',
+              marginBottom: '3rem',
             }}
           >
             <S.TextHeader style={{ color: 'var(--blue-dark)' }}>{t('browse.main.details.aboutDb.title')}</S.TextHeader>
@@ -379,9 +426,9 @@ const BrowseDatasetPage: React.FC = () => {
                     nodesDraggable={false}
                     nodesConnectable={false}
                     nodesFocusable={false}
-                    draggable={true}
-                    zoomOnScroll={true}
-                    panOnDrag={true}
+                    draggable
+                    zoomOnScroll
+                    panOnDrag
                     deleteKeyCode={[]}
                     nodeTypes={nodeTypes}
                     nodeOrigin={REACT_FLOW_OPTIONS.nodeOrigin as [number, number]}
@@ -390,6 +437,7 @@ const BrowseDatasetPage: React.FC = () => {
                     proOptions={{ hideAttribution: true }}
                   >
                     <Background variant={BackgroundVariant.Dots} />
+                    <CustomZoomControls />
                   </ReactFlow>
                 </S.MapWrapper>
               </ReactFlowProvider>

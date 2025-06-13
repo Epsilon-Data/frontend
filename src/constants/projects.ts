@@ -29,3 +29,5 @@ export const DB_TYPE_LABELS: Record<string, string> = {
   neo4j: 'dbTypeLabels.graph',
   csv: 'dbTypeLabels.flatFile',
 };
+
+export const SEARCH_FIELDS = [];

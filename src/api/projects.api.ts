@@ -54,6 +54,15 @@ export const createProject = async (data: ProjectInfo): Promise<void> => {
 
 export const getUserProjects = async (): Promise<ProjectSummaryInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`${PROJECT_API_URL}/me`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  return response.data;
+};
+
+// get shared projects
+export const getSharedProjects = async (): Promise<ProjectSummaryInfo[]> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(PROJECT_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });

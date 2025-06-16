@@ -13,7 +13,9 @@ const RequireAuth: React.FC<WithChildrenProps> = ({ children }) => {
   // get credentials and generate CSRF
   useEffect(() => {
     const query = new URLSearchParams(search);
-    if (query && query.size && !query.get('q')) {
+    if (csrf !== '') {
+      dispatch(getClaims());
+    } else if (query && query.size) {
       dispatch(handleAuth(query))
         .unwrap()
         .then((res) => {
@@ -25,8 +27,6 @@ const RequireAuth: React.FC<WithChildrenProps> = ({ children }) => {
         .catch((err) => {
           notificationController.error({ message: err.message });
         });
-    } else if (csrf !== '') {
-      dispatch(getClaims());
     }
   }, [csrf, dispatch, navigate, search]);
 

@@ -91,6 +91,14 @@ const authSlice = createSlice({
     builder.addCase(doLogout.fulfilled, (state) => {
       state.csrf = '';
     });
+    builder.addCase(getClaims.fulfilled, (state, action) => {
+      if (!action.payload) {
+        state.csrf = '';
+      }
+    });
+    builder.addCase(getClaims.rejected, (state) => {
+      state.csrf = '';
+    });
   },
 });
 

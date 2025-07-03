@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Typography, Tag, Row, Col, Space } from 'antd';
 import { PiLightbulbBold } from 'react-icons/pi';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
-import { FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
 
 const { Text, Paragraph } = Typography;
 
@@ -14,50 +13,29 @@ const KeywordGuidance = () => {
   };
 
   return (
-    <div style={{ paddingBottom: '10rem' }}>
-      <Paragraph style={{ fontWeight: FONT_WEIGHT.light }}>
-        <Text
-          style={{ fontWeight: 'bold', color: 'var(--secondary-color)', fontSize: FONT_SIZE.lg, marginRight: '0.5rem' }}
-        >
-          •
-        </Text>{' '}
-        Don’t include your or participant’s personal details
+    <div className="pb-40">
+      <Paragraph className="font-light text-gray">
+        <Text className="font-bold text-blueDark text-lg mr-2">•</Text> Don’t include your or participant’s personal
+        details
       </Paragraph>
-      <Paragraph style={{ fontWeight: FONT_WEIGHT.light }}>
-        <Text
-          style={{ fontWeight: 'bold', color: 'var(--secondary-color)', fontSize: FONT_SIZE.lg, marginRight: '0.5rem' }}
-        >
-          •
-        </Text>{' '}
-        Use descriptive words, like “population demographics” or “health data” to convey the main themes of your dataset
+      <Paragraph className="font-light">
+        <Text className="font-bold text-blueDark text-lg mr-2">•</Text> Use descriptive words, like “population
+        demographics” or “health data” to convey the main themes of your dataset
       </Paragraph>
 
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          marginTop: '1rem',
-          cursor: 'pointer',
-          userSelect: 'none',
-        }}
-        onClick={toggleExamples}
-      >
-        <PiLightbulbBold style={{ color: '#1890ff', marginRight: 8 }} />
+      <div className="flex items-center mt-4 cursor-pointer user-select-none" onClick={toggleExamples}>
+        <PiLightbulbBold className="text-[#1890ff] mr-8" />
         <Text strong>See good and bad key words</Text>
-        <Text underline style={{ marginLeft: 8 }}>
+        <Text underline className="ml-4">
           {showExamples ? 'Hide examples' : 'Show examples'}
         </Text>
-        {showExamples ? (
-          <FaChevronUp size={10} style={{ marginLeft: 8 }} />
-        ) : (
-          <FaChevronDown size={10} style={{ marginLeft: 8 }} />
-        )}
+        {showExamples ? <FaChevronUp size={10} className="ml-4" /> : <FaChevronDown size={10} className="ml-4" />}
       </div>
 
       {showExamples && (
-        <Row gutter={[16, 8]} style={{ marginTop: '1rem' }}>
+        <Row gutter={[16, 8]} className="mt-4">
           <Col span={24}>
-            <Text strong style={{ marginRight: '1rem' }}>
+            <Text strong className="mt-4">
               Good examples:
             </Text>{' '}
             <Space wrap>
@@ -74,7 +52,7 @@ const KeywordGuidance = () => {
           </Col>
 
           <Col span={24}>
-            <Text strong style={{ marginRight: '1rem' }}>
+            <Text strong className="mr-4">
               Bad examples:
             </Text>{' '}
             <Space wrap>

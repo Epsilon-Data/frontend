@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
-import * as S from './BrowseDatasetPage.styles';
 import { useNavigate } from 'react-router-dom';
 import { Col, RadioChangeEvent, Row, TabsProps } from 'antd/lib';
 import { t } from 'i18next';
@@ -10,14 +9,14 @@ import { IoIosArrowDown } from 'react-icons/io';
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
 import { getProjectDetails, getAllProjects, ProjectInfo, ProjectSummaryInfo } from '@app/api/projects.api';
 import { ModalAccessHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
-import { FONT_FAMILY, FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
 import { FaChevronDown, FaChevronUp, FaMinus, FaPlus } from 'react-icons/fa6';
-import { Button, Image } from 'antd';
+import { Button, Image, Input, Modal, Radio, Select, Tabs, Tag, Typography } from 'antd';
 import { RxEnterFullScreen } from 'react-icons/rx';
 import { DB_TYPE_LABELS } from '@app/constants/projects';
 import ReactFlow, { Background, BackgroundVariant, Panel, ReactFlowProvider, useReactFlow } from 'reactflow';
 import { createNodeTypes, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
 import { DefaultNode } from '@app/components/reactflow-components/DefaultNode/DefaultNode';
+import clsx from 'clsx';
 
 const nodes = [
   {
@@ -59,21 +58,12 @@ const SEARCH_FIELDS = [
 const ImageWithPreview: React.FC<{ src: string; alt?: string }> = ({ src, alt }) => {
   const [visible, setVisible] = useState(false);
   return (
-    <div
-      style={{
-        position: 'relative',
-        width: '300px',
-        height: '200px',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        background: '#eee',
-      }}
-    >
+    <div className="relative w-75 h-48 rounded-lg overflow-hidden bg-[#eee]">
       <Image.PreviewGroup>
         <Image
           src={src}
           alt={alt}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }}
+          className="w-full h-full object-cover block pointer-events-none"
           preview={{
             mask: false,
             visible,
@@ -88,17 +78,7 @@ const ImageWithPreview: React.FC<{ src: string; alt?: string }> = ({ src, alt })
 
       <button
         onClick={() => setVisible(true)}
-        style={{
-          position: 'absolute',
-          bottom: '10px',
-          right: '10px',
-          background: 'white',
-          borderRadius: '8px',
-          border: 'none',
-          padding: '0.5rem 0.5rem 0.2rem',
-          boxShadow: '0 0 6px rgba(0,0,0,0.2)',
-          cursor: 'pointer',
-        }}
+        className="absolute bottom-3 right-3 bg-white rounded-lg border-none padding py-2 px-2 cursor-pointer shadow-button"
       >
         <RxEnterFullScreen />
       </button>
@@ -113,15 +93,12 @@ const DetailsRow: React.FC<{ title: string; content: string; titleWidth?: number
   contentWidth,
 }) => {
   return (
-    <Row style={{ marginBottom: '1rem' }}>
-      <Col
-        span={titleWidth ?? 9}
-        style={{ display: 'flex', justifyContent: 'space-between', fontWeight: FONT_WEIGHT.regular }}
-      >
+    <Row className="mb-4">
+      <Col span={titleWidth ?? 9} className="flex justify-between font-normal">
         <span>{title}</span>
         <span>:</span>
       </Col>
-      <Col span={contentWidth ?? 13} style={{ marginLeft: '1.5rem' }}>
+      <Col span={contentWidth ?? 13} className="ml-6">
         {content}
       </Col>
     </Row>
@@ -142,28 +119,14 @@ const CustomZoomControls = () => {
 
   return (
     <Panel position="bottom-right">
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          background: '#fff',
-          border: '1px solid #ddd',
-          borderRadius: '8px',
-          fontSize: '14px',
-        }}
-      >
-        <Button
-          icon={<FaPlus />}
-          size="small"
-          onClick={() => zoomIn()}
-          style={{ border: 'none', background: 'transparent', marginRight: '10px' }}
-        />
-        <span style={{ width: '2.5rem', textAlign: 'center', display: 'inline-block' }}>{zoomLevel}%</span>
+      <div className="flex items-center bg-white border border-[#ddd] rounded-lg text-base p-1">
+        <Button icon={<FaPlus />} size="small" onClick={() => zoomIn()} className="border-none bg-transparent mr-2.5" />
+        <span className="w-12 text-center inline-block">{zoomLevel}%</span>
         <Button
           icon={<FaMinus />}
           size="small"
           onClick={() => zoomOut()}
-          style={{ border: 'none', background: 'transparent', marginLeft: '10px' }}
+          className="border-none bg-transparent ml-2.5"
         />
       </div>
     </Panel>
@@ -198,14 +161,20 @@ const BrowseDatasetPage: React.FC = () => {
       label: t('browse.main.details.about.title'),
       children: (
         <>
-          <S.AboutText ref={descriptionRef} expanded={isExpanded}>
+          <div
+            ref={descriptionRef}
+            className={clsx('relative overflow-hidden break-normal', isExpanded ? 'line-clamp-none' : 'line-clamp-6')}
+          >
             {project.description}
-          </S.AboutText>
+          </div>
           {showToggle && (
-            <S.ShowButton onClick={() => setIsExpanded((prev) => !prev)}>
+            <Button
+              className="border-none shadow-none text-blueDark text-xs font-medium font-inter cursor-pointer mt-2 p-0 inline-flex items-center gap-2"
+              onClick={() => setIsExpanded((prev) => !prev)}
+            >
               {isExpanded ? t('browse.main.details.about.showLess') : t('browse.main.details.about.showMore')}
               {isExpanded ? <FaChevronUp size={10} /> : <FaChevronDown size={10} />}
-            </S.ShowButton>
+            </Button>
           )}
         </>
       ),
@@ -295,46 +264,60 @@ const BrowseDatasetPage: React.FC = () => {
   return (
     <>
       <PageTitle>{t('browse.title')}</PageTitle>
-      <S.SearchHeader justify="center" align="middle">
-        <S.SearchRow style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <S.BrowseTitle>{t('browse.main.title')}</S.BrowseTitle>
-          <S.BrowseDescription>{t('browse.main.description')}</S.BrowseDescription>
-        </S.SearchRow>
-        <S.SearchRow style={{ width: '55%' }}>
-          <S.SearchWrapper>
-            <S.SearchInput
+      <Row
+        className="bg-gradient-to-b from-[#e2edf8] to-transparent py-20 px-16 flex flex-col"
+        justify="center"
+        align="middle"
+      >
+        <Row className="flex flex-col items-center mb-4">
+          <div className="text-5xl font-medium font-sans text-blueDark">{t('browse.main.title')}</div>
+          <div className="text-base font-normal font-inter text-black mt-2">{t('browse.main.description')}</div>
+        </Row>
+        <Row className="w-1/2 mb-4">
+          <div className="relative w-full">
+            <Input
+              className="w-full items-center justify-center border border-blueDark bg-[rgba(159,203,249,0.2)] pr-12 py-3"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder={t('browse.main.search.placeholder')}
             />
-            <S.SearchButton type="primary" onClick={onSearch}>
+            <Button
+              type="primary"
+              onClick={onSearch}
+              className="absolute top-1/2 right-2 transform -translate-y-1/2 rounded-full h-9 w-9 flex items-center justify-center p-0"
+            >
               <IoSearch />
-            </S.SearchButton>
-          </S.SearchWrapper>
-        </S.SearchRow>
-        <S.SearchRow>
-          <S.SearchLabel>{t('browse.main.search.fields.title')}</S.SearchLabel>
-          <S.SearchRadio.Group defaultValue={'all'} onChange={handleFieldChange}>
-            {SEARCH_FIELDS.map<React.ReactNode>((field) => (
-              <S.SearchRadio key={field.value} value={field.value}>
-                {field.label}
-              </S.SearchRadio>
-            ))}
-          </S.SearchRadio.Group>
-        </S.SearchRow>
-      </S.SearchHeader>
-      <S.SearchContent>
-        <S.ResultsHeader>
-          <div style={{ display: 'column', alignItems: 'left' }}>
-            <S.SectionTitle>{t('browse.main.searchResults.title')}</S.SectionTitle>
-            <S.SectionDescription>{t('browse.main.searchResults.count', { count: 0 })}</S.SectionDescription>
+            </Button>
           </div>
-          <S.SortingSelect
-            className="sort-select"
+        </Row>
+        <Row className="mb-4">
+          <Typography.Text className="flex font-normal text-base mr-4 mt-0.5">
+            {t('browse.main.search.fields.title')}
+          </Typography.Text>
+          <Radio.Group
+            className="mt-1 font-normal text-xs font-inter text-gray-50"
+            defaultValue={'all'}
+            onChange={handleFieldChange}
+          >
+            {SEARCH_FIELDS.map<React.ReactNode>((field) => (
+              <Radio key={field.value} value={field.value}>
+                {field.label}
+              </Radio>
+            ))}
+          </Radio.Group>
+        </Row>
+      </Row>
+      <div className="py-0 px-4 flex flex-col">
+        <div className="flex justify-between border-b border-b-grey-3 pb-4">
+          <div className="flex flex-col items-start">
+            <div className="text-base font-medium font-inter">{t('browse.main.searchResults.title')}</div>
+            <div className="text-xs font-normal font-inter">{t('browse.main.searchResults.count', { count: 0 })}</div>
+          </div>
+          <Select
+            className="sort-select w-50"
             prefix="Sort by: "
             defaultValue="date-created"
-            suffixIcon={<IoIosArrowDown style={{ marginTop: '0.2rem' }} />}
-            style={{ width: 200 }}
+            suffixIcon={<IoIosArrowDown className="mt-1" />}
             onChange={handleChange}
             options={[
               { value: 'date-created', label: 'Date created' },
@@ -342,60 +325,56 @@ const BrowseDatasetPage: React.FC = () => {
               { value: 'last-modified', label: 'Last modified' },
             ]}
           />
-        </S.ResultsHeader>
+        </div>
         <ProjectList projects={projects} mode="all" layout={'grid'} onProjectClick={handleProjectClick} />
-      </S.SearchContent>
-      <S.DetailsModal open={isModalOpen} width={'60%'} closable={false} mask footer={null}>
+      </div>
+      <Modal className="-mt-12 " open={isModalOpen} width={'60%'} closable={false} mask footer={null}>
         <ModalAccessHeader setIsModalOpen={setIsModalOpen} />
-        <S.AccessContent>
-          <S.DetailsHeader>
-            <Col span={14} style={{ padding: '10rem 4rem 10rem 6rem' }}>
-              <S.DetailsTitle>{project.name}</S.DetailsTitle>
-              <S.DetailsSubtitle>
-                {' '}
-                <span style={{ fontWeight: FONT_WEIGHT.regular }}>By:</span>{' '}
+        <div className="h-[48rem] p-0 overflow-y-auto flex flex-col -mt-8 rounded-3xl">
+          <Row className="bg-grey-4 h-[33rem]">
+            <Col span={14} className="pt-40 pr-16 pb-40 pl-24">
+              <div className="text-2xl font-medium font-sans text-black">{project.name}</div>
+              <div className="text-base font-light font-inter text-black">
+                <span className="font-normal">By:</span>
                 {`${project.university} - ${project.faculty}`}
-              </S.DetailsSubtitle>
-              <S.RequestButton type="primary" icon={<IoChevronForwardOutline />} iconPosition="end">
+              </div>
+              <Button
+                className="mt-8 flex items-center w-60 h-10 text-xs font-medium font-inter"
+                type="primary"
+                icon={<IoChevronForwardOutline />}
+                iconPosition="end"
+              >
                 {t('browse.main.details.requestAccess')}
-              </S.RequestButton>
+              </Button>
             </Col>
             <Col span={10}>
-              <S.Cover>
-                <S.CoverText>{project.name?.charAt(0).toUpperCase()}</S.CoverText>
-              </S.Cover>
+              <div className="h-full flex items-center justify-center bg-coverBg text-5xl font-bold text-coverText overflow-hidden">
+                <div className="leading-4 p-8 text-center">{project.name?.charAt(0).toUpperCase()}</div>
+              </div>
             </Col>
-          </S.DetailsHeader>
-          <S.DetailsSection style={{ gap: '3rem' }}>
+          </Row>
+          <Row className="mt-8 mx-24 gap-12">
             <Col span={16}>
-              <S.DetailsTabs defaultActiveKey="about" items={items} />
+              <Tabs className="details-tabs" defaultActiveKey="about" items={items} />
             </Col>
-            <Col span={6} style={{ display: 'flex', flexDirection: 'column' }}>
-              <S.TextHeader>{t('browse.main.details.keywords')}</S.TextHeader>
+            <Col span={6} className="flex flex-col">
+              <div className="text-xs font-medium font-inter mb-4">{t('browse.main.details.keywords')}</div>
               {project.dbKeywords?.map((keyword: string, index: number) => (
-                <S.KeywordTag key={index} bordered={false}>
+                <Tag
+                  className="w-max mb-2 text-xs font-normal font-inter rounded-2xl py-1 px-3 text-center bg-grey-1 text-white break-words"
+                  key={index}
+                  bordered={false}
+                >
                   {keyword}
-                </S.KeywordTag>
+                </Tag>
               ))}
             </Col>
-          </S.DetailsSection>
-          <S.DetailsSection
-            style={{
-              borderTop: '1px solid var(--grey3)',
-              paddingTop: '2rem',
-              display: 'flex',
-              flexDirection: 'column',
-              marginBottom: '3rem',
-            }}
-          >
-            <S.TextHeader style={{ color: 'var(--blue-dark)' }}>{t('browse.main.details.aboutDb.title')}</S.TextHeader>
-            <div
-              style={{
-                fontSize: FONT_SIZE.xs,
-                fontWeight: FONT_WEIGHT.light,
-                fontFamily: FONT_FAMILY.secondary,
-              }}
-            >
+          </Row>
+          <Row className="mt-8 mx-24 border-t border-t-grey-3 pt-8 flex flex-col mb-12">
+            <div className="text-xs font-medium font-inter text-blueDark mb-4">
+              {t('browse.main.details.aboutDb.title')}
+            </div>
+            <div className="font-light text-xs font-inter">
               <DetailsRow
                 title={t('browse.main.details.aboutDb.info.dbName')}
                 content={tempDbDetails.name}
@@ -409,15 +388,19 @@ const BrowseDatasetPage: React.FC = () => {
                 contentWidth={15}
               />
             </div>
-            <S.TextHeader style={{ color: 'var(--blue-dark)' }}>{t('browse.main.details.dbPreview')}</S.TextHeader>
-            <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div className="text-xs font-medium font-inter text-blueDark mb-4">
+              {t('browse.main.details.dbPreview')}
+            </div>
+            <div className="flex gap-6 mb-8">
               <ImageWithPreview src="https://images.unsplash.com/photo-1569521588854-9b461abc92ac?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
               <ImageWithPreview src="https://images.unsplash.com/photo-1553949345-eb786bb3f7ba?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
             </div>
-            <S.TextHeader style={{ color: 'var(--blue-dark)' }}>{t('browse.main.details.dbPreview')}</S.TextHeader>
+            <div className="text-xs font-medium font-inter text-blueDark mb-4">
+              {t('browse.main.details.dbPreview')}
+            </div>
             {project ? (
               <ReactFlowProvider>
-                <S.MapWrapper>
+                <div className="h-[25rem] w-full bg-grey-4 rounded-lg">
                   <ReactFlow
                     nodes={nodes}
                     edges={edges}
@@ -439,14 +422,14 @@ const BrowseDatasetPage: React.FC = () => {
                     <Background variant={BackgroundVariant.Dots} />
                     <CustomZoomControls />
                   </ReactFlow>
-                </S.MapWrapper>
+                </div>
               </ReactFlowProvider>
             ) : (
-              <S.TextHeader>{t('browse.info.noArchetype')}</S.TextHeader>
+              <div className="text-xs font-medium font-inter mb-4">{t('browse.info.noArchetype')}</div>
             )}
-          </S.DetailsSection>
-        </S.AccessContent>
-      </S.DetailsModal>
+          </Row>
+        </div>
+      </Modal>
     </>
   );
 };

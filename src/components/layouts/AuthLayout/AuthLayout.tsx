@@ -1,16 +1,15 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import * as S from './AuthLayout.styles';
 
 const AuthLayout: React.FC = () => {
   return (
-    <S.Wrapper>
-      <S.BackgroundWrapper>
-        <S.LoginWrapper>
+    <div className="flex w-full h-full">
+      <div className="w-full h-full bg-black relative">
+        <div className="flex flex-col items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <Outlet />
-        </S.LoginWrapper>
-      </S.BackgroundWrapper>
-    </S.Wrapper>
+        </div>
+      </div>
+    </div>
   );
 };
 

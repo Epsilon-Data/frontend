@@ -1,40 +1,39 @@
 import React from 'react';
 import FormItem from 'antd/es/form/FormItem';
-import * as S from './ModalTagInput.styles';
-import { FONT_SIZE } from '@app/styles/themes/constants';
+import { Select } from 'antd';
 
 const MAX_COUNT = 6;
 
 export const ModalTagInput: React.FC<{
   name: string;
-  style?: React.CSSProperties;
+  className?: string;
   inputTitle: string;
   inputDescription?: string;
   value: string[];
   setValue: (value: string[]) => void;
-}> = ({ name, style, inputTitle, inputDescription, value, setValue }) => {
+}> = ({ name, className, inputTitle, inputDescription, value, setValue }) => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '3rem' }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <S.InputTitle style={{ fontSize: FONT_SIZE.xl }}>{inputTitle}</S.InputTitle>
-        <S.InputDescription style={{ fontSize: FONT_SIZE.xs }}>{inputDescription}</S.InputDescription>
+    <div className="flex flex-col mb-12">
+      <div className="mb-8">
+        <div className="font-medium font-sans text-blueDark text-xl">{inputTitle}</div>
+        <div className="font-light font-inter text-black text-xs">{inputDescription}</div>
       </div>
-      <FormItem name={name} style={{ ...style }}>
-        <S.TagSelect
+      <FormItem name={name} className={className}>
+        <Select
           mode="tags"
           maxCount={MAX_COUNT}
           value={value}
-          style={{ width: '100%' }}
           onChange={setValue}
           suffixIcon={null}
+          className="tag-select w-full"
         />
       </FormItem>
-      <S.Note>
-        <span>Separate each one with a comma</span>
+      <div className="flex flex-between text-xs font-normal font-inter">
+        <span>Separate each one with a comma &nbsp;</span>
         <span>
           {value.length} / {MAX_COUNT}
         </span>
-      </S.Note>
+      </div>
     </div>
   );
 };

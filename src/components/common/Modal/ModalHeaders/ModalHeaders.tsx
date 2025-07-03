@@ -1,22 +1,26 @@
 import React from 'react';
-import * as S from './ModalHeaders.styles';
 import { useTranslation } from 'react-i18next';
 import { IoChevronBack } from 'react-icons/io5';
+import { Button } from 'antd';
+import clsx from 'clsx';
+
+interface StepItemProps {
+  active: boolean;
+  children?: React.ReactNode;
+}
+
+const StepItem = ({ active, children }: StepItemProps) => {
+  return <div className={clsx('h-1 flex-1 rounded-[2px]', active ? 'bg-[#1677ff]' : 'bg-[#ccc]')}>{children}</div>;
+};
 
 export const ModalStepHeader: React.FC<{
   setModalStep: React.Dispatch<React.SetStateAction<number>>;
   modalStep: number;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleDraft: () => void;
-}> = ({ setModalStep, modalStep, setIsModalOpen, handleDraft }) => {
+  stepTitles: string[];
+}> = ({ setModalStep, modalStep, setIsModalOpen, handleDraft, stepTitles }) => {
   const { t } = useTranslation();
-  const stepTitles = [
-    t('dashboard.createProject.form.step1.title'),
-    t('dashboard.createProject.form.step2.title'),
-    t('dashboard.createProject.form.step3.title'),
-    t('dashboard.createProject.form.step4.title'),
-    t('dashboard.createProject.form.step5.title'),
-  ];
 
   const prevStep = () =>
     setModalStep((prev: number) => {
@@ -30,28 +34,35 @@ export const ModalStepHeader: React.FC<{
     });
 
   return (
-    <S.StepHeader>
+    <div className="flex justify-between bg-grey-4 h-24 rounded-t-lg">
       <div>
-        <S.BackButton onClick={prevStep}>
+        <Button
+          className="flex bg-grey-3 text-blueDark border-none rounded-r-full top-12 w-12 h-8 items-center"
+          onClick={prevStep}
+        >
           <IoChevronBack />
-        </S.BackButton>
-        <S.StepWrapper>
-          <S.StepIndicatorWrapper>
+        </Button>
+        <div className="flex flex-col ml-20">
+          <div className="flex justify-center gap-2 mb-4 w-40">
             {stepTitles.map((title, index) => (
-              <S.StepItem key={index} active={index <= modalStep}>
-                <S.StepBar />
-              </S.StepItem>
+              <StepItem key={index} active={index <= modalStep}>
+                <div className="h-1 bg-inherit rounded-[2px]" />
+              </StepItem>
             ))}
-          </S.StepIndicatorWrapper>
-          <S.StepTitle>{stepTitles[modalStep]}</S.StepTitle>
-        </S.StepWrapper>
+          </div>
+          <div className="font-bold font-inter text-grey-1 text-left">{stepTitles[modalStep]}</div>
+        </div>
       </div>
       <div>
-        <S.DraftButton hidden={modalStep == 0} onClick={handleDraft}>
+        <Button
+          className="flex items-center h-10 border border-grey-3 bg-white text-blueDark text-xs font-medium font-inter m-8"
+          hidden={modalStep == 0}
+          onClick={handleDraft}
+        >
           {t('dashboard.createProject.form.saveDraft')}
-        </S.DraftButton>
+        </Button>
       </div>
-    </S.StepHeader>
+    </div>
   );
 };
 
@@ -60,9 +71,12 @@ export const ModalAccessHeader: React.FC<{ setIsModalOpen: React.Dispatch<React.
 }) => {
   return (
     <div>
-      <S.BackButton onClick={() => setIsModalOpen(false)} style={{ zIndex: '1' }}>
+      <Button
+        className="flex bg-grey-3 text-blueDark border-none rounded-r-full top-12 w-12 h-8 z-1"
+        onClick={() => setIsModalOpen(false)}
+      >
         <IoChevronBack />
-      </S.BackButton>
+      </Button>
     </div>
   );
 };

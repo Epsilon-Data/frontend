@@ -1,9 +1,7 @@
 import React from 'react';
-import * as S from './ProjectList.styles';
 import { ProjectSummaryInfo } from '@app/api/projects.api';
-import { Card, Col, Row } from 'antd';
+import { Button, Card, Col, Row, Tag } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
-import { FONT_WEIGHT } from '@app/styles/themes/constants';
 
 export const ProjectList: React.FC<{
   projects: ProjectSummaryInfo[];
@@ -12,27 +10,28 @@ export const ProjectList: React.FC<{
   onProjectClick: (projectId: string) => void;
 }> = ({ projects, mode, onProjectClick }) => {
   return (
-    <Row gutter={16} style={{ marginTop: '2rem' }}>
+    <Row gutter={16} className="mt-8">
       {projects.map((project) => {
         const lastModifiedDate = new Date(project.lastModified);
         return (
           <Col key={project.projectId} span={8}>
             <Card
               cover={
-                <S.Cover>
-                  <S.Cover>
-                    <S.CoverText>{project.name.charAt(0).toUpperCase()}</S.CoverText>
-                    <S.CoverOverlay className="overlay">
-                      <S.ViewButton
+                <div className="w-full h-28 flex items-center justify-center bg-coverBg text-5xl font-bold text-coverText rounded-t overflow-hidden">
+                  <div className="group w-full h-28 flex items-center justify-center bg-coverBg text-5xl font-bold text-coverText rounded-t overflow-hidden">
+                    <div className="leading-1 p-8 text-center">{project.name.charAt(0).toUpperCase()}</div>
+                    <div className="group-hover:opacity-100 absolute top-0 left-0 w-full h-[56%] bg-black/50 opacity-0 transition-opacity duration-300 rounded-t flex items-center justify-center z-2">
+                      <Button
                         onClick={() => onProjectClick(project.projectId)}
                         icon={<IoChevronForwardOutline />}
                         iconPosition="end"
+                        className="view-project-btn flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo border-none text-white hover:from-primaryGradientFrom hover:to-primaryGradientTo hover:text-white hover:shadow-none focus:from-primaryGradientFrom focus:to-primaryGradientTo focus:text-white focus:shadow-none active:from-primaryGradientFrom active:to-primaryGradientTo active:text-white active:shadow-none"
                       >
                         View project
-                      </S.ViewButton>
-                    </S.CoverOverlay>
-                  </S.Cover>
-                </S.Cover>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               }
               variant="borderless"
             >
@@ -40,38 +39,38 @@ export const ProjectList: React.FC<{
                 <>
                   <Row justify="space-between" align="middle">
                     <Col>
-                      <S.Text>{project.name}</S.Text>
+                      <div className="text-xs font-normal font-inter">{project.name}</div>
                     </Col>
                     <Col>
-                      <S.StatusTag bordered={false} color="#000">
+                      <Tag className="text-xs font-normal font-inter py-1" bordered={false} color="#000">
                         {project.status
                           .toLowerCase()
                           .split(' ')
                           .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                           .join(' ')}
-                      </S.StatusTag>
+                      </Tag>
                     </Col>
                   </Row>
                   <Row>
-                    <S.SubText>
+                    <div className="text-xs font-light font-inter">
                       Last modified:{' '}
                       {`${lastModifiedDate.getDate()} ${lastModifiedDate.toLocaleString('en-GB', {
                         month: 'long',
                       })}, ${lastModifiedDate.getFullYear()}`}
-                    </S.SubText>
+                    </div>
                   </Row>
                 </>
               )}
               {mode == 'all' && (
                 <>
                   <Row>
-                    <S.Text>{project.name}</S.Text>
+                    <div className="text-xs font-normal font-inter text-black">{project.name}</div>
                   </Row>
-                  <Row style={{ marginTop: '0.5rem' }}>
-                    <S.SubText>
-                      <span style={{ fontWeight: FONT_WEIGHT.regular }}>By:</span>{' '}
+                  <Row className="mt-2">
+                    <div className="text-xs font-light font-inter text-black">
+                      <span className="font-normal">By:</span>
                       {`${project.university} - ${project.faculty}`}
-                    </S.SubText>
+                    </div>
                   </Row>
                 </>
               )}

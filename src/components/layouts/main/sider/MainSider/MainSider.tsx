@@ -1,6 +1,6 @@
 import React from 'react';
-import * as S from './MainSider.styles';
 import SiderMenu from '../SiderMenu/SiderMenu';
+import { Layout } from 'antd';
 
 interface MainSiderProps {
   selectedNav: string;
@@ -10,11 +10,16 @@ interface MainSiderProps {
 const MainSider: React.FC<MainSiderProps> = ({ selectedNav, hidden }) => {
   return (
     <>
-      <S.Sider trigger={null} width={260} hidden={hidden} style={{ background: 'var(--grey1)' }}>
-        <S.SiderContent>
+      <Layout.Sider
+        trigger={null}
+        width={260}
+        hidden={hidden}
+        className="bg-grey-1 right-0 overflow-hidden h-auto shadow-sider"
+      >
+        <div className="overflow-y-auto overflow-x-hidden">
           <SiderMenu selectedNav={selectedNav} />
-        </S.SiderContent>
-      </S.Sider>
+        </div>
+      </Layout.Sider>
     </>
   );
 };

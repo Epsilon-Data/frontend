@@ -1,32 +1,27 @@
 import React from 'react';
 import { Input } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
-import * as S from './ModalInput.styles';
-import { FONT_SIZE } from '@app/styles/themes/constants';
+import clsx from 'clsx';
 
 export const ModalInput: React.FC<{
   name: string;
   suffix?: React.ReactNode;
   disabled?: boolean;
-  style?: React.CSSProperties;
+  className?: string;
   inputTitle: string;
   inputDescription?: string;
   large?: boolean;
-}> = ({ name, suffix, disabled, style, inputTitle, inputDescription, large }) => {
+}> = ({ name, suffix, disabled, className, inputTitle, inputDescription, large }) => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '3rem' }}>
-      <div style={{ marginBottom: large ? '3rem' : '2rem' }}>
-        <S.InputTitle style={{ fontSize: large ? FONT_SIZE.xxl : FONT_SIZE.xl }}>{inputTitle}</S.InputTitle>
-        <S.InputDescription style={{ fontSize: large ? FONT_SIZE.md : FONT_SIZE.xs }}>
+    <div className="flex flex-col mb-12">
+      <div className={clsx(large ? 'mb-12' : 'mb-8')}>
+        <div className={clsx('font-medium font-sans text-blueDark', large ? 'text-2xl' : 'text-xl')}>{inputTitle}</div>
+        <div className={clsx('font-light font-inter text-black', large ? 'text-md' : 'text-xs')}>
           {inputDescription}
-        </S.InputDescription>
+        </div>
       </div>
-      <FormItem name={name} style={{ ...style }}>
-        <Input
-          suffix={suffix}
-          disabled={disabled}
-          style={{ border: '1px solid var(--black)', background: 'var(--grey4)' }}
-        />
+      <FormItem name={name} className={className}>
+        <Input suffix={suffix} disabled={disabled} className="border border-black bg-grey-4" />
       </FormItem>
     </div>
   );

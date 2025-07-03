@@ -69,7 +69,6 @@ const RequestAccessPage: React.FC<{ mode: string }> = ({ mode }) => {
           notificationController.success({
             message: t('browse.access.submitSuccess'),
           });
-          navigate(`/browse/summary/${id}`);
         })
         .catch(() => {
           notificationController.error({
@@ -116,7 +115,7 @@ const RequestAccessPage: React.FC<{ mode: string }> = ({ mode }) => {
             <S.RequestAccessButton type="primary" key="edit" onClick={() => handleAccess()}>
               {mode == 'create' ? t('browse.access.submit') : t('connectionRequests.edit.update')}
             </S.RequestAccessButton>
-            <S.CancelButton type="default" key="back" onClick={() => navigate(`/browse/summary/${id}`)}>
+            <S.CancelButton type="default" key="back">
               {t('common.cancel')}
             </S.CancelButton>
           </S.ButtonsWrapper>

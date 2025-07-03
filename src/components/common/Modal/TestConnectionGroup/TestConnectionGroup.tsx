@@ -1,8 +1,6 @@
 import React from 'react';
-import * as S from './TestConnectionGroup.styles';
 import FormItem from 'antd/es/form/FormItem';
-import { Col, Input, Row } from 'antd';
-import { FONT_SIZE } from '@app/styles/themes/constants';
+import { Button, Col, Input, Row } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
 import { FaRegCircleCheck } from 'react-icons/fa6';
@@ -19,60 +17,60 @@ export const TestConnectionGroup: React.FC<{
   const { t } = useTranslation();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', paddingBottom: '3rem' }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <S.InputTitle>{inputTitle}</S.InputTitle>
-        <S.InputDescription>{inputDescription}</S.InputDescription>
+    <div className="flex flex-col pb-12">
+      <div className="mb-8">
+        <div className="font-medium font-sans text-blueDark text-xl">{inputTitle}</div>
+        <div className="font-light font-inter text-black text-xs">{inputDescription}</div>
       </div>
-      <S.UrlWrapper>
+      <Row className="flex justify-between">
         <Col span={18}>
           <Row>
-            <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-              <span style={{ fontSize: FONT_SIZE.md, marginBottom: '0.7rem' }}>URL link:</span>&nbsp;&nbsp;
-              <FormItem name="dbUrl" style={{ flex: '1' }}>
-                <S.UrlInput />
+            <div className="flex items-center w-full">
+              <span className="mb-6 text-base">URL link:</span>&nbsp;&nbsp;
+              <FormItem name="dbUrl" className="flex-1">
+                <Input className="w-full !border !border-black" />
               </FormItem>
             </div>
           </Row>
         </Col>
-        <Col span={5} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <S.TestConnectionButton loading={loading} onClick={onClick}>
+        <Col span={5} className="flex justify-end">
+          <Button className="test-conn-btn bg-black border-none text-white flex" loading={loading} onClick={onClick}>
             Test connection
             <IoChevronForwardOutline />
-          </S.TestConnectionButton>
+          </Button>
         </Col>
-      </S.UrlWrapper>
+      </Row>
       <div>
         {connected ? (
-          <S.TestMessage>
+          <div className="text-xs text-success flex leading-5">
             {t('dashboard.createProject.form.step4.dbUrl.testSuccess')}
-            <FaRegCircleCheck style={{ marginLeft: '0.5rem', marginTop: '0.2rem' }} />
-          </S.TestMessage>
+            <FaRegCircleCheck className="ml-2 mt-1" />
+          </div>
         ) : show ? (
-          <S.TestMessage style={{ color: 'var(--error-color)' }}>
+          <div className="text-xs text-error flex leading-5">
             {t('dashboard.createProject.form.step4.dbUrl.testFailed')}
-            <PiWarningBold style={{ marginLeft: '0.5rem', marginTop: '0.2rem' }} />
-          </S.TestMessage>
+            <PiWarningBold className="ml-2 mt-1" />
+          </div>
         ) : null}
       </div>
-      <div style={{ marginBottom: '2rem', marginTop: '3rem' }}>
-        <S.InputTitle style={{ fontSize: FONT_SIZE.xl, color: 'var(--black)' }}>
+      <div className="mb-8 mt-12">
+        <div className="font-medium font-sans text-xl text-black">
           {t('dashboard.createProject.form.step4.dbCred.title')}
-        </S.InputTitle>
-        <S.InputDescription style={{ fontSize: FONT_SIZE.xs }}>
+        </div>
+        <div className="text-xs font-light font-inter text-black">
           {t('dashboard.createProject.form.step4.dbCred.description')}
-        </S.InputDescription>
+        </div>
       </div>
-      <div style={{ flex: 1 }}>
-        <p style={{ marginBottom: '0.3rem', fontSize: FONT_SIZE.xs }}>Enter database username</p>
+      <div className="flex-1">
+        <p className="mb-1 text-xs">Enter database username</p>
         <FormItem name="username">
-          <Input style={{ border: '1px solid var(--black)', background: 'var(--grey4)' }} />
+          <Input className="border border-black bg-grey-4" />
         </FormItem>
       </div>
-      <div style={{ flex: 1 }}>
-        <p style={{ marginBottom: '0.3rem', fontSize: FONT_SIZE.xs }}>Enter database password</p>
+      <div className="flex-1">
+        <p className="mb-1 text-xs">Enter database password</p>
         <FormItem name="password">
-          <Input.Password style={{ border: '1px solid var(--black)', background: 'var(--grey4)' }} />
+          <Input.Password className="border border-black bg-grey-4" />
         </FormItem>
       </div>
     </div>

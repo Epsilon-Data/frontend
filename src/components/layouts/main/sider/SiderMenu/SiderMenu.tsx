@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
-import * as S from './SiderMenu.styles';
 import { returnCurrentNav, SidebarNavigationItem } from '../sidebarNavigation';
 import { useTranslation } from 'react-i18next';
 import { useMounted } from '@app/hooks/useMounted';
+import { Menu } from 'antd';
 
 interface SiderContentProps {
   selectedNav: string;
@@ -87,9 +87,10 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
   }
 
   return (
-    <S.MenuWrapper>
+    <div className="relative pt-8">
       <div className="menu-indicator" ref={indicatorRef} />
-      <S.Menu
+      <Menu
+        className="bg-transparent border-r-0"
         mode="inline"
         openKeys={openKeys}
         selectedKeys={selectedKeys}
@@ -138,7 +139,7 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
           };
         })}
       />
-    </S.MenuWrapper>
+    </div>
   );
 };
 

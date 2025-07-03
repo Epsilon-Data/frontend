@@ -2,9 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { useAppSelector } from '@app/hooks/reduxHooks';
-import * as S from './DashboardPage.styles';
 import { IoSearch } from 'react-icons/io5';
-import { Form, Radio, Space } from 'antd';
+import { Button, Form, Input, Modal, Radio, Select, Space } from 'antd';
 import { IoIosArrowDown } from 'react-icons/io';
 import { HiOutlineViewGrid } from 'react-icons/hi';
 import { HiMiniListBullet } from 'react-icons/hi2';
@@ -22,7 +21,6 @@ import { TestConnectionGroup } from '@app/components/common/Modal/TestConnection
 import { testConnection } from '@app/api/connectionRequests.api';
 import { createProject, getUserProjects, ProjectSummaryInfo } from '@app/api/projects.api';
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
-import { LAYOUT } from '@app/styles/themes/constants';
 import config from '@app/config/config';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
@@ -82,6 +80,14 @@ const DashboardPage: React.FC = () => {
   const [isFormLoading, setFormLoading] = useState(false);
   const [members, setMembers] = useState<{ email: string; role: string }[]>([]);
   const [projects, setProjects] = useState<ProjectSummaryInfo[]>([]);
+
+  const stepTitles = [
+    t('dashboard.createProject.form.step1.title'),
+    t('dashboard.createProject.form.step2.title'),
+    t('dashboard.createProject.form.step3.title'),
+    t('dashboard.createProject.form.step4.title'),
+    t('dashboard.createProject.form.step5.title'),
+  ];
 
   const dbTypeOptions = [
     { value: 'postgres', label: 'PostgreSQL' },
@@ -208,23 +214,23 @@ const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: LAYOUT.desktop.paddingVertical + ' ' + LAYOUT.desktop.paddingHorizontal }}>
+    <div className="py-3 px-4 md:py-5 md:px-9">
       <PageTitle>{t('dashboard.title')}</PageTitle>
-      <S.HeaderWrapper>
-        <S.Title>{user?.firstName + "'s workspace"}</S.Title>
-        <S.ToolsWrapper>
-          <Space.Compact style={{ border: '1px solid var(--grey2)', borderRadius: '0.5rem' }}>
-            <S.SearchBar
-              prefix={<IoSearch style={{ marginRight: '0.5rem', color: 'var(--grey1)' }} />}
+      <div className="flex items-center justify-between w-full mt-8 pb-4 border-b border-grey-3">
+        <div className="text-xl font-medium font-sans">{user?.firstName + "'s workspace"}</div>
+        <div className="flex items-center gap-4 flex-wrap justify-end">
+          <Space.Compact className="rounded-lg">
+            <Input
+              className="px-2 py-1 text-xs font-inter h-8"
+              prefix={<IoSearch className="text-grey-1 mr-2" />}
               placeholder="Search projects..."
             />
           </Space.Compact>
-          <S.SortingSelect
-            className="sort-select"
+          <Select
+            className="sort-select text-xs font-medium font-sans w-48"
             prefix="Sort by: "
             defaultValue="date-created"
-            suffixIcon={<IoIosArrowDown style={{ marginTop: '0.2rem' }} />}
-            style={{ width: 200 }}
+            suffixIcon={<IoIosArrowDown className="mt-1" />}
             onChange={handleChange}
             options={[
               { value: 'date-created', label: 'Date created' },
@@ -233,69 +239,85 @@ const DashboardPage: React.FC = () => {
             ]}
           />
           <Space>
-            <S.LayoutSelector value={layout} onChange={(e) => setLayout(e.target.value)}>
-              <Radio.Button value="grid">
+            <Radio.Group
+              value={layout}
+              onChange={(e) => setLayout(e.target.value)}
+              className="flex bg-grey-3 rounded-md p-1 gap-1"
+            >
+              <Radio.Button value="grid" className="flex items-center rounded-r-md z-2">
                 <HiOutlineViewGrid />
               </Radio.Button>
-              <Radio.Button value="list">
+              <Radio.Button value="list" className="flex items-center rounded-l-md z-2 border">
                 <HiMiniListBullet />
               </Radio.Button>
-            </S.LayoutSelector>
+            </Radio.Group>
           </Space>
-          <S.AddProjectButton type="primary" icon={<FaPlus />} onClick={showModal}>
+          <Button
+            className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
+            type="primary"
+            icon={<FaPlus />}
+            onClick={showModal}
+          >
             {t('dashboard.main.newProject')}
-          </S.AddProjectButton>
-        </S.ToolsWrapper>
-      </S.HeaderWrapper>
-      <S.ProjectsWrapper style={{ marginTop: '3rem' }}>
-        <S.ProjectsHeader>{t('dashboard.main.personalProjects.title')}</S.ProjectsHeader>
-        <S.ProjectsDescription>{t('dashboard.main.personalProjects.description')}</S.ProjectsDescription>
+          </Button>
+        </div>
+      </div>
+      <div className="my-12">
+        <div className="text-md font-medium font-inter text-black">{t('dashboard.main.personalProjects.title')}</div>
+        <div className="text-xs font-regular font-inter text-grey-1">
+          {t('dashboard.main.personalProjects.description')}
+        </div>
         <ProjectList projects={projects} mode="personal" layout={layout} onProjectClick={handleProjectClick} />
-      </S.ProjectsWrapper>
-      <S.ProjectsWrapper style={{ marginTop: '5rem' }}>
-        <S.ProjectsHeader>{t('dashboard.main.sharedProjects.title')}</S.ProjectsHeader>
-        <S.ProjectsDescription>{t('dashboard.main.sharedProjects.description')}</S.ProjectsDescription>
+      </div>
+      <div className="my-20">
+        <div className="text-md font-medium font-inter text-black">{t('dashboard.main.sharedProjects.title')}</div>
+        <div className="text-xs font-regular font-inter text-grey-1">
+          {t('dashboard.main.sharedProjects.description')}
+        </div>
         <ProjectList projects={projects} mode="shared" layout={layout} onProjectClick={handleProjectClick} />
-      </S.ProjectsWrapper>
-      <S.AddProjectModal
+      </div>
+      <Modal
         open={isModalOpen}
         width={'60%'}
         footer={[
           modalStep < 4 ? (
-            <S.ModalButton
+            <Button
               key="next"
               type="primary"
               onClick={nextStep}
               icon={<IoChevronForwardOutline />}
               iconPosition="end"
+              className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
             >
               {t('common.next')}
-            </S.ModalButton>
+            </Button>
           ) : (
-            <S.ModalButton
+            <Button
               key="submit"
               type="primary"
               onClick={handleCreate}
               icon={<IoChevronForwardOutline />}
               iconPosition="end"
               loading={isFormLoading}
+              className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
             >
-              {t('dashboard.createProject.title')}
-            </S.ModalButton>
+              {t('dashboard.createProject.form.submit')}
+            </Button>
           ),
         ]}
         closable={false}
         mask
       >
         {modalStep === 0 && (
-          <S.ModalBody>
+          <div className="flex flex-col">
             <ModalStepHeader
               setModalStep={setModalStep}
               modalStep={modalStep}
               setIsModalOpen={setIsModalOpen}
               handleDraft={handleDraft}
+              stepTitles={stepTitles}
             />
-            <S.StepContent>
+            <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
               <Form form={step1}>
                 <ModalInput
                   name="name"
@@ -304,19 +326,20 @@ const DashboardPage: React.FC = () => {
                   large
                 />
               </Form>
-            </S.StepContent>
-          </S.ModalBody>
+            </div>
+          </div>
         )}
         {modalStep === 1 && (
-          <S.ModalBody>
+          <div className="flex flex-col">
             <ModalStepHeader
               setModalStep={setModalStep}
               modalStep={modalStep}
               setIsModalOpen={setIsModalOpen}
               handleDraft={handleDraft}
+              stepTitles={stepTitles}
             />
-            <S.StepContent>
-              <Form form={step2} style={{ height: '100%' }}>
+            <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
+              <Form form={step2} className="h-full">
                 <ModalDatePicker
                   startName="startDate"
                   endName="endDate"
@@ -350,36 +373,38 @@ const DashboardPage: React.FC = () => {
                 />
                 <KeywordGuidance />
               </Form>
-            </S.StepContent>
-          </S.ModalBody>
+            </div>
+          </div>
         )}
         {modalStep === 2 && (
-          <S.ModalBody>
+          <div className="flex flex-col">
             <ModalStepHeader
               setModalStep={setModalStep}
               modalStep={modalStep}
               setIsModalOpen={setIsModalOpen}
               handleDraft={handleDraft}
+              stepTitles={stepTitles}
             />
-            <S.StepContent>
-              <Form form={step3} style={{ height: '100%' }}>
+            <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
+              <Form form={step3} className="h-full">
                 <ModalInput name="university" inputTitle={t('dashboard.createProject.form.step3.university')} />
                 <ModalInput name="faculty" inputTitle={t('dashboard.createProject.form.step3.faculty')} />
                 <ModalInput name="ethicsId" inputTitle={t('dashboard.createProject.form.step3.ethicsId')} />
               </Form>
-            </S.StepContent>
-          </S.ModalBody>
+            </div>
+          </div>
         )}
         {modalStep === 3 && (
-          <S.ModalBody>
+          <div className="flex flex-col">
             <ModalStepHeader
               setModalStep={setModalStep}
               modalStep={modalStep}
               setIsModalOpen={setIsModalOpen}
               handleDraft={handleDraft}
+              stepTitles={stepTitles}
             />
-            <S.StepContent>
-              <Form form={step4} style={{ height: '100%' }}>
+            <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
+              <Form form={step4} className="h-full">
                 <ModalInput name="dbName" inputTitle={t('dashboard.createProject.form.step4.dbName')} />
                 <ModalSelect
                   name="dbType"
@@ -395,8 +420,8 @@ const DashboardPage: React.FC = () => {
                   onClick={onTestConnection}
                 />
               </Form>
-            </S.StepContent>
-          </S.ModalBody>
+            </div>
+          </div>
         )}
         {modalStep === 4 && (
           <>
@@ -405,11 +430,12 @@ const DashboardPage: React.FC = () => {
               modalStep={modalStep}
               setIsModalOpen={setIsModalOpen}
               handleDraft={handleDraft}
+              stepTitles={stepTitles}
             />
-            <S.StepContent></S.StepContent>
+            <div className="h-132 py-12 px-20 overflow-y-auto flex flex-col justify-center"></div>
           </>
         )}
-      </S.AddProjectModal>
+      </Modal>
     </div>
   );
 };

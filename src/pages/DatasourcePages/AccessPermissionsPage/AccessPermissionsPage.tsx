@@ -12,13 +12,12 @@ import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import ReactFlow, { Node, ReactFlowProvider, useEdgesState, useNodesState } from 'reactflow';
 import { DefaultNode } from '@app/components/reactflow-components/DefaultNode/DefaultNode';
 import { notificationController } from '@app/controllers/notificationController';
-import { RolePermissions, Template, TemplatePermissions } from '@app/interfaces/interfaces';
+import { RolePermissions, Archetype, TemplatePermissions } from '@app/interfaces/interfaces';
 import { PermissionsModal } from './PermissionsModal/PermissionsModal';
 import { ClearModal } from './ClearModal/ClearModal';
 import { TemplateModal } from './TemplateModal/TemplateModal';
 import { CheckboxOptionType, Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import { getTemplates } from '@app/api/templates.api';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { createNodeTypes, EDGE_TYPES, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
 
@@ -49,7 +48,7 @@ export const AccessPermissionsPage: React.FC = () => {
   const [encapsulatingNode, setEncapsulatingNode] = useState('');
   const [isForbidSetting, setIsForbidSetting] = useState(false);
   const [cardLoading, setCardLoading] = useState(true);
-  const [templates, setTemplates] = useState<Template[]>([]);
+  const [templates, setTemplates] = useState<Archetype[]>([]);
   const [templateId, setTemplateId] = useState('');
   const projectDetails = useAppSelector((state: { project: { details: any } }) => state.project.details);
 
@@ -61,11 +60,7 @@ export const AccessPermissionsPage: React.FC = () => {
       if (isMounted.current) {
         setProjectId(projectDetails.customId);
       }
-      getTemplates(id).then((res) => {
-        if (res) {
-          setTemplates(res);
-        }
-      });
+      setTemplates([]);
       getAccessPermissions(id).then((res) => {
         if (res) {
           setTemplatePermissions(res);

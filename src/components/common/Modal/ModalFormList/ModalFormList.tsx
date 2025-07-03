@@ -1,9 +1,7 @@
 import React from 'react';
-import * as S from './ModalFormList.styles';
 import FormItem from 'antd/es/form/FormItem';
 import { FaChevronDown, FaPlus } from 'react-icons/fa6';
-import { Col, Tag } from 'antd';
-import { FONT_SIZE } from '@app/styles/themes/constants';
+import { Button, Col, Input, Row, Select, Tag } from 'antd';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FormInstance } from 'antd/lib';
 
@@ -30,40 +28,40 @@ export const ModalFormList: React.FC<{
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '3rem' }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <S.InputTitle>{inputTitle}</S.InputTitle>
-        <S.InputDescription>{inputDescription}</S.InputDescription>
+    <div className="flex flex-col mb-12">
+      <div className="mb-2">
+        <div className="text-xl font-medium font-sans text-blueDark">{inputTitle}</div>
+        <div className="text-xs font-light font-inter">{inputDescription}</div>
       </div>
-      <S.EmailWrapper>
-        <Col span={17} style={{ flex: 1 }}>
-          <p style={{ marginBottom: '0.3rem', fontSize: FONT_SIZE.xs }}>Email address</p>
+      <Row className="flex">
+        <Col span={17} className="flex-1">
+          <p className="mb-0.3 text-xs">Email address</p>
           <FormItem name="email">
-            <S.EmailInput style={{ border: '1px solid var(--black)', background: 'var(--grey4)' }} />
+            <Input className="w-full border border-black bg-grey-4" />
           </FormItem>
         </Col>
-        <S.HorizontalLine />
-        <Col span={6} style={{ flex: 1, marginLeft: '1rem' }}>
-          <p style={{ marginBottom: '0.3rem', fontSize: FONT_SIZE.xs }}>Role</p>
+        <div className="h-2 bg-grey-2" />
+        <Col span={6} className="flex-1 ml-1">
+          <p className="mb-0.3 text-xs">Role</p>
           <FormItem name="role">
-            <S.RoleSelect suffixIcon={<FaChevronDown />} options={roles} />
+            <Select className="role-select w-full" suffixIcon={<FaChevronDown />} options={roles} />
           </FormItem>
         </Col>
         <Col>
-          <S.AddButton onClick={handleAdd}>
+          <Button className="mt-4 ml-1 bg-black border-none text-white !hover:bg-black" onClick={handleAdd}>
             <FaPlus />
-          </S.AddButton>
+          </Button>
         </Col>
-      </S.EmailWrapper>
-      <S.HorizontalLine />
+      </Row>
+      <div className="h-[0.1rem] bg-grey-2" />
       {members.map((member, index) => (
-        <div key={index} style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
-          <S.Text>{`${index + 1}. ${member.email}`}</S.Text>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6rem', marginRight: '1rem' }}>
+        <div key={index} className="flex justify-between mt-4">
+          <div className="text-xs font-normal text-inter">{`${index + 1}. ${member.email}`}</div>
+          <div className="flex items-center gap-6 mr-1">
             <Tag bordered={false} color="default">
               {member.role}
             </Tag>
-            <RiDeleteBinLine size={20} style={{ cursor: 'pointer' }} onClick={() => handleRemove(index)} />
+            <RiDeleteBinLine size={20} className="cursor-pointer" onClick={() => handleRemove(index)} />
           </div>
         </div>
       ))}

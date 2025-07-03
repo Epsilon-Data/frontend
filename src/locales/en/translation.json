@@ -43,8 +43,8 @@
       }
     },
     "createProject": {
-      "title": "Create project",
       "form": {
+        "submit": "Create project",
         "saveDraft": "Save draft",
         "step1": {
           "title": "Step 1: Name your template",
@@ -120,6 +120,28 @@
       "dbMapping": {
         "title": "Database mapping",
         "newTemplate": "New template"
+      }
+    },
+    "createTemplate": {
+      "form": {
+        "submit": "Save database mapping",
+        "saveDraft": "Save draft",
+        "step1": {
+          "title": "Step 1: Name your template",
+          "name": {
+            "title": "Choose a name for your template",
+            "description": "Pick a clear and descriptive name to help identify your template easily"
+          }
+        },
+        "step2": {
+          "title": "Step 2: Define your template's - database structure"
+        },
+        "step3": {
+          "title": "Step 3: Mapping database structure with nodes"
+        },
+        "step4": {
+          "title": "Step 4: Set permissions for your database"
+        }
       }
     }
   },
@@ -417,7 +439,7 @@
     "main": {
       "title": "Explore Available Datasets",
       "description": "Browse, request, and analyse datasets securely — no downloads required.",
-      "search":{
+      "search": {
         "fields": {
           "title": "Search in: ",
           "all": "All fields",
@@ -432,7 +454,7 @@
         "count": "{{count}} projects found"
       },
       "details": {
-        "requestAccess":"Request access",
+        "requestAccess": "Request access",
         "about": {
           "title": "About",
           "showMore": "Show more",
@@ -451,7 +473,7 @@
             "notAvailable": "Not available"
           }
         },
-        "keywords":"Keywords",
+        "keywords": "Keywords",
         "aboutDb": {
           "title": "About database",
           "info": {
@@ -614,6 +636,5 @@
     "document": "Document database",
     "graph": "Graph database",
     "flatFile": "Flat file database"
-
   }
 }

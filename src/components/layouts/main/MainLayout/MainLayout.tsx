@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import MainContent from '../MainContent/MainContent';
-import * as S from './MainLayout.styles';
-import { Outlet, useLocation, useParams } from 'react-router-dom';
+import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import MainSider from '../sider/MainSider/MainSider';
 import { Logo } from '@app/components/common/Logo/Logo';
 import { findKeyByUrl } from '../sider/sidebarNavigation';
+import { Layout } from 'antd';
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
@@ -18,24 +17,24 @@ const MainLayout: React.FC = () => {
   }, [location.pathname, id]);
 
   return (
-    <S.LayoutMaster>
-      <S.Header>
-        <S.HeaderLink to={'/'} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+    <Layout className="h-screen w-screen">
+      <Layout className="fixed top-0 left-0 z-10 flex h-14 w-full gap-2 bg-header px-8 py-1 text-2xl font-semibold text-white">
+        <Link to={'/'} className="flex items-center gap-2 text-white hover:text-white">
           <Logo />
           <span style={{ marginBottom: '0.2rem' }}>epsilon</span>
-        </S.HeaderLink>
-      </S.Header>
-      <S.LayoutWrapper>
+        </Link>
+      </Layout>
+      <Layout className="overflow-hidden">
         <MainSider selectedNav={selectedKey} hidden={isHidden} />
-        <S.LayoutMain>
-          <MainContent id="main-content">
+        <Layout className="flex-1 overflow-y-auto">
+          <Layout.Content id="main-content" className="overflow-auto flex flex-col justify-between">
             <div>
               <Outlet />
             </div>
-          </MainContent>
-        </S.LayoutMain>
-      </S.LayoutWrapper>
-    </S.LayoutMaster>
+          </Layout.Content>
+        </Layout>
+      </Layout>
+    </Layout>
   );
 };
 

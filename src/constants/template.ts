@@ -1,1 +1,1 @@
-export const TEMPLATE_API_URL = '/hub/template';
+export const ARCHETYPE_API_URL = '/hub/archetype';

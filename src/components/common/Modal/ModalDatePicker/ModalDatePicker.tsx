@@ -1,42 +1,40 @@
 import React from 'react';
-
 import FormItem from 'antd/es/form/FormItem';
-import * as S from './ModalDatePicker.styles';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { FONT_SIZE } from '@app/styles/themes/constants';
+import { DatePicker } from 'antd';
 
 dayjs.extend(customParseFormat);
 
 export const ModalDatePicker: React.FC<{
   startName: string;
   endName: string;
-  style?: React.CSSProperties;
+  className?: string;
   inputTitle: string;
   inputDescription?: string;
-}> = ({ startName, endName, style, inputTitle, inputDescription }) => {
+}> = ({ startName, endName, className, inputTitle, inputDescription }) => {
   //const dateFormat = 'YYYY-MM-DD';
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '3rem' }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <S.InputTitle>{inputTitle}</S.InputTitle>
-        <S.InputDescription>{inputDescription}</S.InputDescription>
+    <div className="flex flex-col mb-12">
+      <div className="mb-8">
+        <div className="text-xl font-medium font-sans text-blueDark">{inputTitle}</div>
+        <div className="text-xs font-light font-inter">{inputDescription}</div>
       </div>
-      <S.DateWrapper>
-        <div style={{ flex: 1 }}>
-          <p style={{ marginBottom: '0.3rem', fontSize: FONT_SIZE.xs }}>Start</p>
-          <FormItem name={startName} style={{ ...style }}>
-            <S.Picker style={{ border: '1px solid var(--black)' }} />
+      <div className="flex gap-2">
+        <div className="flex-1">
+          <p className="text-xs mb-1">Start</p>
+          <FormItem name={startName} className={className}>
+            <DatePicker className="w-full border border-black" />
           </FormItem>
         </div>
-        <S.HorizontalLine />
-        <div style={{ flex: 1 }}>
-          <p style={{ marginBottom: '0.3rem', fontSize: FONT_SIZE.xs }}>End</p>
-          <FormItem name={endName} style={{ ...style }}>
-            <S.Picker style={{ border: '1px solid var(--black)' }} />
+        <div className="w-12 h-[0.1rem] bg-grey-2 my-9 mx-6" />
+        <div className="flex-1">
+          <p className="text-xs mb-1">End</p>
+          <FormItem name={endName} className={className}>
+            <DatePicker className="w-full border border-black" />
           </FormItem>
         </div>
-      </S.DateWrapper>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import { FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
 import styled from 'styled-components';
 import { Handle } from 'reactflow';
 
@@ -11,8 +10,8 @@ export const TextNodeWrapper = styled.div`
 
 export const TextNodeInput = styled.input`
   background: transparent;
-  font-weight: ${FONT_WEIGHT.medium};
-  font-size: ${FONT_SIZE.md};
+  font-weight: 500;
+  font-size: 1rem;
   border: none;
   border-radius: 0.5rem;
   text-align: center;
@@ -28,8 +27,8 @@ export const TextNodeInput = styled.input`
 export const TextDisplay = styled.div`
   margin-top: 0.25rem;
   float: right;
-  font-weight: ${FONT_WEIGHT.medium};
-  font-size: ${FONT_SIZE.md};
+  font-weight: 500;
+  font-size: 1rem;
   text-align: center;
   width: 200px;
   height: 36px;
@@ -42,14 +41,14 @@ export const TextHandle = styled(Handle)`
   && {
     visibility: hidden;
     border: none;
-    background: var(--gray);
+    background: #4a5565;
     height: 10px;
     width: 10px;
     transition:
       height 0.3s ease,
       width 0.3s ease;
     &:hover {
-      background: var(--secondary-color);
+      background: #1481f1;
       height: 13px;
       width: 13px;
     }

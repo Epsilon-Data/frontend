@@ -19,13 +19,7 @@ export function TextNode({ data, type }: NodeProps<NodeData>) {
   };
 
   const typeColor =
-    type === 'object'
-      ? 'var(--element-object-bg)'
-      : type === 'category'
-      ? 'var(--element-category-bg)'
-      : type === 'subcategory'
-      ? 'var(--element-subcategory-bg)'
-      : 'var(--white)';
+    type === 'object' ? '#ff6666' : type === 'category' ? '#ff8833' : type === 'subcategory' ? '#33b1ff' : '#ffffff';
 
   const handleChange = (e: any) => {
     data.label = e.target.value;

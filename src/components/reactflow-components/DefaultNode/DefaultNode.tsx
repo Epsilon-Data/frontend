@@ -8,13 +8,7 @@ export type NodeData = {
 
 export function DefaultNode({ data, type, id }: NodeProps<NodeData>) {
   const typeColor =
-    type === 'object'
-      ? 'var(--element-object-bg)'
-      : type === 'category'
-      ? 'var(--element-category-bg)'
-      : type === 'subcategory'
-      ? 'var(--element-subcategory-bg)'
-      : 'var(--white)';
+    type === 'object' ? '#ff6666' : type === 'category' ? '#ff8833' : type === 'subcategory' ? '#33b1ff' : '#ffffff';
 
   return (
     <S.DefaultNodeWrapper style={{ background: typeColor }} className="default-node">

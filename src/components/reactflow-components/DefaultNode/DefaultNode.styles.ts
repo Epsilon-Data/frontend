@@ -1,4 +1,3 @@
-import { FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
 import { Handle } from 'reactflow';
 import styled from 'styled-components';
 
@@ -13,8 +12,8 @@ export const DefaultNodeWrapper = styled.div`
 export const TextDisplay = styled.div`
   margin-top: 0.25rem;
   float: right;
-  font-weight: ${FONT_WEIGHT.medium};
-  font-size: ${FONT_SIZE.md};
+  font-weight: 500;
+  font-size: 1rem;
   text-align: center;
   width: 200px;
   height: 36px;

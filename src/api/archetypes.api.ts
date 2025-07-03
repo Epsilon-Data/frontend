@@ -1,21 +1,19 @@
-import { TEMPLATE_API_URL } from '@app/constants/template';
+import { ARCHETYPE_API_URL } from '@app/constants/template';
 import { httpClient, getCsrfHeader } from './http.api';
-import { Template } from '@app/interfaces/interfaces';
+import { Node, Edge } from 'reactflow';
 
-export const getTemplateNames = async (
-  projectId: string | undefined,
-): Promise<{ guid: string; name: string; progress: string }[]> => {
+export interface Archetype {
+  id: string;
+  name: string;
+  nodes: Node[];
+  edges: Edge[];
+  lastModified: Date;
+  status: string;
+}
+
+export const getArchetypes = async (projectId: string | undefined): Promise<Archetype[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(`${TEMPLATE_API_URL}/${projectId}/names`, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-
-  return response.data;
-};
-
-export const getTemplates = async (projectId: string | undefined): Promise<Template[]> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(`${TEMPLATE_API_URL}/${projectId}`, {
+  const response = await httpClient.get(`${ARCHETYPE_API_URL}/${projectId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
@@ -24,7 +22,7 @@ export const getTemplates = async (projectId: string | undefined): Promise<Templ
 
 export const deleteTemplate = async (projectId: string | undefined, templateId: string): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.delete(`${TEMPLATE_API_URL}/${projectId}/${templateId}`, {
+  await httpClient.delete(`${ARCHETYPE_API_URL}/${projectId}/${templateId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 };
@@ -36,7 +34,7 @@ export const createTemplate = async (
 ): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   await httpClient.post(
-    `${TEMPLATE_API_URL}/${projectId}`,
+    `${ARCHETYPE_API_URL}/${projectId}`,
     { projectId: projectId, columnMapping: columnMapping, template: template },
     {
       headers: { [csrfHeaderName]: `${csrf}` },

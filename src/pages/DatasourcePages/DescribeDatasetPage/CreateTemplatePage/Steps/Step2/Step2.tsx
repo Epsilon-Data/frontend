@@ -24,7 +24,6 @@ import { useMounted } from '@app/hooks/useMounted';
 import { ColumnNode } from '@app/components/reactflow-components/ColumnNode/ColumnNode';
 import { notificationController } from '@app/controllers/notificationController';
 import {
-  BG_COLOR,
   BG_VARIANT,
   createNodeTypes,
   EDGE_TYPES,
@@ -198,7 +197,7 @@ const Flow: React.FC<
       fitViewOptions={REACT_FLOW_OPTIONS.fitViewOptions}
     >
       <Controls />
-      <Background color={BG_COLOR} variant={BG_VARIANT} />
+      <Background variant={BG_VARIANT} />
     </ReactFlow>
   );
 };

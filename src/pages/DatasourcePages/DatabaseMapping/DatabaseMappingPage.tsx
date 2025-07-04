@@ -14,6 +14,80 @@ import { Archetype } from '@app/api/archetypes.api';
 import config from '@app/config/config';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { ModalInput } from '@app/components/common/Modal/ModalInput/ModalInput';
+import { CreateTemplate } from './Steps/CreateTemplate';
+import { useEdgesState, useNodesState } from 'reactflow';
+
+// function checkDuplicateNames(nodes: Node[]) {
+//   const nameSet = new Set();
+//   const duplicateNames = new Set();
+
+//   for (const node of nodes) {
+//     if (nameSet.has(node.data.label)) {
+//       duplicateNames.add(node.data.label);
+//     }
+//     nameSet.add(node.data.label);
+//   }
+
+//   if (duplicateNames.size > 0) {
+//     return [...duplicateNames].join(', ');
+//   } else {
+//     return null;
+//   }
+// }
+
+// function hasEmptyLabel(nodes: Node[]): boolean {
+//   return nodes.some((node) => node.data.label.trim() === '');
+// }
+
+// function filterNodesEdges(nodes: Node[], edges: Edge[]) {
+//   const filteredNodes: Node[] = [];
+//   const filteredEdges: Edge[] = [];
+//   let objectWithoutCategory = false;
+//   let haveMultipleObjects = false;
+//   let objectCount = 0;
+
+//   function addNodeAndEdges(node: Node, edge: Edge) {
+//     if (!filteredNodes.some((n) => n.id === node.id)) {
+//       filteredNodes.push(node);
+//     }
+//     if (!filteredEdges.some((e) => e.id === edge.id)) {
+//       filteredEdges.push(edge);
+//     }
+//   }
+
+//   for (const node of nodes) {
+//     if (node.type === 'object') {
+//       objectCount++;
+//       objectWithoutCategory = true;
+//       filteredNodes.push(node);
+//       for (const edge of edges) {
+//         if (edge.source === node.id || edge.target === node.id) {
+//           const subNode = nodes.find((n) => n.id === (edge.source === node.id ? edge.target : edge.source));
+//           if (subNode) {
+//             objectWithoutCategory = false;
+//             addNodeAndEdges(subNode, edge);
+//             for (const subEdge of edges) {
+//               if (subEdge.source === subNode.id || subEdge.target === subNode.id) {
+//                 const subcategoryNode = nodes.find(
+//                   (n) => n.id === (subEdge.source === subNode.id ? subEdge.target : subEdge.source),
+//                 );
+//                 if (subcategoryNode) {
+//                   addNodeAndEdges(subcategoryNode, subEdge);
+//                 }
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+
+//   if (objectCount > 1) {
+//     haveMultipleObjects = true;
+//   }
+
+//   return { objectWithoutCategory, haveMultipleObjects, filteredNodes, filteredEdges };
+// }
 
 const getInitialFormValues = () => {
   if (config.isDev) {
@@ -35,7 +109,9 @@ const getInitialFormValues = () => {
   };
 };
 
-const MetadataPage: React.FC = () => {
+const initialNodes = [{ id: 'node_0', position: { x: 320, y: 200 }, data: { label: 'Object' }, type: 'object' }];
+
+const DatabaseMappingPage: React.FC = () => {
   const [step1] = Form.useForm();
   const [step3] = Form.useForm();
 
@@ -47,6 +123,9 @@ const MetadataPage: React.FC = () => {
   const [archetypes, setArchetypes] = useState<Archetype[]>([]);
   const [isFormLoading, setFormLoading] = useState(false);
   const id = new URLSearchParams(window.location.search).get('id');
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const stepTitles = [
     t('project.createTemplate.form.step1.title'),
@@ -220,7 +299,17 @@ const MetadataPage: React.FC = () => {
               handleDraft={handleDraft}
               stepTitles={stepTitles}
             />
-            <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center"></div>
+            <div className="h-[33rem] py-4 px-8 overflow-y-auto flex flex-col justify-center bg-grey-4">
+              <CreateTemplate
+                nodes={nodes}
+                edges={edges}
+                setEdges={setEdges}
+                setNodes={setNodes}
+                onEdgesChange={onEdgesChange}
+                onNodesChange={onNodesChange}
+                templateName={step1.getFieldValue('name')}
+              />
+            </div>
           </div>
         )}
         {modalStep === 2 && (
@@ -252,4 +341,4 @@ const MetadataPage: React.FC = () => {
   );
 };
 
-export default MetadataPage;
+export default DatabaseMappingPage;

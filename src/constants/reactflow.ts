@@ -5,8 +5,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { BackgroundVariant, Edge, Node, EdgeChange, NodeChange } from 'reactflow';
 
 export const MIN_DISTANCE = 160;
-export const BG_VARIANT = BackgroundVariant.Cross;
-export const BG_COLOR = '#f1f1f1';
+export const BG_VARIANT = BackgroundVariant.Dots;
 
 export const EDGE_TYPES = {
   default: MapEdge,
@@ -30,7 +29,7 @@ export const createNodeTypes = (nodeType = TextNode, overrides = {}) => ({
 
 export const REACT_FLOW_OPTIONS = {
   fitView: true,
-  fitViewOptions: { maxZoom: 1.2 },
+  fitViewOptions: { maxZoom: 1 },
   nodeOrigin: [0.5, 0.5],
 };
 

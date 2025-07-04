@@ -246,6 +246,7 @@ export default createGlobalStyle`
       border-radius: 0 0 0.5rem 0.5rem;
       padding: 1rem 2rem;
       display: flex;
+      margin-top: 0;
       justify-content: flex-end;
     }
   }

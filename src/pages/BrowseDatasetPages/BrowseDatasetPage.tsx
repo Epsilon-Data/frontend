@@ -13,8 +13,8 @@ import { FaChevronDown, FaChevronUp, FaMinus, FaPlus } from 'react-icons/fa6';
 import { Button, Image, Input, Modal, Radio, Select, Tabs, Tag, Typography } from 'antd';
 import { RxEnterFullScreen } from 'react-icons/rx';
 import { DB_TYPE_LABELS } from '@app/constants/projects';
-import ReactFlow, { Background, BackgroundVariant, Panel, ReactFlowProvider, useReactFlow } from 'reactflow';
-import { createNodeTypes, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
+import ReactFlow, { Background, Panel, ReactFlowProvider, useReactFlow } from 'reactflow';
+import { BG_VARIANT, createNodeTypes, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
 import { DefaultNode } from '@app/components/reactflow-components/DefaultNode/DefaultNode';
 import clsx from 'clsx';
 
@@ -419,7 +419,7 @@ const BrowseDatasetPage: React.FC = () => {
                     fitViewOptions={REACT_FLOW_OPTIONS.fitViewOptions}
                     proOptions={{ hideAttribution: true }}
                   >
-                    <Background variant={BackgroundVariant.Dots} />
+                    <Background variant={BG_VARIANT} />
                     <CustomZoomControls />
                   </ReactFlow>
                 </div>

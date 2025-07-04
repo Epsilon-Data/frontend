@@ -19,11 +19,10 @@ import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import * as S from './Step1.styles';
 import { notificationController } from '@app/controllers/notificationController';
 import { ElementSidebar } from './ElementSidebar/ElementSidebar';
-import { BaseInput } from '@app/components/common/inputs/BaseInput/BaseInput';
+import { Input } from 'antd';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import {
-  BG_COLOR,
   BG_VARIANT,
   createNodeTypes,
   EDGE_TYPES,
@@ -239,7 +238,7 @@ const Flow: React.FC<FlowProps> = ({ nodes, edges, setEdges, setNodes, onEdgesCh
       fitViewOptions={REACT_FLOW_OPTIONS.fitViewOptions}
     >
       <Controls />
-      <Background color={BG_COLOR} variant={BG_VARIANT} />
+      <Background variant={BG_VARIANT} />
     </ReactFlow>
   );
 };
@@ -348,7 +347,7 @@ export const Step1: React.FC<{
                 <S.InputHeader>{t('databaseSources.describeDataset.templateName')}</S.InputHeader>
               </BaseCol>
               <BaseCol span={19}>
-                <BaseInput value={templateName} onChange={(e) => setTemplateName(e.target.value)} />
+                <Input value={templateName} onChange={(e) => setTemplateName(e.target.value)} />
               </BaseCol>
             </BaseRow>
             <BaseRow>

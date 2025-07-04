@@ -3,6 +3,7 @@ import {
   createNodeTypes,
   EDGE_TYPES,
   FlowProps,
+  isValidEdge,
   nodeDrag,
   nodeDragStop,
   REACT_FLOW_OPTIONS,
@@ -111,51 +112,6 @@ const CustomZoomControls = () => {
   );
 };
 
-function isValidEdge(source: Node, target: Node, nodes: Node[], edges: Edge[]) {
-  if (!source || !target || source.type === target.type) return false;
-
-  const isCategory = (node: Node) => node?.type === 'category';
-  const isObject = (node: Node) => node?.type === 'object';
-  const isSubcategory = (node: Node) => node?.type === 'subcategory';
-
-  if ((isObject(source) || isObject(target)) && (isSubcategory(source) || isSubcategory(target))) {
-    return false;
-  }
-
-  const isInvalidEdge = (edgeSource: Node, edgeTarget: Node, node: Node) => {
-    if (edgeSource?.type != node.type && edgeTarget?.type != node.type) {
-      return false;
-    }
-    if (edgeSource.id === node.id || edgeTarget.id === node.id) {
-      return false;
-    }
-
-    return true;
-  };
-
-  const relatedEdges = edges.filter(
-    (edge) =>
-      edge.source === source.id || edge.target === target.id || edge.source === target.id || edge.target === source.id,
-  );
-
-  for (let i = 0; i < relatedEdges.length; i++) {
-    const edgeSource = nodes.find((n) => n.id === relatedEdges[i].source);
-    const edgeTarget = nodes.find((n) => n.id === relatedEdges[i].target);
-
-    if (edgeSource && edgeTarget) {
-      if ((isCategory(source) || isCategory(target)) && (isObject(source) || isObject(target))) {
-        if (isObject(source) && isInvalidEdge(edgeSource, edgeTarget, source)) return false;
-        if (isObject(target) && isInvalidEdge(edgeSource, edgeTarget, target)) return false;
-      } else if ((isCategory(source) || isCategory(target)) && (isSubcategory(source) || isSubcategory(target))) {
-        if (isCategory(source) && isInvalidEdge(edgeSource, edgeTarget, source)) return false;
-        if (isCategory(target) && isInvalidEdge(edgeSource, edgeTarget, target)) return false;
-      }
-    }
-  }
-
-  return true;
-}
-
 const Flow: React.FC<FlowProps & { templateName: string }> = ({
   nodes,
   edges,
@@ -176,6 +132,8 @@ const Flow: React.FC<FlowProps & { templateName: string }> = ({
       const targetNode = nodes.find((n) => n.id == params.target);
 
       if (sourceNode && targetNode && isValidEdge(sourceNode, targetNode, nodes, edges)) {
+        console.log(nodes);
+        console.log(edges);
         setEdges(addEdge(params, edges));
       }
     },
@@ -223,16 +181,16 @@ const Flow: React.FC<FlowProps & { templateName: string }> = ({
 
   const onNodeDrag = useCallback(
     (_: unknown, node: unknown) => {
-      nodeDrag(_, node, nodes, setEdges, isValidEdge, edges);
+      nodeDrag(_, node, nodes, setEdges, edges);
     },
     [edges, nodes, setEdges],
   );
 
   const onNodeDragStop = useCallback(
     (_: unknown, node: unknown) => {
-      nodeDragStop(_, node, nodes, setEdges);
+      nodeDragStop(_, node, nodes, edges, setEdges);
     },
-    [nodes, setEdges],
+    [edges, nodes, setEdges],
   );
   return (
     <ReactFlow

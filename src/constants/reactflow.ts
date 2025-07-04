@@ -73,7 +73,7 @@ const closestEdge = (node: any, nodes: any) => {
   return result;
 };
 
-export const nodeDrag = (_: any, node: any, nodes: any, setEdges: any, isValidEdge: any, edges: any) => {
+export const nodeDrag = (_: any, node: any, nodes: any, setEdges: any, edges: any) => {
   const closeEdge: { id: string; source: any; target: any; className?: string } | null = closestEdge(node, nodes);
 
   setEdges((es: any) => {
@@ -93,7 +93,52 @@ export const nodeDrag = (_: any, node: any, nodes: any, setEdges: any, isValidEd
   });
 };
 
-export const nodeDragStop = (_: any, node: any, nodes: any, setEdges: any) => {
+export function isValidEdge(source: Node, target: Node, nodes: Node[], edges: Edge[]) {
+  if (!source || !target || source.type === target.type) return false;
+
+  const isCategory = (node: Node) => node?.type === 'category';
+  const isObject = (node: Node) => node?.type === 'object';
+  const isSubcategory = (node: Node) => node?.type === 'subcategory';
+
+  if ((isObject(source) || isObject(target)) && (isSubcategory(source) || isSubcategory(target))) {
+    return false;
+  }
+
+  const isInvalidEdge = (edgeSource: Node, edgeTarget: Node, node: Node) => {
+    if (edgeSource?.type != node.type && edgeTarget?.type != node.type) {
+      return false;
+    }
+    if (edgeSource.id === node.id || edgeTarget.id === node.id) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const relatedEdges = edges.filter(
+    (edge) =>
+      edge.source === source.id || edge.target === target.id || edge.source === target.id || edge.target === source.id,
+  );
+
+  for (let i = 0; i < relatedEdges.length; i++) {
+    const edgeSource = nodes.find((n) => n.id === relatedEdges[i].source);
+    const edgeTarget = nodes.find((n) => n.id === relatedEdges[i].target);
+
+    if (edgeSource && edgeTarget) {
+      if ((isCategory(source) || isCategory(target)) && (isObject(source) || isObject(target))) {
+        if (isObject(source) && isInvalidEdge(edgeSource, edgeTarget, source)) return false;
+        if (isObject(target) && isInvalidEdge(edgeSource, edgeTarget, target)) return false;
+      } else if ((isCategory(source) || isCategory(target)) && (isSubcategory(source) || isSubcategory(target))) {
+        if (isCategory(source) && isInvalidEdge(edgeSource, edgeTarget, source)) return false;
+        if (isCategory(target) && isInvalidEdge(edgeSource, edgeTarget, target)) return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+export const nodeDragStop = (_: any, node: any, nodes: any, edges: any, setEdges: any) => {
   const closeEdge = closestEdge(node, nodes);
 
   setEdges((es: any) => {
@@ -102,6 +147,12 @@ export const nodeDragStop = (_: any, node: any, nodes: any, setEdges: any) => {
 
     if (
       closeEdge &&
+      isValidEdge(
+        nodes.find((n: any) => n.id === closeEdge.source),
+        nodes.find((n: any) => n.id === closeEdge.target),
+        nodes,
+        edges,
+      ) &&
       !nextEdges.find((ne: any) => ne.source === closeEdge.source && ne.target === closeEdge.target) &&
       isTempEdge
     ) {

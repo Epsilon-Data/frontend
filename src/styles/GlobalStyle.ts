@@ -269,4 +269,26 @@ export default createGlobalStyle`
       font-family: Inter, sans-serif;
     }
   }
+
+    .react-flow {
+    .react-flow__edge.temp {
+      stroke: #bbb;
+      stroke-dasharray: 5 5;
+    }
+    .react-flow__nodes {
+      .react-flow__node.selected {
+        .text-node {
+          border: 1px solid var(--secondary-color);
+        }
+        .react-flow__handle {
+          visibility: visible;
+        }
+      }
+      .react-flow__node:hover {
+        .react-flow__handle {
+          visibility: visible;
+        }
+      }
+    }
+  }
 `;

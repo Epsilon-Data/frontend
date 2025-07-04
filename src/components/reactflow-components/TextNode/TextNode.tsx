@@ -32,8 +32,8 @@ export function TextNode({ data, type }: NodeProps<NodeData>) {
       ) : (
         <S.TextDisplay onDoubleClick={handleDoubleClick}>{data.label}</S.TextDisplay>
       )}
-      <S.TextHandle type="target" position={Position.Top} />
-      <S.TextHandle type="source" position={Position.Top} />
+      <S.TextHandle className="node-handle" type="source" position={Position.Top} />
+      <S.TextHandle className="node-handle" type="target" position={Position.Top} />
     </S.TextNodeWrapper>
   );
 }

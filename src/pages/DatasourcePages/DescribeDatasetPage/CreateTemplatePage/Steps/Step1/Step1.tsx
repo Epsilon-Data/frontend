@@ -208,16 +208,16 @@ const Flow: React.FC<FlowProps> = ({ nodes, edges, setEdges, setNodes, onEdgesCh
 
   const onNodeDrag = useCallback(
     (_: any, node: any) => {
-      nodeDrag(_, node, nodes, setEdges, isValidEdge, edges);
+      nodeDrag(_, node, nodes, setEdges, edges);
     },
     [edges, nodes, setEdges],
   );
 
   const onNodeDragStop = useCallback(
     (_: any, node: any) => {
-      nodeDragStop(_, node, nodes, setEdges);
+      nodeDragStop(_, node, nodes, edges, setEdges);
     },
-    [nodes, setEdges],
+    [edges, nodes, setEdges],
   );
   return (
     <ReactFlow

@@ -113,7 +113,7 @@ const initialNodes = [{ id: 'node_0', position: { x: 320, y: 200 }, data: { labe
 
 const DatabaseMappingPage: React.FC = () => {
   const [step1] = Form.useForm();
-  const [step3] = Form.useForm();
+  // const [step3] = Form.useForm();
 
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -147,9 +147,9 @@ const DatabaseMappingPage: React.FC = () => {
       name: initialValues.name,
     });
 
-    step3.setFieldsValue({
-      permissions: initialValues.permissions,
-    });
+    // step3.setFieldsValue({
+    //   permissions: initialValues.permissions,
+    // });
     setIsModalOpen(true);
     setModalStep(0);
   };

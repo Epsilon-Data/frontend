@@ -103,8 +103,8 @@
     "*/**/*.{js,ts,tsx}": "pnpm lint"
   },
   "engines": {
-    "node": "21.x",
-    "pnpm": ">=9"
+    "node": "22.x",
+    "pnpm": ">=10"
   },
   "resolutions": {
     "@types/react": "^18.0.28",

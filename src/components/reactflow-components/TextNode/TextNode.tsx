@@ -1,14 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Position, NodeProps } from 'reactflow';
 import * as S from './TextNode.styles';
 import { useState } from 'react';
+import { getHandleConfig, NodeData } from '@app/constants/reactflow';
 
-export type NodeData = {
-  label: string;
-};
+interface TypedNodeProps extends NodeProps<NodeData> {
+  type: string;
+}
 
-export function TextNode({ data, type }: NodeProps<NodeData>) {
+export function TextNode({ data, type }: TypedNodeProps) {
   const [isEditing, setEditing] = useState(false);
+
+  const { showSource, showTarget } = getHandleConfig(type);
 
   const handleDoubleClick = () => {
     setEditing(true);
@@ -21,7 +23,7 @@ export function TextNode({ data, type }: NodeProps<NodeData>) {
   const typeColor =
     type === 'object' ? '#ff6666' : type === 'category' ? '#ff8833' : type === 'subcategory' ? '#33b1ff' : '#ffffff';
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: { target: { value: string } }) => {
     data.label = e.target.value;
   };
 
@@ -32,8 +34,9 @@ export function TextNode({ data, type }: NodeProps<NodeData>) {
       ) : (
         <S.TextDisplay onDoubleClick={handleDoubleClick}>{data.label}</S.TextDisplay>
       )}
-      <S.TextHandle className="node-handle" type="source" position={Position.Top} />
-      <S.TextHandle className="node-handle" type="target" position={Position.Top} />
+
+      {showSource && <S.TextHandle type="source" position={Position.Top} />}
+      {showTarget && <S.TextHandle type="target" position={Position.Bottom} />}
     </S.TextNodeWrapper>
   );
 }

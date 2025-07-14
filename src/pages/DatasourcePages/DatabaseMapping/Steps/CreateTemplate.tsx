@@ -121,7 +121,8 @@ const Flow: React.FC<FlowProps & { templateName: string }> = ({
   onNodesChange,
   templateName,
 }) => {
-  const nodeTypes = useMemo(() => createNodeTypes(), []);
+  const isNodesReadOnly = false;
+  const nodeTypes = useMemo(() => createNodeTypes(isNodesReadOnly), [isNodesReadOnly]);
   const edgeTypes = useMemo(() => EDGE_TYPES, []);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
@@ -132,8 +133,6 @@ const Flow: React.FC<FlowProps & { templateName: string }> = ({
       const targetNode = nodes.find((n) => n.id == params.target);
 
       if (sourceNode && targetNode && isValidEdge(sourceNode, targetNode, nodes, edges)) {
-        console.log(nodes);
-        console.log(edges);
         setEdges(addEdge(params, edges));
       }
     },

@@ -15,7 +15,6 @@ import { RxEnterFullScreen } from 'react-icons/rx';
 import { DB_TYPE_LABELS } from '@app/constants/projects';
 import ReactFlow, { Background, Panel, ReactFlowProvider, useReactFlow } from 'reactflow';
 import { BG_VARIANT, createNodeTypes, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
-import { DefaultNode } from '@app/components/reactflow-components/DefaultNode/DefaultNode';
 import clsx from 'clsx';
 
 const nodes = [
@@ -145,8 +144,9 @@ const BrowseDatasetPage: React.FC = () => {
   const [showToggle, setShowToggle] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
   const tempDbDetails = JSON.parse(project.connection?.tempDbDetails ?? '{}');
+  const isNodesReadOnly = true;
 
-  const nodeTypes = useMemo(() => createNodeTypes(DefaultNode), []);
+  const nodeTypes = useMemo(() => createNodeTypes(isNodesReadOnly), [isNodesReadOnly]);
 
   useEffect(() => {
     if (descriptionRef.current) {

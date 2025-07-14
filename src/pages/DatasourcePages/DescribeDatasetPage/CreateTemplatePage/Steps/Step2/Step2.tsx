@@ -2,7 +2,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import { TextNode } from '@app/components/reactflow-components/TextNode/TextNode';
 import ReactFlow, {
   Connection,
   Edge,
@@ -21,7 +20,6 @@ import * as S from './Step2.styles';
 import { getDbColumns } from '@app/api/datasources.api';
 import { ColumnSidebar } from './ColumnSidebar/ColumnSidebar';
 import { useMounted } from '@app/hooks/useMounted';
-import { ColumnNode } from '@app/components/reactflow-components/ColumnNode/ColumnNode';
 import { notificationController } from '@app/controllers/notificationController';
 import {
   BG_VARIANT,
@@ -83,7 +81,7 @@ const Flow: React.FC<
   setFilteredColumns,
   setSearchValue,
 }) => {
-  const nodeTypes = useMemo(() => createNodeTypes(TextNode, { column: ColumnNode }), []);
+  const nodeTypes = useMemo(() => createNodeTypes(false), []);
   const edgeTypes = useMemo(() => EDGE_TYPES, []);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<any, any> | null>(null);
 
@@ -166,16 +164,16 @@ const Flow: React.FC<
 
   const onNodeDrag = useCallback(
     (_: any, node: any) => {
-      nodeDrag(_, node, nodes, setEdges, isValidEdge, edges);
+      nodeDrag(_, node, nodes, setEdges, edges);
     },
     [edges, nodes, setEdges],
   );
 
   const onNodeDragStop = useCallback(
     (_: any, node: any) => {
-      nodeDragStop(_, node, nodes, setEdges);
+      nodeDragStop(_, node, nodes, edges, setEdges);
     },
-    [nodes, setEdges],
+    [edges, nodes, setEdges],
   );
 
   return (

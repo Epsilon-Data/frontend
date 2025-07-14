@@ -10,7 +10,7 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { useNavigate } from 'react-router-dom';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
-import { createTemplate } from '@app/api/templates.api';
+import { createArchetype } from '@app/api/archetypes.api';
 
 function createNodeColumnMapping(nodes: Node[], edges: Edge[]) {
   const columnNodeId = nodes.filter((node) => node.type == 'column').map((node) => node.id);
@@ -149,7 +149,7 @@ export const Step3: React.FC<{
       setSaveDescription(t('databaseSources.describeDataset.step3Description.fail'));
     } else {
       const formattedResult = transformColumns(result, corrTables);
-      createTemplate(id, JSON.stringify(formattedResult), template)
+      createArchetype({ projectId: id ?? null, name: JSON.stringify(formattedResult), template })
         .then(() => {
           setMappingSuccess(true);
           setMessage(t('databaseSources.describeDataset.message.mappingSuccess'));

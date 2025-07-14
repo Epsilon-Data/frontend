@@ -8,7 +8,7 @@ import { FaPlus } from 'react-icons/fa6';
 import { IoIosArrowDown } from 'react-icons/io';
 import { IoChevronForwardOutline, IoSearch } from 'react-icons/io5';
 import { ArchetypeList } from '@app/components/common/ArchetypeList/ArchetypeList';
-import { getArchetypes } from '@app/api/archetypes.api';
+import { createArchetype, getArchetypes } from '@app/api/archetypes.api';
 import { useNavigate } from 'react-router-dom';
 import { Archetype } from '@app/api/archetypes.api';
 import config from '@app/config/config';
@@ -176,11 +176,12 @@ const DatabaseMappingPage: React.FC = () => {
   const handleCreate = async () => {
     setFormLoading(true);
     const formData = {
+      projectId: id,
       name: step1.getFieldValue('name'),
+      template: '',
     };
 
-    // createArchetype(formData);
-    console.log(formData);
+    createArchetype(formData);
     setFormLoading(false);
     setIsModalOpen(false);
   };

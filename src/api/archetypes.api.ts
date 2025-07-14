@@ -20,24 +20,24 @@ export const getArchetypes = async (projectId: string | undefined): Promise<Arch
   return response.data;
 };
 
+export const createArchetype = async (formData: {
+  projectId: string | null;
+  name: string;
+  template: string;
+}): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  await httpClient.post(
+    `${ARCHETYPE_API_URL}/${formData.projectId}`,
+    { projectId: formData.projectId, name: formData.name, template: formData.template },
+    {
+      headers: { [csrfHeaderName]: `${csrf}` },
+    },
+  );
+};
+
 export const deleteTemplate = async (projectId: string | undefined, templateId: string): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   await httpClient.delete(`${ARCHETYPE_API_URL}/${projectId}/${templateId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-};
-
-export const createTemplate = async (
-  projectId: string | undefined,
-  columnMapping: string,
-  template: string,
-): Promise<void> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.post(
-    `${ARCHETYPE_API_URL}/${projectId}`,
-    { projectId: projectId, columnMapping: columnMapping, template: template },
-    {
-      headers: { [csrfHeaderName]: `${csrf}` },
-    },
-  );
 };

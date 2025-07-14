@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { DefaultNode } from '@app/components/reactflow-components/DefaultNode/DefaultNode';
 import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import { TextNode } from '@app/components/reactflow-components/TextNode/TextNode';
 import { Dispatch, SetStateAction } from 'react';
@@ -11,6 +12,34 @@ export const EDGE_TYPES = {
   default: MapEdge,
 };
 
+export interface NodeData {
+  label: string;
+}
+
+const validConnections: Record<string, string[]> = {
+  object: ['category'],
+  category: ['subcategory'],
+};
+
+export const editableNodeTypes = {
+  object: TextNode,
+  category: TextNode,
+  subcategory: TextNode,
+};
+
+export const readonlyNodeTypes = {
+  object: DefaultNode,
+  category: DefaultNode,
+  subcategory: DefaultNode,
+};
+
+export function getHandleConfig(type: string) {
+  return {
+    showSource: type === 'object' || type === 'category',
+    showTarget: type === 'category' || type === 'subcategory',
+  };
+}
+
 export interface FlowProps {
   nodes: Node[];
   edges: Edge[];
@@ -20,12 +49,7 @@ export interface FlowProps {
   setEdges: Dispatch<SetStateAction<Edge<any>[]>>;
 }
 
-export const createNodeTypes = (nodeType = TextNode, overrides = {}) => ({
-  object: nodeType,
-  category: nodeType,
-  subcategory: nodeType,
-  ...overrides,
-});
+export const createNodeTypes = (isReadOnly: boolean) => (isReadOnly ? readonlyNodeTypes : editableNodeTypes);
 
 export const REACT_FLOW_OPTIONS = {
   fitView: true,
@@ -94,48 +118,21 @@ export const nodeDrag = (_: any, node: any, nodes: any, setEdges: any, edges: an
 };
 
 export function isValidEdge(source: Node, target: Node, nodes: Node[], edges: Edge[]) {
-  if (!source || !target || source.type === target.type) return false;
+  if (!source || !target) return false;
+  if (source.id === target.id) return false;
 
-  const isCategory = (node: Node) => node?.type === 'category';
-  const isObject = (node: Node) => node?.type === 'object';
-  const isSubcategory = (node: Node) => node?.type === 'subcategory';
-
-  if ((isObject(source) || isObject(target)) && (isSubcategory(source) || isSubcategory(target))) {
-    return false;
-  }
-
-  const isInvalidEdge = (edgeSource: Node, edgeTarget: Node, node: Node) => {
-    if (edgeSource?.type != node.type && edgeTarget?.type != node.type) {
-      return false;
-    }
-    if (edgeSource.id === node.id || edgeTarget.id === node.id) {
-      return false;
-    }
-
-    return true;
-  };
-
-  const relatedEdges = edges.filter(
-    (edge) =>
-      edge.source === source.id || edge.target === target.id || edge.source === target.id || edge.target === source.id,
+  const edgeExists = edges.some(
+    (e) => (e.source === source.id && e.target === target.id) || (e.source === target.id && e.target === source.id),
   );
 
-  for (let i = 0; i < relatedEdges.length; i++) {
-    const edgeSource = nodes.find((n) => n.id === relatedEdges[i].source);
-    const edgeTarget = nodes.find((n) => n.id === relatedEdges[i].target);
+  if (edgeExists) return false;
 
-    if (edgeSource && edgeTarget) {
-      if ((isCategory(source) || isCategory(target)) && (isObject(source) || isObject(target))) {
-        if (isObject(source) && isInvalidEdge(edgeSource, edgeTarget, source)) return false;
-        if (isObject(target) && isInvalidEdge(edgeSource, edgeTarget, target)) return false;
-      } else if ((isCategory(source) || isCategory(target)) && (isSubcategory(source) || isSubcategory(target))) {
-        if (isCategory(source) && isInvalidEdge(edgeSource, edgeTarget, source)) return false;
-        if (isCategory(target) && isInvalidEdge(edgeSource, edgeTarget, target)) return false;
-      }
-    }
-  }
+  const sourceType = source.type;
+  const targetType = target.type;
 
-  return true;
+  if (!sourceType || !targetType) return false;
+
+  return validConnections[sourceType]?.includes(targetType) ?? false;
 }
 
 export const nodeDragStop = (_: any, node: any, nodes: any, edges: any, setEdges: any) => {
@@ -145,20 +142,63 @@ export const nodeDragStop = (_: any, node: any, nodes: any, edges: any, setEdges
     const nextEdges = es.filter((e: any) => e.className !== 'temp');
     const isTempEdge = es.filter((e: any) => e.className === 'temp').some((e: any) => e.id === closeEdge?.id);
 
-    if (
-      closeEdge &&
-      isValidEdge(
-        nodes.find((n: any) => n.id === closeEdge.source),
-        nodes.find((n: any) => n.id === closeEdge.target),
-        nodes,
-        edges,
-      ) &&
-      !nextEdges.find((ne: any) => ne.source === closeEdge.source && ne.target === closeEdge.target) &&
-      isTempEdge
-    ) {
+    if (closeEdge && isTempEdge) {
       return [...nextEdges, closeEdge];
     }
 
     return nextEdges;
   });
 };
+
+export function createNodeColumnMapping(nodes: Node[], edges: Edge[]) {
+  const columnNodeId = nodes.filter((node) => node.type == 'column').map((node) => node.id);
+  const filteredEdges = edges.filter(
+    (edge) => columnNodeId.includes(edge.source) || columnNodeId.includes(edge.target),
+  );
+
+  if (filteredEdges.length == 0) {
+    return null;
+  }
+
+  const result: { nodeId: string; nodeName: string; nodeType: string | undefined; columns: string[] }[] = [];
+  const isColumn = (node: Node) => node?.type == 'column';
+  filteredEdges.forEach((edge) => {
+    const source = nodes.find((node) => node.id == edge.source);
+    const target = nodes.find((node) => node.id == edge.target);
+    if (source && target) {
+      const isAppended = result.some(
+        (obj) => obj.nodeName === (isColumn(source) ? target.data.label : source.data.label),
+      );
+      if (!isAppended) {
+        result.push({
+          nodeId: isColumn(source) ? target.id : source.id,
+          nodeName: isColumn(source) ? target.data.label : source.data.label,
+          nodeType: isColumn(source) ? target.type : source.type,
+          columns: [isColumn(source) ? source.data.label : target.data.label],
+        });
+      } else {
+        const index = result.findIndex(
+          (obj) => obj.nodeName === (isColumn(source) ? target.data.label : source.data.label),
+        );
+        result[index].columns.push(isColumn(source) ? source.data.label : target.data.label);
+      }
+    }
+  });
+
+  return result;
+}
+
+export function transformColumns(nodeMap: any[], tableMap: { [key: string]: string }) {
+  return nodeMap.map((category) => {
+    const transformedColumns = category.columns.map((column: string) => {
+      return {
+        name: column,
+        table: tableMap[column],
+      };
+    });
+    return {
+      ...category,
+      columns: transformedColumns,
+    };
+  });
+}

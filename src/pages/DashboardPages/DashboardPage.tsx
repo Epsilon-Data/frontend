@@ -19,7 +19,7 @@ import KeywordGuidance from '@app/components/common/Modal/KeywordGuidance/Keywor
 import { ModalSelect } from '@app/components/common/Modal/ModalSelect/ModalSelect';
 import { TestConnectionGroup } from '@app/components/common/Modal/TestConnectionGroup/TestConnectionGroup';
 import { testConnection } from '@app/api/connectionRequests.api';
-import { createProject, getUserProjects, ProjectSummaryInfo } from '@app/api/projects.api';
+import { createProject, getUserOwnedProjects, getUserSharedProjects, ProjectSummaryInfo } from '@app/api/projects.api';
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
 import config from '@app/config/config';
 import dayjs from 'dayjs';
@@ -79,7 +79,8 @@ const DashboardPage: React.FC = () => {
   const [showMessage, setShowMessage] = useState(false);
   const [isFormLoading, setFormLoading] = useState(false);
   const [members, setMembers] = useState<{ email: string; role: string }[]>([]);
-  const [projects, setProjects] = useState<ProjectSummaryInfo[]>([]);
+  const [ownedProjects, setOwnedProjects] = useState<ProjectSummaryInfo[]>([]);
+  const [sharedProjects, setSharedProjects] = useState<ProjectSummaryInfo[]>([]);
 
   const stepTitles = [
     t('dashboard.createProject.form.step1.title'),
@@ -167,6 +168,7 @@ const DashboardPage: React.FC = () => {
 
   const handleCreate = async () => {
     setFormLoading(true);
+
     const formData = {
       ownerId: user?.id ?? '',
       name: step1.getFieldValue('name'),
@@ -177,18 +179,18 @@ const DashboardPage: React.FC = () => {
       description: step2.getFieldValue('description'),
       startDate: step2.getFieldValue('startDate'),
       endDate: step2.getFieldValue('endDate'),
-      members: members.map((m) => JSON.stringify(m)),
+      members: JSON.stringify(members),
       participantsNum: step2.getFieldValue('participantsNum'),
       dbKeywords: dbKeywords,
       connection: {
         orgAdminEmail: '',
-        tempDbDetails: JSON.stringify({
+        tempDbDetails: {
           name: step4.getFieldValue('dbName'),
           type: step4.getFieldValue('dbType'),
           url: step4.getFieldValue('dbUrl'),
           username: step4.getFieldValue('username'),
           password: step4.getFieldValue('password'),
-        }),
+        },
       },
     };
 
@@ -198,8 +200,12 @@ const DashboardPage: React.FC = () => {
   };
 
   const fetch = useCallback(() => {
-    getUserProjects().then((res) => {
-      setProjects(res);
+    getUserOwnedProjects().then((res) => {
+      setOwnedProjects(res);
+    });
+
+    getUserSharedProjects().then((res) => {
+      setSharedProjects(res);
     });
   }, []);
 
@@ -267,14 +273,14 @@ const DashboardPage: React.FC = () => {
         <div className="text-xs font-regular font-inter text-grey-1">
           {t('dashboard.main.personalProjects.description')}
         </div>
-        <ProjectList projects={projects} mode="personal" layout={layout} onProjectClick={handleProjectClick} />
+        <ProjectList projects={ownedProjects} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
       </div>
       <div className="my-20">
         <div className="text-md font-medium font-inter text-black">{t('dashboard.main.sharedProjects.title')}</div>
         <div className="text-xs font-regular font-inter text-grey-1">
           {t('dashboard.main.sharedProjects.description')}
         </div>
-        <ProjectList projects={projects} mode="shared" layout={layout} onProjectClick={handleProjectClick} />
+        <ProjectList projects={sharedProjects} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
       </div>
       <Modal
         open={isModalOpen}

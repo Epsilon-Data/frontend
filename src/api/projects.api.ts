@@ -22,7 +22,13 @@ export interface ProjectSummaryInfo {
 export interface ConnectionInfo {
   requestId?: string;
   orgAdminEmail?: string;
-  tempDbDetails?: string;
+  tempDbDetails?: {
+    name: string;
+    type: string;
+    url: string;
+    username: string;
+    password: string;
+  };
   additionalInfo?: string;
 }
 
@@ -38,7 +44,7 @@ export interface ProjectInfo {
   description: string;
   startDate: Date;
   endDate: Date;
-  members: string[];
+  members: string;
   participantsNum: string;
   lastModified?: Date;
   dbKeywords?: string[];
@@ -52,18 +58,18 @@ export const createProject = async (data: ProjectInfo): Promise<void> => {
   });
 };
 
-export const getUserProjects = async (): Promise<ProjectSummaryInfo[]> => {
+export const getUserOwnedProjects = async (): Promise<ProjectSummaryInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(`${PROJECT_API_URL}/me`, {
+  const response = await httpClient.get(`${PROJECT_API_URL}/own`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
 };
 
 // get shared projects
-export const getSharedProjects = async (): Promise<ProjectSummaryInfo[]> => {
+export const getUserSharedProjects = async (): Promise<ProjectSummaryInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(PROJECT_API_URL, {
+  const response = await httpClient.get(`${PROJECT_API_URL}/share`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
@@ -82,6 +88,9 @@ export const getProjectDetails = async (projectId: string | undefined): Promise<
   const response = await httpClient.get(`${PROJECT_API_URL}/${projectId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
+
+  const memberData = JSON.stringify(response.data.members);
+  response.data.members = memberData;
   return response.data;
 };
 

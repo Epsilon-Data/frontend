@@ -3,7 +3,7 @@ import * as S from './TextNode.styles';
 import { useState } from 'react';
 import { getHandleConfig, NodeData } from '@app/constants/reactflow';
 
-interface TypedNodeProps extends NodeProps<NodeData> {
+export interface TypedNodeProps extends NodeProps<NodeData> {
   type: string;
 }
 

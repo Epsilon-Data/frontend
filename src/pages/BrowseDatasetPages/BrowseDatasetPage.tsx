@@ -14,7 +14,7 @@ import { Button, Image, Input, Modal, Radio, Select, Tabs, Tag, Typography } fro
 import { RxEnterFullScreen } from 'react-icons/rx';
 import { DB_TYPE_LABELS } from '@app/constants/projects';
 import ReactFlow, { Background, Panel, ReactFlowProvider, useReactFlow } from 'reactflow';
-import { BG_VARIANT, createNodeTypes, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
+import { BG_VARIANT, createNodeTypes, EDGE_TYPES, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
 import clsx from 'clsx';
 
 const nodes = [
@@ -143,10 +143,11 @@ const BrowseDatasetPage: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
-  const tempDbDetails = JSON.parse(project.connection?.tempDbDetails ?? '{}');
+  const tempDbDetails = project.connection?.tempDbDetails;
   const isNodesReadOnly = true;
 
   const nodeTypes = useMemo(() => createNodeTypes(isNodesReadOnly), [isNodesReadOnly]);
+  const edgeTypes = useMemo(() => EDGE_TYPES, []);
 
   useEffect(() => {
     if (descriptionRef.current) {
@@ -210,10 +211,9 @@ const BrowseDatasetPage: React.FC = () => {
             title={t('browse.main.details.projectDetails.info.members')}
             content={
               project.members
-                ? project.members
-                    .map((member) => {
-                      const memberObj = JSON.parse(member);
-                      return `${memberObj.email} (${memberObj.role})`;
+                ? JSON.parse(project.members)
+                    .map((member: { email: string; role: string }) => {
+                      return `${member.email} (${member.role})`;
                     })
                     .join(', ')
                 : t('browse.main.details.projectDetails.info.notAvailable')
@@ -371,23 +371,27 @@ const BrowseDatasetPage: React.FC = () => {
             </Col>
           </Row>
           <Row className="mt-8 mx-24 border-t border-t-grey-3 pt-8 flex flex-col mb-12">
-            <div className="text-xs font-medium font-inter text-blueDark mb-4">
-              {t('browse.main.details.aboutDb.title')}
-            </div>
-            <div className="font-light text-xs font-inter">
-              <DetailsRow
-                title={t('browse.main.details.aboutDb.info.dbName')}
-                content={tempDbDetails.name}
-                titleWidth={6}
-                contentWidth={15}
-              />
-              <DetailsRow
-                title={t('browse.main.details.aboutDb.info.dbNature')}
-                content={t(DB_TYPE_LABELS[tempDbDetails.type] ?? tempDbDetails.type)}
-                titleWidth={6}
-                contentWidth={15}
-              />
-            </div>
+            {tempDbDetails && (
+              <>
+                <div className="text-xs font-medium font-inter text-blueDark mb-4">
+                  {t('browse.main.details.aboutDb.title')}
+                </div>
+                <div className="font-light text-xs font-inter">
+                  <DetailsRow
+                    title={t('browse.main.details.aboutDb.info.dbName')}
+                    content={tempDbDetails.name}
+                    titleWidth={6}
+                    contentWidth={15}
+                  />
+                  <DetailsRow
+                    title={t('browse.main.details.aboutDb.info.dbNature')}
+                    content={t(DB_TYPE_LABELS[tempDbDetails.type] ?? tempDbDetails.type)}
+                    titleWidth={6}
+                    contentWidth={15}
+                  />
+                </div>
+              </>
+            )}
             <div className="text-xs font-medium font-inter text-blueDark mb-4">
               {t('browse.main.details.dbPreview')}
             </div>
@@ -414,6 +418,7 @@ const BrowseDatasetPage: React.FC = () => {
                     panOnDrag
                     deleteKeyCode={[]}
                     nodeTypes={nodeTypes}
+                    edgeTypes={edgeTypes}
                     nodeOrigin={REACT_FLOW_OPTIONS.nodeOrigin as [number, number]}
                     fitView={REACT_FLOW_OPTIONS.fitView}
                     fitViewOptions={REACT_FLOW_OPTIONS.fitViewOptions}

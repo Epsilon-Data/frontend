@@ -1,13 +1,23 @@
-import { BaseEdge, EdgeProps, getBezierPath } from 'reactflow';
+import { BaseEdge, EdgeProps, getStraightPath } from 'reactflow';
 
-export function MapEdge(props: EdgeProps) {
-  const { sourceX, sourceY, targetX, targetY } = props;
+interface MapEdgeProps extends EdgeProps {
+  mode?: 'editable' | 'mapping' | 'readonly';
+}
 
-  const [edgePath] = getBezierPath({
-    sourceX: sourceX + 5,
-    sourceY: sourceY + 5,
+export function MapEdge(props: MapEdgeProps) {
+  const { sourceX, sourceY, targetX, targetY, mode = 'editable' } = props;
+
+  let offset = 5;
+
+  if (mode === 'mapping' || mode === 'readonly') {
+    offset = -5;
+  }
+
+  const [edgePath] = getStraightPath({
+    sourceX,
+    sourceY: sourceY + offset,
     targetX,
-    targetY: targetY - 5,
+    targetY: targetY - offset,
   });
 
   return <BaseEdge path={edgePath} {...props} style={{ stroke: '#808080', strokeWidth: '1.5px' }} />;

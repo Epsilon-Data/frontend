@@ -13,9 +13,10 @@ import { FaChevronDown, FaChevronUp, FaMinus, FaPlus } from 'react-icons/fa6';
 import { Button, Image, Input, Modal, Radio, Select, Tabs, Tag, Typography } from 'antd';
 import { RxEnterFullScreen } from 'react-icons/rx';
 import { DB_TYPE_LABELS } from '@app/constants/projects';
-import ReactFlow, { Background, Panel, ReactFlowProvider, useReactFlow } from 'reactflow';
-import { BG_VARIANT, createNodeTypes, EDGE_TYPES, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
+import ReactFlow, { Background, EdgeProps, Panel, ReactFlowProvider, useReactFlow } from 'reactflow';
+import { BG_VARIANT, createNodeTypes, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
 import clsx from 'clsx';
+import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 
 const nodes = [
   {
@@ -144,10 +145,14 @@ const BrowseDatasetPage: React.FC = () => {
   const [showToggle, setShowToggle] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
   const tempDbDetails = project.connection?.tempDbDetails;
-  const isNodesReadOnly = true;
 
-  const nodeTypes = useMemo(() => createNodeTypes(isNodesReadOnly), [isNodesReadOnly]);
-  const edgeTypes = useMemo(() => EDGE_TYPES, []);
+  const nodeTypes = useMemo(() => createNodeTypes('readonly'), []);
+  const edgeTypes = useMemo(
+    () => ({
+      default: (edgeProps: EdgeProps) => <MapEdge {...edgeProps} mode={'readonly'} />,
+    }),
+    [],
+  );
 
   useEffect(() => {
     if (descriptionRef.current) {

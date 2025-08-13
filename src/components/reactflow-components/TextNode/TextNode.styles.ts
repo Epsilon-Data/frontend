@@ -3,7 +3,6 @@ import { Handle } from 'reactflow';
 
 export const TextNodeWrapper = styled.div`
   border-radius: 0.5rem;
-  padding: 0rem 0.5rem 0.5rem 0rem;
   height: 50px;
   padding: 0.5rem;
 `;

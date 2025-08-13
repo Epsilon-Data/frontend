@@ -1,7 +1,7 @@
+import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import {
   BG_VARIANT,
   createNodeTypes,
-  EDGE_TYPES,
   FlowProps,
   isValidEdge,
   nodeDrag,
@@ -27,6 +27,7 @@ import ReactFlow, {
   EdgeChange,
   Panel,
   useReactFlow,
+  EdgeProps,
 } from 'reactflow';
 
 const { Text } = Typography;
@@ -121,9 +122,13 @@ const Flow: React.FC<FlowProps & { templateName: string }> = ({
   onNodesChange,
   templateName,
 }) => {
-  const isNodesReadOnly = false;
-  const nodeTypes = useMemo(() => createNodeTypes(isNodesReadOnly), [isNodesReadOnly]);
-  const edgeTypes = useMemo(() => EDGE_TYPES, []);
+  const nodeTypes = useMemo(() => createNodeTypes('editable'), []);
+  const edgeTypes = useMemo(
+    () => ({
+      default: (edgeProps: EdgeProps) => <MapEdge {...edgeProps} mode={'editable'} />,
+    }),
+    [],
+  );
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
   let nodeId = nodes.length;

@@ -3,10 +3,9 @@ import styled from 'styled-components';
 
 export const DefaultNodeWrapper = styled.div`
   border-radius: 0.5rem;
-  padding: 0rem 0.5rem 0.5rem 0rem;
+  padding: 0.5rem;
   width: fit-content;
   height: 50px;
-  padding: 0.5rem;
 `;
 
 export const TextDisplay = styled.div`
@@ -25,5 +24,17 @@ export const TextDisplay = styled.div`
 export const DefaultHandle = styled(Handle)`
   && {
     visibility: hidden;
+    border: none;
+    background: #4a5565;
+    height: 10px;
+    width: 10px;
+    transition:
+      height 0.3s ease,
+      width 0.3s ease;
+    &:hover {
+      background: #1481f1;
+      height: 13px;
+      width: 13px;
+    }
   }
 `;

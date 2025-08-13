@@ -16,6 +16,7 @@ import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/Modal
 import { ModalInput } from '@app/components/common/Modal/ModalInput/ModalInput';
 import { CreateTemplate } from './Steps/CreateTemplate';
 import { useEdgesState, useNodesState } from 'reactflow';
+import { ColumnMapping } from './Steps/ColumnMapping';
 
 // function checkDuplicateNames(nodes: Node[]) {
 //   const nameSet = new Set();
@@ -126,6 +127,7 @@ const DatabaseMappingPage: React.FC = () => {
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [columns, setColumns] = useState<string[]>([]);
 
   const stepTitles = [
     t('project.createTemplate.form.step1.title'),
@@ -159,6 +161,8 @@ const DatabaseMappingPage: React.FC = () => {
       getArchetypes(id).then((res) => {
         setArchetypes(res);
       });
+
+      setColumns(['Column 1', 'Column 2', 'Column 3']);
     }
   }, [id]);
 
@@ -322,7 +326,17 @@ const DatabaseMappingPage: React.FC = () => {
               handleDraft={handleDraft}
               stepTitles={stepTitles}
             />
-            <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center"></div>
+            <div className="h-[33rem] py-4 px-8 overflow-y-auto flex flex-col justify-center bg-grey-4">
+              <ColumnMapping
+                nodes={nodes}
+                edges={edges}
+                setEdges={setEdges}
+                setNodes={setNodes}
+                onEdgesChange={onEdgesChange}
+                onNodesChange={onNodesChange}
+                columns={columns}
+              />
+            </div>
           </div>
         )}
         {modalStep === 3 && (

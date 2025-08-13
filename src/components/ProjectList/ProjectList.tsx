@@ -5,7 +5,7 @@ import { IoChevronForwardOutline } from 'react-icons/io5';
 
 export const ProjectList: React.FC<{
   projects: ProjectSummaryInfo[];
-  mode: 'personal' | 'shared' | 'all';
+  mode: 'dashboard' | 'all';
   layout: 'list' | 'grid';
   onProjectClick: (projectId: string) => void;
 }> = ({ projects, mode, onProjectClick }) => {
@@ -35,7 +35,7 @@ export const ProjectList: React.FC<{
               }
               variant="borderless"
             >
-              {(mode == 'personal' || mode == 'shared') && (
+              {mode == 'dashboard' && (
                 <>
                   <Row justify="space-between" align="middle">
                     <Col>

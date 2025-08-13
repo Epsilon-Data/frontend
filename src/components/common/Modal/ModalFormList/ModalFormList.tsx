@@ -1,9 +1,10 @@
 import React from 'react';
 import FormItem from 'antd/es/form/FormItem';
 import { FaChevronDown, FaPlus } from 'react-icons/fa6';
-import { Button, Col, Input, Row, Select, Tag } from 'antd';
+import { Button, Col, Input, Row, Select, Tag, message } from 'antd';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FormInstance } from 'antd/lib';
+import { RuleObject } from 'antd/es/form';
 
 const roles = [
   { label: 'Collaborator', value: 'Collaborator' },
@@ -18,9 +19,21 @@ export const ModalFormList: React.FC<{
   form: FormInstance;
   setMembers: (members: { email: string; role: string }[]) => void;
 }> = ({ inputTitle, inputDescription, members, setMembers, form }) => {
-  const handleAdd = () => {
+  const emailRules: RuleObject[] = [
+    {
+      type: 'email',
+      message: 'The input is not a valid email',
+    },
+  ];
+
+  const handleAdd = async () => {
     const { email, role } = form.getFieldsValue(['email', 'role']);
-    setMembers([...members, { email, role }]);
+    try {
+      await form.validateFields(['email']);
+      setMembers([...members, { email, role }]);
+    } catch (errorInfo) {
+      message.error("Invalid team member's email");
+    }
   };
 
   const handleRemove = (index: number) => {
@@ -36,7 +49,7 @@ export const ModalFormList: React.FC<{
       <Row className="flex">
         <Col span={17} className="flex-1">
           <p className="mb-0.3 text-xs">Email address</p>
-          <FormItem name="email">
+          <FormItem name="email" rules={emailRules}>
             <Input className="w-full border border-black bg-grey-4" />
           </FormItem>
         </Col>

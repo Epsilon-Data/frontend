@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DefaultNode } from '@app/components/reactflow-components/DefaultNode/DefaultNode';
-import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import { TextNode } from '@app/components/reactflow-components/TextNode/TextNode';
+import { ColumnNode } from '@app/components/reactflow-components/ColumnNode/ColumnNode';
+import { SubcategoryNode } from '@app/components/reactflow-components/SubcategoryNode/SubcategoryNode';
 import { Dispatch, SetStateAction } from 'react';
 import { BackgroundVariant, Edge, Node, EdgeChange, NodeChange } from 'reactflow';
 
 export const MIN_DISTANCE = 160;
 export const BG_VARIANT = BackgroundVariant.Dots;
-
-export const EDGE_TYPES = {
-  default: MapEdge,
-};
 
 export interface NodeData {
   label: string;
@@ -19,12 +16,21 @@ export interface NodeData {
 const validConnections: Record<string, string[]> = {
   object: ['category'],
   category: ['subcategory'],
+  subcategory: ['column'],
+  column: ['subcategory'],
 };
 
 export const editableNodeTypes = {
   object: TextNode,
   category: TextNode,
   subcategory: TextNode,
+};
+
+export const mappingNodeTypes = {
+  object: DefaultNode,
+  category: DefaultNode,
+  subcategory: SubcategoryNode,
+  column: ColumnNode,
 };
 
 export const readonlyNodeTypes = {
@@ -35,7 +41,7 @@ export const readonlyNodeTypes = {
 
 export function getHandleConfig(type: string) {
   return {
-    showSource: type === 'object' || type === 'category',
+    showSource: type === 'object' || type === 'category' || type === 'column',
     showTarget: type === 'category' || type === 'subcategory',
   };
 }
@@ -49,7 +55,15 @@ export interface FlowProps {
   setEdges: Dispatch<SetStateAction<Edge<any>[]>>;
 }
 
-export const createNodeTypes = (isReadOnly: boolean) => (isReadOnly ? readonlyNodeTypes : editableNodeTypes);
+export const createNodeTypes = (mode: 'mapping' | 'readonly' | 'editable') => {
+  if (mode === 'mapping') {
+    return mappingNodeTypes;
+  } else if (mode === 'readonly') {
+    return readonlyNodeTypes;
+  } else {
+    return editableNodeTypes;
+  }
+};
 
 export const REACT_FLOW_OPTIONS = {
   fitView: true,

@@ -35,7 +35,6 @@ const getInitialFormValues = () => {
     startDate: new Date().toISOString(),
     endDate: new Date().toISOString(),
     participantsNum: '',
-    dbType: '',
     dbUrl: '',
     username: '',
     password: '',
@@ -159,7 +158,6 @@ const DashboardPage: React.FC = () => {
 
     step4.setFieldsValue({
       dbName: initialValues.name,
-      dbType: initialValues.dbType,
       dbUrl: initialValues.dbUrl,
       username: initialValues.username,
       password: initialValues.password,
@@ -431,7 +429,7 @@ const DashboardPage: React.FC = () => {
                   name="dbType"
                   inputTitle={t('dashboard.createProject.form.step4.dbType')}
                   options={dbTypeOptions}
-                  initialValue="postgres"
+                  defaultValue="postgres"
                 />
                 <TestConnectionGroup
                   inputTitle={t('dashboard.createProject.form.step4.dbUrl.title')}

@@ -21,29 +21,10 @@ import { TestConnectionGroup } from '@app/components/common/Modal/TestConnection
 import { testConnection } from '@app/api/connectionRequests.api';
 import { createProject, getUserOwnedProjects, getUserSharedProjects, ProjectSummaryInfo } from '@app/api/projects.api';
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
-import config from '@app/config/config';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 
 const getInitialFormValues = () => {
-  if (config.isDev) {
-    return {
-      name: 'Test Project',
-      lead: 'John Doe',
-      university: 'Test University',
-      faculty: 'Computer Science',
-      ethicsId: 'ETH12345',
-      description: 'This is a test project description',
-      startDate: '2025-01-01',
-      endDate: '2025-12-31',
-      participantsNum: 100,
-      dbType: 'postgres',
-      dbUrl: 'postgresql://test_admin:supersecret@localhost:5433/test',
-      username: 'test_admin',
-      password: 'supersecret',
-    };
-  }
-
   return {
     name: '',
     lead: '',

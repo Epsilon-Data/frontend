@@ -18,7 +18,20 @@ export const ModalTagInput: React.FC<{
         <div className="font-medium font-sans text-blueDark text-xl">{inputTitle}</div>
         <div className="font-light font-inter text-black text-xs">{inputDescription}</div>
       </div>
-      <FormItem name={name} className={className}>
+      <FormItem
+        name={name}
+        className={className}
+        rules={[
+          {
+            validator: (_, val: string[]) => {
+              if (val && val.length >= 2) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('Please enter at least 2 keywords'));
+            },
+          },
+        ]}
+      >
         <Select
           mode="tags"
           maxCount={MAX_COUNT}

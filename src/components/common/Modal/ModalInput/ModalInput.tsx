@@ -14,6 +14,18 @@ export const ModalInput: React.FC<{
   inputRules?: RuleObject[];
   large?: boolean;
 }> = ({ name, suffix, disabled, className, inputTitle, inputDescription, inputRules, large }) => {
+  const rules = [
+    {
+      required: true,
+      message: 'This field is required',
+    },
+    {
+      whitespace: true,
+      message: 'This field cannot be empty',
+    },
+    ...(inputRules || []),
+  ];
+
   return (
     <div className="flex flex-col mb-12">
       <div className={clsx(large ? 'mb-12' : 'mb-8')}>
@@ -22,7 +34,7 @@ export const ModalInput: React.FC<{
           {inputDescription}
         </div>
       </div>
-      <FormItem rules={inputRules} name={name} className={className}>
+      <FormItem rules={rules} name={name} className={className}>
         <Input suffix={suffix} disabled={disabled} className="border border-black bg-grey-4" />
       </FormItem>
     </div>

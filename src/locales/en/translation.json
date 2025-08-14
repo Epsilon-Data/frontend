@@ -99,6 +99,10 @@
         },
         "step5": {
           "title": "Step 5: ---"
+        },
+        "error": {
+          "invalidEmail": "Invalid team member's email",
+          "invalidDbUrl": "Invalid database URL"
         }
       }
     }
@@ -150,130 +154,6 @@
           "title": "Step 4: Set permissions for your database"
         }
       }
-    }
-  },
-  "connectionRequests": {
-    "rTitle": "Connection Requests",
-    "oaTitle": "Connection Requests",
-    "title": "Connection Requests",
-    "date": "Request Date",
-    "requestor": "Requestor",
-    "requestorProject": "Requestor's Project",
-    "requestingProject": "Requesting Project Dataset",
-    "dbRequestSidebar": {
-      "main": "Database Request",
-      "receive": "Requests Received",
-      "sent": "Requests Sent"
-    },
-    "dbRequestList": "Database Request List",
-    "accessRequestList": "{{action}}Access Request List",
-    "accessRequestSidebar": {
-      "main": "Access Request",
-      "receive": "Requests Received",
-      "sent": "Requests Sent"
-    },
-    "viewSource": "View Source",
-    "viewDataset": "View Dataset",
-    "proceed": "Proceed",
-    "reject": "Reject",
-    "details": {
-      "projectInfo": {
-        "id": "Project ID",
-        "title": "Project Information",
-        "name": "Project Name",
-        "duration": "Project Duration",
-        "lead": "Project Lead",
-        "teamMembers": "Project Team Members/Affiliations",
-        "addTeamMembers": "Add Member/Affiliate",
-        "university": "University",
-        "faculty": "Faculty",
-        "ethicsId": "Ethics Approval ID",
-        "description": "Project Description",
-        "isOwnData": "Do you have access to your own data?",
-        "continue": "Continue",
-        "invalidId": "Please input a unique Project ID."
-      },
-      "databaseInfo": {
-        "title": "Database Information",
-        "name": "Database Name",
-        "type": "Database Type",
-        "typePrompt": "Select Database Type",
-        "host": "Host/Server Address",
-        "port": "Port Number",
-        "username": "Database Username",
-        "password": "Database Password",
-        "passwordPrompt": "Input Password",
-        "postgres": "PostgreSQL",
-        "mysql": "MySQL",
-        "mongo": "MongoDB",
-        "testConnection": "Test Connection",
-        "testConnectionTip": "** Please test your database connection before proceeding.",
-        "testSuccess": "Database connection successful! Please proceed.",
-        "testFailed": "Unable to connect to database. Please check your inputs and try again."
-      },
-      "dataInfo": {
-        "title": "Data Information",
-        "collectionDuration": "Data Collection Duration",
-        "participantsNumber": "Number of Participants",
-        "description": "Data Description",
-        "keywords": "Dataset Keywords",
-        "addKeywords": "Add Keywords"
-      },
-      "orgAdminInfo": {
-        "title": "Organisation Admin Information",
-        "email": "Email ID",
-        "tooltip": "Provide email address of organisation admin that has access to the database"
-      },
-      "addInfo": {
-        "title": "Additional Information",
-        "placeholder": "Additional notes related to request"
-      },
-      "revisionInfo": {
-        "title": "Information On Revision Required",
-        "default": "Database connection failed. Please edit the database information."
-      },
-      "openAccessForm": {
-        "title": "Data Open Access Form",
-        "confirmDataOwner": "I confirm that I am the data owner and have the rights to make this data available on the platform.",
-        "confirmInLine": "I confirm that the data collection has been done in line with relevant local, national and institutional regulations and legislation.",
-        "confirmConsent": "I confirm that the study participants have consented their data to be made accessible on the platform."
-      },
-      "requestorInfo": {
-        "title": "Requestor Information"
-      },
-      "requestDatasetInfo": {
-        "title": "Request Dataset Information"
-      }
-    },
-    "create": {
-      "title": "Create Connection Request",
-      "altTitle": "Create Request",
-      "successNotify": "Your connection request is successfully created.",
-      "failNotify": "Unable to create connection request. Please try again."
-    },
-    "view": "View Request",
-    "edit": {
-      "title": "Edit Request {{id}}",
-      "update": "Update & Resubmit",
-      "successNotify": "Request updated successfully.",
-      "failNotify": "Request failed to update. Please try again."
-    },
-    "approve": {
-      "title": "Request Approval",
-      "confirm": "Approve",
-      "successNotify": "Connection request approved.",
-      "failNotify": "Unable to approve connection request. Please try again.",
-      "userRequest": {
-        "successNotify": "User request {{action}}.",
-        "failNotify": "Unable to {{action}} user request. Please try again."
-      }
-    },
-    "revision": {
-      "title": "Request Additional Information",
-      "instruction": "Specify additional information required from request.",
-      "placeholder": "Enter text here",
-      "successNotify": "Revision information submitted successfully.",
-      "failNotify": "Unable to add revision information to connection request. Please try again."
     }
   },
   "databaseSources": {
@@ -548,93 +428,6 @@
       "ethics": {
         "title": "Ethics",
         "id": "Ethics Approval ID"
-      }
-    }
-  },
-  "dataset": {
-    "title": "Datasets",
-    "datasetList": "Dataset List",
-    "analyseData": "Analyse Data",
-    "standard": {
-      "title": "Standard Analyses",
-      "descriptive": {
-        "title": "Descriptive",
-        "guide": "Guide",
-        "table": "Table",
-        "tablePrompt": "Select table",
-        "var": "Variables",
-        "varType": "Variables Type",
-        "dependentVar": "Dependent Variable",
-        "independentVar": "Independent Variables",
-        "varPrompt": "Select {{variable}}",
-        "calculate": {
-          "title": "Calculate",
-          "mean": "Mean",
-          "median": "Median",
-          "mode": "Mode",
-          "sd": "Standard Deviation",
-          "var": "Variance",
-          "min": "Minimum",
-          "max": "Maximum"
-        },
-        "output": "Output",
-        "generate": "Generate Output",
-        "failNotify": "Unable to generate output. Please try again.",
-        "selectVarNotify": "Please select at least one variable.",
-        "selectVarTypeNotify": "Please select the variable type for each variable.",
-        "selectCalcNotify": "Please select the calculations to be performed."
-      },
-      "hypothesis": {
-        "title": "Hypothesis",
-        "altHypo": "Alternative Hypothesis",
-        "sigLvl": "Significance Level",
-        "testValue": "Test Value"
-      },
-      "regression": {
-        "title": "Regression"
-      }
-    },
-    "analysis": {
-      "title": "Analyse Data",
-      "name": "Analysis Name",
-      "createdDate": "Created Date",
-      "updatedDate": "Updated Date",
-      "lastUpdated": "Last Updated By",
-      "create": {
-        "title": "Create Analysis",
-        "prompt": "Please provide your analysis name: ",
-        "successNotify": "Analysis created successfully.",
-        "failNotify": "Failed to create analysis. Please try again."
-      },
-      "download": {
-        "dataset": "Download Dataset",
-        "inProgressNotify": "Download in progress.",
-        "failNotify": "Failed to download content. Please try again."
-      },
-      "view": {
-        "title": "Analysis Details",
-        "delete": "Delete Analysis",
-        "deleteSuccess": "Analysis deleted successfully.",
-        "edit": "Edit Analysis Details",
-        "specs": "Specifications",
-        "util": "Utilities",
-        "description": "Analysis Description",
-        "scripts": "Analysis Scripts",
-        "addScript": "Add Script",
-        "scriptAddSuccess": "Script added successfully.",
-        "scriptAddFail": "Failed to add script. Please try again.",
-        "scriptName": "Script Name",
-        "checkValidation": "Check Validation",
-        "lastUpdated": "Last Updated",
-        "report": "View Report"
-      },
-      "upload": {
-        "title": "Script Upload Settings",
-        "instructions": "Select the CSV that is being read into these variables.",
-        "csvPlaceholder": "Select CSV File",
-        "missingError": "Database missing template and/or access permissions. Please contact the database owner.",
-        "proceed": "Proceed",
-        "locate": "Locate Line"
       }
     }
   },

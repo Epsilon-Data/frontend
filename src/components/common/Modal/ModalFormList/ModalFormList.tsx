@@ -5,6 +5,7 @@ import { Button, Col, Input, Row, Select, Tag, message } from 'antd';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FormInstance } from 'antd/lib';
 import { RuleObject } from 'antd/es/form';
+import { useTranslation } from 'react-i18next';
 
 const roles = [
   { label: 'Collaborator', value: 'Collaborator' },
@@ -19,6 +20,7 @@ export const ModalFormList: React.FC<{
   form: FormInstance;
   setMembers: (members: { email: string; role: string }[]) => void;
 }> = ({ inputTitle, inputDescription, members, setMembers, form }) => {
+  const { t } = useTranslation();
   const emailRules: RuleObject[] = [
     {
       type: 'email',
@@ -30,9 +32,12 @@ export const ModalFormList: React.FC<{
     const { email, role } = form.getFieldsValue(['email', 'role']);
     try {
       await form.validateFields(['email']);
+      if (!email || !role) {
+        throw new Error();
+      }
       setMembers([...members, { email, role }]);
     } catch (errorInfo) {
-      message.error("Invalid team member's email");
+      message.error(t('dashboard.createProject.form.error.invalidEmail'));
     }
   };
 
@@ -56,7 +61,7 @@ export const ModalFormList: React.FC<{
         <div className="h-2 bg-grey-2" />
         <Col span={6} className="flex-1 ml-1">
           <p className="mb-0.3 text-xs">Role</p>
-          <FormItem name="role">
+          <FormItem name="role" initialValue="Collaborator">
             <Select className="role-select w-full" suffixIcon={<FaChevronDown />} options={roles} />
           </FormItem>
         </Col>

@@ -15,6 +15,16 @@ export const TestConnectionGroup: React.FC<{
   show: boolean;
 }> = ({ onClick, loading, inputTitle, inputDescription, connected, show }) => {
   const { t } = useTranslation();
+  const inputRules = [
+    {
+      required: true,
+      message: 'This field is required',
+    },
+    {
+      whitespace: true,
+      message: 'This field cannot be empty',
+    },
+  ];
 
   return (
     <div className="flex flex-col pb-12">
@@ -27,7 +37,7 @@ export const TestConnectionGroup: React.FC<{
           <Row>
             <div className="flex items-center w-full">
               <span className="mb-6 text-base">URL link:</span>&nbsp;&nbsp;
-              <FormItem name="dbUrl" className="flex-1">
+              <FormItem name="dbUrl" className="flex-1" rules={inputRules}>
                 <Input className="w-full !border !border-black" />
               </FormItem>
             </div>
@@ -63,13 +73,21 @@ export const TestConnectionGroup: React.FC<{
       </div>
       <div className="flex-1">
         <p className="mb-1 text-xs">Enter database username</p>
-        <FormItem name="username">
+        <FormItem name="username" rules={inputRules}>
           <Input className="border border-black bg-grey-4" />
         </FormItem>
       </div>
       <div className="flex-1">
         <p className="mb-1 text-xs">Enter database password</p>
-        <FormItem name="password">
+        <FormItem
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: 'This field is required',
+            },
+          ]}
+        >
           <Input.Password className="border border-black bg-grey-4" />
         </FormItem>
       </div>

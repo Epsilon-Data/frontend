@@ -61,11 +61,24 @@ const getInitialFormValues = () => {
   };
 };
 
+const inputRules = [
+  {
+    required: true,
+    message: 'This field is required',
+  },
+  {
+    whitespace: true,
+    message: 'This field cannot be empty',
+  },
+];
+
 const DashboardPage: React.FC = () => {
   const [step1] = Form.useForm();
   const [step2] = Form.useForm();
   const [step3] = Form.useForm();
   const [step4] = Form.useForm();
+
+  const forms = [step1, step2, step3, step4];
 
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -95,7 +108,12 @@ const DashboardPage: React.FC = () => {
     { value: 'csv', label: 'CSV' },
   ];
 
-  const nextStep = () => setModalStep((prev) => Math.min(prev + 1, 4));
+  const nextStep = async () => {
+    try {
+      await forms[modalStep].validateFields();
+      setModalStep((prev) => Math.min(prev + 1, 4));
+    } catch {}
+  };
 
   const handleChange = (value: string | string[]) => {
     console.log(`selected ${value}`);
@@ -329,6 +347,7 @@ const DashboardPage: React.FC = () => {
                   name="name"
                   inputTitle={t('dashboard.createProject.form.step1.name.title')}
                   inputDescription={t('dashboard.createProject.form.step1.name.description')}
+                  inputRules={inputRules}
                   large
                 />
               </Form>
@@ -361,6 +380,7 @@ const DashboardPage: React.FC = () => {
                   name="participantsNum"
                   inputTitle={t('dashboard.createProject.form.step2.participantsNum.title')}
                   inputDescription={t('dashboard.createProject.form.step2.participantsNum.description')}
+                  inputRules={inputRules}
                 />
                 <ModalFormList
                   name="members"
@@ -393,9 +413,21 @@ const DashboardPage: React.FC = () => {
             />
             <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
               <Form form={step3} className="h-full">
-                <ModalInput name="university" inputTitle={t('dashboard.createProject.form.step3.university')} />
-                <ModalInput name="faculty" inputTitle={t('dashboard.createProject.form.step3.faculty')} />
-                <ModalInput name="ethicsId" inputTitle={t('dashboard.createProject.form.step3.ethicsId')} />
+                <ModalInput
+                  name="university"
+                  inputTitle={t('dashboard.createProject.form.step3.university')}
+                  inputRules={inputRules}
+                />
+                <ModalInput
+                  name="faculty"
+                  inputTitle={t('dashboard.createProject.form.step3.faculty')}
+                  inputRules={inputRules}
+                />
+                <ModalInput
+                  name="ethicsId"
+                  inputTitle={t('dashboard.createProject.form.step3.ethicsId')}
+                  inputRules={inputRules}
+                />
               </Form>
             </div>
           </div>
@@ -411,7 +443,11 @@ const DashboardPage: React.FC = () => {
             />
             <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
               <Form form={step4} className="h-full">
-                <ModalInput name="dbName" inputTitle={t('dashboard.createProject.form.step4.dbName')} />
+                <ModalInput
+                  name="dbName"
+                  inputTitle={t('dashboard.createProject.form.step4.dbName')}
+                  inputRules={inputRules}
+                />
                 <ModalSelect
                   name="dbType"
                   inputTitle={t('dashboard.createProject.form.step4.dbType')}

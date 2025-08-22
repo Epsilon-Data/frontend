@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { useProjects } from '@app/hooks/useProjects';
 import { DashboardHeader } from '@app/components/dashboard/DashboardHeader';
 import { Projects } from '@app/components/dashboard/Projects';
+import { MultiStepModal } from '@app/components/dashboard/modal/MultiStepModal';
 
 const getInitialFormValues = () => {
   if (config.isDev) {
@@ -66,7 +67,6 @@ const DashboardPage: React.FC = () => {
   const [step2] = Form.useForm();
   const [step3] = Form.useForm();
   const [step4] = Form.useForm();
-
   const navigate = useNavigate();
   const { t } = useTranslation();
   const user = useAppSelector((state) => state.user.user);
@@ -223,7 +223,10 @@ const DashboardPage: React.FC = () => {
         layout={layout}
       />
       <Projects sharedProjects={sharedProjects} ownedProjects={ownedProjects} layout={layout} />
-      <Modal
+      <MultiStepModal
+        modalStep={modalStep}
+        mask
+        closable={false}
         open={isModalOpen}
         width={'60%'}
         footer={[
@@ -252,137 +255,7 @@ const DashboardPage: React.FC = () => {
             </Button>
           ),
         ]}
-        closable={false}
-        mask
-      >
-        {modalStep === 0 && (
-          <div className="flex flex-col">
-            <ModalStepHeader
-              setModalStep={setModalStep}
-              modalStep={modalStep}
-              setIsModalOpen={setIsModalOpen}
-              handleDraft={handleDraft}
-              stepTitles={stepTitles}
-            />
-            <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
-              <Form form={step1}>
-                <ModalInput
-                  name="name"
-                  inputTitle={t('dashboard.createProject.form.step1.name.title')}
-                  inputDescription={t('dashboard.createProject.form.step1.name.description')}
-                  large
-                />
-              </Form>
-            </div>
-          </div>
-        )}
-        {modalStep === 1 && (
-          <div className="flex flex-col">
-            <ModalStepHeader
-              setModalStep={setModalStep}
-              modalStep={modalStep}
-              setIsModalOpen={setIsModalOpen}
-              handleDraft={handleDraft}
-              stepTitles={stepTitles}
-            />
-            <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
-              <Form form={step2} className="h-full">
-                <ModalDatePicker
-                  startName="startDate"
-                  endName="endDate"
-                  inputTitle={t('dashboard.createProject.form.step2.duration.title')}
-                  inputDescription={t('dashboard.createProject.form.step2.duration.description')}
-                />
-                <ModalTextArea
-                  name="description"
-                  inputTitle={t('dashboard.createProject.form.step2.description.title')}
-                  inputDescription={t('dashboard.createProject.form.step2.description.description')}
-                />
-                <ModalInput
-                  name="participantsNum"
-                  inputTitle={t('dashboard.createProject.form.step2.participantsNum.title')}
-                  inputDescription={t('dashboard.createProject.form.step2.participantsNum.description')}
-                />
-                <ModalFormList
-                  name="members"
-                  inputTitle={t('dashboard.createProject.form.step2.members.title')}
-                  inputDescription={t('dashboard.createProject.form.step2.members.description')}
-                  members={members}
-                  setMembers={setMembers}
-                  form={step2}
-                />
-                <ModalTagInput
-                  name="dbKeywords"
-                  inputTitle={t('dashboard.createProject.form.step2.dbKeywords.title')}
-                  inputDescription={t('dashboard.createProject.form.step2.dbKeywords.description')}
-                  value={dbKeywords}
-                  setValue={setDbKeywords}
-                />
-                <KeywordGuidance />
-              </Form>
-            </div>
-          </div>
-        )}
-        {modalStep === 2 && (
-          <div className="flex flex-col">
-            <ModalStepHeader
-              setModalStep={setModalStep}
-              modalStep={modalStep}
-              setIsModalOpen={setIsModalOpen}
-              handleDraft={handleDraft}
-              stepTitles={stepTitles}
-            />
-            <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
-              <Form form={step3} className="h-full">
-                <ModalInput name="university" inputTitle={t('dashboard.createProject.form.step3.university')} />
-                <ModalInput name="faculty" inputTitle={t('dashboard.createProject.form.step3.faculty')} />
-                <ModalInput name="ethicsId" inputTitle={t('dashboard.createProject.form.step3.ethicsId')} />
-              </Form>
-            </div>
-          </div>
-        )}
-        {modalStep === 3 && (
-          <div className="flex flex-col">
-            <ModalStepHeader
-              setModalStep={setModalStep}
-              modalStep={modalStep}
-              setIsModalOpen={setIsModalOpen}
-              handleDraft={handleDraft}
-              stepTitles={stepTitles}
-            />
-            <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
-              <Form form={step4} className="h-full">
-                <ModalInput name="dbName" inputTitle={t('dashboard.createProject.form.step4.dbName')} />
-                <ModalSelect
-                  name="dbType"
-                  inputTitle={t('dashboard.createProject.form.step4.dbType')}
-                  options={dbTypeOptions}
-                />
-                <TestConnectionGroup
-                  inputTitle={t('dashboard.createProject.form.step4.dbUrl.title')}
-                  inputDescription={t('dashboard.createProject.form.step4.dbUrl.description')}
-                  connected={isConnected}
-                  loading={isTestLoading}
-                  show={showMessage}
-                  onClick={onTestConnection}
-                />
-              </Form>
-            </div>
-          </div>
-        )}
-        {modalStep === 4 && (
-          <>
-            <ModalStepHeader
-              setModalStep={setModalStep}
-              modalStep={modalStep}
-              setIsModalOpen={setIsModalOpen}
-              handleDraft={handleDraft}
-              stepTitles={stepTitles}
-            />
-            <div className="h-132 py-12 px-20 overflow-y-auto flex flex-col justify-center"></div>
-          </>
-        )}
-      </Modal>
+      />
     </div>
   );
 };

@@ -2,12 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { useAppSelector } from '@app/hooks/reduxHooks';
-import { IoSearch } from 'react-icons/io5';
+
 import { Button, Form, Input, Modal, Radio, Select, Space } from 'antd';
-import { IoIosArrowDown } from 'react-icons/io';
-import { HiOutlineViewGrid } from 'react-icons/hi';
-import { HiMiniListBullet } from 'react-icons/hi2';
-import { FaPlus } from 'react-icons/fa6';
+
 import { IoChevronForwardOutline } from 'react-icons/io5';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { ModalInput } from '@app/components/common/Modal/ModalInput/ModalInput';
@@ -19,11 +16,14 @@ import KeywordGuidance from '@app/components/common/Modal/KeywordGuidance/Keywor
 import { ModalSelect } from '@app/components/common/Modal/ModalSelect/ModalSelect';
 import { TestConnectionGroup } from '@app/components/common/Modal/TestConnectionGroup/TestConnectionGroup';
 import { testConnection } from '@app/api/connectionRequests.api';
-import { createProject, getUserOwnedProjects, getUserSharedProjects, ProjectSummaryInfo } from '@app/api/projects.api';
-import { ProjectList } from '@app/components/ProjectList/ProjectList';
+import { createProject } from '@app/api/projects.api';
+
 import config from '@app/config/config';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import { useProjects } from '@app/hooks/useProjects';
+import { DashboardHeader } from '@app/components/dashboard/DashboardHeader';
+import { Projects } from '@app/components/dashboard/Projects';
 
 const getInitialFormValues = () => {
   if (config.isDev) {
@@ -79,8 +79,8 @@ const DashboardPage: React.FC = () => {
   const [showMessage, setShowMessage] = useState(false);
   const [isFormLoading, setFormLoading] = useState(false);
   const [members, setMembers] = useState<{ email: string; role: string }[]>([]);
-  const [ownedProjects, setOwnedProjects] = useState<ProjectSummaryInfo[]>([]);
-  const [sharedProjects, setSharedProjects] = useState<ProjectSummaryInfo[]>([]);
+
+  const { ownedProjects, sharedProjects, loading, fetchProjects } = useProjects();
 
   const stepTitles = [
     t('dashboard.createProject.form.step1.title'),
@@ -194,94 +194,29 @@ const DashboardPage: React.FC = () => {
       },
     };
 
-    createProject(formData);
-    setFormLoading(false);
-    setIsModalOpen(false);
+    try {
+      await createProject(formData);
+      setIsModalOpen(false);
+      // Refresh the projects list after creating a new project
+      await fetchProjects();
+    } catch (error) {
+      console.error('Project creation failed:', error);
+    } finally {
+      setFormLoading(false);
+    }
   };
-
-  const fetch = useCallback(() => {
-    getUserOwnedProjects().then((res) => {
-      setOwnedProjects(res);
-    });
-
-    getUserSharedProjects().then((res) => {
-      setSharedProjects(res);
-    });
-  }, []);
 
   useEffect(() => {
-    fetch();
-  }, [fetch]);
+    fetchProjects();
+  }, [fetchProjects]);
 
   const handleDraft = () => {};
-
-  const handleProjectClick = (projectId: string) => {
-    navigate(`/project/db-mapping?id=${projectId}`);
-  };
 
   return (
     <div className="py-3 px-4 md:py-5 md:px-9">
       <PageTitle>{t('dashboard.title')}</PageTitle>
-      <div className="flex items-center justify-between w-full mt-8 pb-4 border-b border-grey-3">
-        <div className="text-xl font-medium font-sans">{user?.firstName + "'s workspace"}</div>
-        <div className="flex items-center gap-4 flex-wrap justify-end">
-          <Space.Compact className="rounded-lg">
-            <Input
-              className="px-2 py-1 text-xs font-inter h-8"
-              prefix={<IoSearch className="text-grey-1 mr-2" />}
-              placeholder="Search projects..."
-            />
-          </Space.Compact>
-          <Select
-            className="sort-select text-xs font-medium font-sans w-48"
-            prefix="Sort by: "
-            defaultValue="date-created"
-            suffixIcon={<IoIosArrowDown className="mt-1" />}
-            onChange={handleChange}
-            options={[
-              { value: 'date-created', label: 'Date created' },
-              { value: 'title', label: 'Title' },
-              { value: 'last-modified', label: 'Last modified' },
-            ]}
-          />
-          <Space>
-            <Radio.Group
-              value={layout}
-              onChange={(e) => setLayout(e.target.value)}
-              className="flex bg-grey-3 rounded-md p-1 gap-1"
-            >
-              <Radio.Button value="grid" className="flex items-center rounded-r-md z-2">
-                <HiOutlineViewGrid />
-              </Radio.Button>
-              <Radio.Button value="list" className="flex items-center rounded-l-md z-2 border">
-                <HiMiniListBullet />
-              </Radio.Button>
-            </Radio.Group>
-          </Space>
-          <Button
-            className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
-            type="primary"
-            icon={<FaPlus />}
-            onClick={showModal}
-          >
-            {t('dashboard.main.newProject')}
-          </Button>
-        </div>
-      </div>
-      <div className="my-12">
-        <div className="text-md font-medium font-inter text-black">{t('dashboard.main.personalProjects.title')}</div>
-        <div className="text-xs font-regular font-inter text-grey-1">
-          {t('dashboard.main.personalProjects.description')}
-        </div>
-        <ProjectList projects={ownedProjects} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
-      </div>
-      <div className="my-20">
-        <div className="text-md font-medium font-inter text-black">{t('dashboard.main.sharedProjects.title')}</div>
-        <div className="text-xs font-regular font-inter text-grey-1">
-          {t('dashboard.main.sharedProjects.description')}
-        </div>
-        <ProjectList projects={sharedProjects} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
-      </div>
+      <DashboardHeader user={user} showModal={showModal} handleChange={handleChange} />
+      <Projects sharedProjects={sharedProjects} ownedProjects={ownedProjects} layout={layout} />
       <Modal
         open={isModalOpen}
         width={'60%'}

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { useAppSelector } from '@app/hooks/reduxHooks';
@@ -215,7 +215,13 @@ const DashboardPage: React.FC = () => {
   return (
     <div className="py-3 px-4 md:py-5 md:px-9">
       <PageTitle>{t('dashboard.title')}</PageTitle>
-      <DashboardHeader user={user} showModal={showModal} handleChange={handleChange} />
+      <DashboardHeader
+        user={user}
+        showModal={showModal}
+        handleChange={handleChange}
+        handleLayoutChange={setLayout}
+        layout={layout}
+      />
       <Projects sharedProjects={sharedProjects} ownedProjects={ownedProjects} layout={layout} />
       <Modal
         open={isModalOpen}

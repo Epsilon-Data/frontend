@@ -6,8 +6,7 @@ import { HiMiniListBullet } from 'react-icons/hi2';
 import { IoIosArrowDown } from 'react-icons/io';
 import { IoSearch } from 'react-icons/io5';
 
-export const DashboardHeader = ({ user, showModal, handleChange }) => {
-  const [layout, setLayout] = React.useState<'grid' | 'list'>('grid');
+export const DashboardHeader = ({ user, showModal, handleChange, handleLayoutChange, layout }) => {
   return (
     <div className="flex items-center justify-between w-full mt-8 pb-4 border-b border-grey-3">
       <div className="text-xl font-medium font-sans">{user?.firstName + "'s workspace"}</div>
@@ -34,7 +33,7 @@ export const DashboardHeader = ({ user, showModal, handleChange }) => {
         <Space>
           <Radio.Group
             value={layout}
-            onChange={(e) => setLayout(e.target.value)}
+            onChange={(e) => handleLayoutChange(e.target.value)}
             className="flex bg-grey-3 rounded-md p-1 gap-1"
           >
             <Radio.Button value="grid" className="flex items-center rounded-r-md z-2">

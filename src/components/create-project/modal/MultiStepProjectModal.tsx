@@ -68,6 +68,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
     };
 
     try {
+      console.log('Creating project with data:', formData);
       await createProject(formData);
       setIsModalOpen(false);
       await fetchProjects();
@@ -105,6 +106,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
 
   return (
     <Modal
+      maskClosable={true}
       open={isModalOpen}
       {...modalProps}
       footer={[

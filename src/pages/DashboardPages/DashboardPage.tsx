@@ -4,9 +4,9 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 
 import { useProjects } from '@app/hooks/useProjects';
-import { DashboardHeader } from '@app/components/dashboard/DashboardHeader';
-import { Projects } from '@app/components/dashboard/Projects';
-import { MultiStepProjectModal } from '@app/components/dashboard/modal/MultiStepProjectModal';
+import { DashboardHeader } from '@app/components/create-project/DashboardHeader';
+import { Projects } from '@app/components/create-project/Projects';
+import { MultiStepProjectModal } from '@app/components/create-project/modal/MultiStepProjectModal';
 import { ProjectModalProvider } from '@app/providers/ProjectModalProvider';
 
 const DashboardPage: React.FC = () => {

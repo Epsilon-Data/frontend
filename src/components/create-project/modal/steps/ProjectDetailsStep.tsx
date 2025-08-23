@@ -35,11 +35,13 @@ export const ProjectDetailsStep = ({
           inputDescription={t('dashboard.createProject.form.step2.duration.description')}
         />
         <ModalTextArea
+          placeholder={t('dashboard.createProject.form.step2.description.placeholder')}
           name="description"
           inputTitle={t('dashboard.createProject.form.step2.description.title')}
           inputDescription={t('dashboard.createProject.form.step2.description.description')}
         />
         <ModalInput
+          placeholder={t('dashboard.createProject.form.step2.participantsNum.placeholder')}
           name="participantsNum"
           inputTitle={t('dashboard.createProject.form.step2.participantsNum.title')}
           inputDescription={t('dashboard.createProject.form.step2.participantsNum.description')}
@@ -51,8 +53,10 @@ export const ProjectDetailsStep = ({
           members={members}
           setMembers={setMembers}
           form={form}
+          inputProps={{ placeholder: t('dashboard.createProject.form.step2.members.placeholder') }}
         />
         <ModalTagInput
+          selectProps={{ placeholder: t('dashboard.createProject.form.step2.dbKeywords.placeholder') }}
           name="dbKeywords"
           inputTitle={t('dashboard.createProject.form.step2.dbKeywords.title')}
           inputDescription={t('dashboard.createProject.form.step2.dbKeywords.description')}

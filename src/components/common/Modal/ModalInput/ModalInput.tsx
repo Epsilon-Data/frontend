@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { HtmlHTMLAttributes } from 'react';
 import { Input } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import clsx from 'clsx';
 
-export const ModalInput: React.FC<{
-  name: string;
-  suffix?: React.ReactNode;
-  disabled?: boolean;
-  className?: string;
-  inputTitle: string;
-  inputDescription?: string;
-  large?: boolean;
-}> = ({ name, suffix, disabled, className, inputTitle, inputDescription, large }) => {
+export const ModalInput: React.FC<
+  {
+    name: string;
+    suffix?: React.ReactNode;
+    disabled?: boolean;
+    className?: string;
+    inputTitle: string;
+    inputDescription?: string;
+    large?: boolean;
+  } & HtmlHTMLAttributes<HTMLInputElement>
+> = ({ name, suffix, disabled, className, inputTitle, inputDescription, large, ...props }) => {
   return (
     <div className="flex flex-col mb-12">
       <div className={clsx(large ? 'mb-12' : 'mb-8')}>
@@ -21,7 +23,7 @@ export const ModalInput: React.FC<{
         </div>
       </div>
       <FormItem name={name} className={className}>
-        <Input suffix={suffix} disabled={disabled} className="border border-black bg-grey-4" />
+        <Input {...props} suffix={suffix} disabled={disabled} className="border border-black bg-grey-4" />
       </FormItem>
     </div>
   );

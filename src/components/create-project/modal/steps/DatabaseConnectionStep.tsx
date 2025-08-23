@@ -3,7 +3,8 @@ import { ModalInput } from '@app/components/common/Modal/ModalInput/ModalInput';
 import { ModalSelect } from '@app/components/common/Modal/ModalSelect/ModalSelect';
 import { TestConnectionGroup } from '@app/components/common/Modal/TestConnectionGroup/TestConnectionGroup';
 
-import { Form } from 'antd';
+import { Form, Input } from 'antd';
+import FormItem from 'antd/es/form/FormItem';
 import { FormInstance } from 'antd/lib';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -59,10 +60,14 @@ export const DatabaseConnectionStep = ({ form, showMessage, setShowMessage }: Da
   return (
     <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
       <Form form={form} className="h-full">
-        <ModalInput name="dbName" inputTitle={t('dashboard.createProject.form.step4.dbName')} />
+        <ModalInput
+          name="dbName"
+          inputTitle={t('dashboard.createProject.form.step4.dbName.title')}
+          placeholder={t('dashboard.createProject.form.step4.dbName.placeholder')}
+        />
         <ModalSelect
           name="dbType"
-          inputTitle={t('dashboard.createProject.form.step4.dbType')}
+          inputTitle={t('dashboard.createProject.form.step4.dbType.title')}
           options={dbTypeOptions}
         />
         <TestConnectionGroup
@@ -72,7 +77,26 @@ export const DatabaseConnectionStep = ({ form, showMessage, setShowMessage }: Da
           loading={isTestLoading}
           show={showMessage}
           onClick={onTestConnection}
-        />
+        >
+          <div className="flex-1">
+            <p className="mb-1 text-xs">{t('dashboard.createProject.form.step4.username.title')}</p>
+            <FormItem name="username">
+              <Input
+                placeholder={t('dashboard.createProject.form.step4.username.placeholder')}
+                className="border border-black bg-grey-4"
+              />
+            </FormItem>
+          </div>
+          <div className="flex-1">
+            <p className="mb-1 text-xs">{t('dashboard.createProject.form.step4.password.title')}</p>
+            <FormItem name="password">
+              <Input.Password
+                placeholder={t('dashboard.createProject.form.step4.password.placeholder')}
+                className="border border-black bg-grey-4"
+              />
+            </FormItem>
+          </div>
+        </TestConnectionGroup>
       </Form>
     </div>
   );

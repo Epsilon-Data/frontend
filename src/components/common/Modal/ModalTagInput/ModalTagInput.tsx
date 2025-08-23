@@ -1,6 +1,6 @@
 import React from 'react';
 import FormItem from 'antd/es/form/FormItem';
-import { Select } from 'antd';
+import { Select, SelectProps } from 'antd';
 
 const MAX_COUNT = 6;
 
@@ -11,7 +11,8 @@ export const ModalTagInput: React.FC<{
   inputDescription?: string;
   value: string[];
   setValue: (value: string[]) => void;
-}> = ({ name, className, inputTitle, inputDescription, value, setValue }) => {
+  selectProps?: SelectProps;
+}> = ({ name, className, inputTitle, inputDescription, value, setValue, selectProps }) => {
   return (
     <div className="flex flex-col mb-12">
       <div className="mb-8">
@@ -20,6 +21,7 @@ export const ModalTagInput: React.FC<{
       </div>
       <FormItem name={name} className={className}>
         <Select
+          {...selectProps}
           mode="tags"
           maxCount={MAX_COUNT}
           value={value}

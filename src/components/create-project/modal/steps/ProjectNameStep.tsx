@@ -12,6 +12,7 @@ export const ProjectNameStep = ({ form }: ProjectNameStepProps) => {
       <Form form={form}>
         <ModalInput
           name="name"
+          placeholder={t('dashboard.createProject.form.step1.name.placeholder')}
           inputTitle={t('dashboard.createProject.form.step1.name.title')}
           inputDescription={t('dashboard.createProject.form.step1.name.description')}
           large

@@ -13,7 +13,8 @@ export const TestConnectionGroup: React.FC<{
   inputDescription?: string;
   connected: boolean;
   show: boolean;
-}> = ({ onClick, loading, inputTitle, inputDescription, connected, show }) => {
+  children: React.ReactNode;
+}> = ({ onClick, loading, inputTitle, inputDescription, connected, show, children }) => {
   const { t } = useTranslation();
 
   return (
@@ -61,18 +62,7 @@ export const TestConnectionGroup: React.FC<{
           {t('dashboard.createProject.form.step4.dbCred.description')}
         </div>
       </div>
-      <div className="flex-1">
-        <p className="mb-1 text-xs">Enter database username</p>
-        <FormItem name="username">
-          <Input className="border border-black bg-grey-4" />
-        </FormItem>
-      </div>
-      <div className="flex-1">
-        <p className="mb-1 text-xs">Enter database password</p>
-        <FormItem name="password">
-          <Input.Password className="border border-black bg-grey-4" />
-        </FormItem>
-      </div>
+      {children}
     </div>
   );
 };

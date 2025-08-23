@@ -49,6 +49,7 @@
         "step1": {
           "title": "Step 1: Name your template",
           "name": {
+            "placeholder": "Enter a project name",
             "title": "Choose a name for your project",
             "description": "Pick a clear and descriptive name to help identify your project easily"
           }
@@ -60,32 +61,45 @@
             "description": "Set your project's duration — you can update it anytime from the project details page"
           },
           "description": {
+            "placeholder": "Enter a brief description about your project",
             "title": "2. Give a brief description about your project",
             "description": "Share a brief summary of your project's purpose, goals, and key details"
           },
           "participantsNum": {
+            "placeholder": "Enter number of participants",
             "title": "3. How many participants are involved in your project?",
             "description": "Please specify the total number of individuals involved in the project"
           },
           "members": {
+            "placeholder": "Enter team member's email address",
             "title": "4. Add team members to this project",
             "description": "Type individual emails to invite team members and assign their roles"
           },
           "dbKeywords": {
+            "placeholder": "Enter keywords",
             "title": "5. Which keywords best describe your project?",
             "description": "Use 2-5 word phrases that help other reseachers understand the focus and content of your project and its database"
           }
         },
         "step3": {
           "title": "Step 3: Provide information about your university",
-          "university": "1. What is your university name?",
-          "faculty": "2. What is the name of faculty which this project will be carried out?",
-          "ethicsId": "3. What is your project's ethics approval ID?"
+          "university": {
+            "title": "1. What is your university name?",
+            "placeholder": "Enter your university name"
+          },
+          "faculty": {
+            "title": "2. What is the name of faculty which this project will be carried out?",
+            "placeholder": "Enter faculty name"
+          },
+          "ethicsId": {
+            "title": "3. What is your project's ethics approval ID?",
+            "placeholder": "Enter ethics approval ID"
+          }
         },
         "step4": {
           "title": "Step 4: Database connection",
-          "dbName": "1. What is the name of your database?",
-          "dbType": "2. What is the nature of your database?",
+          "dbName": { "title": "1. What is the name of your database?", "placeholder": "Enter your database name" },
+          "dbType": { "title": "2. What is the nature of your database?", "placeholder": "Select database type" },
           "dbUrl": {
             "title": "3. Provide database connection URL",
             "description": "Enter your database URL and test the connection to ensure it's reachable",
@@ -95,7 +109,9 @@
           "dbCred": {
             "title": "Database credentials",
             "description": "Provide your database username and password"
-          }
+          },
+          "username": { "placeholder": "Username", "title": "Enter database username" },
+          "password": { "placeholder": "Password", "title": "Enter database password" }
         },
         "step5": {
           "title": "Step 5: ---"

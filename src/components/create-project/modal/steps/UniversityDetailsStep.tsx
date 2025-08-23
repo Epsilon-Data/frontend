@@ -11,9 +11,21 @@ export const UniversityDetailsStep = ({ form }: UniversityDetailsStepProps) => {
   return (
     <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
       <Form form={form} className="h-full">
-        <ModalInput name="university" inputTitle={t('dashboard.createProject.form.step3.university')} />
-        <ModalInput name="faculty" inputTitle={t('dashboard.createProject.form.step3.faculty')} />
-        <ModalInput name="ethicsId" inputTitle={t('dashboard.createProject.form.step3.ethicsId')} />
+        <ModalInput
+          placeholder={t('dashboard.createProject.form.step3.university.placeholder')}
+          name="university"
+          inputTitle={t('dashboard.createProject.form.step3.university.title')}
+        />
+        <ModalInput
+          placeholder={t('dashboard.createProject.form.step3.faculty.placeholder')}
+          name="faculty"
+          inputTitle={t('dashboard.createProject.form.step3.faculty.title')}
+        />
+        <ModalInput
+          placeholder={t('dashboard.createProject.form.step3.ethicsId.placeholder')}
+          name="ethicsId"
+          inputTitle={t('dashboard.createProject.form.step3.ethicsId.title')}
+        />
       </Form>
     </div>
   );

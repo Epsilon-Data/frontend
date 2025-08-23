@@ -108,6 +108,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
     <Modal
       maskClosable={true}
       open={isModalOpen}
+      onCancel={() => setIsModalOpen(false)}
       {...modalProps}
       footer={[
         modalStep < 4 ? (

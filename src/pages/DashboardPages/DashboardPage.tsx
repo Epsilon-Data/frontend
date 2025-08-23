@@ -6,7 +6,7 @@ import { useAppSelector } from '@app/hooks/reduxHooks';
 import { useProjects } from '@app/hooks/useProjects';
 import { DashboardHeader } from '@app/components/dashboard/DashboardHeader';
 import { Projects } from '@app/components/dashboard/Projects';
-import { MultiStepModal } from '@app/components/dashboard/modal/MultiStepModal';
+import { MultiStepProjectModal } from '@app/components/dashboard/modal/MultiStepProjectModal';
 import { ProjectModalProvider } from '@app/providers/ProjectModalProvider';
 
 const DashboardPage: React.FC = () => {
@@ -25,7 +25,7 @@ const DashboardPage: React.FC = () => {
       <PageTitle>{t('dashboard.title')}</PageTitle>
       <ProjectModalProvider>
         <DashboardHeader user={user} handleLayoutChange={setLayout} layout={layout} />
-        <MultiStepModal fetchProjects={fetchProjects} mask closable={false} width={'60%'} />
+        <MultiStepProjectModal fetchProjects={fetchProjects} mask closable={false} width={'60%'} />
       </ProjectModalProvider>
       <Projects sharedProjects={sharedProjects} ownedProjects={ownedProjects} layout={layout} />
     </div>

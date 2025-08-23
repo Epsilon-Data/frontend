@@ -13,11 +13,11 @@ import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/Modal
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { useProjectModalContext } from '@app/hooks/useProjectModalContext';
 
-type MultiStepModalProps = {
+type MultiStepProjectModalProps = {
   fetchProjects: () => Promise<void>;
 } & React.ComponentProps<typeof Modal>;
 
-export const MultiStepModal = ({ fetchProjects, ...modalProps }: MultiStepModalProps) => {
+export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiStepProjectModalProps) => {
   const [isFormLoading, setFormLoading] = useState(false);
   const { modalStep, setModalStep, setIsModalOpen, isModalOpen, handleDraft, forms } = useProjectModalContext();
   const user = useAppSelector((state) => state.user.user);

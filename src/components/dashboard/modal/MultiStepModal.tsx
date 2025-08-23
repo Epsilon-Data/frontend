@@ -1,18 +1,90 @@
-import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
-import { Step2 } from './steps/Step2';
-import { Step3 } from './steps/Step3';
-import { Step4 } from './steps/step4';
-import { Step5 } from './steps/Step5';
-import { Modal } from 'antd';
+import { ProjectDetailsStep } from './steps/ProjectDetailsStep';
+import { UniversityDetailsStep } from './steps/UniversityDetailsStep';
+import { DatabaseConnectionStep } from './steps/DatabaseConnectionStep';
+import { ConfirmStep } from './steps/ConfirmStep';
+import { Button, Modal } from 'antd';
+import { ProjectNameStep } from './steps/ProjectNameStep';
+import { IoChevronForwardOutline } from 'react-icons/io5';
 
-export const MultiStepModal = ({ modalStep, ...modalProps }) => {
-  const renderStepContent = () => {
+import { useState } from 'react';
+import { createProject } from '@app/api/projects.api';
+import { useTranslation } from 'react-i18next';
+import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
+import { useAppSelector } from '@app/hooks/reduxHooks';
+import { useProjectModalContext } from '@app/hooks/useProjectModalContext';
+
+type MultiStepModalProps = {
+  fetchProjects: () => Promise<void>;
+} & React.ComponentProps<typeof Modal>;
+
+export const MultiStepModal = ({ fetchProjects, ...modalProps }: MultiStepModalProps) => {
+  const [isFormLoading, setFormLoading] = useState(false);
+  const { modalStep, setModalStep, setIsModalOpen, isModalOpen, handleDraft, forms } = useProjectModalContext();
+  const user = useAppSelector((state) => state.user.user);
+
+  const [step1, step2, step3, step4] = forms;
+  const [dbKeywords, setDbKeywords] = useState<string[]>([]);
+  const [members, setMembers] = useState<{ email: string; role: string }[]>([]);
+  const { t } = useTranslation();
+  const [showMessage, setShowMessage] = useState(false);
+  const nextStep = () => {
+    setModalStep((prev) => Math.min(prev + 1, 4));
+  };
+
+  const stepTitles = [
+    t('dashboard.createProject.form.step1.title'),
+    t('dashboard.createProject.form.step2.title'),
+    t('dashboard.createProject.form.step3.title'),
+    t('dashboard.createProject.form.step4.title'),
+    t('dashboard.createProject.form.step5.title'),
+  ];
+
+  const handleCreate = async () => {
+    setFormLoading(true);
+
+    const formData = {
+      ownerId: user?.id ?? '',
+      name: step1.getFieldValue('name'),
+      lead: (user?.firstName ?? '') + ' ' + (user?.lastName ?? ''),
+      university: step3.getFieldValue('university'),
+      faculty: step3.getFieldValue('faculty'),
+      ethicsId: step3.getFieldValue('ethicsId'),
+      description: step2.getFieldValue('description'),
+      startDate: step2.getFieldValue('startDate'),
+      endDate: step2.getFieldValue('endDate'),
+      members: JSON.stringify(members),
+      participantsNum: step2.getFieldValue('participantsNum'),
+      dbKeywords: dbKeywords,
+      connection: {
+        orgAdminEmail: '',
+        tempDbDetails: {
+          name: step4.getFieldValue('dbName'),
+          type: step4.getFieldValue('dbType'),
+          url: step4.getFieldValue('dbUrl'),
+          username: step4.getFieldValue('username'),
+          password: step4.getFieldValue('password'),
+        },
+      },
+    };
+
+    try {
+      await createProject(formData);
+      setIsModalOpen(false);
+      await fetchProjects();
+    } catch (error) {
+      console.error('Project creation failed:', error);
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const renderStep = () => {
     switch (modalStep) {
       case 0:
-        return <Step1 form={step1} />;
+        return <ProjectNameStep form={step1} />;
       case 1:
         return (
-          <Step2
+          <ProjectDetailsStep
             form={step2}
             members={members}
             setMembers={setMembers}
@@ -21,27 +93,47 @@ export const MultiStepModal = ({ modalStep, ...modalProps }) => {
           />
         );
       case 2:
-        return <Step3 form={step3} />;
+        return <UniversityDetailsStep form={step3} />;
       case 3:
-        return (
-          <Step4
-            form={step4}
-            isConnected={isConnected}
-            isTestLoading={isTestLoading}
-            showMessage={showMessage}
-            onTestConnection={onTestConnection}
-            dbTypeOptions={dbTypeOptions}
-          />
-        );
+        return <DatabaseConnectionStep form={step4} showMessage={showMessage} setShowMessage={setShowMessage} />;
       case 4:
-        return <Step5 />;
+        return <ConfirmStep />;
       default:
         return null;
     }
   };
 
   return (
-    <Modal {...modalProps}>
+    <Modal
+      open={isModalOpen}
+      {...modalProps}
+      footer={[
+        modalStep < 4 ? (
+          <Button
+            key="next"
+            type="primary"
+            onClick={nextStep}
+            icon={<IoChevronForwardOutline />}
+            iconPosition="end"
+            className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
+          >
+            {t('common.next')}
+          </Button>
+        ) : (
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleCreate}
+            icon={<IoChevronForwardOutline />}
+            iconPosition="end"
+            loading={isFormLoading}
+            className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
+          >
+            {t('dashboard.createProject.form.submit')}
+          </Button>
+        ),
+      ]}
+    >
       <div className="flex flex-col">
         <ModalStepHeader
           setModalStep={setModalStep}
@@ -50,7 +142,7 @@ export const MultiStepModal = ({ modalStep, ...modalProps }) => {
           handleDraft={handleDraft}
           stepTitles={stepTitles}
         />
-        {renderStepContent()}
+        {renderStep()}
       </div>
     </Modal>
   );

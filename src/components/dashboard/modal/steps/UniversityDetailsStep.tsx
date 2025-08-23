@@ -1,8 +1,12 @@
 import { ModalInput } from '@app/components/common/Modal/ModalInput/ModalInput';
-import { Form } from 'antd';
+import { Form, FormInstance } from 'antd';
 import { useTranslation } from 'react-i18next';
 
-export const Step3 = ({ form }) => {
+type UniversityDetailsStepProps = {
+  form: FormInstance<unknown>;
+};
+
+export const UniversityDetailsStep = ({ form }: UniversityDetailsStepProps) => {
   const { t } = useTranslation();
   return (
     <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">

@@ -4,11 +4,27 @@ import { ModalFormList } from '@app/components/common/Modal/ModalFormList/ModalF
 import { ModalInput } from '@app/components/common/Modal/ModalInput/ModalInput';
 import { ModalTagInput } from '@app/components/common/Modal/ModalTagInput/ModalTagInput';
 import { ModalTextArea } from '@app/components/common/Modal/ModalTextArea/ModalTextArea';
-import { Form } from 'antd';
+import { Form, FormInstance } from 'antd';
+
 import { useTranslation } from 'react-i18next';
 
-export const Step2 = ({ form, members, setMembers, dbKeywords, setDbKeywords }) => {
+type ProjectDetailsStepProps = {
+  form: FormInstance<unknown>;
+  dbKeywords: string[];
+  setDbKeywords: (keywords: string[]) => void;
+  members: { email: string; role: string }[];
+  setMembers: React.Dispatch<React.SetStateAction<{ email: string; role: string }[]>>;
+};
+
+export const ProjectDetailsStep = ({
+  form,
+  dbKeywords,
+  setDbKeywords,
+  members,
+  setMembers,
+}: ProjectDetailsStepProps) => {
   const { t } = useTranslation();
+
   return (
     <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
       <Form form={form} className="h-full">

@@ -1,12 +1,29 @@
+import { useProjectModalContext } from '@app/hooks/useProjectModalContext';
 import { Button, Input, Radio, Select, Space } from 'antd';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaPlus } from 'react-icons/fa6';
 import { HiOutlineViewGrid } from 'react-icons/hi';
 import { HiMiniListBullet } from 'react-icons/hi2';
 import { IoIosArrowDown } from 'react-icons/io';
 import { IoSearch } from 'react-icons/io5';
 
-export const DashboardHeader = ({ user, showModal, handleChange, handleLayoutChange, layout }) => {
+type DashboardHeaderProps = {
+  user: {
+    firstName: string;
+    lastName: string;
+  } | null;
+  handleLayoutChange: React.Dispatch<React.SetStateAction<'grid' | 'list'>>;
+  layout: 'grid' | 'list';
+};
+
+export const DashboardHeader = ({ user, handleLayoutChange, layout }: DashboardHeaderProps) => {
+  const { showModal } = useProjectModalContext();
+  const { t } = useTranslation();
+  const handleChange = (value: string | string[]) => {
+    console.log(`selected ${value}`);
+  };
+
   return (
     <div className="flex items-center justify-between w-full mt-8 pb-4 border-b border-grey-3">
       <div className="text-xl font-medium font-sans">{user?.firstName + "'s workspace"}</div>
@@ -50,7 +67,7 @@ export const DashboardHeader = ({ user, showModal, handleChange, handleLayoutCha
           icon={<FaPlus />}
           onClick={showModal}
         >
-          {/* {t('dashboard.main.newProject')} */}
+          {t('dashboard.main.newProject')}
         </Button>
       </div>
     </div>

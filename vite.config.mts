@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -15,6 +15,11 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/testSetup.ts'],
+    globals: true,
+  },
   resolve: {
     alias: {
       '@app': path.resolve(__dirname, 'src'),
@@ -23,4 +28,4 @@ export default defineConfig({
   define: {
     APP_VERSION: JSON.stringify(process.env.npm_package_version),
   },
-});
+} as UserConfig);

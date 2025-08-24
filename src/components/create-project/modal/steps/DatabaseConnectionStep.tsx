@@ -9,13 +9,13 @@ import { FormInstance } from 'antd/lib';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-type DatbaseConnectionStepProps = {
+export type DatabaseConnectionStepProps = {
   form: FormInstance<unknown>;
   showMessage: boolean;
   setShowMessage: (show: boolean) => void;
 };
 
-export const DatabaseConnectionStep = ({ form, showMessage, setShowMessage }: DatbaseConnectionStepProps) => {
+export const DatabaseConnectionStep = ({ form, showMessage, setShowMessage }: DatabaseConnectionStepProps) => {
   const { t } = useTranslation();
   const [isTestLoading, setTestLoading] = useState(false);
   const [isConnected, setConnected] = useState(false);

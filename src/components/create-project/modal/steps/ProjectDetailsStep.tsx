@@ -8,7 +8,7 @@ import { Form, FormInstance } from 'antd';
 
 import { useTranslation } from 'react-i18next';
 
-type ProjectDetailsStepProps = {
+export type ProjectDetailsStepProps = {
   form: FormInstance<unknown>;
   dbKeywords: string[];
   setDbKeywords: (keywords: string[]) => void;

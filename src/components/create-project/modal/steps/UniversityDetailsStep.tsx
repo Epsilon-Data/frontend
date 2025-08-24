@@ -2,7 +2,7 @@ import { ModalInput } from '@app/components/common/Modal/ModalInput/ModalInput';
 import { Form, FormInstance } from 'antd';
 import { useTranslation } from 'react-i18next';
 
-type UniversityDetailsStepProps = {
+export type UniversityDetailsStepProps = {
   form: FormInstance<unknown>;
 };
 

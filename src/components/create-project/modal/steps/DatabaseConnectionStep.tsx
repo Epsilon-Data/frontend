@@ -34,7 +34,7 @@ export const DatabaseConnectionStep = ({ form, showMessage, setShowMessage }: Da
     try {
       url = new URL(dbUrl);
       const connectionData = {
-        type: 'postgres',
+        type: form.getFieldValue('dbType'),
         port: url.port,
         host: url.hostname,
         username: url.username,

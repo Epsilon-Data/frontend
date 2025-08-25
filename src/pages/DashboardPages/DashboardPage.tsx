@@ -23,6 +23,7 @@ import { createProject, getUserOwnedProjects, getUserSharedProjects, ProjectSumm
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 
 const getInitialFormValues = () => {
   return {
@@ -133,7 +134,15 @@ const DashboardPage: React.FC = () => {
       }
 
       setModalStep((prev) => Math.min(prev + 1, 4));
-    } catch {}
+    } catch (err) {
+      const error = err as ValidateErrorEntity;
+      if (error.errorFields) {
+        forms[modalStep].scrollToField(error.errorFields[0].name, {
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }
   };
 
   const showModal = () => {

@@ -8,6 +8,6 @@ type ProjectModalContextType = {
   setModalStep: React.Dispatch<React.SetStateAction<number>>;
   handleDraft: () => void;
   showModal: () => void;
-  forms: FormInstance<unknown>[]; // Array of FormInstance<any>
+  forms: FormInstance<unknown>[];
 } | null;
 export const ProjectModalContext = createContext<ProjectModalContextType>(null);

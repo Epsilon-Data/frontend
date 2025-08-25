@@ -1,6 +1,7 @@
 import React from 'react';
 import FormItem from 'antd/es/form/FormItem';
 import { Select } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 const MAX_COUNT = 6;
 
@@ -12,6 +13,7 @@ export const ModalTagInput: React.FC<{
   value: string[];
   setValue: (value: string[]) => void;
 }> = ({ name, className, inputTitle, inputDescription, value, setValue }) => {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col mb-12">
       <div className="mb-8">
@@ -27,7 +29,7 @@ export const ModalTagInput: React.FC<{
               if (val && val.length >= 2) {
                 return Promise.resolve();
               }
-              return Promise.reject(new Error('Please enter at least 2 keywords'));
+              return Promise.reject(new Error(t('fieldMessages.tags.min', { min: 2 })));
             },
           },
         ]}
@@ -42,7 +44,7 @@ export const ModalTagInput: React.FC<{
         />
       </FormItem>
       <div className="flex flex-between text-xs font-normal font-inter">
-        <span>Separate each one with a comma &nbsp;</span>
+        <span>{t('fieldMessages.tags.instruction')} &nbsp;</span>
         <span>
           {value.length} / {MAX_COUNT}
         </span>

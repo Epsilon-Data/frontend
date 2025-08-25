@@ -3,6 +3,7 @@ import FormItem from 'antd/es/form/FormItem';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 dayjs.extend(customParseFormat);
 
@@ -13,7 +14,7 @@ export const ModalDatePicker: React.FC<{
   inputTitle: string;
   inputDescription?: string;
 }> = ({ startName, endName, className, inputTitle, inputDescription }) => {
-  //const dateFormat = 'YYYY-MM-DD';
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col mb-12">
       <div className="mb-8">
@@ -28,13 +29,13 @@ export const ModalDatePicker: React.FC<{
             className={className}
             dependencies={[endName]} // re-validate when end changes
             rules={[
-              { required: true, message: 'Please select a start date' },
+              { required: true, message: t('fieldMessages.datePicker.required') },
               ({ getFieldValue }) => ({
                 validator(_, start) {
                   const end = getFieldValue(endName);
                   // allow equal dates; only block if start > end
                   if (start && end && start.isAfter(end, 'day')) {
-                    return Promise.reject(new Error('Start date cannot be after the end date'));
+                    return Promise.reject(new Error(t('fieldMessages.datePicker.startBeforeEnd')));
                   }
                   return Promise.resolve();
                 },
@@ -53,13 +54,13 @@ export const ModalDatePicker: React.FC<{
             className={className}
             dependencies={[startName]} // re-validate when start changes
             rules={[
-              { required: true, message: 'Please select an end date' },
+              { required: true, message: t('fieldMessages.datePicker.required') },
               ({ getFieldValue }) => ({
                 validator(_, end) {
                   const start = getFieldValue(startName);
                   // allow equal dates; only block if end < start
                   if (start && end && end.isBefore(start, 'day')) {
-                    return Promise.reject(new Error('End date cannot be earlier than the start date'));
+                    return Promise.reject(new Error(t('fieldMessages.datePicker.endAfterStart')));
                   }
                   return Promise.resolve();
                 },

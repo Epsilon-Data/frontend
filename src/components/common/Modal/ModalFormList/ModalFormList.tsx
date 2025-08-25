@@ -24,7 +24,7 @@ export const ModalFormList: React.FC<{
   const emailRules: RuleObject[] = [
     {
       type: 'email',
-      message: 'The input is not a valid email',
+      message: t('fieldMessages.input.email'),
     },
   ];
 
@@ -53,14 +53,14 @@ export const ModalFormList: React.FC<{
       </div>
       <Row className="flex">
         <Col span={17} className="flex-1">
-          <p className="mb-0.3 text-xs">Email address</p>
+          <p className="mb-0.3 text-xs">{t('dashboard.createProject.form.step2.members.emailAddress')}</p>
           <FormItem name="email" rules={emailRules}>
             <Input className="w-full border border-black bg-grey-4" />
           </FormItem>
         </Col>
         <div className="h-2 bg-grey-2" />
         <Col span={6} className="flex-1 ml-1">
-          <p className="mb-0.3 text-xs">Role</p>
+          <p className="mb-0.3 text-xs">{t('dashboard.createProject.form.step2.members.role')}</p>
           <FormItem name="role" initialValue="Collaborator">
             <Select className="role-select w-full" suffixIcon={<FaChevronDown />} options={roles} />
           </FormItem>

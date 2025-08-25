@@ -2,6 +2,7 @@ import React from 'react';
 import FormItem from 'antd/es/form/FormItem';
 import TextArea from 'antd/es/input/TextArea';
 import { RuleObject } from 'antd/es/form';
+import { useTranslation } from 'react-i18next';
 
 export const ModalTextArea: React.FC<{
   name: string;
@@ -12,14 +13,15 @@ export const ModalTextArea: React.FC<{
   inputDescription?: string;
   inputRules?: RuleObject[];
 }> = ({ name, disabled, className, inputTitle, inputDescription, inputRules }) => {
+  const { t } = useTranslation();
   const rules = [
     {
       required: true,
-      message: 'This field is required',
+      message: t('fieldMessages.input.required'),
     },
     {
       whitespace: true,
-      message: 'This field cannot be empty',
+      message: t('fieldMessages.input.whitespace'),
     },
     ...(inputRules || []),
   ];

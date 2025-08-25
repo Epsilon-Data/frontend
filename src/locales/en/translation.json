@@ -69,11 +69,30 @@
           },
           "members": {
             "title": "4. Add team members to this project",
-            "description": "Type individual emails to invite team members and assign their roles"
+            "description": "Type individual emails to invite team members and assign their roles",
+            "emailAddress": "Email address",
+            "role": "Role"
           },
           "dbKeywords": {
             "title": "5. Which keywords best describe your project?",
             "description": "Use 2-5 word phrases that help other reseachers understand the focus and content of your project and its database"
+          },
+          "keywordGuidance": {
+            "tip1": "Don’t include your or participant’s personal details",
+            "tip2": "Use descriptive words, like “population demographics” or “health data” to convey the main themes of your dataset",
+            "examples": {
+              "title": "See good and bad keywords",
+              "show": "Show examples",
+              "hide": "Hide examples",
+              "good": {
+                "title": "Good examples:",
+                "list": ["Population Demographics", "Health Records", "Education Statistics"]
+              },
+              "bad": {
+                "title": "Bad examples:",
+                "list": ["Data Info", "Various kinds of important data about different things", "Stats Sheet"]
+              }
+            }
           }
         },
         "step3": {
@@ -88,13 +107,19 @@
           "dbType": "2. What is the nature of your database?",
           "dbUrl": {
             "title": "3. Provide database connection URL",
-            "description": "Enter your database URL and test the connection to ensure it's reachable",
-            "testSuccess": "Connection successful",
-            "testFailed": "Connection failed"
+            "inputLabel": "URL link: ",
+            "description": "Enter your database URL and test the connection to ensure it's reachable"
+          },
+          "testConnection": {
+            "label": "Test connection",
+            "success": "Connection successful",
+            "failed": "Connection failed"
           },
           "dbCred": {
             "title": "Database credentials",
-            "description": "Provide your database username and password"
+            "description": "Provide your database username and password",
+            "username": "Enter database username",
+            "password": "Enter database password"
           }
         },
         "step5": {
@@ -436,5 +461,21 @@
     "document": "Document database",
     "graph": "Graph database",
     "flatFile": "Flat file database"
+  },
+  "fieldMessages": {
+    "input": {
+      "required": "This field is required",
+      "whitespace": "This field cannot be empty",
+      "email": "The input is not a valid email"
+    },
+    "datePicker": {
+      "required": "Please select a date",
+      "startBeforeEnd": "Start date must be before end date",
+      "endAfterStart": "End date must be after start date"
+    },
+    "tags": {
+      "min": "Please enter at least {{min}} keywords",
+      "instruction": "Separate each one with a comma"
+    }
   }
 }

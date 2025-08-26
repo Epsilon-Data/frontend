@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { IoSearch } from 'react-icons/io5';
-import { Button, Form, Input, Modal, Radio, Select, Space } from 'antd';
+import { Button, Form, Input, message, Modal, Radio, Select, Space } from 'antd';
 import { IoIosArrowDown } from 'react-icons/io';
 import { HiOutlineViewGrid } from 'react-icons/hi';
 import { HiMiniListBullet } from 'react-icons/hi2';
@@ -21,29 +21,11 @@ import { TestConnectionGroup } from '@app/components/common/Modal/TestConnection
 import { testConnection } from '@app/api/connectionRequests.api';
 import { createProject, getUserOwnedProjects, getUserSharedProjects, ProjectSummaryInfo } from '@app/api/projects.api';
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
-import config from '@app/config/config';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 
 const getInitialFormValues = () => {
-  if (config.isDev) {
-    return {
-      name: 'Test Project',
-      lead: 'John Doe',
-      university: 'Test University',
-      faculty: 'Computer Science',
-      ethicsId: 'ETH12345',
-      description: 'This is a test project description',
-      startDate: '2025-01-01',
-      endDate: '2025-12-31',
-      participantsNum: 100,
-      dbType: 'postgres',
-      dbUrl: 'postgresql://test_admin:supersecret@localhost:5433/test',
-      username: 'test_admin',
-      password: 'supersecret',
-    };
-  }
-
   return {
     name: '',
     lead: '',
@@ -54,7 +36,6 @@ const getInitialFormValues = () => {
     startDate: new Date().toISOString(),
     endDate: new Date().toISOString(),
     participantsNum: '',
-    dbType: '',
     dbUrl: '',
     username: '',
     password: '',
@@ -66,6 +47,8 @@ const DashboardPage: React.FC = () => {
   const [step2] = Form.useForm();
   const [step3] = Form.useForm();
   const [step4] = Form.useForm();
+
+  const forms = [step1, step2, step3, step4];
 
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -95,8 +78,6 @@ const DashboardPage: React.FC = () => {
     { value: 'csv', label: 'CSV' },
   ];
 
-  const nextStep = () => setModalStep((prev) => Math.min(prev + 1, 4));
-
   const handleChange = (value: string | string[]) => {
     console.log(`selected ${value}`);
   };
@@ -105,6 +86,12 @@ const DashboardPage: React.FC = () => {
     setTestLoading(true);
 
     const { dbUrl } = step4.getFieldsValue(['dbUrl']);
+    if (dbUrl.trim() === '') {
+      message.error(t('dashboard.createProject.form.error.invalidDbUrl'));
+      setTestLoading(false);
+      return;
+    }
+
     let url = dbUrl;
 
     try {
@@ -135,6 +122,29 @@ const DashboardPage: React.FC = () => {
     setTestLoading(false);
   };
 
+  const nextStep = async () => {
+    try {
+      await forms[modalStep].validateFields();
+
+      if (modalStep === 3) {
+        if (!isConnected) {
+          message.error(t('dashboard.createProject.form.error.invalidDbUrl'));
+          return;
+        }
+      }
+
+      setModalStep((prev) => Math.min(prev + 1, 4));
+    } catch (err) {
+      const error = err as ValidateErrorEntity;
+      if (error.errorFields) {
+        forms[modalStep].scrollToField(error.errorFields[0].name, {
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }
+  };
+
   const showModal = () => {
     const initialValues = getInitialFormValues();
 
@@ -157,7 +167,6 @@ const DashboardPage: React.FC = () => {
 
     step4.setFieldsValue({
       dbName: initialValues.name,
-      dbType: initialValues.dbType,
       dbUrl: initialValues.dbUrl,
       username: initialValues.username,
       password: initialValues.password,
@@ -361,6 +370,19 @@ const DashboardPage: React.FC = () => {
                   name="participantsNum"
                   inputTitle={t('dashboard.createProject.form.step2.participantsNum.title')}
                   inputDescription={t('dashboard.createProject.form.step2.participantsNum.description')}
+                  inputRules={[
+                    {
+                      validator: (_, value) => {
+                        if (value === undefined || value === null || value === '') {
+                          return Promise.reject(new Error('Please enter a number'));
+                        }
+                        if (!/^\d+$/.test(value)) {
+                          return Promise.reject(new Error('Only positive integers are allowed'));
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
                 />
                 <ModalFormList
                   name="members"
@@ -416,6 +438,7 @@ const DashboardPage: React.FC = () => {
                   name="dbType"
                   inputTitle={t('dashboard.createProject.form.step4.dbType')}
                   options={dbTypeOptions}
+                  defaultValue="postgres"
                 />
                 <TestConnectionGroup
                   inputTitle={t('dashboard.createProject.form.step4.dbUrl.title')}

@@ -15,6 +15,16 @@ export const TestConnectionGroup: React.FC<{
   show: boolean;
 }> = ({ onClick, loading, inputTitle, inputDescription, connected, show }) => {
   const { t } = useTranslation();
+  const inputRules = [
+    {
+      required: true,
+      message: t('fieldMessages.input.required'),
+    },
+    {
+      whitespace: true,
+      message: t('fieldMessages.input.whitespace'),
+    },
+  ];
 
   return (
     <div className="flex flex-col pb-12">
@@ -26,8 +36,9 @@ export const TestConnectionGroup: React.FC<{
         <Col span={18}>
           <Row>
             <div className="flex items-center w-full">
-              <span className="mb-6 text-base">URL link:</span>&nbsp;&nbsp;
-              <FormItem name="dbUrl" className="flex-1">
+              <span className="mb-6 text-base">{t('dashboard.createProject.form.step4.dbUrl.inputLabel')}</span>
+              &nbsp;&nbsp;
+              <FormItem name="dbUrl" className="flex-1" rules={inputRules}>
                 <Input className="w-full !border !border-black" />
               </FormItem>
             </div>
@@ -35,7 +46,7 @@ export const TestConnectionGroup: React.FC<{
         </Col>
         <Col span={5} className="flex justify-end">
           <Button className="test-conn-btn bg-black border-none text-white flex" loading={loading} onClick={onClick}>
-            Test connection
+            {t('dashboard.createProject.form.step4.testConnection.label')}
             <IoChevronForwardOutline />
           </Button>
         </Col>
@@ -43,12 +54,12 @@ export const TestConnectionGroup: React.FC<{
       <div>
         {connected ? (
           <div className="text-xs text-success flex leading-5">
-            {t('dashboard.createProject.form.step4.dbUrl.testSuccess')}
+            {t('dashboard.createProject.form.step4.testConnection.success')}
             <FaRegCircleCheck className="ml-2 mt-1" />
           </div>
         ) : show ? (
           <div className="text-xs text-error flex leading-5">
-            {t('dashboard.createProject.form.step4.dbUrl.testFailed')}
+            {t('dashboard.createProject.form.step4.testConnection.failed')}
             <PiWarningBold className="ml-2 mt-1" />
           </div>
         ) : null}
@@ -62,14 +73,22 @@ export const TestConnectionGroup: React.FC<{
         </div>
       </div>
       <div className="flex-1">
-        <p className="mb-1 text-xs">Enter database username</p>
-        <FormItem name="username">
+        <p className="mb-1 text-xs">{t('dashboard.createProject.form.step4.dbCred.username')}</p>
+        <FormItem name="username" rules={inputRules}>
           <Input className="border border-black bg-grey-4" />
         </FormItem>
       </div>
       <div className="flex-1">
-        <p className="mb-1 text-xs">Enter database password</p>
-        <FormItem name="password">
+        <p className="mb-1 text-xs">{t('dashboard.createProject.form.step4.dbCred.password')}</p>
+        <FormItem
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: t('fieldMessages.input.required'),
+            },
+          ]}
+        >
           <Input.Password className="border border-black bg-grey-4" />
         </FormItem>
       </div>

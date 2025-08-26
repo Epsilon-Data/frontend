@@ -2,6 +2,8 @@ import React from 'react';
 import { Input } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import clsx from 'clsx';
+import { RuleObject } from 'antd/es/form';
+import { useTranslation } from 'react-i18next';
 
 export const ModalInput: React.FC<{
   name: string;
@@ -10,8 +12,22 @@ export const ModalInput: React.FC<{
   className?: string;
   inputTitle: string;
   inputDescription?: string;
+  inputRules?: RuleObject[];
   large?: boolean;
-}> = ({ name, suffix, disabled, className, inputTitle, inputDescription, large }) => {
+}> = ({ name, suffix, disabled, className, inputTitle, inputDescription, inputRules, large }) => {
+  const { t } = useTranslation();
+  const rules = [
+    {
+      required: true,
+      message: t('fieldMessages.input.required'),
+    },
+    {
+      whitespace: true,
+      message: t('fieldMessages.input.whitespace'),
+    },
+    ...(inputRules || []),
+  ];
+
   return (
     <div className="flex flex-col mb-12">
       <div className={clsx(large ? 'mb-12' : 'mb-8')}>
@@ -20,7 +36,7 @@ export const ModalInput: React.FC<{
           {inputDescription}
         </div>
       </div>
-      <FormItem name={name} className={className}>
+      <FormItem rules={rules} name={name} className={className}>
         <Input suffix={suffix} disabled={disabled} className="border border-black bg-grey-4" />
       </FormItem>
     </div>

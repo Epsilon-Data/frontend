@@ -53,7 +53,9 @@ const DashboardPage: React.FC = () => {
   // };
 
   useEffect(() => {
+    const controller = new AbortController();
     fetchProjects();
+    return () => controller.abort();
   }, [fetchProjects]);
 
   return (

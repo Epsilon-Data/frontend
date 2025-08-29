@@ -5,6 +5,7 @@ import { Button, Col, Input, InputProps, Row, Select, Tag, message } from 'antd'
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FormInstance } from 'antd/lib';
 import { RuleObject } from 'antd/es/form';
+import { useTranslation } from 'react-i18next';
 
 const roles = [
   { label: 'Collaborator', value: 'Collaborator' },
@@ -20,10 +21,11 @@ export const ModalFormList: React.FC<{
   setMembers: (members: { email: string; role: string }[]) => void;
   inputProps?: InputProps;
 }> = ({ inputTitle, inputDescription, members, setMembers, form, inputProps }) => {
+  const { t } = useTranslation();
   const emailRules: RuleObject[] = [
     {
       type: 'email',
-      message: 'The input is not a valid email',
+      message: t('fieldMessages.input.email'),
     },
   ];
 
@@ -31,9 +33,12 @@ export const ModalFormList: React.FC<{
     const { email, role } = form.getFieldsValue(['email', 'role']);
     try {
       await form.validateFields(['email']);
+      if (!email || !role) {
+        throw new Error();
+      }
       setMembers([...members, { email, role }]);
     } catch (errorInfo) {
-      message.error("Invalid team member's email");
+      message.error(t('dashboard.createProject.form.error.invalidEmail'));
     }
   };
 
@@ -49,15 +54,15 @@ export const ModalFormList: React.FC<{
       </div>
       <Row className="flex">
         <Col span={17} className="flex-1">
-          <p className="mb-0.3 text-xs">Email address</p>
+          <p className="mb-0.3 text-xs">{t('dashboard.createProject.form.step2.members.emailAddress')}</p>
           <FormItem name="email" rules={emailRules}>
             <Input {...inputProps} className="w-full border border-black bg-grey-4" />
           </FormItem>
         </Col>
         <div className="h-2 bg-grey-2" />
         <Col span={6} className="flex-1 ml-1">
-          <p className="mb-0.3 text-xs">Role</p>
-          <FormItem name="role">
+          <p className="mb-0.3 text-xs">{t('dashboard.createProject.form.step2.members.role')}</p>
+          <FormItem name="role" initialValue="Collaborator">
             <Select className="role-select w-full" suffixIcon={<FaChevronDown />} options={roles} />
           </FormItem>
         </Col>

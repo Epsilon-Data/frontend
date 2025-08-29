@@ -3,22 +3,28 @@ import { ModalInput } from '@app/components/common/Modal/ModalInput/ModalInput';
 import { ModalSelect } from '@app/components/common/Modal/ModalSelect/ModalSelect';
 import { TestConnectionGroup } from '@app/components/common/Modal/TestConnectionGroup/TestConnectionGroup';
 
-import { Form, Input } from 'antd';
-import FormItem from 'antd/es/form/FormItem';
+import { Form } from 'antd';
 import { FormInstance } from 'antd/lib';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export type DatabaseConnectionStepProps = {
   form: FormInstance<unknown>;
   showMessage: boolean;
-  setShowMessage: (show: boolean) => void;
+  setShowMessage: React.Dispatch<React.SetStateAction<boolean>>;
+  isConnected: boolean;
+  setConnected: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const DatabaseConnectionStep = ({ form, showMessage, setShowMessage }: DatabaseConnectionStepProps) => {
+export const DatabaseConnectionStep = ({
+  form,
+  showMessage,
+  setShowMessage,
+  isConnected,
+  setConnected,
+}: DatabaseConnectionStepProps) => {
   const { t } = useTranslation();
   const [isTestLoading, setTestLoading] = useState(false);
-  const [isConnected, setConnected] = useState(false);
 
   const dbTypeOptions = [
     { value: 'postgres', label: 'PostgreSQL' },
@@ -77,26 +83,7 @@ export const DatabaseConnectionStep = ({ form, showMessage, setShowMessage }: Da
           loading={isTestLoading}
           show={showMessage}
           onClick={onTestConnection}
-        >
-          <div className="flex-1">
-            <p className="mb-1 text-xs">{t('dashboard.createProject.form.step4.username.title')}</p>
-            <FormItem name="username">
-              <Input
-                placeholder={t('dashboard.createProject.form.step4.username.placeholder')}
-                className="border border-black bg-grey-4"
-              />
-            </FormItem>
-          </div>
-          <div className="flex-1">
-            <p className="mb-1 text-xs">{t('dashboard.createProject.form.step4.password.title')}</p>
-            <FormItem name="password">
-              <Input.Password
-                placeholder={t('dashboard.createProject.form.step4.password.placeholder')}
-                className="border border-black bg-grey-4"
-              />
-            </FormItem>
-          </div>
-        </TestConnectionGroup>
+        />
       </Form>
     </div>
   );

@@ -2,7 +2,7 @@ import { ProjectDetailsStep } from './steps/ProjectDetailsStep';
 import { UniversityDetailsStep } from './steps/UniversityDetailsStep';
 import { DatabaseConnectionStep } from './steps/DatabaseConnectionStep';
 import { ConfirmStep } from './steps/ConfirmStep';
-import { Button, Modal } from 'antd';
+import { Button, Modal, message } from 'antd';
 import { ProjectNameStep } from './steps/ProjectNameStep';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 
@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { useProjectModalContext } from '@app/hooks/useProjectModalContext';
+import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 
 type MultiStepProjectModalProps = {
   fetchProjects: () => Promise<void>;
@@ -27,8 +28,28 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
   const [members, setMembers] = useState<{ email: string; role: string }[]>([]);
   const { t } = useTranslation();
   const [showMessage, setShowMessage] = useState(false);
-  const nextStep = () => {
-    setModalStep((prev) => Math.min(prev + 1, 4));
+  const [isConnected, setConnected] = useState(false);
+  const nextStep = async () => {
+    try {
+      await forms[modalStep].validateFields();
+
+      if (modalStep === 3) {
+        if (!isConnected) {
+          message.error(t('dashboard.createProject.form.error.invalidDbUrl'));
+          return;
+        }
+      }
+
+      setModalStep((prev) => Math.min(prev + 1, 4));
+    } catch (err) {
+      const error = err as ValidateErrorEntity;
+      if (error.errorFields) {
+        forms[modalStep].scrollToField(error.errorFields[0].name, {
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }
   };
 
   const stepTitles = [
@@ -96,7 +117,15 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       case 2:
         return <UniversityDetailsStep form={step3} />;
       case 3:
-        return <DatabaseConnectionStep form={step4} showMessage={showMessage} setShowMessage={setShowMessage} />;
+        return (
+          <DatabaseConnectionStep
+            form={step4}
+            showMessage={showMessage}
+            setShowMessage={setShowMessage}
+            isConnected={isConnected}
+            setConnected={setConnected}
+          />
+        );
       case 4:
         return <ConfirmStep />;
       default:

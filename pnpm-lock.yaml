@@ -21,9 +21,6 @@ importers:
       '@epsilon-data/epsilon-connector':
         specifier: ^0.0.9
         version: 0.0.9
-      '@epsilon-data/frontend':
-        specifier: 'link:'
-        version: 'link:'
       '@fontsource/inter':
         specifier: ^5.2.5
         version: 5.2.5

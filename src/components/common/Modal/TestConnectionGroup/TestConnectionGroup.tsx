@@ -39,7 +39,10 @@ export const TestConnectionGroup: React.FC<{
               <span className="mb-6 text-base">{t('dashboard.createProject.form.step4.dbUrl.inputLabel')}</span>
               &nbsp;&nbsp;
               <FormItem name="dbUrl" className="flex-1" rules={inputRules}>
-                <Input className="w-full !border !border-black" />
+                <Input
+                  className="w-full !border !border-black"
+                  placeholder={t('dashboard.createProject.form.step4.dbCred.placeholder')}
+                />
               </FormItem>
             </div>
           </Row>
@@ -73,13 +76,16 @@ export const TestConnectionGroup: React.FC<{
         </div>
       </div>
       <div className="flex-1">
-        <p className="mb-1 text-xs">{t('dashboard.createProject.form.step4.dbCred.username')}</p>
+        <p className="mb-1 text-xs">{t('dashboard.createProject.form.step4.dbCred.username.title')}</p>
         <FormItem name="username" rules={inputRules}>
-          <Input className="border border-black bg-grey-4" />
+          <Input
+            className="border border-black bg-grey-4"
+            placeholder={t('dashboard.createProject.form.step4.dbCred.username.placeholder')}
+          />
         </FormItem>
       </div>
       <div className="flex-1">
-        <p className="mb-1 text-xs">{t('dashboard.createProject.form.step4.dbCred.password')}</p>
+        <p className="mb-1 text-xs">{t('dashboard.createProject.form.step4.dbCred.password.title')}</p>
         <FormItem
           name="password"
           rules={[
@@ -89,7 +95,10 @@ export const TestConnectionGroup: React.FC<{
             },
           ]}
         >
-          <Input.Password className="border border-black bg-grey-4" />
+          <Input.Password
+            className="border border-black bg-grey-4"
+            placeholder={t('dashboard.createProject.form.step4.dbCred.password.placeholder')}
+          />
         </FormItem>
       </div>
     </div>

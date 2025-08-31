@@ -29,6 +29,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
   const { t } = useTranslation();
   const [showMessage, setShowMessage] = useState(false);
   const [isConnected, setConnected] = useState(false);
+
   const nextStep = async () => {
     try {
       await forms[modalStep].validateFields();

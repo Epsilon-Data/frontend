@@ -131,10 +131,11 @@
           },
           "dbCred": {
             "title": "Database credentials",
-            "description": "Provide your database username and password"
-          },
-          "username": { "placeholder": "Username", "title": "Enter database username" },
-          "password": { "placeholder": "Password", "title": "Enter database password" }
+            "description": "Provide your database username and password",
+            "placeholder": "Enter database URL",
+            "username": { "placeholder": "Username", "title": "Enter database username" },
+            "password": { "placeholder": "Password", "title": "Enter database password" }
+          }
         },
         "step5": {
           "title": "Step 5: ---"

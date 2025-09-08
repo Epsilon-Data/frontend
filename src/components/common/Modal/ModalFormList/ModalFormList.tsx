@@ -1,7 +1,7 @@
 import React from 'react';
 import FormItem from 'antd/es/form/FormItem';
 import { FaChevronDown, FaPlus } from 'react-icons/fa6';
-import { Button, Col, Input, Row, Select, Tag, message } from 'antd';
+import { Button, Col, Input, InputProps, Row, Select, Tag, message } from 'antd';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FormInstance } from 'antd/lib';
 import { RuleObject } from 'antd/es/form';
@@ -19,7 +19,8 @@ export const ModalFormList: React.FC<{
   members: { email: string; role: string }[];
   form: FormInstance;
   setMembers: (members: { email: string; role: string }[]) => void;
-}> = ({ inputTitle, inputDescription, members, setMembers, form }) => {
+  inputProps?: InputProps;
+}> = ({ inputTitle, inputDescription, members, setMembers, form, inputProps }) => {
   const { t } = useTranslation();
   const emailRules: RuleObject[] = [
     {
@@ -55,7 +56,7 @@ export const ModalFormList: React.FC<{
         <Col span={17} className="flex-1">
           <p className="mb-0.3 text-xs">{t('dashboard.createProject.form.step2.members.emailAddress')}</p>
           <FormItem name="email" rules={emailRules}>
-            <Input className="w-full border border-black bg-grey-4" />
+            <Input {...inputProps} className="w-full border border-black bg-grey-4" />
           </FormItem>
         </Col>
         <div className="h-2 bg-grey-2" />

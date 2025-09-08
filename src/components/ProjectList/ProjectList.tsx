@@ -3,6 +3,13 @@ import { ProjectSummaryInfo } from '@app/api/projects.api';
 import { Button, Card, Col, Row, Tag } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 
+export type ProjectListProps = React.FC<{
+  projects: ProjectSummaryInfo[];
+  mode: 'dashboard' | 'all';
+  layout: 'list' | 'grid';
+  onProjectClick: (projectId: string) => void;
+}>;
+
 export const ProjectList: React.FC<{
   projects: ProjectSummaryInfo[];
   mode: 'dashboard' | 'all';

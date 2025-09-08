@@ -1,20 +1,22 @@
-import React from 'react';
+import React, { HtmlHTMLAttributes } from 'react';
 import { Input } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import clsx from 'clsx';
 import { RuleObject } from 'antd/es/form';
 import { useTranslation } from 'react-i18next';
 
-export const ModalInput: React.FC<{
-  name: string;
-  suffix?: React.ReactNode;
-  disabled?: boolean;
-  className?: string;
-  inputTitle: string;
-  inputDescription?: string;
-  inputRules?: RuleObject[];
-  large?: boolean;
-}> = ({ name, suffix, disabled, className, inputTitle, inputDescription, inputRules, large }) => {
+export const ModalInput: React.FC<
+  {
+    name: string;
+    suffix?: React.ReactNode;
+    disabled?: boolean;
+    className?: string;
+    inputTitle: string;
+    inputDescription?: string;
+    inputRules?: RuleObject[];
+    large?: boolean;
+  } & HtmlHTMLAttributes<HTMLInputElement>
+> = ({ name, suffix, disabled, className, inputTitle, inputDescription, inputRules, large, ...props }) => {
   const { t } = useTranslation();
   const rules = [
     {
@@ -37,7 +39,7 @@ export const ModalInput: React.FC<{
         </div>
       </div>
       <FormItem rules={rules} name={name} className={className}>
-        <Input suffix={suffix} disabled={disabled} className="border border-black bg-grey-4" />
+        <Input {...props} suffix={suffix} disabled={disabled} className="border border-black bg-grey-4" />
       </FormItem>
     </div>
   );

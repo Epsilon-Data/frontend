@@ -13,13 +13,23 @@ const StepItem = ({ active, children }: StepItemProps) => {
   return <div className={clsx('h-1 flex-1 rounded-[2px]', active ? 'bg-[#1677ff]' : 'bg-[#ccc]')}>{children}</div>;
 };
 
-export const ModalStepHeader: React.FC<{
+export type ModalStepHeaderProps = {
   setModalStep: React.Dispatch<React.SetStateAction<number>>;
   modalStep: number;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleDraft: () => void;
   stepTitles: string[];
-}> = ({ setModalStep, modalStep, setIsModalOpen, handleDraft, stepTitles }) => {
+};
+
+type ModalStepHeader = React.FC<ModalStepHeaderProps>;
+
+export const ModalStepHeader: ModalStepHeader = ({
+  setModalStep,
+  modalStep,
+  setIsModalOpen,
+  handleDraft,
+  stepTitles,
+}) => {
   const { t } = useTranslation();
 
   const prevStep = () =>

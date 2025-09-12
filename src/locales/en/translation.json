@@ -1,6 +1,8 @@
 {
   "common": {
-    "next": "Next"
+    "next": "Next",
+    "yes": "Yes",
+    "no": "No"
   },
   "notifications": {
     "basic": "Basic notification",
@@ -119,6 +121,14 @@
           "title": "Step 4: Database connection",
           "dbName": { "title": "1. What is the name of your database?", "placeholder": "Enter your database name" },
           "dbType": { "title": "2. What is the nature of your database?", "placeholder": "Select database type" },
+          "hasCreds": {
+            "title": "Do you have database credentials?"
+          },
+          "orgAdminEmail": {
+            "title": "3. What is the database owner's email address?",
+            "description": "This email will be used to notify the owner to request database credentials",
+            "placeholder": "Enter database owner's email address"
+          },
           "dbUrl": {
             "title": "3. Provide database connection URL",
             "inputLabel": "URL link: ",
@@ -130,7 +140,7 @@
             "failed": "Connection failed"
           },
           "dbCred": {
-            "title": "Database credentials",
+            "title": "4. Database credentials",
             "description": "Provide your database username and password",
             "placeholder": "Enter database URL",
             "username": { "placeholder": "Username", "title": "Enter database username" },

@@ -68,9 +68,10 @@ export const TestConnectionGroup: React.FC<{
         ) : null}
       </div>
       <div className="mb-8 mt-12">
-        <div className="font-medium font-sans text-xl text-black">
+        <div className="font-medium font-sans text-xl text-blueDark">
           {t('dashboard.createProject.form.step4.dbCred.title')}
         </div>
+        <div className="font-medium font-sans text-blueDark text-xl">{}</div>
         <div className="text-xs font-light font-inter text-black">
           {t('dashboard.createProject.form.step4.dbCred.description')}
         </div>

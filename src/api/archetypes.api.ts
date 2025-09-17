@@ -11,6 +11,13 @@ export interface Archetype {
   status: string;
 }
 
+export interface ArchetypeInfo {
+  projectId: string;
+  name: string;
+  archetype: string;
+  columnMapping: string;
+}
+
 export const getArchetypes = async (projectId: string | undefined): Promise<Archetype[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${ARCHETYPE_API_URL}/${projectId}`, {
@@ -20,19 +27,11 @@ export const getArchetypes = async (projectId: string | undefined): Promise<Arch
   return response.data;
 };
 
-export const createArchetype = async (formData: {
-  projectId: string | null;
-  name: string;
-  template: string;
-}): Promise<void> => {
+export const createArchetype = async (data: ArchetypeInfo): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.post(
-    `${ARCHETYPE_API_URL}/${formData.projectId}`,
-    { projectId: formData.projectId, name: formData.name, template: formData.template },
-    {
-      headers: { [csrfHeaderName]: `${csrf}` },
-    },
-  );
+  await httpClient.post(`${ARCHETYPE_API_URL}/${data.projectId}`, data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
 };
 
 export const deleteTemplate = async (projectId: string | undefined, templateId: string): Promise<void> => {

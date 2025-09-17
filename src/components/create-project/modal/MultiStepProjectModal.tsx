@@ -35,7 +35,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       await forms[modalStep].validateFields();
 
       if (modalStep === 3) {
-        if (!isConnected) {
+        if (!isConnected && step4.getFieldValue('hasCreds')) {
           message.error(t('dashboard.createProject.form.error.invalidDbUrl'));
           return;
         }
@@ -78,7 +78,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       participantsNum: step2.getFieldValue('participantsNum'),
       dbKeywords: dbKeywords,
       connection: {
-        orgAdminEmail: '',
+        orgAdminEmail: step4.getFieldValue('orgAdminEmail'),
         tempDbDetails: {
           name: step4.getFieldValue('dbName'),
           type: step4.getFieldValue('dbType'),

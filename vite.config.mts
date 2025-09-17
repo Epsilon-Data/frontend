@@ -15,6 +15,9 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  optimizeDeps: {
+    force: true,
+  },
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/testSetup.ts'],

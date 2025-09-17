@@ -5,7 +5,6 @@ import { Archetype } from '@app/api/archetypes.api';
 
 export const ArchetypeList: React.FC<{
   archetypes: Archetype[];
-  layout: 'list' | 'grid';
   onArchetypeClick: (projectId: string) => void;
 }> = ({ archetypes, onArchetypeClick }) => {
   return (

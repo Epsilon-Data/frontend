@@ -1,16 +1,19 @@
 import { Position, NodeProps } from 'reactflow';
 import * as S from './TextNode.styles';
 import { useState } from 'react';
-import { getHandleConfig, NodeData } from '@app/constants/reactflow';
+import { NodeLabelData } from '@app/constants/reactflow/types';
 
-export interface TypedNodeProps extends NodeProps<NodeData> {
+export interface TypedNodeProps extends NodeProps<NodeLabelData> {
   type: string;
 }
 
 export function TextNode({ data, type }: TypedNodeProps) {
   const [isEditing, setEditing] = useState(false);
 
-  const { showSource, showTarget } = getHandleConfig(type);
+  const { showSource, showTarget } = {
+    showSource: type === 'object' || type === 'category' || type === 'column',
+    showTarget: type === 'category' || type === 'subcategory',
+  };
 
   const handleDoubleClick = () => {
     setEditing(true);

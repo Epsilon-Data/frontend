@@ -3,14 +3,14 @@ import { useState } from 'react';
 import * as S from './SubcategoryNode.styles';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import { NodeLabelData } from '@app/constants/reactflow/types';
 
-export type NodeData = {
-  label: string;
+export interface SubcatNodeData extends NodeLabelData {
   availableColumns?: string[];
   onColumnSelect?: (columnName: string) => void;
-};
+}
 
-export function SubcategoryNode({ data }: NodeProps<NodeData>) {
+export function SubcategoryNode({ data }: NodeProps<SubcatNodeData>) {
   const [showColumnMenu, setShowColumnMenu] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [filteredColumns, setFilteredColumns] = useState<string[]>(data.availableColumns || []);

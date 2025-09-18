@@ -14,7 +14,8 @@ import { Button, Image, Input, Modal, Radio, Select, Tabs, Tag, Typography } fro
 import { RxEnterFullScreen } from 'react-icons/rx';
 import { DB_TYPE_LABELS } from '@app/constants/projects';
 import ReactFlow, { Background, EdgeProps, Panel, ReactFlowProvider, useReactFlow } from 'reactflow';
-import { BG_VARIANT, createNodeTypes, REACT_FLOW_OPTIONS } from '@app/constants/reactflow';
+import { BG_VARIANT, REACT_FLOW_OPTIONS } from '@app/constants/reactflow/reactflowOptions';
+import { readonlyNodeTypes } from '@app/constants/reactflow/nodeTypes';
 import clsx from 'clsx';
 import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 
@@ -146,7 +147,7 @@ const BrowseDatasetPage: React.FC = () => {
   const descriptionRef = useRef<HTMLDivElement>(null);
   const tempDbDetails = project.connection?.tempDbDetails;
 
-  const nodeTypes = useMemo(() => createNodeTypes('readonly'), []);
+  const nodeTypes = useMemo(() => readonlyNodeTypes, []);
   const edgeTypes = useMemo(
     () => ({
       default: (edgeProps: EdgeProps) => <MapEdge {...edgeProps} mode={'readonly'} />,

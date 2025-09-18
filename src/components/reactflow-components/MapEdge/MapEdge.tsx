@@ -1,6 +1,6 @@
 import { BaseEdge, EdgeProps, getStraightPath } from 'reactflow';
 
-interface MapEdgeProps extends EdgeProps {
+export interface MapEdgeProps extends EdgeProps {
   mode?: 'editable' | 'mapping' | 'readonly';
 }
 

@@ -1,6 +1,7 @@
 import type { Edge, Node } from 'reactflow';
 import type { Dispatch, SetStateAction } from 'react';
 import { TempEdge } from './types';
+import { isValidEdgeBase } from './edgeRules';
 
 export const MIN_DISTANCE = 160;
 
@@ -32,11 +33,16 @@ function closestEdge(node: Node, nodes: Node[]): Edge | null {
 
 export function nodeDrag(_evt: unknown, node: Node, nodes: Node[], setEdges: Dispatch<SetStateAction<Edge[]>>): void {
   const close = closestEdge(node, nodes);
+  const edgeSource = nodes.find((n) => n.id === close?.source);
+  const edgeTarget = nodes.find((n) => n.id === close?.target);
 
   setEdges((prev) => {
-    const next = (prev as TempEdge[]).filter((e) => e.className !== 'temp');
+    const next = (prev as Edge[]).filter((e) => e.className !== 'temp');
 
-    if (!close) return next;
+    if (!close || !edgeSource || !edgeTarget) return next;
+
+    const valid = isValidEdgeBase(edgeSource, edgeTarget, next);
+    if (!valid) return next;
 
     const exists = next.some((e) => e.source === close.source && e.target === close.target);
     if (exists) return next;

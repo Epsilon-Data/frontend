@@ -4,6 +4,7 @@ import type { Connection, Edge, Node, ReactFlowInstance } from 'reactflow';
 import { addEdge } from 'reactflow';
 import { nodeDrag, nodeDragStop } from '@app/constants/reactflow/dragPreview';
 import { useArchetypeFlowContext } from '@app/hooks/useArchetypeFlowContext';
+import { useTranslation } from 'react-i18next';
 
 export function useNodeIdCounter(initial = 0) {
   const ref = useRef(initial);
@@ -21,6 +22,7 @@ export function useArchetypeFlow(params: {
   const ctx = useArchetypeFlowContext();
   const [rf, setRF] = useState<ReactFlowInstance | null>(null);
   const nextId = useNodeIdCounter(nodes.length);
+  const { t } = useTranslation();
 
   const onConnect = useCallback(
     (p: Edge | Connection) => {
@@ -49,9 +51,16 @@ export function useArchetypeFlow(params: {
       if (typeof type !== 'string' || !rf) return;
 
       const position = rf.screenToFlowPosition({ x: e.clientX, y: e.clientY });
-      setNodes((nds) => nds.concat({ id: nextId(), type, position, data: { label: type } }));
+      setNodes((nds) =>
+        nds.concat({
+          id: nextId(),
+          type,
+          position,
+          data: { label: t(`project.createTemplate.form.step2.sidebar.${type}`) },
+        }),
+      );
     },
-    [rf, setNodes, nextId],
+    [rf, setNodes, nextId, t],
   );
 
   const onNodeDrag = useCallback((_: unknown, node: Node) => nodeDrag(_, node, nodes, setEdges), [nodes, setEdges]);

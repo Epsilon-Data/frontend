@@ -57,7 +57,6 @@ const InnerFlow: React.FC<Omit<ArchetypeProps, 'mode' | 'setColumns'>> = ({
   ...rest
 }) => {
   const {
-    computedNodes,
     nodeTypes,
     edgeTypes,
     onConnect,
@@ -73,7 +72,7 @@ const InnerFlow: React.FC<Omit<ArchetypeProps, 'mode' | 'setColumns'>> = ({
   return (
     <ReactFlow
       {...rest}
-      nodes={computedNodes}
+      nodes={nodes}
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}

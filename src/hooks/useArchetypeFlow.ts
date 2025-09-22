@@ -1,5 +1,5 @@
 // hooks/useFlowEngine.ts
-import { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState, DragEvent } from 'react';
+import { Dispatch, SetStateAction, useCallback, useRef, useState, DragEvent } from 'react';
 import type { Connection, Edge, Node, ReactFlowInstance } from 'reactflow';
 import { addEdge } from 'reactflow';
 import { nodeDrag, nodeDragStop } from '@app/constants/reactflow/dragPreview';
@@ -18,7 +18,7 @@ export function useArchetypeFlow(params: {
   setEdges: Dispatch<SetStateAction<Edge[]>>;
   columns?: string[];
 }) {
-  const { nodes, edges, setNodes, setEdges, columns } = params;
+  const { nodes, edges, setNodes, setEdges } = params;
   const ctx = useArchetypeFlowContext();
   const [rf, setRF] = useState<ReactFlowInstance | null>(null);
   const nextId = useNodeIdCounter(nodes.length);
@@ -70,13 +70,8 @@ export function useArchetypeFlow(params: {
     [nodes, edges, setEdges],
   );
 
-  const computedNodes = useMemo(
-    () => (ctx.enhanceNodes ? ctx.enhanceNodes({ nodes, edges, columns, setEdges }) : nodes),
-    [nodes, edges, columns, setEdges, ctx],
-  );
-
   return {
-    computedNodes,
+    nodes,
     edges,
     nodeTypes: ctx.nodeTypes,
     edgeTypes: ctx.edgeTypes,

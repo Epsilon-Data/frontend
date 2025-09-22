@@ -9,12 +9,6 @@ export type ArchetypeFlowContextType = {
   nodeTypes: NodeTypes;
   edgeTypes: EdgeTypes;
   isValidEdge: (source: Node, target: Node, edges: Edge[]) => boolean;
-  enhanceNodes?: (p: {
-    nodes: Node[];
-    edges: Edge[];
-    columns?: string[];
-    setEdges: Dispatch<SetStateAction<Edge[]>>;
-  }) => Node[];
   onConnectPost?: (p: { source: Node; target: Node; setEdges: Dispatch<SetStateAction<Edge[]>> }) => void;
   columns?: string[];
   setColumns?: Dispatch<SetStateAction<string[]>>;

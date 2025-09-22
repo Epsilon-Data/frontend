@@ -3,7 +3,6 @@ import { ArchetypeFlowContext, FlowMode } from '@app/context/ArchetypeFlow';
 import { BG_VARIANT, REACT_FLOW_OPTIONS } from '@app/constants/reactflow/reactflowOptions';
 import { editableNodeTypes, mappingNodeTypes, readonlyNodeTypes } from '@app/constants/reactflow/nodeTypes';
 import { isValidEdgeBase } from '@app/constants/reactflow/edgeRules';
-import { enhanceMappingNodes } from '@app/constants/reactflow/mappingHelpers';
 import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import type { Edge, EdgeTypes, Node } from 'reactflow';
 
@@ -23,7 +22,6 @@ export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, columns, setColum
           nodeTypes: mappingNodeTypes,
           edgeTypes: EDGE_TYPES,
           isValidEdge: isValidEdgeBase,
-          enhanceNodes: enhanceMappingNodes,
           onConnectPost: ({
             source,
             target,

@@ -13,8 +13,8 @@ export function DefaultNode({ data, type, id }: ReadOnlyNodeProps) {
   return (
     <S.DefaultNodeWrapper style={{ background: typeColor }} className="default-node">
       <S.TextDisplay id={id}>{data.label}</S.TextDisplay>
-      <S.DefaultHandle type="target" position={Position.Top} />
-      <S.DefaultHandle type="source" position={Position.Bottom} />
+      {type == 'subcategory' ? null : <S.DefaultHandle type="source" position={Position.Top} />}
+      <S.DefaultHandle type="target" position={Position.Bottom} />
     </S.DefaultNodeWrapper>
   );
 }

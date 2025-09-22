@@ -1,12 +1,13 @@
-// provider/FlowProvider.tsx
 import React, { Dispatch, SetStateAction } from 'react';
 import { ArchetypeFlowContext, FlowMode } from '@app/context/ArchetypeFlow';
 import { BG_VARIANT, REACT_FLOW_OPTIONS } from '@app/constants/reactflow/reactflowOptions';
 import { editableNodeTypes, mappingNodeTypes, readonlyNodeTypes } from '@app/constants/reactflow/nodeTypes';
 import { isValidEdgeBase } from '@app/constants/reactflow/edgeRules';
 import { enhanceMappingNodes } from '@app/constants/reactflow/mappingHelpers';
-import { MapEdge, MapEdgeProps } from '@app/components/reactflow-components/MapEdge/MapEdge';
-import type { Edge, Node } from 'reactflow';
+import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
+import type { Edge, EdgeTypes, Node } from 'reactflow';
+
+const EDGE_TYPES: EdgeTypes = { default: MapEdge };
 
 type Props = React.PropsWithChildren<{
   mode: FlowMode;
@@ -20,7 +21,7 @@ export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, columns, setColum
       ? {
           mode,
           nodeTypes: mappingNodeTypes,
-          edgeTypes: { default: (p: MapEdgeProps) => <MapEdge {...p} mode="mapping" /> },
+          edgeTypes: EDGE_TYPES,
           isValidEdge: isValidEdgeBase,
           enhanceNodes: enhanceMappingNodes,
           onConnectPost: ({
@@ -52,7 +53,7 @@ export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, columns, setColum
       ? {
           mode,
           nodeTypes: readonlyNodeTypes,
-          edgeTypes: { default: (p: MapEdgeProps) => <MapEdge {...p} mode="readonly" /> },
+          edgeTypes: EDGE_TYPES,
           isValidEdge: isValidEdgeBase,
           options: REACT_FLOW_OPTIONS,
           bgVariant: BG_VARIANT,
@@ -60,7 +61,7 @@ export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, columns, setColum
       : {
           mode,
           nodeTypes: editableNodeTypes,
-          edgeTypes: { default: (p: MapEdgeProps) => <MapEdge {...p} mode="editable" /> },
+          edgeTypes: EDGE_TYPES,
           isValidEdge: isValidEdgeBase,
           options: REACT_FLOW_OPTIONS,
           bgVariant: BG_VARIANT,

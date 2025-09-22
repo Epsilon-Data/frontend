@@ -52,6 +52,8 @@ const InnerFlow: React.FC<Omit<ArchetypeProps, 'mode' | 'setColumns'>> = ({
   onNodesChange,
   onEdgesChange,
   columns,
+  setNodes,
+  setEdges,
   ...rest
 }) => {
   const {
@@ -66,7 +68,7 @@ const InnerFlow: React.FC<Omit<ArchetypeProps, 'mode' | 'setColumns'>> = ({
     setReactFlowInstance,
     options,
     bgVariant,
-  } = useArchetypeFlow({ nodes, edges, setNodes: rest.setNodes!, setEdges: rest.setEdges!, columns });
+  } = useArchetypeFlow({ nodes, edges, setNodes: setNodes, setEdges: setEdges, columns });
 
   return (
     <ReactFlow

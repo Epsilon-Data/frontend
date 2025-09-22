@@ -1,17 +1,9 @@
 import { BaseEdge, EdgeProps, getStraightPath } from 'reactflow';
 
-export interface MapEdgeProps extends EdgeProps {
-  mode?: 'editable' | 'mapping' | 'readonly';
-}
+export function MapEdge(props: EdgeProps) {
+  const { sourceX, sourceY, targetX, targetY } = props;
 
-export function MapEdge(props: MapEdgeProps) {
-  const { sourceX, sourceY, targetX, targetY, mode = 'editable' } = props;
-
-  let offset = 5;
-
-  if (mode === 'mapping' || mode === 'readonly') {
-    offset = -5;
-  }
+  const offset = 5;
 
   const [edgePath] = getStraightPath({
     sourceX,

@@ -1,15 +1,13 @@
-// context/FlowContext.ts
 import { createContext } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
-import type { BackgroundVariant, Edge, FitViewOptions, Node, NodeProps } from 'reactflow';
-import type { EdgeProps } from 'reactflow';
+import type { BackgroundVariant, Edge, EdgeTypes, FitViewOptions, Node, NodeTypes } from 'reactflow';
 
 export type FlowMode = 'editable' | 'readonly' | 'mapping';
 
 export type ArchetypeFlowContextType = {
   mode: FlowMode;
-  nodeTypes: Record<string, (props: NodeProps) => JSX.Element>;
-  edgeTypes: Record<string, (props: EdgeProps) => JSX.Element>;
+  nodeTypes: NodeTypes;
+  edgeTypes: EdgeTypes;
   isValidEdge: (source: Node, target: Node, edges: Edge[]) => boolean;
   enhanceNodes?: (p: {
     nodes: Node[];

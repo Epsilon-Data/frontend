@@ -6,6 +6,7 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { FormInstance } from 'antd/lib';
 import { RuleObject } from 'antd/es/form';
 import { useTranslation } from 'react-i18next';
+import { InputLabel } from '../InputLabel/InputLabel';
 
 const roles = [
   { label: 'Collaborator', value: 'Collaborator' },
@@ -48,10 +49,7 @@ export const ModalFormList: React.FC<{
 
   return (
     <div className="flex flex-col mb-12">
-      <div className="mb-2">
-        <div className="text-xl font-medium font-sans text-blueDark">{inputTitle}</div>
-        <div className="text-xs font-light font-inter">{inputDescription}</div>
-      </div>
+      <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} />
       <Row className="flex">
         <Col span={17} className="flex-1">
           <p className="mb-0.3 text-xs">{t('dashboard.createProject.form.step2.members.emailAddress')}</p>

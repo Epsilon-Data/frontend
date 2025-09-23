@@ -500,7 +500,8 @@
     },
     "tags": {
       "min": "Please enter at least {{min}} keywords",
-      "instruction": "Separate each one with a comma"
+      "instruction": "Separate each one with a comma",
+      "duplicate": "This keyword has already been added"
     }
   }
 }

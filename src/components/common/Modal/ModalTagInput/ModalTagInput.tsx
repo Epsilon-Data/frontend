@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import FormItem from 'antd/es/form/FormItem';
-import { Select, SelectProps } from 'antd';
+import { Form, Select, SelectProps } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 const MAX_COUNT = 6;
+const norm = (s: string) => s.trim().toLowerCase();
 
 export const ModalTagInput: React.FC<{
   name: string;
@@ -15,6 +16,21 @@ export const ModalTagInput: React.FC<{
   selectProps?: SelectProps;
 }> = ({ name, className, inputTitle, inputDescription, value, setValue, selectProps }) => {
   const { t } = useTranslation();
+  const [search, setSearch] = useState('');
+  const form = Form.useFormInstance();
+  const normalizedSet = useMemo(() => new Set(value.map(norm)), [value]);
+
+  const onInputKeyDown: React.KeyboardEventHandler = (e) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      const s = norm(search);
+      if (s && normalizedSet.has(s)) {
+        e.preventDefault();
+        e.stopPropagation();
+        form.setFields([{ name, errors: [t('fieldMessages.tags.duplicate')] }]);
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col mb-12">
       <div className="mb-8">
@@ -38,9 +54,14 @@ export const ModalTagInput: React.FC<{
         <Select
           {...selectProps}
           mode="tags"
+          open={false}
+          notFoundContent={null}
           maxCount={MAX_COUNT}
           value={value}
           onChange={setValue}
+          tokenSeparators={[',']}
+          onSearch={setSearch}
+          onInputKeyDown={onInputKeyDown}
           suffixIcon={null}
           className="tag-select w-full"
         />

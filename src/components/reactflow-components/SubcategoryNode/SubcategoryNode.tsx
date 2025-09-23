@@ -1,4 +1,4 @@
-import { Position, NodeProps } from 'reactflow';
+import { Position, NodeProps, NodeToolbar } from 'reactflow';
 import { useState } from 'react';
 import * as S from './SubcategoryNode.styles';
 import { SearchOutlined } from '@ant-design/icons';
@@ -7,7 +7,6 @@ import { NodeLabelData } from '@app/constants/reactflow/types';
 
 export interface SubcatNodeData extends NodeLabelData {
   availableColumns?: string[];
-  onColumnSelect?: (columnName: string) => void;
 }
 
 export function SubcategoryNode({ data }: NodeProps<SubcatNodeData>) {
@@ -27,9 +26,7 @@ export function SubcategoryNode({ data }: NodeProps<SubcatNodeData>) {
   };
 
   const handleColumnSelect = (columnName: string) => {
-    if (data.onColumnSelect) {
-      data.onColumnSelect(columnName);
-    }
+    console.log('Selected column:', columnName);
     setShowColumnMenu(false);
   };
 
@@ -43,12 +40,7 @@ export function SubcategoryNode({ data }: NodeProps<SubcatNodeData>) {
 
   return (
     <S.SubcategoryNodeWrapper className="subcategory-node" onClick={handleClick}>
-      <S.SubcategoryDisplay>{data.label}</S.SubcategoryDisplay>
-
-      <S.SubcategoryHandle type="target" position={Position.Top} />
-      <S.SubcategoryHandle type="source" position={Position.Bottom} />
-
-      {showColumnMenu && data.availableColumns && (
+      <NodeToolbar position={Position.Right}>
         <S.ColumnSelectMenu>
           <S.ColumnSearch
             prefix={<SearchOutlined rev={undefined} style={{ marginRight: '0.5rem' }} />}
@@ -65,7 +57,9 @@ export function SubcategoryNode({ data }: NodeProps<SubcatNodeData>) {
             </S.Column>
           ))}
         </S.ColumnSelectMenu>
-      )}
+      </NodeToolbar>
+      <S.SubcategoryDisplay>{data.label}</S.SubcategoryDisplay>
+      <S.SubcategoryHandle type="target" position={Position.Bottom} />
     </S.SubcategoryNodeWrapper>
   );
 }

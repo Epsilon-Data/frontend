@@ -9,8 +9,7 @@ type ArchetypeProps = {
 export const Archetypes = ({ archetypes }: ArchetypeProps) => {
   const navigate = useNavigate();
 
-  const handleArchetypeClick = (archetypeId: string) => {
-    console.log(archetypeId);
+  const handleArchetypeClick = () => {
     navigate(`/`);
   };
 

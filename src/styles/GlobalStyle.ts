@@ -161,25 +161,26 @@ export default createGlobalStyle`
 
   .tag-select {
     .ant-select-selector {
-      height: 2.5rem !important;
+      padding-bottom: 0.25rem;
       border: 1px solid #000000 !important;
       background-color: #F5F5F5 !important;
   
       .ant-select-selection-overflow-item .ant-select-selection-item {
         border-radius: 1rem;
-        background: #1481F1;
+        background: #FFFFFF;
+        border: 1px solid #AEAEAE;
         margin-top: 0.3rem;
   
         .ant-select-selection-item-content {
           font-size: 0.75rem;
           font-family: Inter, sans-serif;
-          color: #FFFFFF;
+          color: #3B3B3B;
           padding: 0 0.5rem;
         }
   
         .ant-select-selection-item-remove {
           padding-right: 0.5rem;
-          color: #FFFFFF;
+          color: #3B3B3B;
         }
       }
     }

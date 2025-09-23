@@ -3,8 +3,8 @@ import { UniversityDetailsStep } from './steps/UniversityDetailsStep';
 import { DatabaseConnectionStep } from './steps/DatabaseConnectionStep';
 import { ConfirmStep } from './steps/ConfirmStep';
 import { Button, Modal, message } from 'antd';
-import { ProjectNameStep } from './steps/ProjectNameStep';
-import { IoChevronForwardOutline } from 'react-icons/io5';
+import { AboutProjectStep } from './steps/AboutProjectStep';
+import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 
 import { useState } from 'react';
 import { createProject } from '@app/api/projects.api';
@@ -53,12 +53,13 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
     }
   };
 
+  const prevStep = () => setModalStep((prev) => Math.max(prev - 1, 0));
+
   const stepTitles = [
     t('dashboard.createProject.form.step1.title'),
     t('dashboard.createProject.form.step2.title'),
     t('dashboard.createProject.form.step3.title'),
     t('dashboard.createProject.form.step4.title'),
-    t('dashboard.createProject.form.step5.title'),
   ];
 
   const handleCreate = async () => {
@@ -104,7 +105,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
   const renderStep = () => {
     switch (modalStep) {
       case 0:
-        return <ProjectNameStep form={step1} />;
+        return <AboutProjectStep form={step1} />;
       case 1:
         return (
           <ProjectDetailsStep
@@ -141,37 +142,55 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       onCancel={() => setIsModalOpen(false)}
       {...modalProps}
       footer={[
-        modalStep < 4 ? (
-          <Button
-            key="next"
-            type="primary"
-            onClick={nextStep}
-            icon={<IoChevronForwardOutline />}
-            iconPosition="end"
-            className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
-          >
-            {t('common.next')}
-          </Button>
-        ) : (
-          <Button
-            key="submit"
-            type="primary"
-            onClick={handleCreate}
-            icon={<IoChevronForwardOutline />}
-            iconPosition="end"
-            loading={isFormLoading}
-            className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
-          >
-            {t('dashboard.createProject.form.submit')}
-          </Button>
-        ),
+        <>
+          <div className="flex items-center justify-between w-full">
+            <div>
+              {modalStep > 0 && (
+                <Button
+                  key="back"
+                  onClick={prevStep}
+                  disabled={isFormLoading}
+                  icon={<IoChevronBackOutline />}
+                  className="flex items-center h-9 text-blueDark text-xs font-medium font-inter"
+                >
+                  {t('common.back')}
+                </Button>
+              )}
+            </div>
+            <div>
+              {modalStep < 3 ? (
+                <Button
+                  key="next"
+                  type="primary"
+                  onClick={nextStep}
+                  icon={<IoChevronForwardOutline />}
+                  iconPosition="end"
+                  className="flex items-center w-60 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
+                >
+                  {t('common.next')}
+                </Button>
+              ) : (
+                <Button
+                  key="submit"
+                  type="primary"
+                  onClick={handleCreate}
+                  icon={<IoChevronForwardOutline />}
+                  iconPosition="end"
+                  loading={isFormLoading}
+                  className="flex items-center w-60 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
+                >
+                  {t('common.submit')}
+                </Button>
+              )}
+            </div>
+          </div>
+        </>,
       ]}
     >
       <div className="flex flex-col">
         <ModalStepHeader
           setModalStep={setModalStep}
           modalStep={modalStep}
-          setIsModalOpen={setIsModalOpen}
           handleDraft={handleDraft}
           stepTitles={stepTitles}
         />

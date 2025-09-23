@@ -5,7 +5,7 @@ import { Archetype } from '@app/api/archetypes.api';
 
 export const ArchetypeList: React.FC<{
   archetypes: Archetype[];
-  onArchetypeClick: (projectId: string) => void;
+  onArchetypeClick: () => void;
 }> = ({ archetypes, onArchetypeClick }) => {
   return (
     <Row gutter={16} style={{ marginTop: '2rem' }}>
@@ -20,7 +20,7 @@ export const ArchetypeList: React.FC<{
                     <div className="leading-1 p-8 text-center">{archetype.name.charAt(0).toUpperCase()}</div>
                     <div className="group-hover:opacity-100 absolute top-0 left-0 w-full h-[56%] bg-black/50 opacity-0 transition-opacity duration-300 rounded-t flex items-center justify-center z-2">
                       <Button
-                        onClick={() => onArchetypeClick(archetype.id)}
+                        onClick={() => onArchetypeClick()}
                         icon={<IoChevronForwardOutline />}
                         iconPosition="end"
                         className="view-project-btn flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo border-none text-white hover:from-primaryGradientFrom hover:to-primaryGradientTo hover:text-white hover:shadow-none focus:from-primaryGradientFrom focus:to-primaryGradientTo focus:text-white focus:shadow-none active:from-primaryGradientFrom active:to-primaryGradientTo active:text-white active:shadow-none"

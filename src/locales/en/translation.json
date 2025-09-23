@@ -2,7 +2,10 @@
   "common": {
     "next": "Next",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "back": "Back",
+    "submit": "Submit",
+    "saveDraft": "Save draft"
   },
   "notifications": {
     "basic": "Basic notification",
@@ -46,42 +49,37 @@
     },
     "createProject": {
       "form": {
-        "submit": "Create project",
-        "saveDraft": "Save draft",
         "step1": {
-          "title": "Step 1: Name your template",
+          "title": "About Project",
           "name": {
-            "placeholder": "Enter a project name",
+            "placeholder": "e.g. Student Learning Analytics Study",
             "title": "Choose a name for your project",
             "description": "Pick a clear and descriptive name to help identify your project easily"
-          }
-        },
-        "step2": {
-          "title": "Step 2: Provide information about your project",
+          },
           "duration": {
-            "title": "1. What is the duration of your project?",
+            "title": "What is the duration of your project?",
             "description": "Set your project's duration — you can update it anytime from the project details page"
           },
           "description": {
             "placeholder": "Enter a brief description about your project",
-            "title": "2. Give a brief description about your project",
+            "title": "Give a brief description about your project",
             "description": "Share a brief summary of your project's purpose, goals, and key details"
           },
           "participantsNum": {
-            "placeholder": "Enter number of participants",
-            "title": "3. How many participants are involved in your project?",
+            "placeholder": "e.g., 150",
+            "title": "How many participants are involved in your project?",
             "description": "Please specify the total number of individuals involved in the project"
           },
           "members": {
             "placeholder": "Enter team member's email address",
-            "title": "4. Add team members to this project",
+            "title": "Add team members to this project",
             "description": "Type individual emails to invite team members and assign their roles",
             "emailAddress": "Email address",
             "role": "Role"
           },
           "dbKeywords": {
             "placeholder": "Enter keywords",
-            "title": "5. Which keywords best describe your project?",
+            "title": "Which keywords best describe your project?",
             "description": "Use 2-5 word phrases that help other reseachers understand the focus and content of your project and its database"
           },
           "keywordGuidance": {
@@ -102,35 +100,35 @@
             }
           }
         },
-        "step3": {
-          "title": "Step 3: Provide information about your university",
+        "step2": {
+          "title": "University details",
           "university": {
-            "title": "1. What is your university name?",
+            "title": "What is your university name?",
             "placeholder": "Enter your university name"
           },
           "faculty": {
-            "title": "2. What is the name of faculty which this project will be carried out?",
+            "title": "What is the name of faculty which this project will be carried out?",
             "placeholder": "Enter faculty name"
           },
           "ethicsId": {
-            "title": "3. What is your project's ethics approval ID?",
+            "title": "What is your project's ethics approval ID?",
             "placeholder": "Enter ethics approval ID"
           }
         },
-        "step4": {
-          "title": "Step 4: Database connection",
-          "dbName": { "title": "1. What is the name of your database?", "placeholder": "Enter your database name" },
-          "dbType": { "title": "2. What is the nature of your database?", "placeholder": "Select database type" },
+        "step3": {
+          "title": "Database",
+          "dbName": { "title": "What is the name of your database?", "placeholder": "Enter your database name" },
+          "dbType": { "title": "What is the nature of your database?", "placeholder": "Select database type" },
           "hasCreds": {
             "title": "Do you have database credentials?"
           },
           "orgAdminEmail": {
-            "title": "3. What is the database owner's email address?",
+            "title": "What is the database owner's email address?",
             "description": "This email will be used to notify the owner to request database credentials",
             "placeholder": "Enter database owner's email address"
           },
           "dbUrl": {
-            "title": "3. Provide database connection URL",
+            "title": "Provide database connection URL",
             "inputLabel": "URL link: ",
             "description": "Enter your database URL and test the connection to ensure it's reachable"
           },
@@ -140,19 +138,28 @@
             "failed": "Connection failed"
           },
           "dbCred": {
-            "title": "4. Database credentials",
+            "title": "Database credentials",
             "description": "Provide your database username and password",
             "placeholder": "Enter database URL",
             "username": { "placeholder": "Username", "title": "Enter database username" },
             "password": { "placeholder": "Password", "title": "Enter database password" }
           }
         },
-        "step5": {
-          "title": "Step 5: ---"
+        "step4": {
+          "title": "Confirmation",
+          "openAccess": {
+            "title": "Confirm and submit data open access form",
+            "criteria": {
+              "1": "I confirm that I am the data owner and have the rights to make this data available on the platform.",
+              "2": "I confirm that the data collection has been done in line with relevant local, national and institutional regulations and legislation.",
+              "3": "I confirm that the study participants have consented their data to be made accessible on the platform."
+            }
+          }
         },
         "error": {
           "invalidEmail": "Invalid team member's email",
-          "invalidDbUrl": "Invalid database URL"
+          "invalidDbUrl": "Invalid database URL",
+          "allChecked": "All steps must be confirmed before starting a new project."
         }
       }
     }
@@ -179,7 +186,6 @@
     "createTemplate": {
       "form": {
         "submit": "Save database mapping",
-        "saveDraft": "Save draft",
         "step1": {
           "title": "Step 1: Name your template",
           "name": {

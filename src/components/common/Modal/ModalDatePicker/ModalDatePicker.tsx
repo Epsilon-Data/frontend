@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { InputLabel } from '../InputLabel/InputLabel';
 
 dayjs.extend(customParseFormat);
 
@@ -17,10 +18,7 @@ export const ModalDatePicker: React.FC<{
   const { t } = useTranslation();
   return (
     <div className="flex flex-col mb-12">
-      <div className="mb-8">
-        <div className="text-xl font-medium font-sans text-blueDark">{inputTitle}</div>
-        <div className="text-xs font-light font-inter">{inputDescription}</div>
-      </div>
+      <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} />
       <div className="flex gap-2">
         <div className="flex-1">
           <p className="text-xs mb-1">Start</p>

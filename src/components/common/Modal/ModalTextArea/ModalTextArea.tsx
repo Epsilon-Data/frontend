@@ -3,6 +3,7 @@ import FormItem from 'antd/es/form/FormItem';
 import TextArea, { TextAreaProps } from 'antd/es/input/TextArea';
 import { RuleObject } from 'antd/es/form';
 import { useTranslation } from 'react-i18next';
+import { InputLabel } from '../InputLabel/InputLabel';
 
 export const ModalTextArea: React.FC<
   {
@@ -30,10 +31,7 @@ export const ModalTextArea: React.FC<
 
   return (
     <div className="flex flex-col mb-12">
-      <div className="mb-8">
-        <div className="font-medium font-sans text-blueDark text-xl">{inputTitle}</div>
-        <div className="font-light font-inter text-black text-xs">{inputDescription}</div>
-      </div>
+      <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} />
       <FormItem rules={rules} name={name} className={className}>
         <TextArea {...props} rows={4} disabled={disabled} className="bg-grey-4 border border-black" />
       </FormItem>

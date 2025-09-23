@@ -2,6 +2,7 @@ import React from 'react';
 import FormItem from 'antd/es/form/FormItem';
 import { Select, SelectProps } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { InputLabel } from '../InputLabel/InputLabel';
 
 const MAX_COUNT = 6;
 
@@ -17,10 +18,7 @@ export const ModalTagInput: React.FC<{
   const { t } = useTranslation();
   return (
     <div className="flex flex-col mb-12">
-      <div className="mb-8">
-        <div className="font-medium font-sans text-blueDark text-xl">{inputTitle}</div>
-        <div className="font-light font-inter text-black text-xs">{inputDescription}</div>
-      </div>
+      <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} />
       <FormItem
         name={name}
         className={className}

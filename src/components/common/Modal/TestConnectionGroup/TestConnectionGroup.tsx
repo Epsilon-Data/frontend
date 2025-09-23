@@ -5,6 +5,7 @@ import { IoChevronForwardOutline } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
 import { FaRegCircleCheck } from 'react-icons/fa6';
 import { PiWarningBold } from 'react-icons/pi';
+import { InputLabel } from '../InputLabel/InputLabel';
 
 export const TestConnectionGroup: React.FC<{
   onClick?: React.MouseEventHandler<HTMLElement> | undefined;
@@ -28,10 +29,7 @@ export const TestConnectionGroup: React.FC<{
 
   return (
     <div className="flex flex-col pb-12">
-      <div className="mb-8">
-        <div className="font-medium font-sans text-blueDark text-xl">{inputTitle}</div>
-        <div className="font-light font-inter text-black text-xs">{inputDescription}</div>
-      </div>
+      <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} />
       <Row className="flex justify-between">
         <Col span={18}>
           <Row>
@@ -67,14 +65,11 @@ export const TestConnectionGroup: React.FC<{
           </div>
         ) : null}
       </div>
-      <div className="mb-8 mt-12">
-        <div className="font-medium font-sans text-xl text-blueDark">
-          {t('dashboard.createProject.form.step4.dbCred.title')}
-        </div>
-        <div className="font-medium font-sans text-blueDark text-xl">{}</div>
-        <div className="text-xs font-light font-inter text-black">
-          {t('dashboard.createProject.form.step4.dbCred.description')}
-        </div>
+      <div className="mt-12">
+        <InputLabel
+          inputTitle={t('dashboard.createProject.form.step4.dbCred.title')}
+          inputDescription={t('dashboard.createProject.form.step4.dbCred.description')}
+        />
       </div>
       <div className="flex-1">
         <p className="mb-1 text-xs">{t('dashboard.createProject.form.step4.dbCred.username.title')}</p>

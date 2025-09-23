@@ -1,9 +1,9 @@
 import React, { HtmlHTMLAttributes } from 'react';
 import { Input } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
-import clsx from 'clsx';
 import { RuleObject } from 'antd/es/form';
 import { useTranslation } from 'react-i18next';
+import { InputLabel } from '../InputLabel/InputLabel';
 
 export const ModalInput: React.FC<
   {
@@ -14,9 +14,8 @@ export const ModalInput: React.FC<
     inputTitle: string;
     inputDescription?: string;
     inputRules?: RuleObject[];
-    large?: boolean;
   } & HtmlHTMLAttributes<HTMLInputElement>
-> = ({ name, suffix, disabled, className, inputTitle, inputDescription, inputRules, large, ...props }) => {
+> = ({ name, suffix, disabled, className, inputTitle, inputDescription, inputRules, ...props }) => {
   const { t } = useTranslation();
   const rules = [
     {
@@ -32,12 +31,7 @@ export const ModalInput: React.FC<
 
   return (
     <div className="flex flex-col mb-12">
-      <div className={clsx(large ? 'mb-12' : 'mb-8')}>
-        <div className={clsx('font-medium font-sans text-blueDark', large ? 'text-2xl' : 'text-xl')}>{inputTitle}</div>
-        <div className={clsx('font-light font-inter text-black', large ? 'text-md' : 'text-xs')}>
-          {inputDescription}
-        </div>
-      </div>
+      <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} />
       <FormItem rules={rules} name={name} className={className}>
         <Input {...props} suffix={suffix} disabled={disabled} className="border border-black bg-grey-4" />
       </FormItem>

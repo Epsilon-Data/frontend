@@ -1,9 +1,7 @@
-import { ProjectDetailsStep } from './steps/ProjectDetailsStep';
 import { UniversityDetailsStep } from './steps/UniversityDetailsStep';
 import { DatabaseConnectionStep } from './steps/DatabaseConnectionStep';
 import { ConfirmStep } from './steps/ConfirmStep';
 import { Button, Modal, message } from 'antd';
-import { AboutProjectStep } from './steps/AboutProjectStep';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 
 import { useState } from 'react';
@@ -13,6 +11,7 @@ import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/Modal
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { useProjectModalContext } from '@app/hooks/useProjectModalContext';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
+import { AboutProjectStep } from './steps/AboutProjectStep';
 
 type MultiStepProjectModalProps = {
   fetchProjects: () => Promise<void>;
@@ -34,14 +33,14 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
     try {
       await forms[modalStep].validateFields();
 
-      if (modalStep === 3) {
-        if (!isConnected && step4.getFieldValue('hasCreds')) {
+      if (modalStep === 2) {
+        if (!isConnected && step3.getFieldValue('hasCreds')) {
           message.error(t('dashboard.createProject.form.error.invalidDbUrl'));
           return;
         }
       }
 
-      setModalStep((prev) => Math.min(prev + 1, 4));
+      setModalStep((prev) => Math.min(prev + 1, 3));
     } catch (err) {
       const error = err as ValidateErrorEntity;
       if (error.errorFields) {
@@ -69,28 +68,29 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       ownerId: user?.id ?? '',
       name: step1.getFieldValue('name'),
       lead: (user?.firstName ?? '') + ' ' + (user?.lastName ?? ''),
-      university: step3.getFieldValue('university'),
-      faculty: step3.getFieldValue('faculty'),
-      ethicsId: step3.getFieldValue('ethicsId'),
-      description: step2.getFieldValue('description'),
-      startDate: step2.getFieldValue('startDate'),
-      endDate: step2.getFieldValue('endDate'),
+      university: step2.getFieldValue('university'),
+      faculty: step2.getFieldValue('faculty'),
+      ethicsId: step2.getFieldValue('ethicsId'),
+      description: step1.getFieldValue('description'),
+      startDate: step1.getFieldValue('startDate'),
+      endDate: step1.getFieldValue('endDate'),
       members: JSON.stringify(members),
-      participantsNum: step2.getFieldValue('participantsNum'),
+      participantsNum: step1.getFieldValue('participantsNum'),
       dbKeywords: dbKeywords,
       connection: {
-        orgAdminEmail: step4.getFieldValue('orgAdminEmail'),
+        orgAdminEmail: step3.getFieldValue('orgAdminEmail'),
         tempDbDetails: {
-          name: step4.getFieldValue('dbName'),
-          type: step4.getFieldValue('dbType'),
-          url: step4.getFieldValue('dbUrl'),
-          username: step4.getFieldValue('username'),
-          password: step4.getFieldValue('password'),
+          name: step3.getFieldValue('dbName'),
+          type: step3.getFieldValue('dbType'),
+          url: step3.getFieldValue('dbUrl'),
+          username: step3.getFieldValue('username'),
+          password: step3.getFieldValue('password'),
         },
       },
     };
 
     try {
+      await step4.validateFields();
       console.log('Creating project with data:', formData);
       await createProject(formData);
       setIsModalOpen(false);
@@ -105,31 +105,29 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
   const renderStep = () => {
     switch (modalStep) {
       case 0:
-        return <AboutProjectStep form={step1} />;
-      case 1:
         return (
-          <ProjectDetailsStep
-            form={step2}
+          <AboutProjectStep
+            form={step1}
             members={members}
             setMembers={setMembers}
             dbKeywords={dbKeywords}
             setDbKeywords={setDbKeywords}
           />
         );
+      case 1:
+        return <UniversityDetailsStep form={step2} />;
       case 2:
-        return <UniversityDetailsStep form={step3} />;
-      case 3:
         return (
           <DatabaseConnectionStep
-            form={step4}
+            form={step3}
             showMessage={showMessage}
             setShowMessage={setShowMessage}
             isConnected={isConnected}
             setConnected={setConnected}
           />
         );
-      case 4:
-        return <ConfirmStep />;
+      case 3:
+        return <ConfirmStep form={step4} />;
       default:
         return null;
     }
@@ -141,51 +139,49 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       open={isModalOpen}
       onCancel={() => setIsModalOpen(false)}
       {...modalProps}
-      footer={[
-        <>
-          <div className="flex items-center justify-between w-full">
-            <div>
-              {modalStep > 0 && (
-                <Button
-                  key="back"
-                  onClick={prevStep}
-                  disabled={isFormLoading}
-                  icon={<IoChevronBackOutline />}
-                  className="flex items-center h-9 text-blueDark text-xs font-medium font-inter"
-                >
-                  {t('common.back')}
-                </Button>
-              )}
-            </div>
-            <div>
-              {modalStep < 3 ? (
-                <Button
-                  key="next"
-                  type="primary"
-                  onClick={nextStep}
-                  icon={<IoChevronForwardOutline />}
-                  iconPosition="end"
-                  className="flex items-center w-60 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
-                >
-                  {t('common.next')}
-                </Button>
-              ) : (
-                <Button
-                  key="submit"
-                  type="primary"
-                  onClick={handleCreate}
-                  icon={<IoChevronForwardOutline />}
-                  iconPosition="end"
-                  loading={isFormLoading}
-                  className="flex items-center w-60 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
-                >
-                  {t('common.submit')}
-                </Button>
-              )}
-            </div>
+      footer={
+        <div className="flex items-center justify-between w-full">
+          <div>
+            {modalStep > 0 && (
+              <Button
+                key="back"
+                onClick={prevStep}
+                disabled={isFormLoading}
+                icon={<IoChevronBackOutline />}
+                className="flex items-center h-9 text-blueDark text-xs font-medium font-inter"
+              >
+                {t('common.back')}
+              </Button>
+            )}
           </div>
-        </>,
-      ]}
+          <div>
+            {modalStep < 3 ? (
+              <Button
+                key="next"
+                type="primary"
+                onClick={nextStep}
+                icon={<IoChevronForwardOutline />}
+                iconPosition="end"
+                className="flex items-center w-60 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
+              >
+                {t('common.next')}
+              </Button>
+            ) : (
+              <Button
+                key="submit"
+                type="primary"
+                onClick={handleCreate}
+                icon={<IoChevronForwardOutline />}
+                iconPosition="end"
+                loading={isFormLoading}
+                className="flex items-center w-60 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
+              >
+                {t('common.submit')}
+              </Button>
+            )}
+          </div>
+        </div>
+      }
     >
       <div className="flex flex-col">
         <ModalStepHeader

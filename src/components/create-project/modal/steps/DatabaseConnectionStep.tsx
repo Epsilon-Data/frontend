@@ -2,6 +2,7 @@ import { testConnection } from '@app/api/connectionRequests.api';
 import { ModalInput } from '@app/components/common/Modal/ModalInput/ModalInput';
 import { ModalRadioGroup } from '@app/components/common/Modal/ModalRadioGroup/ModalRadioGroup';
 import { ModalSelect } from '@app/components/common/Modal/ModalSelect/ModalSelect';
+import { NumberedFormItem } from '@app/components/common/Modal/NumberedFormItem/NumberedFormItem';
 import { TestConnectionGroup } from '@app/components/common/Modal/TestConnectionGroup/TestConnectionGroup';
 
 import { Form, RadioChangeEvent } from 'antd';
@@ -91,40 +92,48 @@ export const DatabaseConnectionStep = ({
   return (
     <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
       <Form form={form} className="h-full">
-        <ModalInput
-          name="dbName"
-          inputTitle={t('dashboard.createProject.form.step4.dbName.title')}
-          placeholder={t('dashboard.createProject.form.step4.dbName.placeholder')}
-        />
-        <ModalSelect
-          name="dbType"
-          inputTitle={t('dashboard.createProject.form.step4.dbType.title')}
-          options={dbTypeOptions}
-        />
-        <ModalRadioGroup
-          name="hasCreds"
-          inputTitle={t('dashboard.createProject.form.step4.hasCreds.title')}
-          options={radioGroupOptions}
-          defaultValue={true}
-          onChange={handleHasCredsChange}
-        />
+        <NumberedFormItem number={1}>
+          <ModalInput
+            name="dbName"
+            inputTitle={t('dashboard.createProject.form.step3.dbName.title')}
+            placeholder={t('dashboard.createProject.form.step3.dbName.placeholder')}
+          />
+        </NumberedFormItem>
+        <NumberedFormItem number={2}>
+          <ModalSelect
+            name="dbType"
+            inputTitle={t('dashboard.createProject.form.step3.dbType.title')}
+            options={dbTypeOptions}
+          />
+        </NumberedFormItem>
+        <NumberedFormItem number={3} showDivider={false}>
+          <ModalRadioGroup
+            name="hasCreds"
+            inputTitle={t('dashboard.createProject.form.step3.hasCreds.title')}
+            options={radioGroupOptions}
+            defaultValue={true}
+            onChange={handleHasCredsChange}
+          />
+        </NumberedFormItem>
         {hasCreds ? (
           <TestConnectionGroup
-            inputTitle={t('dashboard.createProject.form.step4.dbUrl.title')}
-            inputDescription={t('dashboard.createProject.form.step4.dbUrl.description')}
+            inputTitle={t('dashboard.createProject.form.step3.dbUrl.title')}
+            inputDescription={t('dashboard.createProject.form.step3.dbUrl.description')}
             connected={isConnected}
             loading={isTestLoading}
             show={showMessage}
             onClick={onTestConnection}
           />
         ) : (
-          <ModalInput
-            name="orgAdminEmail"
-            inputTitle={t('dashboard.createProject.form.step4.orgAdminEmail.title')}
-            inputDescription={t('dashboard.createProject.form.step4.orgAdminEmail.description')}
-            inputRules={[{ type: 'email', message: t('fieldMessages.input.email') }]}
-            placeholder={t('dashboard.createProject.form.step4.orgAdminEmail.placeholder')}
-          />
+          <NumberedFormItem number={4} showDivider={false}>
+            <ModalInput
+              name="orgAdminEmail"
+              inputTitle={t('dashboard.createProject.form.step3.orgAdminEmail.title')}
+              inputDescription={t('dashboard.createProject.form.step3.orgAdminEmail.description')}
+              inputRules={[{ type: 'email', message: t('fieldMessages.input.email') }]}
+              placeholder={t('dashboard.createProject.form.step3.orgAdminEmail.placeholder')}
+            />
+          </NumberedFormItem>
         )}
       </Form>
     </div>

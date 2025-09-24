@@ -2,6 +2,7 @@ import React from 'react';
 import FormItem from 'antd/es/form/FormItem';
 import { FaChevronDown } from 'react-icons/fa6';
 import { Select } from 'antd';
+import { InputLabel } from '../InputLabel/InputLabel';
 
 export const ModalSelect: React.FC<{
   name: string;
@@ -15,10 +16,7 @@ export const ModalSelect: React.FC<{
 }> = ({ name, disabled, className, inputTitle, inputDescription, options, defaultValue }) => {
   return (
     <div className="flex flex-col mb-12">
-      <div className="mb-8">
-        <div className="font-medium font-sans text-blueDark text-xl">{inputTitle}</div>
-        <div className="font-light font-inter text-black text-xs">{inputDescription}</div>
-      </div>
+      <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} />
       <FormItem name={name} className={className} initialValue={defaultValue ?? options?.[0]?.value}>
         <Select className="modal-select" disabled={disabled} suffixIcon={<FaChevronDown />} options={options} />
       </FormItem>

@@ -17,7 +17,7 @@ export const ProjectList: React.FC<{
   onProjectClick: (projectId: string) => void;
 }> = ({ projects, mode, onProjectClick }) => {
   return (
-    <Row gutter={16} className="mt-8">
+    <Row gutter={[24, 24]} className="mt-8">
       {projects.map((project) => {
         const lastModifiedDate = new Date(project.lastModified);
         return (

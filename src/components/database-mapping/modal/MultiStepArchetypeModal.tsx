@@ -91,6 +91,7 @@ export const MultiStepArchetypeModal = ({
             onEdgesChange={onEdgesChange}
             columns={columns}
             setColumns={setColumns}
+            name={step1.getFieldValue('name')}
           />
         );
       case 3:

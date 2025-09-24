@@ -33,6 +33,7 @@ export const ArchetypeFlow: React.FC<ArchetypeProps> = ({
   return (
     <ArchetypeFlowProvider mode={mode} columns={columns} setColumns={setColumns}>
       <InnerFlow
+        mode={mode}
         name={name}
         nodes={nodes}
         edges={edges}
@@ -45,7 +46,8 @@ export const ArchetypeFlow: React.FC<ArchetypeProps> = ({
   );
 };
 
-const InnerFlow: React.FC<Omit<ArchetypeProps, 'mode' | 'setColumns'>> = ({
+const InnerFlow: React.FC<Omit<ArchetypeProps, 'setColumns'>> = ({
+  mode,
   name,
   nodes,
   edges,
@@ -89,7 +91,7 @@ const InnerFlow: React.FC<Omit<ArchetypeProps, 'mode' | 'setColumns'>> = ({
       fitViewOptions={options?.fitViewOptions}
       proOptions={{ hideAttribution: true }}
     >
-      {name && <ElementsSidebar name={name} />}
+      {name && <ElementsSidebar name={name} mode={mode} />}
       <ZoomControls />
       <Background variant={bgVariant} />
     </ReactFlow>

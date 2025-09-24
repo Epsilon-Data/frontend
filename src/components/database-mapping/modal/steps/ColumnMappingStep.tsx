@@ -10,6 +10,7 @@ type ColumnMappingStepProps = {
   onEdgesChange: (value: EdgeChange[]) => void;
   columns: string[];
   setColumns: React.Dispatch<React.SetStateAction<string[]>>;
+  name: string;
 };
 
 export const ColumnMappingStep = ({
@@ -21,12 +22,14 @@ export const ColumnMappingStep = ({
   onEdgesChange,
   columns,
   setColumns,
+  name,
 }: ColumnMappingStepProps) => {
   return (
     <div className="h-[33rem] py-4 px-8 overflow-y-auto flex flex-col justify-center bg-grey-4">
       <div className="flex flex-col bg-white rounded-lg">
         <div className="h-[30rem] w-full">
           <ArchetypeFlow
+            name={name}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}

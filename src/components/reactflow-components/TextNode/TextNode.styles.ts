@@ -8,7 +8,7 @@ export const TextNodeWrapper = styled.div`
 `;
 
 export const TextNodeInput = styled.input`
-  color: #ffffff;
+  color: #000000;
   background: transparent;
   font-weight: 500;
   font-size: 1rem;
@@ -25,7 +25,7 @@ export const TextNodeInput = styled.input`
 `;
 
 export const TextDisplay = styled.div`
-  color: #ffffff;
+  color: #000000;
   margin-top: 0.25rem;
   float: right;
   font-weight: 500;

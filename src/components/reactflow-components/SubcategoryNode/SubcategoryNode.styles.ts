@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import { Handle } from 'reactflow';
 import { Input } from 'antd';
 
-export const SubcategoryNodeWrapper = styled.div`
+export const SubcategoryNodeWrapper = styled.div<{ $selected?: boolean }>`
   background: #33b1ff;
-  border: 1px solid #000000;
+  border: ${({ $selected }) => ($selected ? '1.5px solid #6E6E6E' : '2px solid transparent')};
   border-radius: 0.5rem;
   padding: 0.5rem;
   width: fit-content;

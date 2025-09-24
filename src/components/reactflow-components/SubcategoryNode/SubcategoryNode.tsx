@@ -9,7 +9,7 @@ export interface SubcatNodeData extends NodeLabelData {
   availableColumns?: string[];
 }
 
-export function SubcategoryNode({ data }: NodeProps<SubcatNodeData>) {
+export function SubcategoryNode({ data, selected }: NodeProps<SubcatNodeData>) {
   const [showColumnMenu, setShowColumnMenu] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [filteredColumns, setFilteredColumns] = useState<string[]>(data.availableColumns || []);
@@ -39,7 +39,7 @@ export function SubcategoryNode({ data }: NodeProps<SubcatNodeData>) {
   };
 
   return (
-    <S.SubcategoryNodeWrapper className="subcategory-node" onClick={handleClick}>
+    <S.SubcategoryNodeWrapper className="subcategory-node" onClick={handleClick} $selected={selected}>
       <NodeToolbar position={Position.Right}>
         <S.ColumnSelectMenu>
           <S.ColumnSearch

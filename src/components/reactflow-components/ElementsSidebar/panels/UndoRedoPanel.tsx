@@ -11,7 +11,7 @@ export const UndoRedoPanel: React.FC<{ transition: boolean }> = ({ transition })
       className={[
         'flex flex-col items-center bg-white border border-[#ddd] rounded-lg text-base w-10 shadow-xl',
         'transition-transform duration-500 ease-in-out',
-        shouldTransition ? '-translate-y-[300px]' : 'translate-y-0',
+        shouldTransition ? '-translate-y-[400%]' : 'translate-y-0',
       ].join(' ')}
     >
       <Button className="border-none bg-transparent shadow-none" icon={<LuUndo />} />

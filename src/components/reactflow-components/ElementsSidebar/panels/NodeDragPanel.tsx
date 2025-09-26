@@ -3,7 +3,6 @@ import { Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { PiLightbulbBold } from 'react-icons/pi';
 import { TiWarningOutline } from 'react-icons/ti';
-import { useDeferredHide } from '@app/hooks/useDeferredHide';
 
 type Props = {
   hidden: boolean;
@@ -14,16 +13,16 @@ export const NodeDragPanel: React.FC<Props> = ({ hidden, onDragStart }) => {
   const { Text } = Typography;
   const { t } = useTranslation();
 
-  const shouldHide = useDeferredHide(hidden);
-
   return (
     <div
       className={[
-        'flex flex-col bg-white border border-[#ddd] rounded-lg p-3 w-60 mb-4 shadow-xl',
+        'flex flex-col bg-white rounded-lg w-60 shadow-xl',
         'transition-all duration-500 ease-in-out will-change-transform origin-left',
-        shouldHide ? '-translate-x-[120%] opacity-0 pointer-events-none' : 'translate-x-0 opacity-100',
+        hidden
+          ? 'mb-0 border-0 p-0 opacity-0 pointer-events-none'
+          : 'mb-4 border border-[#ddd] p-3 translate-x-0 opacity-100',
       ].join(' ')}
-      aria-hidden={shouldHide}
+      aria-hidden={hidden}
     >
       <div className="text-sm text-start mb-2">{t('project.createTemplate.form.step2.sidebar.blocks')}</div>
 

@@ -14,7 +14,6 @@ export const ArchetypeNameStep = ({ form }: ArchetypeNameStepProps) => {
           name="name"
           inputTitle={t('project.createTemplate.form.step1.name.title')}
           inputDescription={t('project.createTemplate.form.step1.name.description')}
-          large
         />
       </Form>
     </div>

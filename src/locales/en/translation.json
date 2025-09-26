@@ -187,14 +187,14 @@
       "form": {
         "submit": "Save database mapping",
         "step1": {
-          "title": "Step 1: Name your template",
+          "title": "Name your template",
           "name": {
             "title": "Choose a name for your template",
             "description": "Pick a clear and descriptive name to help identify your template easily"
           }
         },
         "step2": {
-          "title": "Step 2: Define your template's - database structure",
+          "title": "Database structure",
           "sidebar": {
             "blocks": "Mapping blocks: ",
             "rules": "Connection rules",
@@ -204,10 +204,10 @@
           }
         },
         "step3": {
-          "title": "Step 3: Mapping database structure with nodes"
+          "title": "Mapping with nodes"
         },
         "step4": {
-          "title": "Step 4: Set permissions for your database"
+          "title": "Set permissions"
         }
       }
     }

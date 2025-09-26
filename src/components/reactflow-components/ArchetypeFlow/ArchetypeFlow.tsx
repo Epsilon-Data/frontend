@@ -5,6 +5,7 @@ import { useArchetypeFlow } from '@app/hooks/useArchetypeFlow';
 import { ArchetypeFlowProvider } from '@app/providers/ArchetypeFlowProvider';
 import React, { Dispatch, SetStateAction } from 'react';
 import ReactFlow, { Background, Edge, EdgeChange, Node, NodeChange } from 'reactflow';
+import { ColumnSidebar } from '../ColumnSidebar/ColumnSidebar';
 
 export interface ArchetypeProps {
   mode: FlowMode;
@@ -40,13 +41,14 @@ export const ArchetypeFlow: React.FC<ArchetypeProps> = ({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         columns={columns}
+        setColumns={setColumns}
         {...rest}
       />
     </ArchetypeFlowProvider>
   );
 };
 
-const InnerFlow: React.FC<Omit<ArchetypeProps, 'setColumns'>> = ({
+const InnerFlow: React.FC<ArchetypeProps> = ({
   mode,
   name,
   nodes,
@@ -54,6 +56,7 @@ const InnerFlow: React.FC<Omit<ArchetypeProps, 'setColumns'>> = ({
   onNodesChange,
   onEdgesChange,
   columns,
+  setColumns,
   setNodes,
   setEdges,
   ...rest
@@ -69,7 +72,9 @@ const InnerFlow: React.FC<Omit<ArchetypeProps, 'setColumns'>> = ({
     setReactFlowInstance,
     options,
     bgVariant,
-  } = useArchetypeFlow({ nodes, edges, setNodes: setNodes, setEdges: setEdges, columns });
+  } = useArchetypeFlow({ nodes, edges, setNodes, setEdges, columns });
+
+  const selectedSubcat = [...nodes].reverse().find((n) => n.selected && n.type === 'subcategory') || null;
 
   return (
     <ReactFlow
@@ -92,6 +97,14 @@ const InnerFlow: React.FC<Omit<ArchetypeProps, 'setColumns'>> = ({
       proOptions={{ hideAttribution: true }}
     >
       {name && <ElementsSidebar name={name} mode={mode} />}
+      <ColumnSidebar
+        selectedSubcat={selectedSubcat}
+        setNodes={setNodes}
+        setEdges={setEdges}
+        mode={mode}
+        columns={columns || []}
+        setColumns={setColumns || undefined}
+      />
       <ZoomControls />
       <Background variant={bgVariant} />
     </ReactFlow>

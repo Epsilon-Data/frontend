@@ -204,7 +204,12 @@
           }
         },
         "step3": {
-          "title": "Mapping with nodes"
+          "title": "Mapping with nodes",
+          "toolbar": {
+            "title": "Columns",
+            "searchPlaceholder": "Search columns",
+            "noColumns": "No columns found"
+          }
         },
         "step4": {
           "title": "Set permissions"

@@ -5,34 +5,32 @@ import { useArchetypeFlow } from '@app/hooks/useArchetypeFlow';
 import { ArchetypeFlowProvider } from '@app/providers/ArchetypeFlowProvider';
 import React, { Dispatch, SetStateAction } from 'react';
 import ReactFlow, { Background, Edge, EdgeChange, Node, NodeChange } from 'reactflow';
-import { ColumnSidebar } from '../ColumnSidebar/ColumnSidebar';
+import { Anchor, ReactflowBridge } from '../ColumnToolbar/ReactflowBridge/ReactflowBridge';
 
 export interface ArchetypeProps {
   mode: FlowMode;
   name?: string;
-  columns?: string[];
-  setColumns?: React.Dispatch<React.SetStateAction<string[]>>;
   nodes: Node[];
   edges: Edge[];
   onNodesChange: (value: NodeChange[]) => void;
   onEdgesChange: (value: EdgeChange[]) => void;
   setNodes: Dispatch<SetStateAction<Node[]>>;
   setEdges: Dispatch<SetStateAction<Edge[]>>;
+  onAnchorChange?: (a: Anchor) => void;
 }
 
 export const ArchetypeFlow: React.FC<ArchetypeProps> = ({
   mode,
   name,
-  columns,
-  setColumns,
   nodes,
   edges,
   onNodesChange,
   onEdgesChange,
+  onAnchorChange,
   ...rest
 }) => {
   return (
-    <ArchetypeFlowProvider mode={mode} columns={columns} setColumns={setColumns}>
+    <ArchetypeFlowProvider mode={mode}>
       <InnerFlow
         mode={mode}
         name={name}
@@ -40,8 +38,7 @@ export const ArchetypeFlow: React.FC<ArchetypeProps> = ({
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        columns={columns}
-        setColumns={setColumns}
+        onAnchorChange={onAnchorChange}
         {...rest}
       />
     </ArchetypeFlowProvider>
@@ -55,10 +52,9 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
   edges,
   onNodesChange,
   onEdgesChange,
-  columns,
-  setColumns,
   setNodes,
   setEdges,
+  onAnchorChange,
   ...rest
 }) => {
   const {
@@ -72,9 +68,7 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
     setReactFlowInstance,
     options,
     bgVariant,
-  } = useArchetypeFlow({ nodes, edges, setNodes, setEdges, columns });
-
-  const selectedSubcat = [...nodes].reverse().find((n) => n.selected && n.type === 'subcategory') || null;
+  } = useArchetypeFlow({ nodes, edges, setNodes, setEdges });
 
   return (
     <ReactFlow
@@ -97,16 +91,9 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
       proOptions={{ hideAttribution: true }}
     >
       {name && <ElementsSidebar name={name} mode={mode} />}
-      <ColumnSidebar
-        selectedSubcat={selectedSubcat}
-        setNodes={setNodes}
-        setEdges={setEdges}
-        mode={mode}
-        columns={columns || []}
-        setColumns={setColumns || undefined}
-      />
       <ZoomControls />
       <Background variant={bgVariant} />
+      <ReactflowBridge onUpdate={(a) => onAnchorChange?.(a)} />
     </ReactFlow>
   );
 };

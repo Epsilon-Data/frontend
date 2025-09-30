@@ -1,6 +1,7 @@
 import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlow/ArchetypeFlow';
 import { ColumnToolbar } from '@app/components/reactflow-components/ColumnToolbar/ColumnToolbar';
 import { Anchor } from '@app/components/reactflow-components/ColumnToolbar/ReactflowBridge/ReactflowBridge';
+import { computeNextColumnPosition } from '@app/constants/reactflow/mappingHelpers';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Node, Edge, NodeChange, EdgeChange, addEdge } from 'reactflow';
 
@@ -50,6 +51,8 @@ export const ColumnMappingStep = ({
       const baseX = anchor.flowPos.x;
       const baseY = anchor.flowPos.y;
 
+      const { x, y } = computeNextColumnPosition(subcatId, nodes, edges, baseX, baseY);
+
       const colId =
         typeof crypto !== 'undefined' && 'randomUUID' in crypto
           ? crypto.randomUUID()
@@ -59,7 +62,7 @@ export const ColumnMappingStep = ({
         nds.concat({
           id: colId,
           type: 'column',
-          position: { x: baseX + 260, y: baseY },
+          position: { x, y },
           data: { label: colName },
         } as Node),
       );
@@ -70,7 +73,7 @@ export const ColumnMappingStep = ({
 
       setColumns((prev) => prev.filter((c) => c !== colName));
     },
-    [anchor, setNodes, setEdges, setColumns],
+    [anchor, nodes, edges, setNodes, setEdges, setColumns],
   );
 
   const addBackColumn = useCallback(

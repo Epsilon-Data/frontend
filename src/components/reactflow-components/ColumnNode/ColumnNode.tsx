@@ -7,8 +7,7 @@ export function ColumnNode({ data }: NodeProps<NodeLabelData>) {
   return (
     <S.ColumnNodeWrapper className="column-node">
       <S.ColumnDisplay>{data.label}</S.ColumnDisplay>
-      <S.ColumnHandle type="target" position={Position.Top} />
-      <S.ColumnHandle type="source" position={Position.Bottom} />
+      <S.ColumnHandle type="target" position={Position.Bottom} />
     </S.ColumnNodeWrapper>
   );
 }

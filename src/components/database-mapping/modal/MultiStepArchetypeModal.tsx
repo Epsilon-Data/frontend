@@ -30,7 +30,7 @@ export const MultiStepArchetypeModal = ({
   const [step1] = forms;
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [columns, setColumns] = useState<string[]>(['one', 'two', 'three']);
+  const [columns, setColumns] = useState<string[]>([]);
   const { t } = useTranslation();
 
   const nextStep = () => setModalStep((prev) => Math.min(prev + 1, 4));

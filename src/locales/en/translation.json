@@ -208,7 +208,9 @@
           "toolbar": {
             "title": "Columns",
             "searchPlaceholder": "Search columns",
-            "noColumns": "No columns found"
+            "noColumns": "No columns found",
+            "subcategoryMapped": "This subcategory is already mapped to a column",
+            "disabled": "Please select a subcategory node"
           }
         },
         "step4": {

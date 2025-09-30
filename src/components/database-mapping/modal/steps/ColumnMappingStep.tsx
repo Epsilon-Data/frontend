@@ -2,7 +2,8 @@ import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlo
 import { ColumnToolbar } from '@app/components/reactflow-components/ColumnToolbar/ColumnToolbar';
 import { Anchor } from '@app/components/reactflow-components/ColumnToolbar/ReactflowBridge/ReactflowBridge';
 import { computeNextColumnPosition } from '@app/constants/reactflow/mappingHelpers';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Node, Edge, NodeChange, EdgeChange, addEdge } from 'reactflow';
 
 type ColumnMappingStepProps = {
@@ -28,9 +29,27 @@ export const ColumnMappingStep = ({
   setColumns,
   name,
 }: ColumnMappingStepProps) => {
+  const { t } = useTranslation();
   const [anchor, setAnchor] = useState<Anchor>(null);
   const [toolbarOpen, setToolbarOpen] = useState(false);
   const lastSelectedIdRef = useRef<string | null>(null);
+
+  const connectedColumnCount = useMemo(() => {
+    if (!anchor) return 0;
+    const subcatId = anchor.selectedId;
+
+    return edges.reduce((count, e) => {
+      if (e.source !== subcatId && e.target !== subcatId) return count;
+      const otherId = e.source === subcatId ? e.target : e.source;
+      const other = nodes.find((n) => n.id === otherId);
+      return other?.type === 'column' ? count + 1 : count;
+    }, 0);
+  }, [anchor, edges, nodes]);
+
+  const toolbarDisabled = !!anchor && connectedColumnCount >= 1;
+  const disabledMessage = toolbarDisabled
+    ? t('project.createTemplate.form.step3.toolbar.subcategoryMapped')
+    : undefined;
 
   useEffect(() => {
     if (!anchor) {
@@ -46,7 +65,7 @@ export const ColumnMappingStep = ({
 
   const handlePick = useCallback(
     (colName: string) => {
-      if (!anchor) return;
+      if (!anchor || toolbarDisabled) return;
       const subcatId = anchor.selectedId;
       const baseX = anchor.flowPos.x;
       const baseY = anchor.flowPos.y;
@@ -73,7 +92,7 @@ export const ColumnMappingStep = ({
 
       setColumns((prev) => prev.filter((c) => c !== colName));
     },
-    [anchor, nodes, edges, setNodes, setEdges, setColumns],
+    [anchor, toolbarDisabled, nodes, edges, setNodes, setEdges, setColumns],
   );
 
   const addBackColumn = useCallback(
@@ -150,7 +169,8 @@ export const ColumnMappingStep = ({
           {anchor && toolbarOpen && (
             <ColumnToolbar
               columns={columns}
-              disabled={!anchor}
+              disabled={!anchor || toolbarDisabled}
+              disabledMessage={disabledMessage}
               style={{ left: anchor.left, top: anchor.top }}
               onPick={handlePick}
               onClose={handleToolbarClose}

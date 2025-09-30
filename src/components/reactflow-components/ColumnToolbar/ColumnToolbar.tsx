@@ -6,12 +6,20 @@ import { IoClose, IoSearch } from 'react-icons/io5';
 type ToolbarProps = {
   columns: string[];
   disabled?: boolean;
+  disabledMessage?: string;
   style?: React.CSSProperties;
   onPick: (name: string) => void;
   onClose: () => void;
 };
 
-export const ColumnToolbar: React.FC<ToolbarProps> = ({ columns, disabled, style, onPick, onClose }) => {
+export const ColumnToolbar: React.FC<ToolbarProps> = ({
+  columns,
+  disabled,
+  disabledMessage,
+  style,
+  onPick,
+  onClose,
+}) => {
   const { t } = useTranslation();
   const [q, setQ] = React.useState('');
   const filtered = React.useMemo(() => {
@@ -49,7 +57,9 @@ export const ColumnToolbar: React.FC<ToolbarProps> = ({ columns, disabled, style
 
       <div className="mt-2 max-h-64 overflow-y-auto">
         {disabled ? (
-          <div className="px-2 py-1 text-xs text-gray-500">Select a subcategory node</div>
+          <div className="px-2 py-1 text-xs text-gray-500">
+            {disabledMessage || t('project.createTemplate.form.step3.toolbar.disabled')}
+          </div>
         ) : filtered.length ? (
           filtered.map((name) => (
             <button

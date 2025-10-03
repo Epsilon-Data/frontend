@@ -5,55 +5,56 @@ import { useArchetypeFlow } from '@app/hooks/useArchetypeFlow';
 import { ArchetypeFlowProvider } from '@app/providers/ArchetypeFlowProvider';
 import React, { Dispatch, SetStateAction } from 'react';
 import ReactFlow, { Background, Edge, EdgeChange, Node, NodeChange } from 'reactflow';
+import { Anchor, ReactflowBridge } from '../ColumnToolbar/ReactflowBridge/ReactflowBridge';
 
 export interface ArchetypeProps {
   mode: FlowMode;
   name?: string;
-  columns?: string[];
-  setColumns?: React.Dispatch<React.SetStateAction<string[]>>;
   nodes: Node[];
   edges: Edge[];
   onNodesChange: (value: NodeChange[]) => void;
   onEdgesChange: (value: EdgeChange[]) => void;
   setNodes: Dispatch<SetStateAction<Node[]>>;
   setEdges: Dispatch<SetStateAction<Edge[]>>;
+  onAnchorChange?: (a: Anchor) => void;
 }
 
 export const ArchetypeFlow: React.FC<ArchetypeProps> = ({
   mode,
   name,
-  columns,
-  setColumns,
   nodes,
   edges,
   onNodesChange,
   onEdgesChange,
+  onAnchorChange,
   ...rest
 }) => {
   return (
-    <ArchetypeFlowProvider mode={mode} columns={columns} setColumns={setColumns}>
+    <ArchetypeFlowProvider mode={mode}>
       <InnerFlow
+        mode={mode}
         name={name}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        columns={columns}
+        onAnchorChange={onAnchorChange}
         {...rest}
       />
     </ArchetypeFlowProvider>
   );
 };
 
-const InnerFlow: React.FC<Omit<ArchetypeProps, 'mode' | 'setColumns'>> = ({
+const InnerFlow: React.FC<ArchetypeProps> = ({
+  mode,
   name,
   nodes,
   edges,
   onNodesChange,
   onEdgesChange,
-  columns,
   setNodes,
   setEdges,
+  onAnchorChange,
   ...rest
 }) => {
   const {
@@ -67,7 +68,7 @@ const InnerFlow: React.FC<Omit<ArchetypeProps, 'mode' | 'setColumns'>> = ({
     setReactFlowInstance,
     options,
     bgVariant,
-  } = useArchetypeFlow({ nodes, edges, setNodes: setNodes, setEdges: setEdges, columns });
+  } = useArchetypeFlow({ nodes, edges, setNodes, setEdges });
 
   return (
     <ReactFlow
@@ -89,9 +90,10 @@ const InnerFlow: React.FC<Omit<ArchetypeProps, 'mode' | 'setColumns'>> = ({
       fitViewOptions={options?.fitViewOptions}
       proOptions={{ hideAttribution: true }}
     >
-      {name && <ElementsSidebar name={name} />}
+      {name && <ElementsSidebar name={name} mode={mode} />}
       <ZoomControls />
       <Background variant={bgVariant} />
+      <ReactflowBridge onUpdate={(a) => onAnchorChange?.(a)} />
     </ReactFlow>
   );
 };

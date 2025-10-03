@@ -66,7 +66,7 @@
     "lint": "eslint \"*/**/*.{js,ts,tsx}\" --fix",
     "lint:styles": "stylelint '*/**/*.{js,ts,tsx}'",
     "prepare": "husky install",
-    "clean": "pnpm i && pnpm prune && pnpm store prune"
+    "clean": "rm -rf node_modules/.vite node_modules/.cache && pnpm i && pnpm prune && pnpm store prune"
   },
   "browserslist": [
     ">0.2%",

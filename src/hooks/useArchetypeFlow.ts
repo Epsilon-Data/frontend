@@ -16,7 +16,6 @@ export function useArchetypeFlow(params: {
   edges: Edge[];
   setNodes: Dispatch<SetStateAction<Node[]>>;
   setEdges: Dispatch<SetStateAction<Edge[]>>;
-  columns?: string[];
 }) {
   const { nodes, edges, setNodes, setEdges } = params;
   const ctx = useArchetypeFlowContext();

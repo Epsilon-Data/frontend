@@ -10,11 +10,9 @@ const EDGE_TYPES: EdgeTypes = { default: MapEdge };
 
 type Props = React.PropsWithChildren<{
   mode: FlowMode;
-  columns?: string[];
-  setColumns?: React.Dispatch<React.SetStateAction<string[]>>;
 }>;
 
-export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, columns, setColumns, children }) => {
+export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, children }) => {
   const contextValue =
     mode === 'mapping'
       ? {
@@ -42,8 +40,6 @@ export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, columns, setColum
               ),
             );
           },
-          columns,
-          setColumns,
           options: REACT_FLOW_OPTIONS,
           bgVariant: BG_VARIANT,
         }

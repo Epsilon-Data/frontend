@@ -1,43 +1,32 @@
-import type { Edge, Node } from 'reactflow';
+import { Node, Edge } from 'reactflow';
 
-export function createNodeColumnMapping(nodes: Node[], edges: Edge[]) {
-  const columnIds = nodes.filter((n) => n.type === 'column').map((n) => n.id);
-  const filtered = edges.filter((e) => columnIds.includes(e.source) || columnIds.includes(e.target));
-  if (!filtered.length) return null;
+const COLUMN_X_OFFSET = 260;
+const ROW_GAP = 64;
+const COL_GAP = 220;
+const MAX_ROWS = 6;
 
-  type MappingRow = { nodeId: string; nodeName: string; nodeType?: string; columns: string[] };
-  const result: MappingRow[] = [];
-  const isColumn = (n: Node) => n?.type === 'column';
-
-  filtered.forEach((e) => {
-    const s = nodes.find((n) => n.id === e.source)!;
-    const t = nodes.find((n) => n.id === e.target)!;
-
-    const nodeId = isColumn(s) ? t.id : s.id;
-    const nodeName = (isColumn(s) ? t.data : s.data) as { label?: string };
-    const columnName = (isColumn(s) ? s.data : t.data) as { label?: string };
-
-    const resolvedName = nodeName?.label ?? '';
-    const resolvedCol = columnName?.label ?? '';
-    if (!resolvedName || !resolvedCol) return;
-
-    const idx = result.findIndex((r) => r.nodeName === resolvedName);
-    if (idx === -1) {
-      result.push({ nodeId, nodeName: resolvedName, nodeType: isColumn(s) ? t.type : s.type, columns: [resolvedCol] });
-    } else {
-      result[idx].columns.push(resolvedCol);
-    }
-  });
-
-  return result;
-}
-
-export function transformColumns(
-  nodeMap: { nodeId: string; nodeName: string; nodeType?: string; columns: string[] }[],
-  tableMap: Record<string, string>,
+export function computeNextColumnPosition(
+  subcatId: string,
+  nodes: Node[],
+  edges: Edge[],
+  baseX: number,
+  baseY: number,
 ) {
-  return nodeMap.map((category) => ({
-    ...category,
-    columns: category.columns.map((c) => ({ name: c, table: tableMap[c] })),
-  }));
+  const connectedIds = edges
+    .filter((e) => e.source === subcatId || e.target === subcatId)
+    .map((e) => (e.source === subcatId ? e.target : e.source));
+
+  const connectedCols = connectedIds
+    .map((id) => nodes.find((n) => n.id === id))
+    .filter((n): n is Node => Boolean(n && n.type === 'column'));
+
+  const count = connectedCols.length;
+
+  const colIndex = Math.floor(count / MAX_ROWS);
+  const rowIndex = count % MAX_ROWS;
+
+  const x = baseX + COLUMN_X_OFFSET + colIndex * COL_GAP;
+  const y = baseY + rowIndex * ROW_GAP;
+
+  return { x, y };
 }

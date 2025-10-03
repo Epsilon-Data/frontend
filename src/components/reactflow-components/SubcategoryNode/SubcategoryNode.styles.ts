@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import { Handle } from 'reactflow';
 import { Input } from 'antd';
 
-export const SubcategoryNodeWrapper = styled.div`
+export const SubcategoryNodeWrapper = styled.div<{ $selected?: boolean }>`
   background: #33b1ff;
-  border: 1px solid #000000;
+  border: ${({ $selected }) => ($selected ? '1.5px solid #6E6E6E' : '2px solid transparent')};
   border-radius: 0.5rem;
   padding: 0.5rem;
   width: fit-content;
@@ -43,17 +43,11 @@ export const SubcategoryHandle = styled(Handle)`
 `;
 
 export const ColumnSelectMenu = styled.div`
-  position: absolute;
-  top: -10%;
-  left: 155%;
-  transform: translateX(-50%);
-  z-index: 1000;
   background: white;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   padding: 8px;
-  margin-top: 4px;
   width: 100%;
 `;
 

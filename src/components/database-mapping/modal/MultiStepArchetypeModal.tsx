@@ -91,6 +91,7 @@ export const MultiStepArchetypeModal = ({
             onEdgesChange={onEdgesChange}
             columns={columns}
             setColumns={setColumns}
+            name={step1.getFieldValue('name')}
           />
         );
       case 3:
@@ -137,7 +138,6 @@ export const MultiStepArchetypeModal = ({
         <ModalStepHeader
           setModalStep={setModalStep}
           modalStep={modalStep}
-          setIsModalOpen={setIsModalOpen}
           handleDraft={handleDraft}
           stepTitles={stepTitles}
         />

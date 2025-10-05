@@ -1,7 +1,7 @@
 import { getUserOwnedProjects, getUserSharedProjects, ProjectSummaryInfo } from '@app/api/projects.api';
 import { useCallback, useState } from 'react';
 
-export const useProjects = () => {
+export const useUserProjects = () => {
   const [ownedProjects, setOwnedProjects] = useState<ProjectSummaryInfo[]>([]);
   const [sharedProjects, setSharedProjects] = useState<ProjectSummaryInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(false);

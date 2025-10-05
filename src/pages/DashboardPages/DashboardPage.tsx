@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useAppSelector } from '@app/hooks/reduxHooks';
 
-import { useProjects } from '@app/hooks/useProjects';
+import { useUserProjects } from '@app/hooks/useUserProjects';
 import { DashboardHeader } from '@app/components/create-project/DashboardHeader';
 import { Projects } from '@app/components/create-project/Projects';
 import { MultiStepProjectModal } from '@app/components/create-project/modal/MultiStepProjectModal';
@@ -12,7 +12,7 @@ const DashboardPage: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
   const [layout, setLayout] = useState<'grid' | 'list'>('grid');
 
-  const { ownedProjects, sharedProjects, fetchProjects } = useProjects();
+  const { ownedProjects, sharedProjects, fetchProjects } = useUserProjects();
 
   useEffect(() => {
     const controller = new AbortController();

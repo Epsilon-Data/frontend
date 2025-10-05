@@ -137,7 +137,6 @@ export const MultiStepArchetypeModal = ({
         <ModalStepHeader
           setModalStep={setModalStep}
           modalStep={modalStep}
-          setIsModalOpen={setIsModalOpen}
           handleDraft={handleDraft}
           stepTitles={stepTitles}
         />

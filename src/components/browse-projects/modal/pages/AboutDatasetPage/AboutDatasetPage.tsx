@@ -17,6 +17,7 @@ type AboutDatasetPageProps = {
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
   onNodesChange: (value: NodeChange[]) => void;
   onEdgesChange: (value: EdgeChange[]) => void;
+  setModalStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const AboutDatasetPage = ({
@@ -27,6 +28,7 @@ export const AboutDatasetPage = ({
   setEdges,
   onNodesChange,
   onEdgesChange,
+  setModalStep,
 }: AboutDatasetPageProps) => {
   const { t } = useTranslation();
   return (
@@ -35,7 +37,7 @@ export const AboutDatasetPage = ({
         <Col span={14} className="pt-40 pr-16 pb-40 pl-24">
           <div className="text-2xl font-medium font-sans text-black">{project.name}</div>
           <div className="text-base font-light font-inter text-black">
-            <span className="font-normal">By:</span>
+            <span className="font-normal">By: </span>
             {`${project.university} - ${project.faculty}`}
           </div>
           <Button
@@ -43,6 +45,7 @@ export const AboutDatasetPage = ({
             type="primary"
             icon={<IoChevronForwardOutline />}
             iconPosition="end"
+            onClick={() => setModalStep((prev) => prev + 1)}
           >
             {t('browse.main.details.requestAccess')}
           </Button>

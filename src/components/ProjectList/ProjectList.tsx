@@ -75,7 +75,7 @@ export const ProjectList: React.FC<{
                   </Row>
                   <Row className="mt-2">
                     <div className="text-xs font-light font-inter text-black">
-                      <span className="font-normal">By:</span>
+                      <span className="font-normal">By: </span>
                       {`${project.university} - ${project.faculty}`}
                     </div>
                   </Row>

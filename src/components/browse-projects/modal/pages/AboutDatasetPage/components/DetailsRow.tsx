@@ -14,7 +14,7 @@ export const DetailsRow: React.FC<DetailsRowProps> = ({ title, content, titleWid
         <span>{title}</span>
         <span>:</span>
       </Col>
-      <Col span={contentWidth ?? 13} className="ml-6">
+      <Col span={contentWidth ?? 13} className="ml-6 font-light">
         {content}
       </Col>
     </Row>

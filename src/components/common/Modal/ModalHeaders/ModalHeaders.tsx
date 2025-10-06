@@ -75,7 +75,7 @@ export const ModalAccessHeader: React.FC<ModalAccessHeaderProps> = ({ setModalSt
   return (
     <div>
       <Button
-        className="flex bg-grey-3 text-blueDark border-none rounded-r-full top-12 w-12 h-8 z-1"
+        className="flex bg-grey-3 text-blueDark border-none rounded-r-full top-12 w-12 h-8 z-10"
         onClick={handleClick}
       >
         <IoChevronBack />

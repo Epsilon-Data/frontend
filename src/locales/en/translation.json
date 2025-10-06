@@ -212,171 +212,6 @@
       }
     }
   },
-  "databaseSources": {
-    "title": "Database Sources",
-    "id": "Source ID",
-    "projectName": "Project Name",
-    "dbName": "Database Name",
-    "date": "Connect Date",
-    "provider": "Provider",
-    "sourceList": "Source List",
-    "manage": "Manage",
-    "sidebarTitle": "Project {{id}}",
-    "describeDataset": {
-      "title": "Describe Dataset",
-      "projectTitle": "Describe Dataset Project {{id}}",
-      "listCols": {
-        "templateName": "Template Name",
-        "setupProgress": "Setup Progress"
-      },
-      "createTemplate": "Create New Template",
-      "createTemplateTitle": "Create Template Project {{id}}",
-      "step1": "Step 1",
-      "step2": "Step 2",
-      "step3": "Save",
-      "step1Description": "Describe your data structure.",
-      "step2Description": "Map column names.",
-      "step3Description": {
-        "loading": "Please wait...",
-        "success": "Saved!",
-        "fail": "Failed to save."
-      },
-      "instructions": {
-        "title": "Instructions",
-        "description": "Start defining the object of your data collection (e.g. person, event).",
-        "example": "Click here to view an example of a predefined archetype.",
-        "modal": "In this diagram, the 'Person' object is initially defined as it is the focal point (in pink) for data collection. Various attributes pertaining to the person, such as 'Demographic' data and 'Lifestyle' data, are mapped out as distinct categories. These categories can then contain more sub-categories such as ethnicity or directly connect to real variables from your database."
-      },
-      "elementSidebar": {
-        "description": "You can drag these elements to the pane on the right.",
-        "elements": "Elements",
-        "object": "Object",
-        "category": "Category",
-        "subcategory": "Sub-Category"
-      },
-      "columnSidebar": {
-        "search": "Search columns",
-        "checkAll": "Check all in current list"
-      },
-      "templateName": "Template Name: ",
-      "clear": "Clear",
-      "reset": "Reset",
-      "saveTemplate": "Save Archetype Template",
-      "saveMapping": "Save Mapping",
-      "viewTemplates": "View Data Structure Templates",
-      "backToStep1": "Back to Step 1 - Template Creation",
-      "backToStep2": "Back to Step 2 - Column Mapping",
-      "notify": {
-        "noObject": "Please add an object to your archetype.",
-        "onlyOneObject": "Only one object is allowed in your archetype.",
-        "specifyCategory": "Please specify at least one category for an object.",
-        "duplicateElements": "Duplicate element names found: {{names}}",
-        "emptyLabels": "Please label all the nodes before saving.",
-        "mapSingleColumn": "Please map at least a column to your archetype.",
-        "specifyTemplateName": "Please specify a template name."
-      },
-      "message": {
-        "columnsNotConnected": "Some columns are not connected to your template.",
-        "subcatCriteria": "Each sub-category should have at least two columns connected.",
-        "catCriteria": "Categories that does not contain any sub-categories should have at least one column connected.",
-        "mappingFailedDescription": "Please try mapping your columns again.",
-        "mappingSuccess": "Your dataset template and column mapping have been saved successfully.",
-        "mappingSuccessDescription": "You may now proceed to set access permissions or view all data structure templates.",
-        "saveFailed": "Your dataset template and column mapping failed to save.",
-        "saveFailedDescription": "Please try again later.",
-        "saving": "Saving your dataset description..."
-      }
-    },
-    "accessPermissions": {
-      "title": "Set Access Permissions",
-      "projectTitle": "Set Access Permissions Project {{id}}",
-      "listTitle": "Access Permissions Project {{id}} ",
-      "research": "Research/Education Institution",
-      "govOrg": "Government Organisations",
-      "others": "Others",
-      "clear": "Clear",
-      "save": "Set Permissions",
-      "permission": {
-        "title": "Permissions for {{node}}",
-        "message": "Set permissions on {{node}}",
-        "viewAggregated": "View aggregated results",
-        "performAnalysis": "Perform analysis"
-      },
-      "notify": {
-        "noPermissionsSet": "There are no permissions set. Please set at least 1 permission.",
-        "saveSuccess": "Permissions saved successfully for template: {{template}}.",
-        "saveFailed": "Your permissions failed to save. Please try again.",
-        "clearSuccess": "Permissions cleared successfully for selected groups.",
-        "noneCleared": "No groups selected. No permissions were cleared."
-      },
-      "templateModal": {
-        "instruction": "Select a template for setting access permissions: ",
-        "placeholder": "Select a template",
-        "useTemplate": "Use Template",
-        "noTemplatesTitle": "No templates found.",
-        "noTemplatesMessage": "Please create a template before setting permissions."
-      },
-      "permissionModal": {
-        "instruction": "Select other groups (or skip) for the same access permissions: ",
-        "copyFrom": "Copy permissions from: ",
-        "copyTo": "Copy permissions to: ",
-        "skip": "Skip",
-        "copyPermissions": "Copy Permissions"
-      },
-      "clearModal": {
-        "instruction": "Select groups to clear permissions for: ",
-        "clearPermissions": "Clear Permissions"
-      }
-    },
-    "metadata": {
-      "title": "Metadata",
-      "projectTitle": "Metadata Project {{id}}",
-      "dbSummary": "Database Summary",
-      "overallDesc": {
-        "title": "Overall Description",
-        "dateCreated": "Date Created",
-        "schemaCount": "Schema Count",
-        "tableCount": "Total Table Count",
-        "viewCount": "View Count",
-        "columnCount": "Total Column Count"
-      },
-      "erd": "Entity Relationship Diagram (ERD)",
-      "tableInfo": {
-        "title": "Table Information",
-        "selectPrompt": "Select a table",
-        "colCount": "Column Count",
-        "schema": "Table Schema",
-        "column": "Column",
-        "dataType": "Data Type",
-        "isNullable": "Is Nullable"
-      }
-    },
-    "otherSettings": {
-      "title": "Other Settings",
-      "cover": "Project Cover Photo",
-      "save": "Save",
-      "deleteSuccess": "Cover photo deleted successfully.",
-      "deleteFail": "Failed to delete cover photo. Please try again.",
-      "addTableau": "Add Tableau Visualisations",
-      "submitVis": "Submit Visualisations",
-      "submitSuccess": "Visualisations applied to project information.",
-      "submitFail": "Failed to save visualisations. Please try again.",
-      "urlInvalid": "Invalid Tableau URL.",
-      "visTitle": "Visualisation Title",
-      "visUrl": "Tableau URL",
-      "vis": "Visualisation",
-      "missingTitle": "Missing visualisation title.",
-      "missingUrl": "Missing Tableau URL.",
-      "upload": "Upload Cover Photo",
-      "uploadInfo": "Only JPG, JPEG and PNG files less than 2MB are allowed.",
-      "uploadSuccess": "Cover photo uploaded successfully.",
-      "uploadFail": "Failed to upload cover photo. Please try again.",
-      "syncDb": "Sync Datasource",
-      "update": "Update",
-      "syncSuccess": "Datasource synced successfully.",
-      "syncFail": "Failed to sync datasource. Please try again."
-    }
-  },
   "browse": {
     "title": "Browse Datasets",
     "main": {
@@ -427,63 +262,76 @@
         "dbPreview": "Database preview"
       }
     },
-    "info": {
-      "requestAccess": "Request Data Access",
-      "createdDate": "Created Date: ",
-      "aboutDataset": "About Dataset",
-      "description": "Description",
-      "sampleDescription": "Dataset description. Sample text here.",
-      "collectionDuration": "Collection Duration",
-      "tags": "Tags",
-      "visualisations": "Visualisations",
-      "datasetArchetype": "Dataset Archetype",
-      "noArchetype": "No archetype provided.",
-      "relatedProject": "Related Project",
-      "details": {
-        "title": "Details",
-        "altTitle": "Project Details"
-      }
-    },
-    "search": {
-      "sidebarTitle": "Current Search",
-      "results": "{{num}} matches found. Showing results from {{start}} to {{end}}.",
-      "term": "Searched Term: ",
-      "keywords": "Keywords: ",
-      "allDatasets": "Viewing all datasets.",
-      "selectAll": "Select all keywords"
-    },
-    "access": {
-      "title": "Data Access Request",
-      "submit": "Submit Request",
-      "submitSuccess": "Request submitted successfully.",
-      "submitFail": "Failed to submit request. Please try again.",
-      "dataset": {
-        "title": "Request Dataset",
-        "id": "Project ID",
-        "name": "Project Name",
-        "accessPurpose": "Access Purpose"
+    "createRequest": {
+      "form": {
+        "title": "Database access form",
+        "requestor": {
+          "title": "Requestor details",
+          "description": "This information is pulled from your profile. To make changes, edit your profile.",
+          "firstName": "Requestor's first name",
+          "lastName": "Requestor's last name",
+          "position": "Position/title",
+          "email": "Email address",
+          "orgName": "Organisation name"
+        },
+        "project": {
+          "title": "Project details",
+          "description": "Provide relevant information about your project.",
+          "name": {
+            "title": "Project name",
+            "placeholder":"e.g. Student Learning Analytics Study"
+          },
+          "duration": "Project duration",
+          "describe": {
+            "title": "Project description",
+            "placeholder": "Describe the purpose, methodology, and scope of your research project."
+          },
+          "ethics": {
+            "title": "Project approval ethics ID",
+            "placeholder": "e.g., HREC-2024-001234"
+          },
+          "objective": {
+            "title": "Project objective",
+            "placeholder": "What specific goals do you aim to achieve with this research?"
+          },
+          "outcome": {
+            "title": "Project outcome",
+            "placeholder": "What results or deliverables do you expect from this project?"
+          },
+          "members": {
+            "title": "Project team members",
+            "placeholder": "Enter team member's email addresses separated by commas (e.g., research@uni.edu, assistant@uni.edu)"
+          }
+        },
+        "submit": {
+          "success" : {
+          "title": "Your submission has been successfully submitted.",
+          "description": "The project owner will review your application."
+          },
+          "next": {
+            "title": "What happens next?",
+            "review":{
+              "title": "In Review",
+              "description": "Your application is being reviewed by the project owner."
+            },
+            "approved": {
+              "title": "Approved",
+              "description": "Once they accept, you will get permission to access the data."
+            },
+            "revision": {
+              "title": "Revision Required",
+              "description": "They may request additional information from you."
+            },
+            "rejected": {
+              "title": "Rejected",
+              "description": "If declined, you can reapply."
+            }
+          }
+        }
       },
-      "requestor": {
-        "title": "Requestor Details",
-        "name": "Requestor Name",
-        "email": "Email",
-        "orgName": "Organisation Name",
-        "position": "Position/Title"
-      },
-      "project": {
-        "title": "Project Details",
-        "name": "Project Name",
-        "duration": "Project Duration",
-        "background": "Project Background",
-        "objective": "Project Objective",
-        "hypotheses": "Project Hypotheses",
-        "outcome": "Project Outcome",
-        "members": "Project Team Members/Affiliations",
-        "addMembers": "Add Member/Affiliate"
-      },
-      "ethics": {
-        "title": "Ethics",
-        "id": "Ethics Approval ID"
+      "nextSteps": {
+        "viewRequests": "View my requests",
+        "return": "Return to Browser Hub"
       }
     }
   },

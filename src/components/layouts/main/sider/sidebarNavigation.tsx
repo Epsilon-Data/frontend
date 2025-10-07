@@ -2,6 +2,7 @@ import React from 'react';
 import { PiCirclesThreeBold } from 'react-icons/pi';
 import { TiPointOfInterest } from 'react-icons/ti';
 import { FaRegUser } from 'react-icons/fa6';
+import { RiLogoutCircleLine } from 'react-icons/ri';
 
 export interface SidebarNavigationItem {
   title: string;
@@ -40,6 +41,12 @@ const homeNavigation: SidebarNavigationItem[] = [
     key: 'profile',
     url: '/profile',
     icon: <FaRegUser size={17} />,
+  },
+  {
+    title: 'common.logout',
+    key: 'logout',
+    url: '/logout',
+    icon: <RiLogoutCircleLine size={17} />,
   },
 ];
 

@@ -5,7 +5,8 @@
     "no": "No",
     "back": "Back",
     "submit": "Submit",
-    "saveDraft": "Save draft"
+    "saveDraft": "Save draft",
+    "logout": "Logout"
   },
   "notifications": {
     "basic": "Basic notification",

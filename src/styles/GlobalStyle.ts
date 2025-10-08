@@ -136,54 +136,17 @@ export default createGlobalStyle`
     margin-right: 0.5rem;
   }
 
-  .role-select .ant-select-selector {
-    border: 1px solid #000000 !important;
+  .select-field .ant-select-selector {
+    border: 1px solid #E6E6E6 !important;
+    background-color: #F5F5F5 !important;
   }
 
-  .role-select .ant-select-arrow {
+  .select-field .ant-select-arrow {
     color: #000000;
   }
 
   .ant-layout-has-sider {
     margin-top: 3.5rem;
-  }
-
-  .modal-select {
-    .ant-select-selector {
-      border: 1px solid #000000 !important;
-    }
-
-    .ant-select-arrow {
-      color: var(--black);
-      margin-right: 0.2rem;
-    }
-  }
-
-  .tag-select {
-    .ant-select-selector {
-      padding-bottom: 0.25rem;
-      border: 1px solid #000000 !important;
-      background-color: #F5F5F5 !important;
-  
-      .ant-select-selection-overflow-item .ant-select-selection-item {
-        border-radius: 1rem;
-        background: #FFFFFF;
-        border: 1px solid #AEAEAE;
-        margin-top: 0.3rem;
-  
-        .ant-select-selection-item-content {
-          font-size: 0.75rem;
-          font-family: Inter, sans-serif;
-          color: #3B3B3B;
-          padding: 0 0.5rem;
-        }
-  
-        .ant-select-selection-item-remove {
-          padding-right: 0.5rem;
-          color: #3B3B3B;
-        }
-      }
-    }
   }
 
   .test-conn-btn {

@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import FormItem from 'antd/es/form/FormItem';
-import { Form, Select, SelectProps } from 'antd';
+import { Form, Select, SelectProps, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { InputLabel } from '../InputLabel/InputLabel';
+import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 
 const MAX_COUNT = 6;
 const norm = (s: string) => s.trim().toLowerCase();
@@ -30,6 +31,15 @@ export const ModalTagInput: React.FC<{
         form.setFields([{ name, errors: [t('fieldMessages.tags.duplicate')] }]);
       }
     }
+  };
+
+  const tagRender = (props: CustomTagProps) => {
+    const { label, closable } = props;
+    return (
+      <Tag className="rounded-full m-1 px-3 py-1 text-xs" closable={closable}>
+        {label}
+      </Tag>
+    );
   };
 
   return (
@@ -61,7 +71,8 @@ export const ModalTagInput: React.FC<{
           onSearch={setSearch}
           onInputKeyDown={onInputKeyDown}
           suffixIcon={null}
-          className="tag-select w-full"
+          tagRender={tagRender}
+          className="select-field w-full"
         />
       </FormItem>
       <div className="flex flex-between text-xs font-normal font-inter">

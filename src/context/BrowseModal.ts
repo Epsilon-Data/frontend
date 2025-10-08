@@ -10,6 +10,10 @@ type BrowseModalContextType = {
   showModal: (projectId: string) => void;
   form: FormInstance<unknown>;
   project: ProjectInfo;
-  isModalLoading: boolean;
+  validateMembers: (emails: string[]) => {
+    normalized: string[];
+    invalid: string[];
+    duplicates: string[];
+  };
 } | null;
 export const BrowseModalContext = createContext<BrowseModalContextType>(null);

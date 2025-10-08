@@ -33,6 +33,7 @@ export interface ConnectionInfo {
 
 export interface ProjectInfo {
   projectId?: string;
+  status?: 'CRAWLING' | 'ACTIVE' | 'ERROR' | 'MAPPED' | 'LINKED';
   customId?: string;
   ownerId: string;
   name: string;

@@ -259,7 +259,10 @@
             "dbNature": "Database nature"
           }
         },
-        "dbPreview": "Database preview"
+        "dbPreview": {
+          "title": "Database preview",
+          "noArchetype": "No archetype found for this database."
+        }
       }
     },
     "createRequest": {

@@ -97,13 +97,17 @@ export const AboutDatasetPage = ({
             </div>
           </>
         )}
-        <div className="text-xs font-medium font-inter text-blueDark mb-4">{t('browse.main.details.dbPreview')}</div>
+        <div className="text-xs font-medium font-inter text-blueDark mb-4">
+          {t('browse.main.details.dbPreview.title')}
+        </div>
         <div className="flex gap-6 mb-8">
           <ImageWithPreview src="https://images.unsplash.com/photo-1569521588854-9b461abc92ac?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
           <ImageWithPreview src="https://images.unsplash.com/photo-1553949345-eb786bb3f7ba?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
         </div>
-        <div className="text-xs font-medium font-inter text-blueDark mb-4">{t('browse.main.details.dbPreview')}</div>
-        {project ? (
+        <div className="text-xs font-medium font-inter text-blueDark mb-4">
+          {t('browse.main.details.dbPreview.title')}
+        </div>
+        {project.status == 'MAPPED' ? (
           <div className="h-[25rem] w-full bg-grey-4 rounded-lg">
             <ArchetypeFlow
               nodes={nodes}
@@ -116,7 +120,7 @@ export const AboutDatasetPage = ({
             />
           </div>
         ) : (
-          <div className="text-xs font-medium font-inter mb-4">{t('browse.info.noArchetype')}</div>
+          <div className="text-xs font-medium font-inter mb-4">{t('browse.main.details.dbPreview.noArchetype')}</div>
         )}
       </Row>
     </div>

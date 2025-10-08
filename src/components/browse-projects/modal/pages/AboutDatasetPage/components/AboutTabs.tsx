@@ -15,6 +15,7 @@ export const AboutTabs = ({ project }: AboutTabsProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
+  const members = JSON.parse(project.members).length > 0 ? JSON.parse(project.members) : null;
 
   useEffect(() => {
     if (descriptionRef.current) {
@@ -77,8 +78,8 @@ export const AboutTabs = ({ project }: AboutTabsProps) => {
           <DetailsRow
             title={t('browse.main.details.projectDetails.info.members')}
             content={
-              project.members
-                ? JSON.parse(project.members)
+              members
+                ? members
                     .map((member: { email: string; role: string }) => {
                       return `${member.email} (${member.role})`;
                     })

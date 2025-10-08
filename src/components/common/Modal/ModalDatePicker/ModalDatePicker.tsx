@@ -14,11 +14,12 @@ export const ModalDatePicker: React.FC<{
   className?: string;
   inputTitle: string;
   inputDescription?: string;
-}> = ({ startName, endName, className, inputTitle, inputDescription }) => {
+  labelLarge?: boolean;
+}> = ({ startName, endName, className, inputTitle, inputDescription, labelLarge = true }) => {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col mb-12">
-      <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} />
+      <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} large={labelLarge} />
       <div className="flex gap-2">
         <div className="flex-1">
           <p className="text-xs mb-1">Start</p>
@@ -41,7 +42,7 @@ export const ModalDatePicker: React.FC<{
             ]}
             validateTrigger={['onChange', 'onBlur']}
           >
-            <DatePicker className="w-full border border-black" />
+            <DatePicker className="w-full border border-grey-3 bg-grey-4" />
           </FormItem>
         </div>
         <div className="w-12 h-[0.1rem] bg-grey-2 my-9 mx-6" />
@@ -66,7 +67,7 @@ export const ModalDatePicker: React.FC<{
             ]}
             validateTrigger={['onChange', 'onBlur']}
           >
-            <DatePicker className="w-full border border-black" />
+            <DatePicker className="w-full border border-grey-3 bg-grey-4" />
           </FormItem>
         </div>
       </div>

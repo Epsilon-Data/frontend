@@ -34,7 +34,7 @@ export const ModalInput: React.FC<
     <div className="flex flex-col mb-12">
       <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} large={labelLarge} />
       <FormItem rules={rules} name={name} className={className}>
-        <Input {...props} suffix={suffix} disabled={disabled} className="border border-black bg-grey-4" />
+        <Input {...props} suffix={suffix} disabled={disabled} className="border border-grey-3 bg-grey-4" />
       </FormItem>
     </div>
   );

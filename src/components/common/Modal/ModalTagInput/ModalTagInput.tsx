@@ -34,9 +34,9 @@ export const ModalTagInput: React.FC<{
   };
 
   const tagRender = (props: CustomTagProps) => {
-    const { label, closable } = props;
+    const { label, closable, onClose } = props;
     return (
-      <Tag className="rounded-full m-1 px-3 py-1 text-xs" closable={closable}>
+      <Tag className="rounded-full m-1 px-3 py-1 text-xs" closable={closable} onClose={onClose}>
         {label}
       </Tag>
     );

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Typography } from 'antd';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
+import React from 'react';
 
 const { Text } = Typography;
 
@@ -44,18 +45,18 @@ export const SubmissionResultPage = () => {
           {showDetails && (
             <Row gutter={[16, 16]} className="mt-4">
               {requestStates.map((state, index) => (
-                <>
-                  <Col span={5} key={index}>
+                <React.Fragment key={index}>
+                  <Col span={5}>
                     <Tag className="rounded-xl" bordered color={state.color}>
                       {t(`browse.createRequest.form.submit.next.${state.key}.title`)}
                     </Tag>
                   </Col>
-                  <Col span={19} key={index}>
+                  <Col span={19}>
                     <Text className="font-light">
                       {t(`browse.createRequest.form.submit.next.${state.key}.description`)}
                     </Text>
                   </Col>
-                </>
+                </React.Fragment>
               ))}
             </Row>
           )}

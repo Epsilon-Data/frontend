@@ -9,6 +9,8 @@ import { RequestAccessPage } from './pages/RequestAccessPage';
 import { SubmissionResultPage } from './pages/SubmissionResultPage';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import { useState } from 'react';
+import { useAppSelector } from '@app/hooks/reduxHooks';
+import { createRequest } from '@app/api/analysisRequests.api';
 
 type MultiStepBrowseModalProps = React.ComponentProps<typeof Modal>;
 
@@ -16,13 +18,51 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
   const { t } = useTranslation();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [members, setMembers] = useState<{ email: string; role: string }[]>([]);
-  const { modalStep, setModalStep, setIsModalOpen, isModalOpen, form, project, isModalLoading } =
+  const [members, setMembers] = useState<string[]>([]);
+  const [isFormLoading, setFormLoading] = useState(false);
+  const { modalStep, setModalStep, setIsModalOpen, isModalOpen, form, project, validateMembers } =
     useBrowseModalContext();
+  const user = useAppSelector((state) => state.user.user);
 
-  const nextStep = async () => {
+  const createAnalysisRequest = async () => {
+    setFormLoading(true);
+    const { normalized, invalid, duplicates } = validateMembers(members);
+    if (invalid.length || duplicates.length) {
+      form.setFields([
+        {
+          name: 'projectMembers',
+          errors: [
+            invalid.length ? `Invalid email(s): ${invalid.join(', ')}` : '',
+            duplicates.length ? `Duplicate email(s): ${duplicates.join(', ')}` : '',
+          ].filter(Boolean),
+        },
+      ]);
+      form.scrollToField('projectMembers', { behavior: 'smooth', block: 'center' });
+      setFormLoading(false);
+      return;
+    }
+
+    const formData = {
+      requestorId: user?.id,
+      projectId: project.projectId || '',
+      requestorName: user?.firstName + ' ' + user?.lastName || '',
+      requestorEmail: user?.email.name || '',
+      requestorOrgName: '',
+      requestorPosition: '',
+      projectName: form.getFieldValue('projectName'),
+      projectStartDate: form.getFieldValue('projectStartDate'),
+      projectEndDate: form.getFieldValue('projectEndDate'),
+      projectDescription: form.getFieldValue('projectDescription'),
+      projectEthicsId: form.getFieldValue('projectEthicsId'),
+      projectObjective: form.getFieldValue('projectObjective'),
+      projectOutcome: form.getFieldValue('projectOutcome'),
+      projectMembers: JSON.stringify(normalized),
+    };
+
     try {
-      form.validateFields();
+      await form.validateFields();
+      console.log('Creating access request with data:', formData);
+      await createRequest(formData);
       setModalStep((prev) => prev + 1);
     } catch (err) {
       const error = err as ValidateErrorEntity;
@@ -32,6 +72,8 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
           block: 'center',
         });
       }
+    } finally {
+      setFormLoading(false);
     }
   };
 
@@ -68,10 +110,10 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
           <Button
             key="submit"
             type="primary"
-            onClick={nextStep}
+            onClick={createAnalysisRequest}
             icon={<IoChevronForwardOutline />}
             iconPosition="end"
-            loading={isModalLoading}
+            loading={isFormLoading}
             className="flex items-center w-60 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
           >
             {t('common.submit')}
@@ -82,19 +124,17 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
           <>
             <Button
               key="view-requests"
-              disabled={isModalLoading}
               icon={<IoChevronBackOutline />}
               className="flex items-center h-9 text-blueDark text-xs font-medium font-inter"
             >
               {t('browse.createRequest.nextSteps.viewRequests')}
             </Button>
             <Button
-              key="submit"
+              key="return"
               type="primary"
               onClick={() => setIsModalOpen(false)}
               icon={<IoChevronForwardOutline />}
               iconPosition="end"
-              loading={isModalLoading}
               className="flex items-center w-60 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
             >
               {t('browse.createRequest.nextSteps.return')}

@@ -6,25 +6,21 @@ import { DATE_FORMAT, ANALYSIS_REQUEST_API_URL } from '@app/constants/analysisRe
 import { httpClient, getCsrfHeader } from './http.api';
 
 export interface AnalysisRequest {
-  id: string;
-  customId?: string;
-  name: string;
-  requestor?: string;
+  requestId?: string;
+  projectId: string;
+  requestorId?: string;
   requestorName: string;
-  email: string;
-  orgName: string;
-  position: string;
+  requestorEmail: string;
+  requestorOrgName: string;
+  requestorPosition: string;
   projectName: string;
-  projectDuration: Date[];
-  projectBackground: string;
+  projectStartDate: Date;
+  projectEndDate: Date;
+  projectDescription: string;
   projectObjective: string;
-  projectHypotheses: string;
   projectOutcome: string;
-  projectMembers: string[];
-  ethicsId: string;
-  status?: number;
-  createdDate?: Date;
-  revisionInfo?: string;
+  projectMembers: string;
+  projectEthicsId: string;
 }
 
 export interface Tag {
@@ -127,12 +123,11 @@ export const reviseRequest = async (data: { requestId: string | undefined; revis
   return response.data;
 };
 
-export const createRequest = async (data: AnalysisRequest): Promise<AnalysisRequest> => {
+export const createRequest = async (data: AnalysisRequest): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(ANALYSIS_REQUEST_API_URL, data, {
+  await httpClient.post(ANALYSIS_REQUEST_API_URL, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-  return response.data;
 };
 
 export const approveRequest = async (data: { requestId: string | undefined; isApproved: boolean }): Promise<string> => {
@@ -149,7 +144,7 @@ export const approveRequest = async (data: { requestId: string | undefined; isAp
 
 export const editRequest = async (data: AnalysisRequest): Promise<AnalysisRequest> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.put(`${ANALYSIS_REQUEST_API_URL}/${data.id}`, data, {
+  const response = await httpClient.put(`${ANALYSIS_REQUEST_API_URL}/${data.requestId}`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;

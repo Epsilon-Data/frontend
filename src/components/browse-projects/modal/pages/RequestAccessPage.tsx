@@ -5,14 +5,15 @@ import { Form, FormInstance, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { DetailsRow } from './AboutDatasetPage/components/DetailsRow';
 import { InputLabel } from '@app/components/common/Modal/InputLabel/InputLabel';
-import { ModalFormList } from '@app/components/common/Modal/ModalFormList/ModalFormList';
 import { ProjectInfo } from '@app/api/projects.api';
+import { ModalDatePicker } from '@app/components/common/Modal/ModalDatePicker/ModalDatePicker';
+import { ModalEmailTag } from '@app/components/common/Modal/ModalEmailTag/ModalEmailTag';
 
 type RequestAccessPageProps = {
   project: ProjectInfo;
   form: FormInstance<unknown>;
-  members: { email: string; role: string }[];
-  setMembers: React.Dispatch<React.SetStateAction<{ email: string; role: string }[]>>;
+  members: string[];
+  setMembers: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 export const RequestAccessPage = ({ project, form, members, setMembers }: RequestAccessPageProps) => {
@@ -84,16 +85,22 @@ export const RequestAccessPage = ({ project, form, members, setMembers }: Reques
               className="mb-0"
               labelLarge={false}
             />
+            <ModalDatePicker
+              startName="projectStartDate"
+              endName="projectEndDate"
+              inputTitle={t('browse.createRequest.form.project.duration')}
+              labelLarge={false}
+            />
             <ModalInput
               placeholder={t('browse.createRequest.form.project.describe.placeholder')}
-              name="projectBackground"
+              name="projectDescription"
               inputTitle={t('browse.createRequest.form.project.describe.title')}
               className="mb-0"
               labelLarge={false}
             />
             <ModalInput
               placeholder={t('browse.createRequest.form.project.ethics.placeholder')}
-              name="ethicsId"
+              name="projectEthicsId"
               inputTitle={t('browse.createRequest.form.project.ethics.title')}
               className="mb-0"
               labelLarge={false}
@@ -112,13 +119,13 @@ export const RequestAccessPage = ({ project, form, members, setMembers }: Reques
               className="mb-0"
               labelLarge={false}
             />
-            <ModalFormList
+            <ModalEmailTag
               name="projectMembers"
               inputTitle={t('browse.createRequest.form.project.members.title')}
-              members={members}
-              form={form}
-              setMembers={setMembers}
-              inputProps={{ placeholder: t('browse.createRequest.form.project.members.placeholder') }}
+              selectProps={{ placeholder: t('browse.createRequest.form.project.members.placeholder') }}
+              value={members}
+              setValue={setMembers}
+              labelLarge={false}
             />
           </NumberedFormItem>
         </Form>

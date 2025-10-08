@@ -300,7 +300,7 @@
           },
           "members": {
             "title": "Project team members",
-            "placeholder": "Enter team member's email addresses separated by commas (e.g., research@uni.edu, assistant@uni.edu)"
+            "placeholder": "Enter team member's email addresses separated by commas (e.g., research@uni.edu)"
           }
         },
         "submit": {
@@ -355,7 +355,8 @@
     "tags": {
       "min": "Please enter at least {{min}} keywords",
       "instruction": "Separate each one with a comma",
-      "duplicate": "This keyword has already been added"
+      "duplicate": "This keyword has already been added",
+      "invalidEmail":"Invalid team member's email"
     }
   }
 }

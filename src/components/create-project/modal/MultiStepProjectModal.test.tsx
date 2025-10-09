@@ -4,11 +4,10 @@ import userEvent from '@testing-library/user-event';
 
 import { MultiStepProjectModal } from './MultiStepProjectModal';
 
-import { ProjectDetailsStepProps } from './steps/ProjectDetailsStep';
-
 import { DatabaseConnectionStepProps } from './steps/DatabaseConnectionStep';
 import { ModalStepHeaderProps } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { ButtonProps } from 'antd';
+import { AboutProjectStepProps } from './steps/AboutProjectStep';
 
 // Mock dependencies
 const mockSetModalStep = vi.fn();
@@ -78,19 +77,10 @@ vi.mock('@app/api/projects.api', () => ({
 }));
 
 // Mock step components
-vi.mock('./steps/ProjectNameStep', () => ({
-  ProjectNameStep: () => (
-    <div data-testid="project-name-step">
-      Project Name Step
-      <input data-testid="project-name" />
-    </div>
-  ),
-}));
-
-vi.mock('./steps/ProjectDetailsStep', () => ({
-  ProjectDetailsStep: ({ members, setMembers, dbKeywords, setDbKeywords }: ProjectDetailsStepProps) => (
-    <div data-testid="project-details-step">
-      Project Details Step
+vi.mock('./steps/AboutProjectStep', () => ({
+  AboutProjectStep: ({ members, setMembers, dbKeywords, setDbKeywords }: AboutProjectStepProps) => (
+    <div data-testid="about-project-step">
+      About Project Step
       <button
         data-testid="add-member"
         onClick={() => setMembers([...members, { email: 'test@example.com', role: 'researcher' }])}
@@ -124,15 +114,15 @@ vi.mock('./steps/ConfirmStep', () => ({
 }));
 
 vi.mock('@app/components/common/Modal/ModalHeaders/ModalHeaders', () => ({
-  ModalStepHeader: ({ modalStep, setIsModalOpen, handleDraft, stepTitles }: ModalStepHeaderProps) => (
+  ModalStepHeader: ({ modalStep, setModalStep, handleDraft, stepTitles }: ModalStepHeaderProps) => (
     <div data-testid="modal-step-header">
       <span data-testid="current-step">{modalStep}</span>
       <span data-testid="step-title">{stepTitles[modalStep]}</span>
       <button data-testid="draft-button" onClick={handleDraft}>
         Save Draft
       </button>
-      <button data-testid="close-button" onClick={() => setIsModalOpen(false)}>
-        Close
+      <button data-testid="go-to-next-step" onClick={() => setModalStep((prev) => prev + 1)}>
+        Go to Next Step
       </button>
     </div>
   ),
@@ -192,11 +182,11 @@ describe('MultiStepProjectModal', () => {
     expect(screen.getByTestId('modal-step-header')).toBeInTheDocument();
   });
 
-  it('renders ProjectNameStep on step 0', () => {
+  it('renders AboutProjectStep on step 0', () => {
     render(<MultiStepProjectModal {...defaultProps} />);
 
-    expect(screen.getByTestId('project-name-step')).toBeInTheDocument();
-    expect(screen.queryByTestId('project-details-step')).not.toBeInTheDocument();
+    expect(screen.getByTestId('about-project-step')).toBeInTheDocument();
+    expect(screen.queryByTestId('university-details-step')).not.toBeInTheDocument();
   });
 
   it('displays correct step title in header', () => {

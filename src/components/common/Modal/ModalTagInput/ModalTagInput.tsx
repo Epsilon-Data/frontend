@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { InputLabel } from '../InputLabel/InputLabel';
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 
-const MAX_COUNT = 6;
+const MAX_COUNT = 5;
 const norm = (s: string) => s.trim().toLowerCase();
 
 export const ModalTagInput: React.FC<{

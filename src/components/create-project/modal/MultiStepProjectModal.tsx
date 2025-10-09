@@ -28,6 +28,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
   const { t } = useTranslation();
   const [showMessage, setShowMessage] = useState(false);
   const [isConnected, setConnected] = useState(false);
+  const [dbUrl, setDbUrl] = useState('');
 
   const nextStep = async () => {
     try {
@@ -82,7 +83,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
         tempDbDetails: {
           name: step3.getFieldValue('dbName'),
           type: step3.getFieldValue('dbType'),
-          url: step3.getFieldValue('dbUrl'),
+          url: dbUrl,
           username: step3.getFieldValue('username'),
           password: step3.getFieldValue('password'),
         },
@@ -124,6 +125,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
             setShowMessage={setShowMessage}
             isConnected={isConnected}
             setConnected={setConnected}
+            setDbUrl={setDbUrl}
           />
         );
       case 3:

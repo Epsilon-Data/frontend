@@ -9,7 +9,7 @@ import { ProjectInfo } from '@app/api/projects.api';
 import { ModalDatePicker } from '@app/components/common/Modal/ModalDatePicker/ModalDatePicker';
 import { ModalEmailTag } from '@app/components/common/Modal/ModalEmailTag/ModalEmailTag';
 
-type RequestAccessPageProps = {
+export type RequestAccessPageProps = {
   project: ProjectInfo;
   form: FormInstance<unknown>;
   members: string[];

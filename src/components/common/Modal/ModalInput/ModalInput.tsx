@@ -14,8 +14,9 @@ export const ModalInput: React.FC<
     inputTitle: string;
     inputDescription?: string;
     inputRules?: RuleObject[];
+    labelLarge?: boolean;
   } & HtmlHTMLAttributes<HTMLInputElement>
-> = ({ name, suffix, disabled, className, inputTitle, inputDescription, inputRules, ...props }) => {
+> = ({ name, suffix, disabled, className, inputTitle, inputDescription, inputRules, labelLarge = true, ...props }) => {
   const { t } = useTranslation();
   const rules = [
     {
@@ -31,9 +32,9 @@ export const ModalInput: React.FC<
 
   return (
     <div className="flex flex-col mb-12">
-      <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} />
+      <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} large={labelLarge} />
       <FormItem rules={rules} name={name} className={className}>
-        <Input {...props} suffix={suffix} disabled={disabled} className="border border-black bg-grey-4" />
+        <Input {...props} suffix={suffix} disabled={disabled} className="border border-grey-3 bg-grey-4" />
       </FormItem>
     </div>
   );

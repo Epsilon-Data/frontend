@@ -39,7 +39,7 @@ export const TestConnectionGroup: React.FC<{
           <p className="mb-1 text-xs">{t('dashboard.createProject.form.step3.dbCred.username.title')}</p>
           <FormItem name="username" rules={inputRules}>
             <Input
-              className="border border-black bg-grey-4"
+              className="border border-grey-3 bg-grey-4"
               placeholder={t('dashboard.createProject.form.step3.dbCred.username.placeholder')}
             />
           </FormItem>
@@ -56,7 +56,7 @@ export const TestConnectionGroup: React.FC<{
             ]}
           >
             <Input.Password
-              className="border border-black bg-grey-4"
+              className="border border-grey-3 bg-grey-4"
               placeholder={t('dashboard.createProject.form.step3.dbCred.password.placeholder')}
             />
           </FormItem>
@@ -72,14 +72,14 @@ export const TestConnectionGroup: React.FC<{
                 &nbsp;&nbsp;
                 <FormItem name="dbUrl" className="flex-1" rules={inputRules}>
                   <Input
-                    className="w-full !border !border-black"
+                    className="w-full border-grey-3 bg-grey-4"
                     placeholder={t('dashboard.createProject.form.step3.dbCred.placeholder')}
                   />
                 </FormItem>
               </div>
             </Row>
           </Col>
-          <Col span={5} className="flex justify-end">
+          <Col span={5} className="flex">
             <Button className="test-conn-btn bg-black border-none text-white flex" loading={loading} onClick={onClick}>
               {t('dashboard.createProject.form.step3.testConnection.label')}
               <IoChevronForwardOutline />

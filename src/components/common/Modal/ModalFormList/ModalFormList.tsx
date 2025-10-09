@@ -54,14 +54,14 @@ export const ModalFormList: React.FC<{
         <Col span={17} className="flex-1">
           <p className="mb-0.3 text-xs">{t('dashboard.createProject.form.step1.members.emailAddress')}</p>
           <FormItem name="email" rules={emailRules}>
-            <Input {...inputProps} className="w-full border border-black bg-grey-4" />
+            <Input {...inputProps} className="w-full border border-grey-3 bg-grey-4" />
           </FormItem>
         </Col>
         <div className="h-2 bg-grey-2" />
         <Col span={6} className="flex-1 ml-1">
           <p className="mb-0.3 text-xs">{t('dashboard.createProject.form.step1.members.role')}</p>
           <FormItem name="role" initialValue="Collaborator">
-            <Select className="role-select w-full" suffixIcon={<FaChevronDown />} options={roles} />
+            <Select className="select-field w-full" suffixIcon={<FaChevronDown />} options={roles} />
           </FormItem>
         </Col>
         <Col>

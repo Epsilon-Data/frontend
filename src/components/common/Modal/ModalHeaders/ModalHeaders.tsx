@@ -11,9 +11,18 @@ export type ModalStepHeaderProps = {
   stepTitles: string[];
 };
 
-type ModalStepHeader = React.FC<ModalStepHeaderProps>;
+export type ModalAccessHeaderProps = {
+  setModalStep: React.Dispatch<React.SetStateAction<number>>;
+  modalStep: number;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-export const ModalStepHeader: ModalStepHeader = ({ setModalStep, modalStep, handleDraft, stepTitles }) => {
+export const ModalStepHeader: React.FC<ModalStepHeaderProps> = ({
+  setModalStep,
+  modalStep,
+  handleDraft,
+  stepTitles,
+}) => {
   const { t } = useTranslation();
 
   const goToStep = (step: number) => {
@@ -54,14 +63,20 @@ export const ModalStepHeader: ModalStepHeader = ({ setModalStep, modalStep, hand
   );
 };
 
-export const ModalAccessHeader: React.FC<{ setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>> }> = ({
-  setIsModalOpen,
-}) => {
+export const ModalAccessHeader: React.FC<ModalAccessHeaderProps> = ({ setModalStep, modalStep, setIsModalOpen }) => {
+  const handleClick = () => {
+    if (modalStep > 0) {
+      setModalStep((prev) => prev - 1);
+    } else {
+      setIsModalOpen(false);
+    }
+  };
+
   return (
     <div>
       <Button
-        className="flex bg-grey-3 text-blueDark border-none rounded-r-full top-12 w-12 h-8 z-1"
-        onClick={() => setIsModalOpen(false)}
+        className="flex bg-grey-3 text-blueDark border-none rounded-r-full top-12 w-12 h-8 z-10"
+        onClick={handleClick}
       >
         <IoChevronBack />
       </Button>

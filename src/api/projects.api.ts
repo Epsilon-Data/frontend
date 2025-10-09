@@ -1,6 +1,5 @@
 import { PROJECT_API_URL } from '@app/constants/projects';
 import { getCsrfHeader, httpClient } from './http.api';
-import { AccessDetails } from '@app/interfaces/interfaces';
 
 export interface Pagination {
   current: number;
@@ -34,6 +33,7 @@ export interface ConnectionInfo {
 
 export interface ProjectInfo {
   projectId?: string;
+  status?: 'CRAWLING' | 'ACTIVE' | 'ERROR' | 'MAPPED' | 'LINKED';
   customId?: string;
   ownerId: string;
   name: string;
@@ -80,6 +80,7 @@ export const getAllProjects = async (): Promise<ProjectSummaryInfo[]> => {
   const response = await httpClient.get(`${PROJECT_API_URL}/all`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
+
   return response.data;
 };
 
@@ -91,20 +92,16 @@ export const getProjectDetails = async (projectId: string | undefined): Promise<
 
   const memberData = JSON.stringify(response.data.members);
   response.data.members = memberData;
+
+  const dbData = JSON.parse(response.data.connection.tempDbDetails);
+  response.data.connection.tempDbDetails = dbData;
+
   return response.data;
 };
 
 export const getProjectSummary = async (projectId: string | undefined): Promise<ProjectSummaryInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${PROJECT_API_URL}/${projectId}/summary`, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-  return response.data;
-};
-
-export const requestAccess = async (data: AccessDetails): Promise<AccessDetails> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(PROJECT_API_URL, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;

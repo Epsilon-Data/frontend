@@ -2,9 +2,26 @@
 import { Priority } from '../constants/enums/priorities';
 import { RequestStatus } from '@app/constants/enums/requestStatus';
 import { format } from 'date-fns';
-import { DATE_FORMAT, ACCESS_REQUEST_API_URL } from '@app/constants/accessRequest';
+import { DATE_FORMAT, ANALYSIS_REQUEST_API_URL } from '@app/constants/analysisRequest';
 import { httpClient, getCsrfHeader } from './http.api';
-import { AccessDetails } from '@app/interfaces/interfaces';
+
+export interface AnalysisRequest {
+  requestId?: string;
+  projectId: string;
+  requestorId?: string;
+  requestorName: string;
+  requestorEmail: string;
+  requestorOrgName: string;
+  requestorPosition: string;
+  projectName: string;
+  projectStartDate: Date;
+  projectEndDate: Date;
+  projectDescription: string;
+  projectObjective: string;
+  projectOutcome: string;
+  projectMembers: string;
+  projectEthicsId: string;
+}
 
 export interface Tag {
   value: string;
@@ -33,9 +50,9 @@ export interface RequestTableData {
   pagination: Pagination;
 }
 
-export const getRequestDetails = async (requestId: string | undefined): Promise<AccessDetails> => {
+export const getRequestDetails = async (requestId: string | undefined): Promise<AnalysisRequest> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(`${ACCESS_REQUEST_API_URL}/${requestId}`, {
+  const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/${requestId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
@@ -45,7 +62,7 @@ export const getRequestTableData = async (
   pagination: Pagination,
 ): Promise<{ sent: RequestTableData; receive: RequestTableData }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(ACCESS_REQUEST_API_URL, {
+  const response = await httpClient.get(ANALYSIS_REQUEST_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
@@ -100,16 +117,23 @@ export const getRequestTableData = async (
 
 export const reviseRequest = async (data: { requestId: string | undefined; revisionInfo: string }): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.put(`${ACCESS_REQUEST_API_URL}/${data.requestId}/revision`, data, {
+  const response = await httpClient.put(`${ANALYSIS_REQUEST_API_URL}/${data.requestId}/revision`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
 };
 
+export const createRequest = async (data: AnalysisRequest): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  await httpClient.post(ANALYSIS_REQUEST_API_URL, data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+};
+
 export const approveRequest = async (data: { requestId: string | undefined; isApproved: boolean }): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.patch(
-    `${ACCESS_REQUEST_API_URL}/${data.requestId}`,
+    `${ANALYSIS_REQUEST_API_URL}/${data.requestId}`,
     { isApproved: data.isApproved },
     {
       headers: { [csrfHeaderName]: `${csrf}` },
@@ -118,17 +142,17 @@ export const approveRequest = async (data: { requestId: string | undefined; isAp
   return response.data;
 };
 
-export const editRequest = async (data: AccessDetails): Promise<AccessDetails> => {
+export const editRequest = async (data: AnalysisRequest): Promise<AnalysisRequest> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.put(`${ACCESS_REQUEST_API_URL}/${data.id}`, data, {
+  const response = await httpClient.put(`${ANALYSIS_REQUEST_API_URL}/${data.requestId}`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
 };
 
-export const deleteRequest = async (requestId: string | undefined): Promise<AccessDetails> => {
+export const deleteRequest = async (requestId: string | undefined): Promise<AnalysisRequest> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.delete(`${ACCESS_REQUEST_API_URL}/${requestId}`, {
+  const response = await httpClient.delete(`${ANALYSIS_REQUEST_API_URL}/${requestId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;

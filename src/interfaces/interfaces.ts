@@ -109,29 +109,6 @@ export interface TemplatePermissions {
   settings: RolePermissions[];
 }
 
-export interface AccessDetails {
-  id: string;
-  customId?: string;
-  name: string;
-  accessPurpose: string;
-  requestor?: string;
-  requestorName: string;
-  email: string;
-  orgName: string;
-  position: string;
-  projectName: string;
-  projectDuration: Date[];
-  projectBackground: string;
-  projectObjective: string;
-  projectHypotheses: string;
-  projectOutcome: string;
-  projectMembers: string[];
-  ethicsId: string;
-  status?: number;
-  createdDate?: Date;
-  revisionInfo?: string;
-}
-
 export interface DescriptiveAnalysis {
   id: string;
   variables: { name: string; type: string; table: string }[];

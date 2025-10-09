@@ -18,7 +18,7 @@ export const ModalSelect: React.FC<{
     <div className="flex flex-col mb-12">
       <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} />
       <FormItem name={name} className={className} initialValue={defaultValue ?? options?.[0]?.value}>
-        <Select className="modal-select" disabled={disabled} suffixIcon={<FaChevronDown />} options={options} />
+        <Select className="select-field" disabled={disabled} suffixIcon={<FaChevronDown />} options={options} />
       </FormItem>
     </div>
   );

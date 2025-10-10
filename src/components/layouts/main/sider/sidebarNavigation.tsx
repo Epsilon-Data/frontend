@@ -1,7 +1,6 @@
 import React from 'react';
 import { PiCirclesThreeBold } from 'react-icons/pi';
 import { TiPointOfInterest } from 'react-icons/ti';
-import { FaRegUser } from 'react-icons/fa6';
 import { RiLogoutCircleLine } from 'react-icons/ri';
 
 export interface SidebarNavigationItem {
@@ -28,20 +27,20 @@ const homeNavigation: SidebarNavigationItem[] = [
         key: 'browse',
         url: '/browse',
       },
-      {
-        title: 'dashboard.sidebar.browserHub.trackRequests',
-        key: 'track-requests',
-        url: '/track-requests',
-      },
+      // {
+      //   title: 'dashboard.sidebar.browserHub.trackRequests',
+      //   key: 'track-requests',
+      //   url: '/track-requests',
+      // },
     ],
     icon: <TiPointOfInterest size={17} />,
   },
-  {
-    title: 'dashboard.sidebar.profile',
-    key: 'profile',
-    url: '/profile',
-    icon: <FaRegUser size={17} />,
-  },
+  // {
+  //   title: 'dashboard.sidebar.profile',
+  //   key: 'profile',
+  //   url: '/profile',
+  //   icon: <FaRegUser size={17} />,
+  // },
   {
     title: 'common.logout',
     key: 'logout',
@@ -60,33 +59,33 @@ const projectNavigation: SidebarNavigationItem[] = [
         key: 'project/db-mapping',
         url: '/project/db-mapping',
       },
-      {
-        title: 'project.sidebar.projectDb.managePermissions',
-        key: 'project/manage-permissions',
-        url: '/project/manage-permissions',
-      },
-      {
-        title: 'project.sidebar.projectDb.metadata',
-        key: 'project/metadata',
-        url: '/project/metadata',
-      },
+      // {
+      //   title: 'project.sidebar.projectDb.managePermissions',
+      //   key: 'project/manage-permissions',
+      //   url: '/project/manage-permissions',
+      // },
+      // {
+      //   title: 'project.sidebar.projectDb.metadata',
+      //   key: 'project/metadata',
+      //   url: '/project/metadata',
+      // },
     ],
   },
-  {
-    title: 'project.sidebar.projectAccess',
-    key: 'project-access',
-    url: '/project/access',
-  },
-  {
-    title: 'project.sidebar.team',
-    key: 'team',
-    url: '/project/team',
-  },
-  {
-    title: 'project.sidebar.settings',
-    key: 'settings',
-    url: '/project/settings',
-  },
+  // {
+  //   title: 'project.sidebar.projectAccess',
+  //   key: 'project-access',
+  //   url: '/project/access',
+  // },
+  // {
+  //   title: 'project.sidebar.team',
+  //   key: 'team',
+  //   url: '/project/team',
+  // },
+  // {
+  //   title: 'project.sidebar.settings',
+  //   key: 'settings',
+  //   url: '/project/settings',
+  // },
 ];
 
 const sidebarNavigation: { [key: string]: SidebarNavigationItem[] } = {

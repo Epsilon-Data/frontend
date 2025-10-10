@@ -33,8 +33,7 @@ export const AboutProjectStep = ({ form, dbKeywords, setDbKeywords, members, set
         </NumberedFormItem>
         <NumberedFormItem number={2}>
           <ModalDatePicker
-            startName="startDate"
-            endName="endDate"
+            rangeName="duration"
             inputTitle={t('dashboard.createProject.form.step1.duration.title')}
             inputDescription={t('dashboard.createProject.form.step1.duration.description')}
           />

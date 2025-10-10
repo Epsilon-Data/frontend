@@ -86,8 +86,7 @@ export const RequestAccessPage = ({ project, form, members, setMembers }: Reques
               labelLarge={false}
             />
             <ModalDatePicker
-              startName="projectStartDate"
-              endName="projectEndDate"
+              rangeName="projectDuration"
               inputTitle={t('browse.createRequest.form.project.duration')}
               labelLarge={false}
             />

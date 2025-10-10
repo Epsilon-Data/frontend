@@ -84,7 +84,7 @@ export const DatabaseConnectionStep = ({
     let dbUrl = '';
 
     if (isDbUrl) {
-      dbUrl = form.getFieldsValue(['dbUrl']).dbUrl;
+      dbUrl = form.getFieldValue('dbUrl');
     } else {
       const { username, password, hostname, port, name } = form.getFieldsValue([
         'username',

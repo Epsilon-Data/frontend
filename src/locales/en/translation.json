@@ -367,9 +367,7 @@
       "email": "The input is not a valid email"
     },
     "datePicker": {
-      "required": "Please select a date",
-      "startBeforeEnd": "Start date must be before end date",
-      "endAfterStart": "End date must be after start date"
+      "required": "Please select a start date and end date"
     },
     "tags": {
       "min": "Please enter at least {{min}} keywords",

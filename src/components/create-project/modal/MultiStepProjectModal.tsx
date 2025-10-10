@@ -65,6 +65,8 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
   const handleCreate = async () => {
     setFormLoading(true);
 
+    const [startDate, endDate] = step1.getFieldValue('duration') || [];
+
     const formData = {
       ownerId: user?.id ?? '',
       name: step1.getFieldValue('name'),
@@ -73,8 +75,8 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       faculty: step2.getFieldValue('faculty'),
       ethicsId: step2.getFieldValue('ethicsId'),
       description: step1.getFieldValue('description'),
-      startDate: step1.getFieldValue('startDate'),
-      endDate: step1.getFieldValue('endDate'),
+      startDate: startDate?.toDate() || null,
+      endDate: endDate?.toDate() || null,
       members: JSON.stringify(members),
       participantsNum: step1.getFieldValue('participantsNum'),
       dbKeywords: dbKeywords,

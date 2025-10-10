@@ -42,6 +42,8 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
       return;
     }
 
+    const [startDate, endDate] = form.getFieldValue('projectDuration') || [];
+
     const formData = {
       requestorId: user?.id,
       projectId: project.projectId || '',
@@ -50,8 +52,8 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
       requestorOrgName: '',
       requestorPosition: '',
       projectName: form.getFieldValue('projectName'),
-      projectStartDate: form.getFieldValue('projectStartDate'),
-      projectEndDate: form.getFieldValue('projectEndDate'),
+      projectStartDate: startDate?.toDate() || null,
+      projectEndDate: endDate?.toDate() || null,
       projectDescription: form.getFieldValue('projectDescription'),
       projectEthicsId: form.getFieldValue('projectEthicsId'),
       projectObjective: form.getFieldValue('projectObjective'),

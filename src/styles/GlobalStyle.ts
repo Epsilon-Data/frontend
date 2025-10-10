@@ -234,10 +234,10 @@ export default createGlobalStyle`
     }
   }
 
-    .react-flow {
+  .react-flow {
     .react-flow__edge.temp {
-      stroke: #bbb;
-      stroke-dasharray: 5 5;
+        stroke: #bbb;
+        stroke-dasharray: 5 5;
     }
     .react-flow__nodes {
       .react-flow__node.selected {

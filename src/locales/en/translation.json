@@ -128,22 +128,30 @@
             "description": "This email will be used to notify the owner to request database credentials",
             "placeholder": "Enter database owner's email address"
           },
-          "dbUrl": {
-            "title": "Provide database connection URL",
-            "inputLabel": "URL link: ",
-            "description": "Enter your database URL and test the connection to ensure it's reachable"
-          },
-          "testConnection": {
-            "label": "Test connection",
-            "success": "Connection successful",
-            "failed": "Connection failed"
-          },
           "dbCred": {
+            "configuration": {
+              "title": "How would you like to configure your database connection?",
+              "dbUrl": "Database URL",
+              "manual": "Manual entry"
+            },
             "title": "Database credentials",
-            "description": "Provide your database username and password",
+            "description": "Enter database connection details manually — including username, password, host, port, and database name.",
             "placeholder": "Enter database URL",
-            "username": { "placeholder": "Username", "title": "Enter database username" },
-            "password": { "placeholder": "Password", "title": "Enter database password" }
+            "username": { "title": "Username", "placeholder": "Enter database username" },
+            "password": { "title": "Password", "placeholder": "Enter database password" },
+            "hostname": { "title": "Hostname", "placeholder": "Enter database hostname" },
+            "port": { "title": "Port", "placeholder": "Enter database port" },
+            "name": { "title": "Database Name", "placeholder": "Enter database name" },
+            "dbUrl": {
+              "title": "Provide database connection URL",
+              "inputLabel": "URL link: ",
+              "description": "Enter your database URL and test the connection to ensure it's reachable"
+            },
+            "testConnection": {
+              "label": "Test connection",
+              "success": "Connection successful",
+              "failed": "Connection failed"
+            }
           }
         },
         "step4": {

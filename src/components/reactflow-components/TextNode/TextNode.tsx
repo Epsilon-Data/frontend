@@ -1,18 +1,15 @@
-import { Position, NodeProps } from 'reactflow';
+import { Position, NodeProps } from '@xyflow/react';
 import * as S from './TextNode.styles';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { NodeData } from '@app/constants/reactflow/types';
+import { getLevelColor } from '@app/constants/reactflow/reactflowOptions';
 
-export interface TypedNodeProps extends NodeProps<NodeData> {
-  type: string;
-}
-
-export function TextNode({ data, type }: TypedNodeProps) {
+export function TextNode({ data }: NodeProps<NodeData>) {
   const [isEditing, setEditing] = useState(false);
 
   const { showSource, showTarget } = {
-    showSource: type === 'root' || type === 'object' || type === 'category',
-    showTarget: type === 'category' || type === 'subcategory',
+    showSource: true,
+    showTarget: data.level > 0,
   };
 
   const handleDoubleClick = () => {
@@ -23,23 +20,21 @@ export function TextNode({ data, type }: TypedNodeProps) {
     setEditing(false);
   };
 
-  const typeColor =
-    type === 'object' ? '#ff6666' : type === 'category' ? '#ff8833' : type === 'subcategory' ? '#33b1ff' : '#ffffff';
+  const levelColor = useMemo(() => getLevelColor(data.level), [data.level]);
 
   const handleChange = (e: { target: { value: string } }) => {
     data.label = e.target.value;
   };
 
   return (
-    <S.TextNodeWrapper style={{ background: typeColor }} className="text-node">
+    <S.TextNodeWrapper style={{ background: levelColor }} className="text-node">
       {isEditing ? (
         <S.TextNodeInput defaultValue={data.label} onChange={handleChange} onBlur={handleBlur} autoFocus />
       ) : (
         <S.TextDisplay onDoubleClick={handleDoubleClick}>{data.label}</S.TextDisplay>
       )}
-
-      {showSource && <S.TextHandle type="source" position={Position.Top} />}
-      {showTarget && <S.TextHandle type="target" position={Position.Bottom} />}
+      {showTarget && <S.TextHandle type="target" position={Position.Top} />}
+      {showSource && <S.TextHandle type="source" position={Position.Bottom} />}
     </S.TextNodeWrapper>
   );
 }

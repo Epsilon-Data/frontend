@@ -3,22 +3,9 @@ import { TextNode } from '@app/components/reactflow-components/TextNode/TextNode
 import { ColumnNode } from '@app/components/reactflow-components/ColumnNode/ColumnNode';
 import { SubcategoryNode } from '@app/components/reactflow-components/SubcategoryNode/SubcategoryNode';
 
-export const editableNodeTypes = {
-  root: TextNode,
-  object: TextNode,
-  category: TextNode,
-  subcategory: TextNode,
-};
-
-export const readonlyNodeTypes = {
-  object: DefaultNode,
-  category: DefaultNode,
-  subcategory: DefaultNode,
-};
-
-export const mappingNodeTypes = {
-  object: DefaultNode,
-  category: DefaultNode,
+export const nodeTypes = {
+  edit: TextNode,
+  read: DefaultNode,
   subcategory: SubcategoryNode,
   column: ColumnNode,
 };

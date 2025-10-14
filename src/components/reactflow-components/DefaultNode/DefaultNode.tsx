@@ -1,17 +1,14 @@
-import { NodeProps, Position } from 'reactflow';
+import { NodeProps, Position } from '@xyflow/react';
 import * as S from './DefaultNode.styles';
 import { NodeData } from '@app/constants/reactflow/types';
+import { getLevelColor } from '@app/constants/reactflow/reactflowOptions';
+import { useMemo } from 'react';
 
-interface ReadOnlyNodeProps extends NodeProps<NodeData> {
-  type: string;
-}
-
-export function DefaultNode({ data, type, id }: ReadOnlyNodeProps) {
-  const typeColor =
-    type === 'object' ? '#ff6666' : type === 'category' ? '#ff8833' : type === 'subcategory' ? '#33b1ff' : '#ffffff';
+export function DefaultNode({ data, id, type }: NodeProps<NodeData>) {
+  const levelColor = useMemo(() => getLevelColor(data.level), [data.level]);
 
   return (
-    <S.DefaultNodeWrapper style={{ background: typeColor }} className="default-node">
+    <S.DefaultNodeWrapper style={{ background: levelColor }} className="default-node">
       <S.TextDisplay id={id}>{data.label}</S.TextDisplay>
       {type == 'subcategory' ? null : <S.DefaultHandle type="source" position={Position.Top} />}
       <S.DefaultHandle type="target" position={Position.Bottom} />

@@ -54,7 +54,7 @@ export const ModalFormList: React.FC<{
         <Col span={17} className="flex-1">
           <p className="mb-0.3 text-xs">{t('dashboard.createProject.form.step1.members.emailAddress')}</p>
           <FormItem name="email" rules={emailRules}>
-            <Input {...inputProps} className="w-full border border-grey-3 bg-grey-4" />
+            <Input {...inputProps} className="w-full border border-grey-3 bg-grey-4 [&::placeholder]:text-grey-2" />
           </FormItem>
         </Col>
         <div className="h-2 bg-grey-2" />

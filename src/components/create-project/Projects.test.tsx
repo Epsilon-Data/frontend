@@ -78,7 +78,7 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => <BrowserRou
 
 describe('Projects Component', () => {
   const mockOwnedProjects = generateMockProjects(2);
-  const mockSharedProjects = generateMockProjects(2);
+  const mockAnalysisProjects = generateMockProjects(2);
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -88,18 +88,18 @@ describe('Projects Component', () => {
   it('renders succesfully when provided mock projects', () => {
     render(
       <TestWrapper>
-        <Projects ownedProjects={mockOwnedProjects} sharedProjects={mockSharedProjects} layout="grid" />
+        <Projects ownedProjects={mockOwnedProjects} analysisProjects={mockAnalysisProjects} layout="grid" />
       </TestWrapper>,
     );
 
     expect(screen.getByText('dashboard.main.personalProjects.title')).toBeInTheDocument();
-    expect(screen.getByText('dashboard.main.sharedProjects.title')).toBeInTheDocument();
+    expect(screen.getByText('dashboard.main.analysisProjects.title')).toBeInTheDocument();
   });
 
   it('displays personal projects section with correct title and description', () => {
     render(
       <TestWrapper>
-        <Projects ownedProjects={mockOwnedProjects} sharedProjects={mockSharedProjects} layout="grid" />
+        <Projects ownedProjects={mockOwnedProjects} analysisProjects={mockAnalysisProjects} layout="grid" />
       </TestWrapper>,
     );
 
@@ -110,18 +110,18 @@ describe('Projects Component', () => {
   it('displays shared projects section with correct title and description', () => {
     render(
       <TestWrapper>
-        <Projects ownedProjects={mockOwnedProjects} sharedProjects={mockSharedProjects} layout="grid" />
+        <Projects ownedProjects={mockOwnedProjects} analysisProjects={mockAnalysisProjects} layout="grid" />
       </TestWrapper>,
     );
 
-    expect(screen.getByText('dashboard.main.sharedProjects.title')).toBeInTheDocument();
-    expect(screen.getByText('dashboard.main.sharedProjects.description')).toBeInTheDocument();
+    expect(screen.getByText('dashboard.main.analysisProjects.title')).toBeInTheDocument();
+    expect(screen.getByText('dashboard.main.analysisProjects.description')).toBeInTheDocument();
   });
 
   it('applies correct CSS classes', () => {
     render(
       <TestWrapper>
-        <Projects ownedProjects={mockOwnedProjects} sharedProjects={mockSharedProjects} layout="grid" />
+        <Projects ownedProjects={mockOwnedProjects} analysisProjects={mockAnalysisProjects} layout="grid" />
       </TestWrapper>,
     );
 
@@ -130,7 +130,7 @@ describe('Projects Component', () => {
     expect(personalSection?.parentElement).toHaveClass('my-12');
 
     // Check shared projects section
-    const sharedSection = screen.getByText('dashboard.main.sharedProjects.title').closest('div');
+    const sharedSection = screen.getByText('dashboard.main.analysisProjects.title').closest('div');
     expect(sharedSection?.parentElement).toHaveClass('my-20');
 
     // Check title styling

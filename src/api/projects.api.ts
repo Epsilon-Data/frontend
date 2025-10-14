@@ -68,7 +68,7 @@ export const getUserOwnedProjects = async (signal?: AbortSignal): Promise<Projec
 };
 
 // get shared projects
-export const getUserSharedProjects = async (signal?: AbortSignal): Promise<ProjectSummaryInfo[]> => {
+export const getUserAnalysisProjects = async (signal?: AbortSignal): Promise<ProjectSummaryInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${PROJECT_API_URL}/share`, {
     headers: { [csrfHeaderName]: `${csrf}` },

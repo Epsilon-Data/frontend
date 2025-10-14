@@ -45,8 +45,8 @@
         "title": "Personal projects",
         "description": "View and manage all your personal projects in one place"
       },
-      "sharedProjects": {
-        "title": "Shared projects",
+      "analysisProjects": {
+        "title": "Analysis projects",
         "description": "View, use and analyse datasets"
       }
     },

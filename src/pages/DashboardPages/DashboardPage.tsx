@@ -12,7 +12,7 @@ const DashboardPage: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
   const [layout, setLayout] = useState<'grid' | 'list'>('grid');
   const { csrf, initialized } = useAppSelector((state) => state.auth);
-  const { ownedProjects, sharedProjects, fetchProjects } = useUserProjects();
+  const { ownedProjects, analysisProjects, fetchProjects } = useUserProjects();
 
   useEffect(() => {
     if (!(initialized && csrf)) return;
@@ -27,7 +27,7 @@ const DashboardPage: React.FC = () => {
         <DashboardHeader user={user} handleLayoutChange={setLayout} layout={layout} />
         <MultiStepProjectModal fetchProjects={fetchProjects} mask closable={false} width={'60%'} />
       </ProjectModalProvider>
-      <Projects sharedProjects={sharedProjects} ownedProjects={ownedProjects} layout={layout} />
+      <Projects analysisProjects={analysisProjects} ownedProjects={ownedProjects} layout={layout} />
     </div>
   );
 };

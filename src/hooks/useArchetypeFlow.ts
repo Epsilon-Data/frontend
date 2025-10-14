@@ -2,7 +2,6 @@
 import { Dispatch, SetStateAction, useCallback, useRef, useState, DragEvent } from 'react';
 import type { Connection, Edge, Node, ReactFlowInstance } from 'reactflow';
 import { addEdge } from 'reactflow';
-import { nodeDrag, nodeDragStop } from '@app/constants/reactflow/dragPreview';
 import { useArchetypeFlowContext } from '@app/hooks/useArchetypeFlowContext';
 import { useTranslation } from 'react-i18next';
 import { message } from 'antd';
@@ -20,7 +19,7 @@ export function useArchetypeFlow(params: {
 }) {
   const { nodes, edges, setNodes, setEdges } = params;
   const ctx = useArchetypeFlowContext();
-  const [rf, setRF] = useState<ReactFlowInstance | null>(null);
+  const [rf, setRf] = useState<ReactFlowInstance | null>(null);
   const nextId = useNodeIdCounter(nodes.length);
   const { t } = useTranslation();
   const ROOT_ID = 'root';
@@ -64,13 +63,6 @@ export function useArchetypeFlow(params: {
     [rf, setNodes, nextId, t],
   );
 
-  const onNodeDrag = useCallback((_: unknown, node: Node) => nodeDrag(_, node, nodes, setEdges), [nodes, setEdges]);
-
-  const onNodeDragStop = useCallback(
-    (_: unknown, node: Node) => nodeDragStop(_, node, nodes, edges, setEdges),
-    [nodes, edges, setEdges],
-  );
-
   const onNodesDelete = (deletedNodes: Node[]) => {
     const includesRoot = deletedNodes.some((n) => n.id === ROOT_ID);
     if (includesRoot) {
@@ -79,18 +71,40 @@ export function useArchetypeFlow(params: {
     }
   };
 
+  const onConnectEnd = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      if (rf) {
+        const id = nextId();
+        console.log(event);
+        const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
+        const newNode = {
+          id,
+          position: rf.screenToFlowPosition({
+            x: clientX,
+            y: clientY,
+          }),
+          data: { label: `Node ${id}` },
+          origin: [0.5, 0.0],
+        };
+
+        setNodes((nds) => nds.concat(newNode));
+        setEdges((eds) => eds.concat({ id, source: ROOT_ID, target: id }));
+      }
+    },
+    [nextId, rf, setEdges, setNodes],
+  );
+
   return {
     nodes,
     edges,
     nodeTypes: ctx.nodeTypes,
     edgeTypes: ctx.edgeTypes,
     onConnect,
+    onConnectEnd,
     onDrop,
     onDragOver,
-    onNodeDrag,
-    onNodeDragStop,
     onNodesDelete,
-    setReactFlowInstance: setRF,
+    setReactFlowInstance: setRf,
     options: ctx.options,
     bgVariant: ctx.bgVariant,
   };

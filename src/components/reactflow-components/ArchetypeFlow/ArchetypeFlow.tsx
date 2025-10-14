@@ -61,10 +61,9 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
     nodeTypes,
     edgeTypes,
     onConnect,
+    onConnectEnd,
     onDrop,
     onDragOver,
-    onNodeDrag,
-    onNodeDragStop,
     onNodesDelete,
     setReactFlowInstance,
     options,
@@ -78,10 +77,9 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
-      onNodeDrag={onNodeDrag}
-      onNodeDragStop={onNodeDragStop}
       onNodesDelete={onNodesDelete}
       onConnect={onConnect}
+      onConnectEnd={onConnectEnd}
       onInit={setReactFlowInstance}
       onDrop={onDrop}
       onDragOver={onDragOver}

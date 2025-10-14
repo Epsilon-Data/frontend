@@ -5,6 +5,7 @@ import { addEdge } from 'reactflow';
 import { nodeDrag, nodeDragStop } from '@app/constants/reactflow/dragPreview';
 import { useArchetypeFlowContext } from '@app/hooks/useArchetypeFlowContext';
 import { useTranslation } from 'react-i18next';
+import { message } from 'antd';
 
 export function useNodeIdCounter(initial = 0) {
   const ref = useRef(initial);
@@ -22,6 +23,7 @@ export function useArchetypeFlow(params: {
   const [rf, setRF] = useState<ReactFlowInstance | null>(null);
   const nextId = useNodeIdCounter(nodes.length);
   const { t } = useTranslation();
+  const ROOT_ID = 'root';
 
   const onConnect = useCallback(
     (p: Edge | Connection) => {
@@ -69,6 +71,14 @@ export function useArchetypeFlow(params: {
     [nodes, edges, setEdges],
   );
 
+  const onNodesDelete = (deletedNodes: Node[]) => {
+    const includesRoot = deletedNodes.some((n) => n.id === ROOT_ID);
+    if (includesRoot) {
+      setNodes((nds) => [...nds, nodes.find((n) => n.id === ROOT_ID)!]);
+      message.error(t('project.createTemplate.form.step2.error.deleteRoot'));
+    }
+  };
+
   return {
     nodes,
     edges,
@@ -79,6 +89,7 @@ export function useArchetypeFlow(params: {
     onDragOver,
     onNodeDrag,
     onNodeDragStop,
+    onNodesDelete,
     setReactFlowInstance: setRF,
     options: ctx.options,
     bgVariant: ctx.bgVariant,

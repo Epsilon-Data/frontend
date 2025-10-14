@@ -4,6 +4,7 @@ import { ColumnNode } from '@app/components/reactflow-components/ColumnNode/Colu
 import { SubcategoryNode } from '@app/components/reactflow-components/SubcategoryNode/SubcategoryNode';
 
 export const editableNodeTypes = {
+  root: TextNode,
   object: TextNode,
   category: TextNode,
   subcategory: TextNode,

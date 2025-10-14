@@ -2,6 +2,7 @@ import KeywordGuidance from '@app/components/common/Modal/KeywordGuidance/Keywor
 import { ModalDatePicker } from '@app/components/common/Modal/ModalDatePicker/ModalDatePicker';
 import { ModalFormList } from '@app/components/common/Modal/ModalFormList/ModalFormList';
 import { ModalInput } from '@app/components/common/Modal/ModalInput/ModalInput';
+import { ModalNumberInput } from '@app/components/common/Modal/ModalNumberInput/ModalNumberInput';
 import { ModalTagInput } from '@app/components/common/Modal/ModalTagInput/ModalTagInput';
 import { ModalTextArea } from '@app/components/common/Modal/ModalTextArea/ModalTextArea';
 import { NumberedFormItem } from '@app/components/common/Modal/NumberedFormItem/NumberedFormItem';
@@ -47,7 +48,7 @@ export const AboutProjectStep = ({ form, dbKeywords, setDbKeywords, members, set
           />
         </NumberedFormItem>
         <NumberedFormItem number={4}>
-          <ModalInput
+          <ModalNumberInput
             placeholder={t('dashboard.createProject.form.step1.participantsNum.placeholder')}
             name="participantsNum"
             inputTitle={t('dashboard.createProject.form.step1.participantsNum.title')}

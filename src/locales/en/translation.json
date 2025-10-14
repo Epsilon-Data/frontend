@@ -364,7 +364,8 @@
     "input": {
       "required": "This field is required",
       "whitespace": "This field cannot be empty",
-      "email": "The input is not a valid email"
+      "email": "The input is not a valid email",
+      "invalidNumber": "Please enter a whole number 0 or greater"
     },
     "datePicker": {
       "required": "Please select a start date and end date"

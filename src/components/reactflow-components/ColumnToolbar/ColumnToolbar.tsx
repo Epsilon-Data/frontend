@@ -58,7 +58,7 @@ export const ColumnToolbar: React.FC<ToolbarProps> = ({
       <div className="mt-2 max-h-64 overflow-y-auto">
         {disabled ? (
           <div className="px-2 py-1 text-xs text-gray-500">
-            {disabledMessage || t('project.createTemplate.form.step3.toolbar.disabled')}
+            {disabledMessage || t('project.createTemplate.form.step3.toolbar.error.disabled')}
           </div>
         ) : filtered.length ? (
           filtered.map((name) => (
@@ -74,7 +74,7 @@ export const ColumnToolbar: React.FC<ToolbarProps> = ({
           ))
         ) : (
           <div className="px-2 py-1 text-xs text-gray-500">
-            {t('project.createTemplate.form.step3.toolbar.noColumns')}
+            {t('project.createTemplate.form.step3.toolbar.error.noColumns')}
           </div>
         )}
       </div>

@@ -48,7 +48,7 @@ export const ColumnMappingStep = ({
 
   const toolbarDisabled = !!anchor && connectedColumnCount >= 1;
   const disabledMessage = toolbarDisabled
-    ? t('project.createTemplate.form.step3.toolbar.subcategoryMapped')
+    ? t('project.createTemplate.form.step3.toolbar.error.subcategoryMapped')
     : undefined;
 
   useEffect(() => {

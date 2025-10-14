@@ -206,17 +206,19 @@
           "title": "Database structure",
           "sidebar": {
             "blocks": "Mapping blocks: ",
-            "rules": "Connection rules",
-            "object": "Object",
-            "category": "Category",
-            "subcategory": "Sub-category"
+            "rules": "Connection rules"
+          },
+          "error": {
+            "deleteRoot": "The root node cannot be deleted"
           }
         },
         "step3": {
           "title": "Mapping with nodes",
           "toolbar": {
             "title": "Columns",
-            "searchPlaceholder": "Search columns",
+            "searchPlaceholder": "Search columns"
+          },
+          "error": {
             "noColumns": "No columns found",
             "subcategoryMapped": "This subcategory is already mapped to a column",
             "disabled": "Please select a subcategory node"

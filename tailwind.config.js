@@ -32,11 +32,6 @@ module.exports = {
           warning: '#FFF4E7',
           error: '#FFE2E2',
         },
-        element: {
-          objectBg: '#ff6666',
-          categoryBg: '#ff8833',
-          subcategoryBg: '#33b1ff',
-        },
         siderBg: '#ecf1ff',
         revisionCardBg: '#ffc8c9',
       },

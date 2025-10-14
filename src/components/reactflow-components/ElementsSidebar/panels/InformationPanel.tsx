@@ -6,10 +6,9 @@ import { TiWarningOutline } from 'react-icons/ti';
 
 type Props = {
   hidden: boolean;
-  onDragStart: (e: React.DragEvent<HTMLDivElement>, type: string) => void;
 };
 
-export const NodeDragPanel: React.FC<Props> = ({ hidden, onDragStart }) => {
+export const InformationPanel: React.FC<Props> = ({ hidden }) => {
   const { Text } = Typography;
   const { t } = useTranslation();
 
@@ -25,22 +24,6 @@ export const NodeDragPanel: React.FC<Props> = ({ hidden, onDragStart }) => {
       aria-hidden={hidden}
     >
       <div className="text-sm text-start mb-2">{t('project.createTemplate.form.step2.sidebar.blocks')}</div>
-
-      <div
-        className="dndnode object bg-element-categoryBg text-center mb-2 rounded-lg py-2 w-5/6 text-white"
-        onDragStart={(e) => onDragStart(e, 'category')}
-        draggable
-      >
-        {t('project.createTemplate.form.step2.sidebar.category')}
-      </div>
-
-      <div
-        className="dndnode object bg-element-subcategoryBg text-center mb-2 rounded-lg py-2 w-5/6 text-white"
-        onDragStart={(e) => onDragStart(e, 'subcategory')}
-        draggable
-      >
-        {t('project.createTemplate.form.step2.sidebar.subcategory')}
-      </div>
 
       <div className="text-sm text-start my-2">{t('project.createTemplate.form.step2.sidebar.rules')}</div>
       <div className="font-light text-gray text-xs pb-0">

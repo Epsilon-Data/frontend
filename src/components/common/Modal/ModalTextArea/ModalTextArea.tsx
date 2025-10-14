@@ -33,7 +33,12 @@ export const ModalTextArea: React.FC<
     <div className="flex flex-col mb-12">
       <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} />
       <FormItem rules={rules} name={name} className={className}>
-        <TextArea {...props} rows={4} disabled={disabled} className="bg-grey-4 border border-grey-3" />
+        <TextArea
+          {...props}
+          rows={4}
+          disabled={disabled}
+          className="bg-grey-4 border border-grey-3 [&::placeholder]:text-grey-2"
+        />
       </FormItem>
     </div>
   );

@@ -72,7 +72,7 @@ export const ModalTagInput: React.FC<{
           onInputKeyDown={onInputKeyDown}
           suffixIcon={null}
           tagRender={tagRender}
-          className="select-field w-full"
+          className="select-field w-full [&_.ant-select-selection-placeholder]:text-grey-2"
         />
       </FormItem>
       <div className="flex flex-between text-xs font-normal font-inter">

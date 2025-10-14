@@ -33,7 +33,10 @@ export const ModalDatePicker: React.FC<{
         rules={[{ required: true, message: t('fieldMessages.datePicker.required') }]}
         validateTrigger={['onChange', 'onBlur']}
       >
-        <DatePicker.RangePicker placement="bottomLeft" className="w-full border border-grey-3 bg-grey-4" />
+        <DatePicker.RangePicker
+          placement="bottomLeft"
+          className="w-full border border-grey-3 bg-grey-4 [&_.ant-picker-input>input::placeholder]:text-grey-2"
+        />
       </FormItem>
     </div>
   );

@@ -69,7 +69,7 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
                     &nbsp;&nbsp;
                     <FormItem name="dbUrl" className="flex-1" rules={inputRules}>
                       <Input
-                        className="w-full border-grey-3 bg-grey-4"
+                        className="w-full border-grey-3 bg-grey-4 [&::placeholder]:text-grey-2"
                         placeholder={t('dashboard.createProject.form.step3.dbCred.placeholder')}
                       />
                     </FormItem>
@@ -111,7 +111,7 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
               <p className="mb-1 text-xs">{t('dashboard.createProject.form.step3.dbCred.username.title')}</p>
               <FormItem name="username" rules={inputRules}>
                 <Input
-                  className="border border-grey-3 bg-grey-4"
+                  className="border border-grey-3 bg-grey-4 [&::placeholder]:text-grey-2"
                   placeholder={t('dashboard.createProject.form.step3.dbCred.username.placeholder')}
                 />
               </FormItem>
@@ -128,7 +128,7 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
                 ]}
               >
                 <Input.Password
-                  className="border border-grey-3 bg-grey-4"
+                  className="border border-grey-3 bg-grey-4 [&::placeholder]:text-grey-2"
                   placeholder={t('dashboard.createProject.form.step3.dbCred.password.placeholder')}
                 />
               </FormItem>
@@ -137,7 +137,7 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
               <p className="mb-1 text-xs">{t('dashboard.createProject.form.step3.dbCred.hostname.title')}</p>
               <FormItem name="hostname" rules={inputRules}>
                 <Input
-                  className="border border-grey-3 bg-grey-4"
+                  className="border border-grey-3 bg-grey-4 [&::placeholder]:text-grey-2"
                   placeholder={t('dashboard.createProject.form.step3.dbCred.hostname.placeholder')}
                 />
               </FormItem>
@@ -146,7 +146,7 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
               <p className="mb-1 text-xs">{t('dashboard.createProject.form.step3.dbCred.port.title')}</p>
               <FormItem name="port" rules={inputRules}>
                 <Input
-                  className="border border-grey-3 bg-grey-4"
+                  className="border border-grey-3 bg-grey-4 [&::placeholder]:text-grey-2"
                   placeholder={t('dashboard.createProject.form.step3.dbCred.port.placeholder')}
                 />
               </FormItem>
@@ -155,7 +155,7 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
               <p className="mb-1 text-xs">{t('dashboard.createProject.form.step3.dbCred.name.title')}</p>
               <FormItem name="name" rules={inputRules}>
                 <Input
-                  className="border border-grey-3 bg-grey-4"
+                  className="border border-grey-3 bg-grey-4 [&::placeholder]:text-grey-2"
                   placeholder={t('dashboard.createProject.form.step3.dbCred.name.placeholder')}
                 />
               </FormItem>

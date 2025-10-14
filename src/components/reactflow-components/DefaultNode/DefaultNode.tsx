@@ -1,8 +1,8 @@
 import { NodeProps, Position } from 'reactflow';
 import * as S from './DefaultNode.styles';
-import { NodeLabelData } from '@app/constants/reactflow/types';
+import { NodeData } from '@app/constants/reactflow/types';
 
-interface ReadOnlyNodeProps extends NodeProps<NodeLabelData> {
+interface ReadOnlyNodeProps extends NodeProps<NodeData> {
   type: string;
 }
 

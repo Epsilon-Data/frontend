@@ -17,7 +17,7 @@ type MultiStepArchetypeModalProps = {
   projectId: string;
 } & React.ComponentProps<typeof Modal>;
 
-const initialNodes = [{ id: 'node_0', position: { x: 320, y: 200 }, data: { label: 'Object' }, type: 'object' }];
+const initialNodes = [{ id: 'node_0', position: { x: 320, y: 200 }, data: { label: 'Main Entity', level: 0 } }];
 
 export const MultiStepArchetypeModal = ({
   fetchArchetypes,

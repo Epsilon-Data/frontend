@@ -1,8 +1,8 @@
 import { Position, NodeProps } from 'reactflow';
 import * as S from './SubcategoryNode.styles';
-import { NodeLabelData } from '@app/constants/reactflow/types';
+import { NodeData } from '@app/constants/reactflow/types';
 
-export function SubcategoryNode({ data, selected }: NodeProps<NodeLabelData>) {
+export function SubcategoryNode({ data, selected }: NodeProps<NodeData>) {
   return (
     <S.SubcategoryNodeWrapper className="subcategory-node" $selected={selected}>
       <S.SubcategoryDisplay>{data.label}</S.SubcategoryDisplay>

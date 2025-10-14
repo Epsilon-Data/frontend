@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Position, NodeProps } from 'reactflow';
 import * as S from './ColumnNode.styles';
-import { NodeLabelData } from '@app/constants/reactflow/types';
+import { NodeData } from '@app/constants/reactflow/types';
 
-export function ColumnNode({ data }: NodeProps<NodeLabelData>) {
+export function ColumnNode({ data }: NodeProps<NodeData>) {
   return (
     <S.ColumnNodeWrapper className="column-node">
       <S.ColumnDisplay>{data.label}</S.ColumnDisplay>

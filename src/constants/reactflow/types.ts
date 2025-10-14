@@ -1,10 +1,8 @@
-import type { Edge, Node } from 'reactflow';
+import type { Edge } from 'reactflow';
 
-export interface NodeLabelData {
+export interface NodeData {
   label: string;
+  level: number;
 }
 
 export type TempEdge = Edge & { className?: string };
-
-export type RFNode = Node<NodeLabelData>;
-export type RFEdge = Edge;

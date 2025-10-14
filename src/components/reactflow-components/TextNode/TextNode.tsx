@@ -1,9 +1,9 @@
 import { Position, NodeProps } from 'reactflow';
 import * as S from './TextNode.styles';
 import { useState } from 'react';
-import { NodeLabelData } from '@app/constants/reactflow/types';
+import { NodeData } from '@app/constants/reactflow/types';
 
-export interface TypedNodeProps extends NodeProps<NodeLabelData> {
+export interface TypedNodeProps extends NodeProps<NodeData> {
   type: string;
 }
 
@@ -11,7 +11,7 @@ export function TextNode({ data, type }: TypedNodeProps) {
   const [isEditing, setEditing] = useState(false);
 
   const { showSource, showTarget } = {
-    showSource: type === 'object' || type === 'category' || type === 'column',
+    showSource: type === 'root' || type === 'object' || type === 'category',
     showTarget: type === 'category' || type === 'subcategory',
   };
 

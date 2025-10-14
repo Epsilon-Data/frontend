@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Position, NodeProps } from 'reactflow';
+import { Position, NodeProps } from '@xyflow/react';
 import * as S from './ColumnNode.styles';
 import { NodeData } from '@app/constants/reactflow/types';
 

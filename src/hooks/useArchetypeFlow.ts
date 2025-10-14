@@ -1,7 +1,7 @@
 // hooks/useFlowEngine.ts
-import { Dispatch, SetStateAction, useCallback, useRef, useState, DragEvent } from 'react';
-import type { Connection, Edge, Node, ReactFlowInstance } from 'reactflow';
-import { addEdge } from 'reactflow';
+import { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
+import type { Connection, Edge, Node, ReactFlowInstance } from '@xyflow/react';
+import { addEdge } from '@xyflow/react';
 import { useArchetypeFlowContext } from '@app/hooks/useArchetypeFlowContext';
 import { useTranslation } from 'react-i18next';
 import { message } from 'antd';
@@ -39,30 +39,6 @@ export function useArchetypeFlow(params: {
     [nodes, edges, setEdges, ctx],
   );
 
-  const onDragOver = useCallback((e: DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  }, []);
-
-  const onDrop = useCallback(
-    (e: DragEvent) => {
-      e.preventDefault();
-      const type = e.dataTransfer.getData('application/reactflow');
-      if (typeof type !== 'string' || !rf) return;
-
-      const position = rf.screenToFlowPosition({ x: e.clientX, y: e.clientY });
-      setNodes((nds) =>
-        nds.concat({
-          id: nextId(),
-          type,
-          position,
-          data: { label: t(`project.createTemplate.form.step2.sidebar.${type}`) },
-        }),
-      );
-    },
-    [rf, setNodes, nextId, t],
-  );
-
   const onNodesDelete = (deletedNodes: Node[]) => {
     const includesRoot = deletedNodes.some((n) => n.id === ROOT_ID);
     if (includesRoot) {
@@ -76,6 +52,7 @@ export function useArchetypeFlow(params: {
       if (rf) {
         const id = nextId();
         console.log(event);
+
         const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
         const newNode = {
           id,
@@ -83,8 +60,8 @@ export function useArchetypeFlow(params: {
             x: clientX,
             y: clientY,
           }),
-          data: { label: `Node ${id}` },
-          origin: [0.5, 0.0],
+          data: { label: `Node ${id}`, level: 1 },
+          type: 'edit',
         };
 
         setNodes((nds) => nds.concat(newNode));
@@ -101,8 +78,6 @@ export function useArchetypeFlow(params: {
     edgeTypes: ctx.edgeTypes,
     onConnect,
     onConnectEnd,
-    onDrop,
-    onDragOver,
     onNodesDelete,
     setReactFlowInstance: setRf,
     options: ctx.options,

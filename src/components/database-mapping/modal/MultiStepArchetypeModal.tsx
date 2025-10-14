@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
-import { useEdgesState, useNodesState } from 'reactflow';
+import { Edge, Node, useEdgesState, useNodesState } from '@xyflow/react';
 import { createArchetype } from '@app/api/archetypes.api';
 import { ArchetypeNameStep } from './steps/ArchetypeNameStep';
 import { CreateTemplateStep } from './steps/CreateTemplateStep';
@@ -17,7 +17,9 @@ type MultiStepArchetypeModalProps = {
   projectId: string;
 } & React.ComponentProps<typeof Modal>;
 
-const initialNodes = [{ id: 'node_0', position: { x: 320, y: 200 }, data: { label: 'Main Entity', level: 0 } }];
+const initialNodes: Node[] = [
+  { id: 'node_0', position: { x: 320, y: 200 }, data: { label: 'Main Entity', level: 0 }, type: 'edit' },
+];
 
 export const MultiStepArchetypeModal = ({
   fetchArchetypes,
@@ -28,8 +30,8 @@ export const MultiStepArchetypeModal = ({
   const { modalStep, setModalStep, setIsModalOpen, isModalOpen, handleDraft, forms } = useArchetypeModalContext();
 
   const [step1] = forms;
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [columns, setColumns] = useState<string[]>([]);
   const { t } = useTranslation();
 

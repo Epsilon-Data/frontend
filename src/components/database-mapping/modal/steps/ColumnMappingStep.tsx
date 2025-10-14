@@ -4,7 +4,7 @@ import { Anchor } from '@app/components/reactflow-components/ColumnToolbar/React
 import { computeNextColumnPosition } from '@app/constants/reactflow/mappingHelpers';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Node, Edge, NodeChange, EdgeChange, addEdge } from 'reactflow';
+import { Node, Edge, NodeChange, EdgeChange, addEdge } from '@xyflow/react';
 
 type ColumnMappingStepProps = {
   nodes: Node[];

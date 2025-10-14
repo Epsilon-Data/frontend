@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ModalAccessHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { useBrowseModalContext } from '@app/hooks/useBrowseModalContext';
 import { AboutDatasetPage } from './pages/AboutDatasetPage/AboutDatasetPage';
-import { useNodesState, useEdgesState } from 'reactflow';
+import { useNodesState, useEdgesState } from '@xyflow/react';
 import { RequestAccessPage } from './pages/RequestAccessPage';
 import { SubmissionResultPage } from './pages/SubmissionResultPage';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';

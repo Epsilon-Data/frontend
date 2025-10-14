@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
-import type { BackgroundVariant, Edge, EdgeTypes, FitViewOptions, Node, NodeTypes } from 'reactflow';
+import type { BackgroundVariant, Edge, EdgeTypes, FitViewOptions, Node, NodeTypes } from '@xyflow/react';
 
 export type FlowMode = 'editable' | 'readonly' | 'mapping';
 

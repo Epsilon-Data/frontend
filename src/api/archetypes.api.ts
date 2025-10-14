@@ -1,6 +1,6 @@
 import { ARCHETYPE_API_URL } from '@app/constants/template';
 import { httpClient, getCsrfHeader } from './http.api';
-import { Node, Edge } from 'reactflow';
+import { Node, Edge } from '@xyflow/react';
 
 export interface Archetype {
   id: string;

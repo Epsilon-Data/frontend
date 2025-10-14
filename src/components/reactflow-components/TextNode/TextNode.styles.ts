@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Handle } from 'reactflow';
+import { Handle } from '@xyflow/react';
 
 export const TextNodeWrapper = styled.div`
   border-radius: 0.5rem;

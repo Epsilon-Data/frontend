@@ -1,4 +1,4 @@
-import { Position, NodeProps } from 'reactflow';
+import { Position, NodeProps } from '@xyflow/react';
 import * as S from './SubcategoryNode.styles';
 import { NodeData } from '@app/constants/reactflow/types';
 

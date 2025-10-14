@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { FaMinus, FaPlus } from 'react-icons/fa6';
-import { Panel, useReactFlow } from 'reactflow';
+import { Panel, useReactFlow } from '@xyflow/react';
 
 export const ZoomControls = () => {
   const { zoomIn, zoomOut, getZoom } = useReactFlow();

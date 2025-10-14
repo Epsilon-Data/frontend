@@ -1,4 +1,4 @@
-import { Handle } from 'reactflow';
+import { Handle } from '@xyflow/react';
 import styled from 'styled-components';
 
 export const DefaultNodeWrapper = styled.div`

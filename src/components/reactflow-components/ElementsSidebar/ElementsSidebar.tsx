@@ -1,4 +1,4 @@
-import { Panel } from 'reactflow';
+import { Panel } from '@xyflow/react';
 import { TemplateNamePanel } from './panels/TemplateNamePanel';
 import { UndoRedoPanel } from './panels/UndoRedoPanel';
 import { InformationPanel } from './panels/InformationPanel';

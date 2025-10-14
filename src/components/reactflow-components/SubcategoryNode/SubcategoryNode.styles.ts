@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Handle } from 'reactflow';
+import { Handle } from '@xyflow/react';
 import { Input } from 'antd';
 
 export const SubcategoryNodeWrapper = styled.div<{ $selected?: boolean }>`

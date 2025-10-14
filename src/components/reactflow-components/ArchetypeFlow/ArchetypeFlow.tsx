@@ -4,7 +4,7 @@ import { FlowMode } from '@app/context/ArchetypeFlow';
 import { useArchetypeFlow } from '@app/hooks/useArchetypeFlow';
 import { ArchetypeFlowProvider } from '@app/providers/ArchetypeFlowProvider';
 import React, { Dispatch, SetStateAction } from 'react';
-import ReactFlow, { Background, Edge, EdgeChange, Node, NodeChange } from 'reactflow';
+import { Background, Edge, EdgeChange, Node, NodeChange, ReactFlow } from '@xyflow/react';
 import { Anchor, ReactflowBridge } from '../ColumnToolbar/ReactflowBridge/ReactflowBridge';
 
 export interface ArchetypeProps {
@@ -57,18 +57,8 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
   onAnchorChange,
   ...rest
 }) => {
-  const {
-    nodeTypes,
-    edgeTypes,
-    onConnect,
-    onConnectEnd,
-    onDrop,
-    onDragOver,
-    onNodesDelete,
-    setReactFlowInstance,
-    options,
-    bgVariant,
-  } = useArchetypeFlow({ nodes, edges, setNodes, setEdges });
+  const { nodeTypes, edgeTypes, onConnect, onConnectEnd, onNodesDelete, setReactFlowInstance, options, bgVariant } =
+    useArchetypeFlow({ nodes, edges, setNodes, setEdges });
 
   return (
     <ReactFlow
@@ -81,8 +71,6 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
       onConnect={onConnect}
       onConnectEnd={onConnectEnd}
       onInit={setReactFlowInstance}
-      onDrop={onDrop}
-      onDragOver={onDragOver}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       nodeOrigin={options?.nodeOrigin as [number, number]}

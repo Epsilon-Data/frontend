@@ -1,4 +1,4 @@
-import { Node, Edge } from 'reactflow';
+import { Node, Edge } from '@xyflow/react';
 
 const COLUMN_X_OFFSET = 260;
 const ROW_GAP = 64;

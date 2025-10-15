@@ -3,7 +3,7 @@ import { TemplateNamePanel } from './panels/TemplateNamePanel';
 import { UndoRedoPanel } from './panels/UndoRedoPanel';
 import { InformationPanel } from './panels/InformationPanel';
 
-export const ElementsSidebar: React.FC<{ name: string; mode: string }> = ({ name, mode }) => {
+export const ArchetypeSidebar: React.FC<{ name: string; mode: string }> = ({ name, mode }) => {
   const isMapping = mode === 'mapping';
 
   return (

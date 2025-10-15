@@ -18,7 +18,13 @@ type MultiStepArchetypeModalProps = {
 } & React.ComponentProps<typeof Modal>;
 
 const initialNodes: Node[] = [
-  { id: 'node_0', position: { x: 320, y: 200 }, data: { label: 'Main Entity', level: 0 }, type: 'edit' },
+  {
+    id: 'node_0',
+    position: { x: 320, y: 200 },
+    data: { label: 'Main Entity', level: 0 },
+    type: 'root',
+    deletable: false,
+  },
 ];
 
 export const MultiStepArchetypeModal = ({

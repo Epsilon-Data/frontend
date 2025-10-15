@@ -1,4 +1,4 @@
-import { ElementsSidebar } from '@app/components/reactflow-components/ElementsSidebar/ElementsSidebar';
+import { ArchetypeSidebar } from '@app/components/reactflow-components/ArchetypeSidebar/ArchetypeSidebar';
 import { ZoomControls } from '@app/components/reactflow-components/ZoomControls/ZoomControls';
 import { FlowMode } from '@app/context/ArchetypeFlow';
 import { useArchetypeFlow } from '@app/hooks/useArchetypeFlow';
@@ -57,8 +57,12 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
   onAnchorChange,
   ...rest
 }) => {
-  const { nodeTypes, edgeTypes, onConnect, onConnectEnd, onNodesDelete, setReactFlowInstance, options, bgVariant } =
-    useArchetypeFlow({ nodes, edges, setNodes, setEdges });
+  const { nodeTypes, edgeTypes, onConnect, onConnectEnd, setReactFlowInstance, options, bgVariant } = useArchetypeFlow({
+    nodes,
+    edges,
+    setNodes,
+    setEdges,
+  });
 
   return (
     <ReactFlow
@@ -67,7 +71,6 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
-      onNodesDelete={onNodesDelete}
       onConnect={onConnect}
       onConnectEnd={onConnectEnd}
       onInit={setReactFlowInstance}
@@ -78,7 +81,7 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
       fitViewOptions={options?.fitViewOptions}
       proOptions={{ hideAttribution: true }}
     >
-      {name && <ElementsSidebar name={name} mode={mode} />}
+      {name && <ArchetypeSidebar name={name} mode={mode} />}
       <ZoomControls />
       <Background variant={bgVariant} />
       <ReactflowBridge onUpdate={(a) => onAnchorChange?.(a)} />

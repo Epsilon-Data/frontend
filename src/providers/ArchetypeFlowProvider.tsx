@@ -2,7 +2,6 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { ArchetypeFlowContext, FlowMode } from '@app/context/ArchetypeFlow';
 import { BG_VARIANT, REACT_FLOW_OPTIONS } from '@app/constants/reactflow/reactflowOptions';
 import { nodeTypes } from '@app/constants/reactflow/nodeTypes';
-import { isValidEdgeBase } from '@app/constants/reactflow/edgeRules';
 import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import type { Edge, EdgeTypes, Node } from '@xyflow/react';
 
@@ -19,7 +18,6 @@ export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, children }) => {
           mode,
           nodeTypes: nodeTypes,
           edgeTypes: EDGE_TYPES,
-          isValidEdge: isValidEdgeBase,
           onConnectPost: ({
             source,
             target,
@@ -47,7 +45,6 @@ export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, children }) => {
           mode,
           nodeTypes: nodeTypes,
           edgeTypes: EDGE_TYPES,
-          isValidEdge: isValidEdgeBase,
           options: REACT_FLOW_OPTIONS,
           bgVariant: BG_VARIANT,
         };

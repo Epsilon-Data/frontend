@@ -8,7 +8,6 @@ export type ArchetypeFlowContextType = {
   mode: FlowMode;
   nodeTypes: NodeTypes;
   edgeTypes: EdgeTypes;
-  isValidEdge: (source: Node, target: Node, edges: Edge[]) => boolean;
   onConnectPost?: (p: { source: Node; target: Node; setEdges: Dispatch<SetStateAction<Edge[]>> }) => void;
   options?: { fitView: boolean; fitViewOptions: FitViewOptions; nodeOrigin: number[] };
   bgVariant: BackgroundVariant;

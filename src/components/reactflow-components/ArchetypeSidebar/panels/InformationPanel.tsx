@@ -1,7 +1,6 @@
-import React from 'react';
 import { Typography } from 'antd';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { PiLightbulbBold } from 'react-icons/pi';
 import { TiWarningOutline } from 'react-icons/ti';
 
 type Props = {
@@ -11,6 +10,9 @@ type Props = {
 export const InformationPanel: React.FC<Props> = ({ hidden }) => {
   const { Text } = Typography;
   const { t } = useTranslation();
+  const instructions: string[] = t('project.createTemplate.form.step2.sidebar.instructions.content', {
+    returnObjects: true,
+  });
 
   return (
     <div
@@ -23,23 +25,16 @@ export const InformationPanel: React.FC<Props> = ({ hidden }) => {
       ].join(' ')}
       aria-hidden={hidden}
     >
-      <div className="text-sm text-start mb-2">{t('project.createTemplate.form.step2.sidebar.blocks')}</div>
-
-      <div className="text-sm text-start my-2">{t('project.createTemplate.form.step2.sidebar.rules')}</div>
-      <div className="font-light text-gray text-xs pb-0">
-        <Text className="font-bold text-blueDark mr-2">•</Text> Parent → Category
-      </div>
-      <div className="font-light text-gray text-xs">
-        <Text className="font-bold text-blueDark mr-2">•</Text> Category → Sub-category
-      </div>
+      <div className="text-sm text-start mb-2">{t('project.createTemplate.form.step2.sidebar.instructions.title')}</div>
+      {instructions.map((item, idx) => (
+        <div key={idx} className="font-light text-gray text-xs pb-2">
+          {item}
+        </div>
+      ))}
       <div className="flex items-center mt-2">
         <TiWarningOutline size={18} className="text-red-500 mr-2" />
-        <Text className="font-light text-gray text-xs">No direct parent → Sub-category</Text>
-      </div>
-      <div className="flex items-center mt-2">
-        <PiLightbulbBold size={30} className="text-[#1890ff] mr-2" />
         <Text className="font-light text-gray text-xs">
-          Press Alt/Option key while dragging to duplicate an element
+          {t('project.createTemplate.form.step2.sidebar.instructions.warning')}
         </Text>
       </div>
     </div>

@@ -205,8 +205,11 @@
         "step2": {
           "title": "Database structure",
           "sidebar": {
-            "blocks": "Mapping blocks: ",
-            "rules": "Connection rules"
+            "instructions": {
+              "title": "Instructions:",
+              "content": ["Create a hierarchical structure to represent your database schema.", "Starting with the root node, you can create a new node when you drop the connection line on the pane."],
+              "warning": "Note: The root node cannot be deleted."
+            }
           },
           "error": {
             "deleteRoot": "The root node cannot be deleted"

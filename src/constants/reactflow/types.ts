@@ -1,13 +1,8 @@
-import type { Edge, XYPosition } from '@xyflow/react';
+import type { Edge } from '@xyflow/react';
 
-export interface NodeData {
-  id: string;
-  position: XYPosition;
-  data: {
-    label: string;
-    level: number;
-  };
-  type: string;
-}
+export type NodeData = {
+  label: string;
+  level: number;
+};
 
 export type TempEdge = Edge & { className?: string };

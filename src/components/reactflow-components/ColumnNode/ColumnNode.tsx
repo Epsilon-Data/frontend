@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Position, NodeProps } from '@xyflow/react';
+import { Node, Position, NodeProps } from '@xyflow/react';
 import * as S from './ColumnNode.styles';
 import { NodeData } from '@app/constants/reactflow/types';
 
-export function ColumnNode({ data }: NodeProps<NodeData>) {
+type ColumnNodeProps = NodeProps<Node<NodeData, 'column'>>;
+
+export function ColumnNode({ data }: ColumnNodeProps) {
   return (
     <S.ColumnNodeWrapper className="column-node">
       <S.ColumnDisplay>{data.label}</S.ColumnDisplay>

@@ -1,13 +1,13 @@
+import { FlowMode } from '@app/context/ArchetypeFlow';
 import { Typography } from 'antd';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TiWarningOutline } from 'react-icons/ti';
 
 type Props = {
-  hidden: boolean;
+  mode: FlowMode;
 };
 
-export const InformationPanel: React.FC<Props> = ({ hidden }) => {
+export const InformationPanel: React.FC<Props> = ({ mode }) => {
   const { Text } = Typography;
   const { t } = useTranslation();
   const instructions: string[] = t('project.createTemplate.form.step2.sidebar.instructions.content', {
@@ -19,11 +19,8 @@ export const InformationPanel: React.FC<Props> = ({ hidden }) => {
       className={[
         'flex flex-col bg-white rounded-lg w-60 shadow-xl',
         'transition-all duration-500 ease-in-out will-change-transform origin-left',
-        hidden
-          ? 'mb-0 border-0 p-0 opacity-0 pointer-events-none'
-          : 'mb-4 border border-[#ddd] p-3 translate-x-0 opacity-100',
+        'mb-4 border border-[#ddd] p-3 translate-x-0 opacity-100',
       ].join(' ')}
-      aria-hidden={hidden}
     >
       <div className="text-sm text-start mb-2">{t('project.createTemplate.form.step2.sidebar.instructions.title')}</div>
       {instructions.map((item, idx) => (
@@ -31,11 +28,17 @@ export const InformationPanel: React.FC<Props> = ({ hidden }) => {
           {item}
         </div>
       ))}
-      <div className="flex items-center mt-2">
-        <TiWarningOutline size={18} className="text-red-500 mr-2" />
-        <Text className="font-light text-gray text-xs">
-          {t('project.createTemplate.form.step2.sidebar.instructions.warning')}
-        </Text>
+      <div className="flex flex-col items-start mt-2 bg-yellow-200 p-2 rounded">
+        {mode == 'editable' && (
+          <>
+            <Text className="font-bold text-gray text-xs">
+              {t('project.createTemplate.form.step2.sidebar.instructions.warning.title')}
+            </Text>
+            <Text className="font-light text-gray text-xs">
+              {t('project.createTemplate.form.step2.sidebar.instructions.warning.content')}
+            </Text>
+          </>
+        )}
       </div>
     </div>
   );

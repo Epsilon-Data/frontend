@@ -1,17 +1,13 @@
 import React from 'react';
 import { Button } from 'antd';
 import { LuRedo, LuUndo } from 'react-icons/lu';
-import { useDeferredHide } from '@app/hooks/useDeferredHide';
 
-export const UndoRedoPanel: React.FC<{ transition: boolean }> = ({ transition }) => {
-  const shouldTransition = useDeferredHide(transition);
-
+export const UndoRedoPanel: React.FC = () => {
   return (
     <div
       className={[
         'flex flex-col items-center bg-white border border-[#ddd] rounded-lg text-base w-10 shadow-xl',
         'transition-transform duration-500 ease-in-out',
-        shouldTransition ? '-translate-y-[400%]' : 'translate-y-0',
       ].join(' ')}
     >
       <Button className="border-none bg-transparent shadow-none" icon={<LuUndo />} />

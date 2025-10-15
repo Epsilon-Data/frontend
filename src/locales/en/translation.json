@@ -208,7 +208,7 @@
             "instructions": {
               "title": "Instructions:",
               "content": ["Create a hierarchical structure to represent your database schema.", "Starting with the root node, you can create a new node when you drop the connection line on the pane."],
-              "warning": "Note: The root node cannot be deleted."
+              "warning": { "title": "Note:", "content": "The main entity cannot be deleted."}
             }
           },
           "error": {

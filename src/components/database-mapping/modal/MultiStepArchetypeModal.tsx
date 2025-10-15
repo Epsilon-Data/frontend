@@ -41,7 +41,7 @@ export const MultiStepArchetypeModal = ({
   const [columns, setColumns] = useState<string[]>([]);
   const { t } = useTranslation();
 
-  const nextStep = () => setModalStep((prev) => Math.min(prev + 1, 4));
+  const nextStep = () => setModalStep((prev) => Math.min(prev + 1, 3));
 
   const stepTitles = [
     t('project.createTemplate.form.step1.title'),

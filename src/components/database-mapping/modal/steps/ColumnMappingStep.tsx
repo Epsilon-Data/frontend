@@ -152,8 +152,8 @@ export const ColumnMappingStep = ({
   }, [anchor, setNodes, setToolbarOpen]);
 
   return (
-    <div className="h-[33rem] py-4 px-8 overflow-y-auto flex flex-col justify-center bg-grey-4">
-      <div className="flex flex-col bg-white rounded-lg">
+    <div className="h-[33rem] overflow-y-auto flex flex-col justify-center bg-grey-4">
+      <div className="flex flex-col bg-white">
         <div className="relative isolate h-[33rem] w-full overflow-hidden">
           <ArchetypeFlow
             name={name}

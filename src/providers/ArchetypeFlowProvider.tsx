@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { ArchetypeFlowContext, FlowMode } from '@app/context/ArchetypeFlow';
 import { BG_VARIANT, REACT_FLOW_OPTIONS } from '@app/constants/reactflow/reactflowOptions';
-import { nodeTypes } from '@app/constants/reactflow/nodeTypes';
+import { nodeTypes } from '@app/constants/reactflow/types';
 import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
 import type { Edge, EdgeTypes, Node } from '@xyflow/react';
 

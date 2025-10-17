@@ -203,6 +203,10 @@ export default createGlobalStyle`
     .ant-modal-content {
       padding: 0;
       border-radius: 0.5rem;
+
+      .ant-modal-body .ant-modal-confirm-body-wrapper {
+        padding: 1rem;
+      }
     }
 
     .ant-modal-footer {

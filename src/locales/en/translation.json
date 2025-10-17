@@ -235,6 +235,10 @@
               "nodeMapped": "This leaf node is already mapped to a column",
               "disabled": "Please select a leaf node"
             }
+          },
+          "validation": {
+            "title": "Please map all leaf nodes to the respective columns",
+            "description": "Each leaf node must be mapped to a column in the database. Following are the leaf nodes that are not mapped:"
           }
         },
         "step4": {

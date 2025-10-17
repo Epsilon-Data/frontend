@@ -11,6 +11,7 @@ import { ArchetypeNameStep } from './steps/ArchetypeNameStep';
 import { CreateTemplateStep } from './steps/CreateTemplateStep';
 import { ColumnMappingStep } from './steps/ColumnMappingStep';
 import { SetPermissionsStep } from './steps/SetPermissionsStep';
+import { findUnmappedLeafs } from '@app/constants/reactflow/helpers';
 
 type MultiStepArchetypeModalProps = {
   fetchArchetypes: () => Promise<void>;
@@ -56,7 +57,28 @@ export const MultiStepArchetypeModal = ({
     return () => controller.abort();
   }, [fetchColumns, projectId]);
 
-  const nextStep = () => setModalStep((prev) => Math.min(prev + 1, 3));
+  const nextStep = () => {
+    if (modalStep === 2) {
+      const missing = findUnmappedLeafs(nodes, edges);
+      if (missing.length) {
+        Modal.warning({
+          title: t('project.createTemplate.form.step3.validation.title'),
+          content: (
+            <div>
+              <div className="mb-2">{t('project.createTemplate.form.step3.validation.description')}</div>
+              <ul style={{ paddingLeft: 18 }}>
+                {missing.map((name) => (
+                  <li key={name}>• {name}</li>
+                ))}
+              </ul>
+            </div>
+          ),
+        });
+        return;
+      }
+    }
+    setModalStep((prev) => Math.min(prev + 1, 3));
+  };
 
   const stepTitles = [
     t('project.createTemplate.form.step1.title'),
@@ -67,7 +89,6 @@ export const MultiStepArchetypeModal = ({
 
   const handleCreate = async () => {
     setFormLoading(true);
-    //TODO: archetype and columnMapping formatting confirmation
     const formData = {
       projectId: projectId,
       name: step1.getFieldValue('name'),

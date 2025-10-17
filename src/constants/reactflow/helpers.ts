@@ -5,6 +5,17 @@ const ROW_GAP = 64;
 const COL_GAP = 220;
 const MAX_ROWS = 6;
 
+export type RowType = 'category' | 'leaf';
+
+export type TableRow = {
+  key: string;
+  label: string;
+  kind: RowType;
+  parentId?: string;
+  topCategoryId?: string;
+  children?: TableRow[];
+};
+
 export function computeNextColumnPosition(
   subcatId: string,
   nodes: Node[],
@@ -57,4 +68,52 @@ export function findUnmappedLeafs(nodes: Node[], edges: Edge[]) {
   });
 
   return missing;
+}
+
+export function buildAdjacency(edges: Edge[]) {
+  const out = new Map<string, string[]>();
+  const inMap = new Map<string, string[]>();
+  for (const e of edges) {
+    (out.get(e.source) ?? out.set(e.source, []).get(e.source)!).push(e.target);
+    (inMap.get(e.target) ?? inMap.set(e.target, []).get(e.target)!).push(e.source);
+  }
+  return { out, inMap };
+}
+
+export function graphToTableRows(nodes: Node[], edges: Edge[]): TableRow[] {
+  const byId = new Map(nodes.map((n) => [n.id, n]));
+  const { out, inMap } = buildAdjacency(edges);
+  const childrenOf = (id: string) => out.get(id) ?? [];
+  const labelOf = (id: string) => String((byId.get(id)?.data as { label: string })?.label ?? id);
+
+  const rootIds = nodes.filter((n) => n.type === 'root').map((n) => n.id);
+  const catUnderRoot = new Set<string>();
+  for (const r of rootIds) for (const c of childrenOf(r)) if (byId.get(c)?.type === 'category') catUnderRoot.add(c);
+
+  const categories = nodes.filter((n) => n.type === 'category');
+  const topCats = catUnderRoot.size
+    ? [...catUnderRoot]
+    : categories.filter((n) => !(inMap.get(n.id) ?? []).some((p) => byId.get(p)?.type === 'category')).map((n) => n.id);
+
+  const isLeafCategory = (catId: string) => childrenOf(catId).some((cid) => byId.get(cid)?.type === 'column');
+
+  const buildCategory = (id: string, topId: string, parentId?: string): TableRow => {
+    const subcats = childrenOf(id)
+      .map((cid) => byId.get(cid))
+      .filter((n) => n && n.type === 'category') as Node[];
+
+    const children = subcats.map((n) => buildCategory(n.id, topId, id)).sort((a, b) => a.label.localeCompare(b.label));
+
+    return {
+      key: id,
+      label: labelOf(id),
+      kind: isLeafCategory(id) ? 'leaf' : 'category',
+      parentId,
+      topCategoryId: topId,
+      children: children.length ? children : undefined,
+    };
+  };
+
+  const rows = topCats.map((tc) => buildCategory(tc, tc)).sort((a, b) => a.label.localeCompare(b.label));
+  return rows;
 }

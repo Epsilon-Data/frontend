@@ -155,7 +155,7 @@ export const MultiStepArchetypeModal = ({
           />
         );
       case 3:
-        return <SetPermissionsStep />;
+        return <SetPermissionsStep nodes={nodes} edges={edges} />;
       default:
         return null;
     }

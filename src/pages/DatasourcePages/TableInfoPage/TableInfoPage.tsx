@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import * as S from './TableInfoPage.styles';
-import { ColumnTableRow, DatabaseTableInfo, getDbTableInfo } from '@app/api/datasources.api';
+import { ColumnTableRow, DatabaseTableInfo, getDbTableInfo } from '@app/api/database.api';
 import { useParams } from 'react-router-dom';
 import { useMounted } from '@app/hooks/useMounted';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';

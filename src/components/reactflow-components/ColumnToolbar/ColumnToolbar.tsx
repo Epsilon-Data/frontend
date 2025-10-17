@@ -1,14 +1,15 @@
+import { ColumnInfo } from '@app/api/database.api';
 import { Input } from 'antd';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { IoClose, IoSearch } from 'react-icons/io5';
 
 type ToolbarProps = {
-  columns: string[];
+  columns: ColumnInfo[];
   disabled?: boolean;
   disabledMessage?: string;
   style?: React.CSSProperties;
-  onPick: (name: string) => void;
+  onPick: (col: ColumnInfo) => void;
   onClose: () => void;
 };
 
@@ -24,7 +25,7 @@ export const ColumnToolbar: React.FC<ToolbarProps> = ({
   const [q, setQ] = React.useState('');
   const filtered = React.useMemo(() => {
     const s = q.trim().toLowerCase();
-    return s ? columns.filter((c) => c.toLowerCase().includes(s)) : columns;
+    return s ? columns.filter((c) => c.name.toLowerCase().includes(s)) : columns;
   }, [columns, q]);
 
   return (
@@ -61,14 +62,15 @@ export const ColumnToolbar: React.FC<ToolbarProps> = ({
             {disabledMessage || t('project.createTemplate.form.step3.toolbar.error.disabled')}
           </div>
         ) : filtered.length ? (
-          filtered.map((name) => (
+          filtered.map((col) => (
             <button
-              key={name}
-              onClick={() => onPick(name)}
+              key={col.id}
+              onClick={() => onPick(col)}
               className="mt-2 w-full text-left rounded-md border border-sky-300 hover:bg-sky-50"
             >
-              <div className="mx-3 px-2 py-1 flex items-center justify-between border-x border-sky-300">
-                <span className="block py-1 text-xs">{name}</span>
+              <div className="mx-3 px-2 py-1 flex flex-col items-start justify-between border-x border-sky-300">
+                <span className="block text-xs">{col.name}</span>
+                <span className="block text-[10px] text-gray-400">{col.table}</span>
               </div>
             </button>
           ))

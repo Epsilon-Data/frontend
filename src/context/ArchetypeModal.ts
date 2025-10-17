@@ -1,3 +1,4 @@
+import { ColumnInfo } from '@app/api/database.api';
 import { FormInstance } from 'antd';
 import { createContext } from 'react';
 
@@ -9,5 +10,8 @@ type ArchetypeModalContextType = {
   handleDraft: () => void;
   showModal: () => void;
   forms: FormInstance<unknown>[];
+  columns: ColumnInfo[];
+  setColumns: React.Dispatch<React.SetStateAction<ColumnInfo[]>>;
+  fetchColumns: (projectId: string) => void;
 } | null;
 export const ArchetypeModalContext = createContext<ArchetypeModalContextType>(null);

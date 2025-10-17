@@ -5,6 +5,7 @@ import { computeNextColumnPosition } from '@app/constants/reactflow/mappingHelpe
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Node, Edge, NodeChange, EdgeChange, addEdge } from '@xyflow/react';
+import { ColumnInfo } from '@app/api/database.api';
 
 type ColumnMappingStepProps = {
   nodes: Node[];
@@ -13,8 +14,8 @@ type ColumnMappingStepProps = {
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
   onNodesChange: (value: NodeChange[]) => void;
   onEdgesChange: (value: EdgeChange[]) => void;
-  columns: string[];
-  setColumns: React.Dispatch<React.SetStateAction<string[]>>;
+  columns: ColumnInfo[];
+  setColumns: React.Dispatch<React.SetStateAction<ColumnInfo[]>>;
   name: string;
 };
 
@@ -62,7 +63,7 @@ export const ColumnMappingStep = ({
   }, [anchor]);
 
   const handlePick = useCallback(
-    (colName: string) => {
+    (col: ColumnInfo) => {
       if (!anchor || toolbarDisabled) return;
       const nodeId = anchor.selectedId;
       const fromNode = nodes.find((n) => n.id === nodeId);
@@ -73,33 +74,28 @@ export const ColumnMappingStep = ({
 
       const { x, y } = computeNextColumnPosition(nodeId, nodes, edges, baseX, baseY);
 
-      const colId =
-        typeof crypto !== 'undefined' && 'randomUUID' in crypto
-          ? crypto.randomUUID()
-          : `col_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
-
       setNodes((nds) =>
         nds.concat({
-          id: colId,
+          id: col.id,
           type: 'column',
           position: { x, y },
-          data: { label: colName, level: parentLevel + 1 },
+          data: { label: col.name, level: parentLevel + 1, table: col.table },
         } as Node),
       );
 
       setEdges((eds) =>
-        addEdge({ id: `edge_${nodeId}_${colId}`, source: nodeId, target: colId, type: 'default' }, eds),
+        addEdge({ id: `edge_${nodeId}_${col.id}`, source: nodeId, target: col.id, type: 'default' }, eds),
       );
 
-      setColumns((prev) => prev.filter((c) => c !== colName));
+      setColumns((prev) => prev.filter((c) => c.id !== col.id));
     },
     [anchor, toolbarDisabled, nodes, edges, setNodes, setEdges, setColumns],
   );
 
   const addBackColumn = useCallback(
-    (name?: string) => {
-      if (!name) return;
-      setColumns((prev) => (prev.includes(name) ? prev : [...prev, name]));
+    (col?: ColumnInfo) => {
+      if (!col) return;
+      setColumns((prev) => (prev.some((c) => c.id === col.id) ? prev : [...prev, col]));
     },
     [setColumns],
   );
@@ -109,7 +105,7 @@ export const ColumnMappingStep = ({
 
   const handleEdgesChangeMapping = useCallback(
     (changes: EdgeChange[]) => {
-      const toAddBack: string[] = [];
+      const toAddBack: ColumnInfo[] = [];
 
       const byId = new Map(nodes.map((n) => [n.id, n as Node]));
 
@@ -126,8 +122,14 @@ export const ColumnMappingStep = ({
         const otherNode = columnNode === s ? t : s;
 
         if (columnNode && isCategory(otherNode)) {
-          const name = typeof columnNode.data?.label === 'string' ? columnNode.data.label : undefined;
-          if (name) toAddBack.push(name);
+          if (columnNode?.data?.label) {
+            const col: ColumnInfo = {
+              id: columnNode.id,
+              name: typeof columnNode.data.label === 'string' ? columnNode.data.label : '',
+              table: typeof columnNode.data.table === 'string' ? columnNode.data.table : '',
+            };
+            toAddBack.push(col);
+          }
         }
       }
 
@@ -139,13 +141,19 @@ export const ColumnMappingStep = ({
 
   const handleNodesChangeMapping = useCallback(
     (changes: NodeChange[]) => {
-      const toAddBack: string[] = [];
+      const toAddBack: ColumnInfo[] = [];
       for (const c of changes) {
         if (c.type !== 'remove') continue;
         const removedNode = nodes.find((n) => n.id === c.id);
         if (removedNode?.type === 'column') {
-          const name = typeof removedNode.data?.label === 'string' ? removedNode.data.label : undefined;
-          if (name) toAddBack.push(name);
+          if (removedNode?.data?.label) {
+            const col: ColumnInfo = {
+              id: removedNode.id,
+              name: typeof removedNode.data.label === 'string' ? removedNode.data.label : '',
+              table: typeof removedNode.data.table === 'string' ? removedNode.data.table : '',
+            };
+            toAddBack.push(col);
+          }
         }
       }
       onNodesChange(changes);

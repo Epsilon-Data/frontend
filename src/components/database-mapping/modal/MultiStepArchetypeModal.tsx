@@ -1,7 +1,7 @@
 import { Button, Modal } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
@@ -33,13 +33,28 @@ export const MultiStepArchetypeModal = ({
   ...modalProps
 }: MultiStepArchetypeModalProps) => {
   const [isFormLoading, setFormLoading] = useState(false);
-  const { modalStep, setModalStep, setIsModalOpen, isModalOpen, handleDraft, forms } = useArchetypeModalContext();
+  const {
+    modalStep,
+    setModalStep,
+    setIsModalOpen,
+    isModalOpen,
+    handleDraft,
+    forms,
+    columns,
+    setColumns,
+    fetchColumns,
+  } = useArchetypeModalContext();
 
   const [step1] = forms;
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const [columns, setColumns] = useState<string[]>([]);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchColumns(projectId);
+    return () => controller.abort();
+  }, [fetchColumns, projectId]);
 
   const nextStep = () => setModalStep((prev) => Math.min(prev + 1, 3));
 
@@ -56,8 +71,24 @@ export const MultiStepArchetypeModal = ({
     const formData = {
       projectId: projectId,
       name: step1.getFieldValue('name'),
-      archetype: '',
-      columnMapping: '',
+      archetype: {
+        nodes: nodes.map((node) => ({
+          id: node.id,
+          data: {
+            label: node.data.label,
+            level: node.data.level,
+          },
+          position: {
+            x: node.position.x,
+            y: node.position.y,
+          },
+        })),
+        edges: edges.map((edge) => ({
+          id: edge.id,
+          source: edge.source,
+          target: edge.target,
+        })),
+      },
     };
 
     try {

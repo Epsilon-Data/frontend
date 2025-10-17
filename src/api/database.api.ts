@@ -56,6 +56,12 @@ export interface ColumnTableRow {
   primary: boolean;
 }
 
+export interface ColumnInfo {
+  id: string;
+  name: string;
+  table: string;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const updateCrawlStatus = (status: number) => {
   let statusTag = { value: 'Pending', priority: Priority.INFO, status: CrawlStatus.PENDING };
@@ -147,12 +153,11 @@ export const getDbTableInfo = async (projectId: string | undefined): Promise<Dat
   return response.data;
 };
 
-export const getDbColumns = async (projectId: string | undefined): Promise<any> => {
+export const getDbColumns = async (projectId: string | undefined): Promise<ColumnInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${DATABASE_API_URL}/${projectId}/columns`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-
   return response.data;
 };
 

@@ -6,13 +6,12 @@ import { getColors } from '@app/constants/reactflow/reactflowOptions';
 
 type TextNodeProps = NodeProps<Node<NodeData>>;
 
-export function TextNode({ id, data, selected }: TextNodeProps) {
+export function TextNode({ id, data }: TextNodeProps) {
   const rf = useReactFlow();
   const [isEditing, setEditing] = useState(false);
   const showTarget = data.level > 0;
 
   const handleDoubleClick = () => setEditing(true);
-
   const handleBlur = () => setEditing(false);
 
   const { levelColor, textColor } = useMemo(() => getColors(data.level), [data.level]);
@@ -23,7 +22,7 @@ export function TextNode({ id, data, selected }: TextNodeProps) {
   };
 
   return (
-    <S.TextNodeWrapper style={{ background: levelColor }} className="text-node" $selected={selected}>
+    <S.TextNodeWrapper style={{ background: levelColor }} className="text-node">
       {isEditing ? (
         <S.TextNodeInput
           defaultValue={data.label}

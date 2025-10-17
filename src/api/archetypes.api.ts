@@ -14,8 +14,10 @@ export interface Archetype {
 export interface ArchetypeInfo {
   projectId: string;
   name: string;
-  archetype: string;
-  columnMapping: string;
+  archetype: {
+    nodes: Node[];
+    edges: Edge[];
+  };
 }
 
 export const getArchetypes = async (projectId: string | undefined): Promise<Archetype[]> => {

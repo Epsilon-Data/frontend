@@ -248,7 +248,21 @@
           }
         },
         "step4": {
-          "title": "Set permissions"
+          "title": "Set permissions",
+          "instruction": {
+            "title": "Set database use and access permissions",
+            "subtitle": "Any permissions set at parent level affects their respective child."
+          },
+          "table": {
+            "header": {
+              "parent": "Parent node: {{name}}",
+              "analysis": {
+                "detail": "Detail Analysis",
+                "highLevel": "High Level Analysis"
+              },
+              "searchPlaceholder": "Find a category"
+            }
+          }
         }
       }
     }

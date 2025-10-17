@@ -6,7 +6,7 @@ import { getColors } from '@app/constants/reactflow/reactflowOptions';
 
 type TextNodeProps = NodeProps<Node<NodeData>>;
 
-export function TextNode({ id, data }: TextNodeProps) {
+export function TextNode({ id, data, selected }: TextNodeProps) {
   const rf = useReactFlow();
   const [isEditing, setEditing] = useState(false);
   const showTarget = data.level > 0;
@@ -23,7 +23,7 @@ export function TextNode({ id, data }: TextNodeProps) {
   };
 
   return (
-    <S.TextNodeWrapper style={{ background: levelColor }} className="text-node">
+    <S.TextNodeWrapper style={{ background: levelColor }} className="text-node" $selected={selected}>
       {isEditing ? (
         <S.TextNodeInput
           defaultValue={data.label}

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Handle } from '@xyflow/react';
 
-export const TextNodeWrapper = styled.div`
+export const TextNodeWrapper = styled.div<{ $selected?: boolean }>`
   border-radius: 0.5rem;
   height: 50px;
   padding: 0.5rem;

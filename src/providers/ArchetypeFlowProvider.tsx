@@ -27,10 +27,10 @@ export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, children }) => {
             target: Node;
             setEdges: Dispatch<SetStateAction<Edge[]>>;
           }) => {
-            const isSubcatColumn =
-              (source.type === 'subcategory' && target.type === 'column') ||
-              (source.type === 'column' && target.type === 'subcategory');
-            if (!isSubcatColumn) return;
+            const isCategoryColumn =
+              (source.type === 'category' && target.type === 'column') ||
+              (source.type === 'column' && target.type === 'category');
+            if (!isCategoryColumn) return;
             setEdges((eds: Edge[]) =>
               eds.filter(
                 (e) =>

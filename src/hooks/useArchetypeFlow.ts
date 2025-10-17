@@ -1,30 +1,43 @@
-// hooks/useFlowEngine.ts
 import { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
 import type { Connection, Edge, FinalConnectionState, Node, ReactFlowInstance } from '@xyflow/react';
 import { addEdge } from '@xyflow/react';
 import { useArchetypeFlowContext } from '@app/hooks/useArchetypeFlowContext';
+import { FlowMode } from '@app/context/ArchetypeFlow';
 
 export function useNodeIdCounter(initial = 0) {
   const ref = useRef(initial);
   return () => `${ref.current++}`;
 }
 
-export function useArchetypeFlow(params: {
+type useArchetypeFlowProps = {
   nodes: Node[];
   edges: Edge[];
   setNodes: Dispatch<SetStateAction<Node[]>>;
   setEdges: Dispatch<SetStateAction<Edge[]>>;
-}) {
-  const { nodes, edges, setNodes, setEdges } = params;
+  mode: FlowMode;
+};
+
+export function useArchetypeFlow(params: useArchetypeFlowProps) {
+  const { nodes, edges, setNodes, setEdges, mode } = params;
   const ctx = useArchetypeFlowContext();
   const nextId = useNodeIdCounter(nodes.length);
   const [rf, setRf] = useState<ReactFlowInstance>({} as ReactFlowInstance);
 
-  const onConnect = useCallback((p: Edge | Connection) => setEdges((eds) => addEdge(p, eds)), [setEdges]);
+  const mappingLocked = mode != 'editable';
+
+  const isValidConnection = useCallback(() => !mappingLocked, [mappingLocked]);
+
+  const onConnect = useCallback(
+    (p: Edge | Connection) => {
+      setEdges((eds) => addEdge(p, eds));
+    },
+    [setEdges],
+  );
 
   const onConnectEnd = useCallback(
     (event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
       if (!connectionState.isValid) {
+        if (mappingLocked) return;
         const id = nextId();
 
         const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
@@ -47,7 +60,7 @@ export function useArchetypeFlow(params: {
         );
       }
     },
-    [nextId, rf, setEdges, setNodes],
+    [mappingLocked, nextId, rf, setEdges, setNodes],
   );
 
   return {
@@ -57,6 +70,8 @@ export function useArchetypeFlow(params: {
     edgeTypes: ctx.edgeTypes,
     onConnect,
     onConnectEnd,
+    isValidConnection,
+    nodesConnectable: !mappingLocked,
     setReactFlowInstance: setRf,
     options: ctx.options,
     bgVariant: ctx.bgVariant,

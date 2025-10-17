@@ -47,9 +47,7 @@ export const ColumnMappingStep = ({
   }, [anchor, edges, nodes]);
 
   const toolbarDisabled = !!anchor && connectedColumnCount >= 1;
-  const disabledMessage = toolbarDisabled
-    ? t('project.createTemplate.form.step3.toolbar.error.subcategoryMapped')
-    : undefined;
+  const disabledMessage = toolbarDisabled ? t('project.createTemplate.form.step3.toolbar.error.nodeMapped') : undefined;
 
   useEffect(() => {
     if (!anchor) {
@@ -66,11 +64,14 @@ export const ColumnMappingStep = ({
   const handlePick = useCallback(
     (colName: string) => {
       if (!anchor || toolbarDisabled) return;
-      const subcatId = anchor.selectedId;
+      const nodeId = anchor.selectedId;
+      const fromNode = nodes.find((n) => n.id === nodeId);
+      const parentLevel = (fromNode?.data as { level: number })?.level ?? 0;
+
       const baseX = anchor.flowPos.x;
       const baseY = anchor.flowPos.y;
 
-      const { x, y } = computeNextColumnPosition(subcatId, nodes, edges, baseX, baseY);
+      const { x, y } = computeNextColumnPosition(nodeId, nodes, edges, baseX, baseY);
 
       const colId =
         typeof crypto !== 'undefined' && 'randomUUID' in crypto
@@ -82,12 +83,12 @@ export const ColumnMappingStep = ({
           id: colId,
           type: 'column',
           position: { x, y },
-          data: { label: colName },
+          data: { label: colName, level: parentLevel + 1 },
         } as Node),
       );
 
       setEdges((eds) =>
-        addEdge({ id: `e_${subcatId}_${colId}`, source: subcatId, target: colId, type: 'default' }, eds),
+        addEdge({ id: `edge_${nodeId}_${colId}`, source: nodeId, target: colId, type: 'default' }, eds),
       );
 
       setColumns((prev) => prev.filter((c) => c !== colName));
@@ -103,23 +104,33 @@ export const ColumnMappingStep = ({
     [setColumns],
   );
 
+  const isColumn = (n?: Node) => n?.type === 'column';
+  const isCategory = (n?: Node) => n?.type === 'category';
+
   const handleEdgesChangeMapping = useCallback(
     (changes: EdgeChange[]) => {
       const toAddBack: string[] = [];
+
+      const byId = new Map(nodes.map((n) => [n.id, n as Node]));
+
       for (const c of changes) {
         if (c.type !== 'remove') continue;
+
         const removed = edges.find((e) => e.id === c.id);
         if (!removed) continue;
-        const s = nodes.find((n) => n.id === removed.source);
-        const t = nodes.find((n) => n.id === removed.target);
-        const isSubcatColumn =
-          (s?.type === 'subcategory' && t?.type === 'column') || (s?.type === 'column' && t?.type === 'subcategory');
-        if (isSubcatColumn) {
-          const colNode = s?.type === 'column' ? s : t?.type === 'column' ? t : null;
-          const name = typeof colNode?.data?.label === 'string' ? colNode!.data.label : undefined;
+
+        const s = byId.get(removed.source);
+        const t = byId.get(removed.target);
+
+        const columnNode = isColumn(s) ? s : isColumn(t) ? t : undefined;
+        const otherNode = columnNode === s ? t : s;
+
+        if (columnNode && isCategory(otherNode)) {
+          const name = typeof columnNode.data?.label === 'string' ? columnNode.data.label : undefined;
           if (name) toAddBack.push(name);
         }
       }
+
       onEdgesChange(changes);
       toAddBack.forEach(addBackColumn);
     },

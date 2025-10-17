@@ -10,9 +10,12 @@ type Props = {
 export const InformationPanel: React.FC<Props> = ({ mode }) => {
   const { Text } = Typography;
   const { t } = useTranslation();
-  const instructions: string[] = t('project.createTemplate.form.step2.sidebar.instructions.content', {
-    returnObjects: true,
-  });
+  const archetypeInstructions: string[] = t(
+    `project.createTemplate.form.${mode == 'editable' ? 'step2' : 'step3'}.sidebar.instructions.content`,
+    {
+      returnObjects: true,
+    },
+  );
 
   return (
     <div
@@ -23,22 +26,24 @@ export const InformationPanel: React.FC<Props> = ({ mode }) => {
       ].join(' ')}
     >
       <div className="text-sm text-start mb-2">{t('project.createTemplate.form.step2.sidebar.instructions.title')}</div>
-      {instructions.map((item, idx) => (
+      {archetypeInstructions.map((item, idx) => (
         <div key={idx} className="font-light text-gray text-xs pb-2">
           {item}
         </div>
       ))}
       <div className="flex flex-col items-start mt-2 bg-yellow-200 p-2 rounded">
-        {mode == 'editable' && (
-          <>
-            <Text className="font-bold text-gray text-xs">
-              {t('project.createTemplate.form.step2.sidebar.instructions.warning.title')}
-            </Text>
-            <Text className="font-light text-gray text-xs">
-              {t('project.createTemplate.form.step2.sidebar.instructions.warning.content')}
-            </Text>
-          </>
-        )}
+        <Text className="font-bold text-gray text-xs">
+          {t(
+            `project.createTemplate.form.${mode == 'editable' ? 'step2' : 'step3'}.sidebar.instructions.warning.title`,
+          )}
+        </Text>
+        <Text className="font-light text-gray text-xs">
+          {t(
+            `project.createTemplate.form.${
+              mode == 'editable' ? 'step2' : 'step3'
+            }.sidebar.instructions.warning.content`,
+          )}
+        </Text>
       </div>
     </div>
   );

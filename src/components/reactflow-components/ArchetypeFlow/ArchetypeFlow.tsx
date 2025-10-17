@@ -57,11 +57,22 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
   onAnchorChange,
   ...rest
 }) => {
-  const { nodeTypes, edgeTypes, onConnect, onConnectEnd, setReactFlowInstance, options, bgVariant } = useArchetypeFlow({
+  const {
+    nodeTypes,
+    edgeTypes,
+    onConnect,
+    onConnectEnd,
+    nodesConnectable,
+    isValidConnection,
+    setReactFlowInstance,
+    options,
+    bgVariant,
+  } = useArchetypeFlow({
     nodes,
     edges,
     setNodes,
     setEdges,
+    mode,
   });
 
   return (
@@ -80,6 +91,8 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
       fitView={options?.fitView}
       fitViewOptions={options?.fitViewOptions}
       proOptions={{ hideAttribution: true }}
+      nodesConnectable={nodesConnectable}
+      isValidConnection={isValidConnection}
     >
       {name && <ArchetypeSidebar name={name} mode={mode} />}
       <ZoomControls />

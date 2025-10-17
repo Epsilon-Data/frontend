@@ -30,3 +30,31 @@ export function computeNextColumnPosition(
 
   return { x, y };
 }
+
+export function findUnmappedLeafs(nodes: Node[], edges: Edge[]) {
+  const byId = new Map(nodes.map((n) => [n.id, n]));
+  const missing: string[] = [];
+  const outMap = new Map<string, Edge[]>();
+  edges.forEach((e) => {
+    const arr = outMap.get(e.source);
+    if (arr) arr.push(e);
+    else outMap.set(e.source, [e]);
+  });
+
+  nodes.forEach((n) => {
+    if (n.type !== 'category') return;
+
+    const outs = outMap.get(n.id) ?? [];
+    const hasCategoryChild = outs.some((e) => byId.get(e.target)?.type === 'category');
+
+    if (!hasCategoryChild) {
+      const columnLinks = outs.filter((e) => byId.get(e.target)?.type === 'column').length;
+      if (columnLinks !== 1) {
+        const label = (n.data as { label: string })?.label ?? n.id;
+        missing.push(label);
+      }
+    }
+  });
+
+  return missing;
+}

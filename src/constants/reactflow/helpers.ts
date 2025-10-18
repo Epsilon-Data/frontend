@@ -121,7 +121,7 @@ export function findDuplicateChildLabels(nodes: Node[], edges: Edge[]) {
   return issues;
 }
 
-export function buildAdjacency(edges: Edge[]) {
+function buildAdjacency(edges: Edge[]) {
   const out = new Map<string, string[]>();
   const inMap = new Map<string, string[]>();
   for (const e of edges) {
@@ -131,7 +131,7 @@ export function buildAdjacency(edges: Edge[]) {
   return { out, inMap };
 }
 
-export function graphToTableRows(nodes: Node[], edges: Edge[]): TableRow[] {
+function graphToTableRows(nodes: Node[], edges: Edge[]): TableRow[] {
   const byId = new Map(nodes.map((n) => [n.id, n]));
   const { out, inMap } = buildAdjacency(edges);
   const childrenOf = (id: string) => out.get(id) ?? [];
@@ -167,4 +167,68 @@ export function graphToTableRows(nodes: Node[], edges: Edge[]): TableRow[] {
 
   const rows = topCats.map((tc) => buildCategory(tc, tc)).sort((a, b) => a.label.localeCompare(b.label));
   return rows;
+}
+
+export function buildPermissionTree(nodes: Node[], edges: Edge[]) {
+  const rows = graphToTableRows(nodes, edges);
+
+  const byId = new Map<string, TableRow>();
+  const childrenById = new Map<string, string[]>();
+  const parentById = new Map<string, string>();
+  const topKeys = rows.map((r) => r.key);
+
+  const walk = (r: TableRow) => {
+    byId.set(r.key, r);
+    if (r.children?.length) {
+      childrenById.set(
+        r.key,
+        r.children.map((c) => c.key),
+      );
+      for (const c of r.children) {
+        parentById.set(c.key, r.key);
+        walk(c);
+      }
+    }
+  };
+  rows.forEach(walk);
+
+  const findDescendants = (catId: string) => {
+    const q = [catId];
+    const cats: string[] = [];
+    const leafs: string[] = [];
+    while (q.length) {
+      const cur = q.pop()!;
+      const kids = childrenById.get(cur) ?? [];
+      for (const k of kids) {
+        const n = byId.get(k)!;
+        if (n.kind === 'category') {
+          cats.push(n.key);
+          q.push(n.key);
+        } else if (n.kind === 'leaf') {
+          leafs.push(n.key);
+        }
+      }
+    }
+    return { cats, leafs };
+  };
+
+  const ancestorsUpToTop = (nodeId: string) => {
+    const res: string[] = [];
+    let cur: string | undefined = nodeId;
+    while (true) {
+      const p = parentById.get(cur!);
+      if (!p) break;
+      res.push(p);
+      cur = p;
+    }
+    return res;
+  };
+
+  const allDescLeafsChecked = (catId: string, leafCheckedMap: Record<string, boolean>) => {
+    const { leafs } = findDescendants(catId);
+    if (leafs.length === 0) return false;
+    return leafs.every((id) => !!leafCheckedMap[id]);
+  };
+
+  return { rows, byId, childrenById, parentById, topKeys, findDescendants, ancestorsUpToTop, allDescLeafsChecked };
 }

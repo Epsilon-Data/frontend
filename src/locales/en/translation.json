@@ -258,7 +258,7 @@
               "parent": "Parent node: {{name}}",
               "analysis": {
                 "detail": "Detail Analysis",
-                "highLevel": "High Level Analysis"
+                "high": "High Level Analysis"
               },
               "searchPlaceholder": "Find a category"
             }

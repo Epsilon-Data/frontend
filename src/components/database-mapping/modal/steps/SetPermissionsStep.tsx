@@ -2,9 +2,10 @@ import { Input, Segmented, Space, Table } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { IoSearch } from 'react-icons/io5';
 import { Node, Edge } from '@xyflow/react';
-import { useCallback, useMemo, useState } from 'react';
-import { graphToTableRows, TableRow } from '@app/constants/reactflow/helpers';
+import { useMemo, useState } from 'react';
+import { TableRow } from '@app/constants/reactflow/helpers';
 import { ToggleRadio } from '@app/components/common/Modal/ToggleRadio/ToggleRadio';
+import { usePermissionTable } from '@app/hooks/usePermissionTable';
 
 type SetPermissionsStepProps = {
   nodes: Node[];
@@ -13,89 +14,13 @@ type SetPermissionsStepProps = {
 
 type Mode = 'apply' | 'override';
 
-const RADIO_W = 160;
-const TOGGLE_W = 200;
-
 export const SetPermissionsStep = ({ nodes, edges }: SetPermissionsStepProps) => {
   const { t } = useTranslation();
-  const rows = useMemo(() => graphToTableRows(nodes, edges), [nodes, edges]);
 
-  const { byId, childrenById, topKeys } = useMemo(() => {
-    const byId = new Map<string, TableRow>();
-    const childrenById = new Map<string, string[]>();
-    const topKeys: string[] = rows.map((r) => r.key);
-
-    const walk = (r: TableRow) => {
-      byId.set(r.key, r);
-      if (r.children?.length) {
-        childrenById.set(
-          r.key,
-          r.children.map((c) => c.key),
-        );
-        r.children.forEach(walk);
-      }
-    };
-    rows.forEach(walk);
-    return { byId, childrenById, topKeys };
-  }, [rows]);
-
-  const [modeByTop, setModeByTop] = useState<Record<string, Mode>>({});
-  const [parentChecked, setParentChecked] = useState<Record<string, boolean>>({});
-  const [leafChecked, setLeafChecked] = useState<Record<string, boolean>>({});
-
-  const setMode = useCallback((topId: string, m: Mode) => {
-    setModeByTop((prev) => ({ ...prev, [topId]: m }));
-  }, []);
-
-  const findDescendantLeaf = useCallback(
-    (catId: string) => {
-      const q = [catId];
-      const out: string[] = [];
-      while (q.length) {
-        const cur = q.pop()!;
-        const kids = childrenById.get(cur) ?? [];
-        for (const k of kids) {
-          const n = byId.get(k)!;
-          if (n.kind === 'leaf') out.push(n.key);
-          if (n.kind === 'leaf' || n.kind === 'category') q.push(n.key);
-        }
-      }
-      return out;
-    },
-    [byId, childrenById],
+  const { rows, topKeys, modeByTop, setMode, isEnabled, getChecked, onParentToggle, onLeafToggle } = usePermissionTable(
+    nodes,
+    edges,
   );
-
-  const isEnabled = (row: TableRow) => {
-    const topId = row.topCategoryId ?? row.key;
-    const mode = modeByTop[topId] ?? 'apply';
-    const isTop = topKeys.includes(row.key);
-
-    if (mode === 'apply') {
-      return isTop;
-    } else {
-      return row.kind === 'leaf' && !isTop;
-    }
-  };
-
-  const onHighRadio = (row: TableRow, next: boolean) => {
-    const topId = row.topCategoryId ?? row.key;
-    setMode(topId, 'apply');
-    setParentChecked((prev) => ({ ...prev, [row.key]: next }));
-    const leaves = findDescendantLeaf(row.key);
-    if (leaves.length) {
-      setLeafChecked((prev) => {
-        const copy = { ...prev };
-        for (const id of leaves) copy[id] = next;
-        return copy;
-      });
-    }
-  };
-
-  const onDetailRadio = (row: TableRow, next: boolean) => {
-    const topId = byId.get(row.key)!.topCategoryId ?? row.key;
-    setMode(topId, 'override');
-    setLeafChecked((prev) => ({ ...prev, [row.key]: next }));
-  };
 
   const [q, setQ] = useState('');
   const filtered = useMemo(() => {
@@ -112,6 +37,14 @@ export const SetPermissionsStep = ({ nodes, edges }: SetPermissionsStepProps) =>
     return filterTree(rows);
   }, [q, rows]);
 
+  const renderRadio = (col: 'high' | 'detail') => (_: unknown, row: TableRow) => {
+    const enabled = isEnabled(row);
+    const checked = getChecked(col, row);
+    const onChange = (next: boolean) =>
+      row.kind === 'category' ? onParentToggle(col, row, next) : onLeafToggle(col, row, next);
+    return <ToggleRadio checked={checked} disabled={!enabled} onChange={onChange} />;
+  };
+
   const columns = [
     {
       title: t('project.createTemplate.form.step4.table.header.parent', {
@@ -126,30 +59,18 @@ export const SetPermissionsStep = ({ nodes, edges }: SetPermissionsStepProps) =>
       ),
     },
     {
-      title: t('project.createTemplate.form.step4.table.header.analysis.highLevel'),
+      title: t('project.createTemplate.form.step4.table.header.analysis.high'),
       key: 'high',
-      width: RADIO_W,
+      width: 150,
       align: 'center' as const,
-      render: (_: unknown, row: TableRow) => (
-        <ToggleRadio
-          checked={!!parentChecked[row.key]}
-          disabled={!isEnabled(row)}
-          onChange={(next) => onHighRadio(row, next)}
-        />
-      ),
+      render: renderRadio('high'),
     },
     {
       title: t('project.createTemplate.form.step4.table.header.analysis.detail'),
       key: 'detail',
-      width: RADIO_W,
+      width: 150,
       align: 'center' as const,
-      render: (_: unknown, row: TableRow) => (
-        <ToggleRadio
-          checked={!!leafChecked[row.key]}
-          disabled={!isEnabled(row)}
-          onChange={(next) => onDetailRadio(row, next)}
-        />
-      ),
+      render: renderRadio('detail'),
     },
     {
       title: (
@@ -164,7 +85,7 @@ export const SetPermissionsStep = ({ nodes, edges }: SetPermissionsStepProps) =>
         </Space.Compact>
       ),
       key: 'mode',
-      width: TOGGLE_W,
+      width: 200,
       align: 'right' as const,
       render: (_: unknown, row: TableRow) => {
         if (!topKeys.includes(row.key)) return null;
@@ -187,7 +108,7 @@ export const SetPermissionsStep = ({ nodes, edges }: SetPermissionsStepProps) =>
   ];
 
   return (
-    <div className="h-[33rem] py-12 px-10 overflow-y-auto flex flex-col justify-start">
+    <div className="h-[33rem] p-10 overflow-y-auto flex flex-col justify-start">
       <div className="mb-8">
         <div className="font-medium font-sans text-grey-1 text-lg">
           {t('project.createTemplate.form.step4.instruction.title')}
@@ -203,7 +124,6 @@ export const SetPermissionsStep = ({ nodes, edges }: SetPermissionsStepProps) =>
           columns={columns}
           dataSource={filtered}
           pagination={false}
-          bordered
           tableLayout="fixed"
           expandable={{
             expandRowByClick: true,

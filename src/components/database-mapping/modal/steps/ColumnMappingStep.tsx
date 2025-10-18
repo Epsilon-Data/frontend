@@ -88,6 +88,8 @@ export const ColumnMappingStep = ({
       );
 
       setColumns((prev) => prev.filter((c) => c.id !== col.id));
+
+      setToolbarOpen(false);
     },
     [anchor, toolbarDisabled, nodes, edges, setNodes, setEdges, setColumns],
   );

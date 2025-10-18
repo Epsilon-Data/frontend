@@ -1,4 +1,4 @@
-import { Input, Segmented, Space, Table } from 'antd';
+import { Input, Segmented, Space, Table, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { IoSearch } from 'react-icons/io5';
 import { Node, Edge } from '@xyflow/react';
@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react';
 import { TableRow } from '@app/constants/reactflow/helpers';
 import { ToggleRadio } from '@app/components/common/Modal/ToggleRadio/ToggleRadio';
 import { usePermissionTable } from '@app/hooks/usePermissionTable';
+import { RxQuestionMarkCircled } from 'react-icons/rx';
 
 type SetPermissionsStepProps = {
   nodes: Node[];
@@ -47,11 +48,16 @@ export const SetPermissionsStep = ({ nodes, edges }: SetPermissionsStepProps) =>
 
   const columns = [
     {
-      title: t('project.createTemplate.form.step4.table.header.parent', {
-        name: nodes.find((n) => n.type === 'root')?.data.label ?? '',
-      }),
+      title: (
+        <span className="font-light">
+          {t('project.createTemplate.form.step4.table.header.parent', {
+            name: nodes.find((n) => n.type === 'root')?.data.label ?? '',
+          })}
+        </span>
+      ),
       dataIndex: 'label',
       key: 'label',
+      align: 'left' as const,
       render: (text: string) => (
         <span className="font-medium whitespace-nowrap overflow-hidden text-ellipsis" title={text}>
           {text}
@@ -59,16 +65,31 @@ export const SetPermissionsStep = ({ nodes, edges }: SetPermissionsStepProps) =>
       ),
     },
     {
-      title: t('project.createTemplate.form.step4.table.header.analysis.high'),
+      title: (
+        <div className="flex flex-row font-light items-center">
+          <span>{t('project.createTemplate.form.step4.table.header.analysis.high.title')}</span>
+          <Tooltip title={t('project.createTemplate.form.step4.table.header.analysis.high.tooltip')} placement="bottom">
+            <RxQuestionMarkCircled size={18} className="ml-2" />
+          </Tooltip>
+        </div>
+      ),
       key: 'high',
-      width: 150,
       align: 'center' as const,
       render: renderRadio('high'),
     },
     {
-      title: t('project.createTemplate.form.step4.table.header.analysis.detail'),
+      title: (
+        <div className="flex flex-row font-light items-center">
+          <span>{t('project.createTemplate.form.step4.table.header.analysis.detail.title')}</span>
+          <Tooltip
+            title={t('project.createTemplate.form.step4.table.header.analysis.detail.tooltip')}
+            placement="bottom"
+          >
+            <RxQuestionMarkCircled size={18} className="ml-2" />
+          </Tooltip>
+        </div>
+      ),
       key: 'detail',
-      width: 150,
       align: 'center' as const,
       render: renderRadio('detail'),
     },
@@ -76,7 +97,7 @@ export const SetPermissionsStep = ({ nodes, edges }: SetPermissionsStepProps) =>
       title: (
         <Space.Compact className="rounded-lg">
           <Input
-            className="px-2 py-1 text-xs font-inter h-8"
+            className="px-2 py-1 text-xs font-inter h-8 font-light"
             prefix={<IoSearch className="text-grey-1 mr-2" />}
             placeholder={t('project.createTemplate.form.step4.table.header.searchPlaceholder')}
             value={q}
@@ -100,6 +121,11 @@ export const SetPermissionsStep = ({ nodes, edges }: SetPermissionsStepProps) =>
               ]}
               value={mode}
               onChange={(v) => setMode(row.key, v as Mode)}
+              className="
+                [&_.ant-segmented-thumb]:!bg-black
+                [&_.ant-segmented-item-selected]:!bg-black
+                [&_.ant-segmented-item-selected]:!text-white
+              "
             />
           </div>
         );

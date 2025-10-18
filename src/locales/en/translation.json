@@ -257,8 +257,14 @@
             "header": {
               "parent": "Parent node: {{name}}",
               "analysis": {
-                "detail": "Detail Analysis",
-                "high": "High Level Analysis"
+                "detail": {
+                  "title": "Detail analysis",
+                  "tooltip": "Access to perform analysis on the archetype entities"
+                },
+                "high": {
+                  "title": "High level analysis", 
+                  "tooltip": "Access to the archetype entities"
+                }
               },
               "searchPlaceholder": "Find a category"
             }

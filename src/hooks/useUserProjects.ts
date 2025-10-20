@@ -6,10 +6,10 @@ export const useUserProjects = () => {
   const [sharedProjects, setSharedProjects] = useState<ProjectSummaryInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const fetchProjects = useCallback(async () => {
+  const fetchProjects = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     try {
-      const [owned, shared] = await Promise.all([getUserOwnedProjects(), getUserSharedProjects()]);
+      const [owned, shared] = await Promise.all([getUserOwnedProjects(signal), getUserSharedProjects(signal)]);
       setOwnedProjects(owned);
       setSharedProjects(shared);
     } catch (error) {

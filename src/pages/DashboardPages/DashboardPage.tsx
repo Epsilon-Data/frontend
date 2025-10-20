@@ -11,14 +11,15 @@ import { ProjectModalProvider } from '@app/providers/ProjectModalProvider';
 const DashboardPage: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
   const [layout, setLayout] = useState<'grid' | 'list'>('grid');
-
+  const { csrf, initialized } = useAppSelector((state) => state.auth);
   const { ownedProjects, sharedProjects, fetchProjects } = useUserProjects();
 
   useEffect(() => {
+    if (!(initialized && csrf)) return;
     const controller = new AbortController();
-    fetchProjects();
+    fetchProjects(controller.signal);
     return () => controller.abort();
-  }, [fetchProjects]);
+  }, [csrf, fetchProjects, initialized]);
 
   return (
     <div className="py-3 px-4 md:py-5 md:px-9">

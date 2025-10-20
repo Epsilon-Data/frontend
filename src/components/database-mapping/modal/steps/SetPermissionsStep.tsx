@@ -7,6 +7,7 @@ import { TableRow } from '@app/constants/reactflow/helpers';
 import { ToggleRadio } from '@app/components/common/Modal/ToggleRadio/ToggleRadio';
 import { usePermissionTable } from '@app/hooks/usePermissionTable';
 import { RxQuestionMarkCircled } from 'react-icons/rx';
+import { getColors } from '@app/constants/reactflow/reactflowOptions';
 
 type SetPermissionsStepProps = {
   nodes: Node[];
@@ -156,6 +157,35 @@ export const SetPermissionsStep = ({ nodes, edges }: SetPermissionsStepProps) =>
             defaultExpandAllRows: true,
             indentSize: 16,
           }}
+          onRow={(row) => {
+            if (row.kind === 'category' && row.children?.length) {
+              const { levelColor, textColor } = getColors(row.level ?? 0);
+              return {
+                style: {
+                  ['--row-bg' as string]: levelColor,
+                  ['--row-fg' as string]: textColor,
+                },
+              };
+            }
+            return {};
+          }}
+          rowClassName={(row) =>
+            row.kind === 'category' && row.children?.length
+              ? [
+                  '[&_.ant-table-cell]:bg-[var(--row-bg)]',
+                  '[&_.ant-table-cell]:text-[var(--row-fg)]',
+                  'hover:[&_.ant-table-cell]:bg-[var(--row-bg)]',
+                  'hover:[&_.ant-table-cell]:text-[var(--row-fg)]',
+                  '[&_.ant-table-cell:first-child]:rounded-l-lg',
+                  '[&_.ant-table-cell:last-child]:rounded-r-lg',
+                  '[&_.ant-table-cell]:overflow-hidden',
+                  '[&_.ant-table-cell]:border-0',
+                  'mb-1',
+                  'transition-colors',
+                  'duration-200',
+                ].join(' ')
+              : ''
+          }
         />
       </div>
     </div>

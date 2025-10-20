@@ -13,6 +13,7 @@ export type TableRow = {
   kind: RowType;
   parentId?: string;
   topCategoryId?: string;
+  level?: number;
   children?: TableRow[];
 };
 
@@ -148,6 +149,11 @@ function graphToTableRows(nodes: Node[], edges: Edge[]): TableRow[] {
 
   const isLeafCategory = (catId: string) => childrenOf(catId).some((cid) => byId.get(cid)?.type === 'column');
 
+  const getNodeLevel = (id: string): number => {
+    const raw = (byId.get(id)?.data as { level: number })?.level;
+    return Number(raw);
+  };
+
   const buildCategory = (id: string, topId: string, parentId?: string): TableRow => {
     const subcats = childrenOf(id)
       .map((cid) => byId.get(cid))
@@ -161,6 +167,7 @@ function graphToTableRows(nodes: Node[], edges: Edge[]): TableRow[] {
       kind: isLeafCategory(id) ? 'leaf' : 'category',
       parentId,
       topCategoryId: topId,
+      level: getNodeLevel(id),
       children: children.length ? children : undefined,
     };
   };

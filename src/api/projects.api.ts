@@ -58,19 +58,21 @@ export const createProject = async (data: ProjectInfo): Promise<void> => {
   });
 };
 
-export const getUserOwnedProjects = async (): Promise<ProjectSummaryInfo[]> => {
+export const getUserOwnedProjects = async (signal?: AbortSignal): Promise<ProjectSummaryInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${PROJECT_API_URL}/own`, {
     headers: { [csrfHeaderName]: `${csrf}` },
+    signal,
   });
   return response.data;
 };
 
 // get shared projects
-export const getUserSharedProjects = async (): Promise<ProjectSummaryInfo[]> => {
+export const getUserSharedProjects = async (signal?: AbortSignal): Promise<ProjectSummaryInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${PROJECT_API_URL}/share`, {
     headers: { [csrfHeaderName]: `${csrf}` },
+    signal,
   });
   return response.data;
 };

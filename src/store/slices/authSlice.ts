@@ -19,10 +19,12 @@ import { UserDetails } from '@app/domain/UserModel';
 
 export interface AuthSlice {
   csrf: string | null;
+  initialized: boolean;
 }
 
 const initialState: AuthSlice = {
   csrf: readCsrf(),
+  initialized: false,
 };
 
 export const doLogin = createAsyncThunk('auth/doLogin', async () =>
@@ -90,14 +92,17 @@ const authSlice = createSlice({
     });
     builder.addCase(doLogout.fulfilled, (state) => {
       state.csrf = '';
+      state.initialized = true;
     });
     builder.addCase(getClaims.fulfilled, (state, action) => {
       if (!action.payload) {
         state.csrf = '';
       }
+      state.initialized = true;
     });
     builder.addCase(getClaims.rejected, (state) => {
       state.csrf = '';
+      state.initialized = true;
     });
   },
 });

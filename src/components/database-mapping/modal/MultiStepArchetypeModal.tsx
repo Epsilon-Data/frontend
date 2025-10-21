@@ -11,7 +11,7 @@ import { ArchetypeNameStep } from './steps/ArchetypeNameStep';
 import { CreateTemplateStep } from './steps/CreateTemplateStep';
 import { ColumnMappingStep } from './steps/ColumnMappingStep';
 import { SetPermissionsStep } from './steps/SetPermissionsStep';
-import { findUnmappedLeafs } from '@app/constants/reactflow/helpers';
+import { findDuplicateChildLabels, findUnmappedLeafs } from '@app/constants/reactflow/helpers';
 
 type MultiStepArchetypeModalProps = {
   fetchArchetypes: () => Promise<void>;
@@ -58,25 +58,78 @@ export const MultiStepArchetypeModal = ({
   }, [fetchColumns, projectId]);
 
   const nextStep = () => {
-    if (modalStep === 2) {
-      const missing = findUnmappedLeafs(nodes, edges);
-      if (missing.length) {
-        Modal.warning({
-          title: t('project.createTemplate.form.step3.validation.title'),
-          content: (
-            <div>
-              <div className="mb-2">{t('project.createTemplate.form.step3.validation.description')}</div>
-              <ul style={{ paddingLeft: 18 }}>
-                {missing.map((name) => (
-                  <li key={name}>• {name}</li>
-                ))}
-              </ul>
-            </div>
-          ),
-        });
-        return;
-      }
+    let duplicateGroups: ReturnType<typeof findDuplicateChildLabels> = [];
+    let missingLeafs: string[] = [];
+
+    if (modalStep === 1 || modalStep === 2) {
+      duplicateGroups = findDuplicateChildLabels(nodes, edges);
     }
+
+    if (modalStep === 2) {
+      missingLeafs = findUnmappedLeafs(nodes, edges);
+    }
+
+    if (duplicateGroups.length || missingLeafs.length) {
+      Modal.warning({
+        title: t('project.createTemplate.form.step3.validation.title'),
+        content: (
+          <div>
+            {duplicateGroups.length > 0 && (
+              <>
+                <div className="mb-2 font-medium">
+                  {t('project.createTemplate.form.step3.validation.duplicateLabels.title')}
+                </div>
+
+                <ul className="mb-3 pl-4">
+                  {duplicateGroups.map((g) => (
+                    <li key={g.parentId} className="mb-2">
+                      <div>
+                        <strong>
+                          {t('project.createTemplate.form.step3.validation.duplicateLabels.node', {
+                            name: g.parentLabel,
+                          })}
+                        </strong>
+                      </div>
+
+                      {g.labels?.length > 0 && (
+                        <div className="pl-4">
+                          <div className="text-blueDark">
+                            {t('project.createTemplate.form.step3.validation.duplicateLabels.siblings')}
+                          </div>
+                          <div className="font-light">{g.labels.join(', ')}</div>
+                        </div>
+                      )}
+
+                      {g.conflictsWithParent?.length > 0 && (
+                        <div className="pl-4 mt-1">
+                          <div className="text-blueDark">
+                            {t('project.createTemplate.form.step3.validation.duplicateLabels.parentConflict')}
+                          </div>
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {missingLeafs.length > 0 && (
+              <>
+                <div className="mb-2 font-medium">{t('project.createTemplate.form.step3.validation.missingLeafs')}</div>
+                <ul style={{ paddingLeft: 18 }}>
+                  {missingLeafs.map((name) => (
+                    <li key={name}>• {name}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+        ),
+      });
+      return;
+    }
+
+    // All good → advance
     setModalStep((prev) => Math.min(prev + 1, 3));
   };
 

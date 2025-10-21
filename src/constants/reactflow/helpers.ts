@@ -58,3 +58,54 @@ export function findUnmappedLeafs(nodes: Node[], edges: Edge[]) {
 
   return missing;
 }
+
+export function findDuplicateChildLabels(nodes: Node[], edges: Edge[]) {
+  const byId = new Map(nodes.map((n) => [n.id, n]));
+
+  const childLabelsByParent = new Map<string, string[]>();
+  edges.forEach((e) => {
+    const parent = byId.get(e.source);
+    const child = byId.get(e.target);
+    if (!parent || !child) return;
+
+    const parentType = parent.type ?? '';
+    if (parentType !== 'category' && parentType !== 'root') return;
+
+    const label = (child.data as { label?: string })?.label?.trim();
+    if (!label) return;
+
+    const list = childLabelsByParent.get(parent.id);
+    if (list) list.push(label);
+    else childLabelsByParent.set(parent.id, [label]);
+  });
+
+  const issues: Array<{
+    parentId: string;
+    parentLabel: string;
+    labels: string[];
+    conflictsWithParent: string[];
+  }> = [];
+
+  for (const [parentId, childLabels] of childLabelsByParent.entries()) {
+    const parentNode = byId.get(parentId);
+    const parentLabelRaw = (parentNode?.data as { label?: string })?.label ?? parentId;
+    const parentLabel = parentLabelRaw.trim();
+
+    const counts = new Map<string, number>();
+    childLabels.forEach((l) => counts.set(l, (counts.get(l) ?? 0) + 1));
+    const dupChildLabels = [...counts.entries()].filter(([, c]) => c > 1).map(([l]) => l);
+
+    const conflictsWithParent = Array.from(new Set(childLabels.filter((l) => l === parentLabel)));
+
+    if (dupChildLabels.length || conflictsWithParent.length) {
+      issues.push({
+        parentId,
+        parentLabel,
+        labels: dupChildLabels,
+        conflictsWithParent,
+      });
+    }
+  }
+
+  return issues;
+}

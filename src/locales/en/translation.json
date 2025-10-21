@@ -237,8 +237,14 @@
             }
           },
           "validation": {
-            "title": "Please map all leaf nodes to the respective columns",
-            "description": "Each leaf node must be mapped to a column in the database. Following are the leaf nodes that are not mapped:"
+            "title": "Changes required before proceeding",
+            "duplicateLabels": {
+              "title": "Some parent nodes have label issues: ",
+              "node": "Node: {{name}}",
+              "siblings": "Duplicate child labels: ",
+              "parentConflict": "Child label(s) identical to parent label"
+            },
+            "missingLeafs": "Please map all leaf nodes to their respective columns. Following are the leaf nodes that are not mapped:"
           }
         },
         "step4": {

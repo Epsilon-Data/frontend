@@ -25,10 +25,19 @@ export function useArchetypeFlow(params: useArchetypeFlowProps) {
 
   const mappingLocked = mode != 'editable';
 
-  const isValidConnection = useCallback(() => !mappingLocked, [mappingLocked]);
+  const isValidConnection = useCallback(
+    (p?: Edge | Connection) => {
+      if (!mappingLocked) return false;
+      if (!p) return true;
+
+      return p.source !== p.target;
+    },
+    [mappingLocked],
+  );
 
   const onConnect = useCallback(
     (p: Edge | Connection) => {
+      if (p.source === p.target) return;
       setEdges((eds) => addEdge(p, eds));
     },
     [setEdges],

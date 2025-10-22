@@ -11,7 +11,8 @@ import { ArchetypeNameStep } from './steps/ArchetypeNameStep';
 import { CreateTemplateStep } from './steps/CreateTemplateStep';
 import { ColumnMappingStep } from './steps/ColumnMappingStep';
 import { SetPermissionsStep } from './steps/SetPermissionsStep';
-import { findUnmappedLeafs } from '@app/constants/reactflow/helpers';
+import { findUnmappedLeafs, permissionsFromChecked } from '@app/constants/reactflow/helpers';
+import { CheckedByCol, usePermissionTable } from '@app/hooks/usePermissionTable';
 
 type MultiStepArchetypeModalProps = {
   fetchArchetypes: () => Promise<void>;
@@ -49,6 +50,11 @@ export const MultiStepArchetypeModal = ({
   const [step1] = forms;
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const [checkedByCol, setCheckedByCol] = useState<CheckedByCol>({
+    high: { parent: {}, leaf: {} },
+    detail: { parent: {}, leaf: {} },
+  });
+  const { childrenById } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -89,27 +95,29 @@ export const MultiStepArchetypeModal = ({
 
   const handleCreate = async () => {
     setFormLoading(true);
+    const permissions = permissionsFromChecked(checkedByCol, childrenById);
+
     const formData = {
       projectId: projectId,
       name: step1.getFieldValue('name'),
-      archetype: {
-        nodes: nodes.map((node) => ({
-          id: node.id,
-          data: {
-            label: node.data.label,
-            level: node.data.level,
-          },
-          position: {
-            x: node.position.x,
-            y: node.position.y,
-          },
-        })),
-        edges: edges.map((edge) => ({
-          id: edge.id,
-          source: edge.source,
-          target: edge.target,
-        })),
-      },
+      nodes: nodes.map((node) => ({
+        id: node.id,
+        data: {
+          label: node.data.label,
+          level: node.data.level,
+        },
+        position: {
+          x: node.position.x,
+          y: node.position.y,
+        },
+      })),
+      edges: edges.map((edge) => ({
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+      })),
+      permissions,
+      status: 'DRAFT' as const,
     };
 
     try {
@@ -155,7 +163,14 @@ export const MultiStepArchetypeModal = ({
           />
         );
       case 3:
-        return <SetPermissionsStep nodes={nodes} edges={edges} />;
+        return (
+          <SetPermissionsStep
+            nodes={nodes}
+            edges={edges}
+            checkedByCol={checkedByCol}
+            setCheckedByCol={setCheckedByCol}
+          />
+        );
       default:
         return null;
     }

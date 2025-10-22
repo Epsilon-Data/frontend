@@ -1,3 +1,4 @@
+import { Permission } from '@app/api/archetypes.api';
 import { Node, Edge } from '@xyflow/react';
 
 const COLUMN_Y_OFFSET = 150;
@@ -187,4 +188,52 @@ export function buildPermissionTree(nodes: Node[], edges: Edge[]) {
   };
 
   return { rows, byId, childrenById, parentById, topKeys, findDescendants, ancestorsUpToTop, allDescLeafsChecked };
+}
+
+export function permissionsFromChecked(
+  checkedByCol: {
+    high: { parent: Record<string, boolean>; leaf: Record<string, boolean> };
+    detail: { parent: Record<string, boolean>; leaf: Record<string, boolean> };
+  },
+  childrenById: Map<string, string[]>,
+): Permission[] {
+  const out: Permission[] = [];
+  const covered = new Set<string>();
+
+  const coverSubtree = (id: string) => {
+    const stack = [id];
+    while (stack.length) {
+      const cur = stack.pop()!;
+      if (covered.has(cur)) continue;
+      covered.add(cur);
+      const kids = childrenById.get(cur);
+      if (kids?.length) stack.push(...kids);
+    }
+  };
+
+  for (const [id, checked] of Object.entries(checkedByCol.detail.parent)) {
+    if (!checked || covered.has(id)) continue;
+    out.push({ id, permission: 'DETAILED' });
+    coverSubtree(id);
+  }
+
+  for (const [id, checked] of Object.entries(checkedByCol.detail.leaf)) {
+    if (!checked || covered.has(id)) continue;
+    out.push({ id, permission: 'DETAILED' });
+    covered.add(id);
+  }
+
+  for (const [id, checked] of Object.entries(checkedByCol.high.parent)) {
+    if (!checked || covered.has(id)) continue;
+    out.push({ id, permission: 'HIGH' });
+    coverSubtree(id);
+  }
+
+  for (const [id, checked] of Object.entries(checkedByCol.high.leaf)) {
+    if (!checked || covered.has(id)) continue;
+    out.push({ id, permission: 'HIGH' });
+    covered.add(id);
+  }
+
+  return out;
 }

@@ -8,22 +8,26 @@ import { ToggleRadio } from '@app/components/common/Modal/ToggleRadio/ToggleRadi
 import { usePermissionTable } from '@app/hooks/usePermissionTable';
 import { RxQuestionMarkCircled } from 'react-icons/rx';
 import { getColors } from '@app/constants/reactflow/reactflowOptions';
+import { CheckedByCol } from '../MultiStepArchetypeModal';
 
 type SetPermissionsStepProps = {
   nodes: Node[];
   edges: Edge[];
+  checkedByCol: CheckedByCol;
+  setCheckedByCol: React.Dispatch<React.SetStateAction<CheckedByCol>>;
 };
 
 type Mode = 'apply' | 'override';
 
-export const SetPermissionsStep = ({ nodes, edges }: SetPermissionsStepProps) => {
+export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol }: SetPermissionsStepProps) => {
   const { t } = useTranslation();
 
   const { rows, topKeys, modeByTop, setMode, isEnabled, getChecked, onParentToggle, onLeafToggle } = usePermissionTable(
     nodes,
     edges,
+    checkedByCol,
+    setCheckedByCol,
   );
-
   const [q, setQ] = useState('');
   const filtered = useMemo(() => {
     if (!q) return rows;

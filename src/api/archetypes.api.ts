@@ -13,7 +13,7 @@ export interface Archetype {
 
 export type Permission = {
   id: string;
-  permission: 'DETAILED' | 'HIGH';
+  permission: 'DETAILED' | 'HIGH' | 'NONE';
 };
 
 export interface ArchetypeInfo {

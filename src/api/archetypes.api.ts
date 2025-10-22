@@ -11,13 +11,19 @@ export interface Archetype {
   status: string;
 }
 
+export type Permission = {
+  id: string;
+  permission: 'DETAILED' | 'HIGH' | 'NONE';
+};
+
 export interface ArchetypeInfo {
   projectId: string;
+  archetypeId?: string;
   name: string;
-  archetype: {
-    nodes: Node[];
-    edges: Edge[];
-  };
+  nodes: Node[];
+  edges: Edge[];
+  permissions?: Permission[];
+  status: 'DRAFT' | 'ACTIVE';
 }
 
 export const getArchetypes = async (projectId: string | undefined): Promise<Archetype[]> => {

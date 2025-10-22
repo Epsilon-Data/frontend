@@ -145,24 +145,23 @@ export const MultiStepArchetypeModal = ({
     const formData = {
       projectId: projectId,
       name: step1.getFieldValue('name'),
-      archetype: {
-        nodes: nodes.map((node) => ({
-          id: node.id,
-          data: {
-            label: node.data.label,
-            level: node.data.level,
-          },
-          position: {
-            x: node.position.x,
-            y: node.position.y,
-          },
-        })),
-        edges: edges.map((edge) => ({
-          id: edge.id,
-          source: edge.source,
-          target: edge.target,
-        })),
-      },
+      nodes: nodes.map((node) => ({
+        id: node.id,
+        data: {
+          label: node.data.label,
+          level: node.data.level,
+        },
+        position: {
+          x: node.position.x,
+          y: node.position.y,
+        },
+      })),
+      edges: edges.map((edge) => ({
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+      })),
+      status: 'DRAFT' as const,
     };
 
     try {

@@ -11,7 +11,8 @@ import { ArchetypeNameStep } from './steps/ArchetypeNameStep';
 import { CreateTemplateStep } from './steps/CreateTemplateStep';
 import { ColumnMappingStep } from './steps/ColumnMappingStep';
 import { SetPermissionsStep } from './steps/SetPermissionsStep';
-import { findDuplicateChildLabels, findUnmappedLeafs } from '@app/constants/reactflow/helpers';
+import { findDuplicateChildLabels, findUnmappedLeafs, permissionsFromChecked } from '@app/constants/reactflow/helpers';
+import { CheckedByCol, usePermissionTable } from '@app/hooks/usePermissionTable';
 
 type MultiStepArchetypeModalProps = {
   fetchArchetypes: () => Promise<void>;
@@ -49,6 +50,11 @@ export const MultiStepArchetypeModal = ({
   const [step1] = forms;
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const [checkedByCol, setCheckedByCol] = useState<CheckedByCol>({
+    high: { parent: {}, leaf: {} },
+    detail: { parent: {}, leaf: {} },
+  });
+  const { childrenById } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -142,6 +148,8 @@ export const MultiStepArchetypeModal = ({
 
   const handleCreate = async () => {
     setFormLoading(true);
+    const permissions = permissionsFromChecked(checkedByCol, childrenById);
+
     const formData = {
       projectId: projectId,
       name: step1.getFieldValue('name'),
@@ -162,6 +170,7 @@ export const MultiStepArchetypeModal = ({
         source: edge.source,
         target: edge.target,
       })),
+      permissions,
       status: 'DRAFT' as const,
     };
 
@@ -208,7 +217,14 @@ export const MultiStepArchetypeModal = ({
           />
         );
       case 3:
-        return <SetPermissionsStep nodes={nodes} edges={edges} />;
+        return (
+          <SetPermissionsStep
+            nodes={nodes}
+            edges={edges}
+            checkedByCol={checkedByCol}
+            setCheckedByCol={setCheckedByCol}
+          />
+        );
       default:
         return null;
     }

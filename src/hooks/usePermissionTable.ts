@@ -5,24 +5,26 @@ import { buildPermissionTree } from '@app/constants/reactflow/helpers';
 import { Node, Edge } from '@xyflow/react';
 
 export type Mode = 'apply' | 'override';
+
 type ColKey = 'high' | 'detail';
 
 type Checked = {
   parent: Record<string, boolean>;
   leaf: Record<string, boolean>;
 };
-type CheckedByCol = Record<ColKey, Checked>;
 
-export function usePermissionTable(nodes: Node[], edges: Edge[]) {
+export type CheckedByCol = Record<ColKey, Checked>;
+
+export function usePermissionTable(
+  nodes: Node[],
+  edges: Edge[],
+  checkedByCol: CheckedByCol,
+  setCheckedByCol: React.Dispatch<React.SetStateAction<CheckedByCol>>,
+) {
   const { rows, byId, childrenById, parentById, topKeys, findDescendants, ancestorsUpToTop, allDescLeafsChecked } =
     useMemo(() => buildPermissionTree(nodes, edges), [nodes, edges]);
 
   const [modeByTop, setModeByTop] = useState<Record<string, Mode>>({});
-
-  const [checkedByCol, setCheckedByCol] = useState<CheckedByCol>({
-    high: { parent: {}, leaf: {} },
-    detail: { parent: {}, leaf: {} },
-  });
 
   const isEnabled = useCallback(
     (row: TableRow) => {
@@ -38,19 +40,25 @@ export function usePermissionTable(nodes: Node[], edges: Edge[]) {
     setModeByTop((prev) => ({ ...prev, [topId]: m }));
   }, []);
 
-  const setParentChecked = useCallback((col: ColKey, updates: Record<string, boolean>) => {
-    setCheckedByCol((prev) => ({
-      ...prev,
-      [col]: { ...prev[col], parent: { ...prev[col].parent, ...updates } },
-    }));
-  }, []);
+  const setParentChecked = useCallback(
+    (col: ColKey, updates: Record<string, boolean>) => {
+      setCheckedByCol((prev) => ({
+        ...prev,
+        [col]: { ...prev[col], parent: { ...prev[col].parent, ...updates } },
+      }));
+    },
+    [setCheckedByCol],
+  );
 
-  const setLeafChecked = useCallback((col: ColKey, updates: Record<string, boolean>) => {
-    setCheckedByCol((prev) => ({
-      ...prev,
-      [col]: { ...prev[col], leaf: { ...prev[col].leaf, ...updates } },
-    }));
-  }, []);
+  const setLeafChecked = useCallback(
+    (col: ColKey, updates: Record<string, boolean>) => {
+      setCheckedByCol((prev) => ({
+        ...prev,
+        [col]: { ...prev[col], leaf: { ...prev[col].leaf, ...updates } },
+      }));
+    },
+    [setCheckedByCol],
+  );
 
   const onParentToggle = useCallback(
     (col: ColKey, row: TableRow, next: boolean) => {
@@ -91,7 +99,7 @@ export function usePermissionTable(nodes: Node[], edges: Edge[]) {
         return copy;
       });
     },
-    [ancestorsUpToTop, allDescLeafsChecked, setLeafChecked, setMode],
+    [setMode, setLeafChecked, setCheckedByCol, ancestorsUpToTop, allDescLeafsChecked],
   );
 
   return {

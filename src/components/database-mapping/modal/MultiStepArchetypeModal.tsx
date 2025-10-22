@@ -155,6 +155,7 @@ export const MultiStepArchetypeModal = ({
           x: node.position.x,
           y: node.position.y,
         },
+        type: node.type,
       })),
       edges: edges.map((edge) => ({
         id: edge.id,

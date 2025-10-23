@@ -288,13 +288,13 @@ export function permissionsFromChecked(
 
   for (const [id, checked] of Object.entries(checkedByCol.high.parent)) {
     if (!checked || covered.has(id)) continue;
-    out.push({ id, permission: 'HIGH' });
+    out.push({ id, permission: 'HIGH_LEVEL' });
     coverSubtree(id);
   }
 
   for (const [id, checked] of Object.entries(checkedByCol.high.leaf)) {
     if (!checked || covered.has(id)) continue;
-    out.push({ id, permission: 'HIGH' });
+    out.push({ id, permission: 'HIGH_LEVEL' });
     covered.add(id);
   }
 

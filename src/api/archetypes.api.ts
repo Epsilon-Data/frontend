@@ -23,7 +23,7 @@ export interface ArchetypeInfo {
   nodes: Node[];
   edges: Edge[];
   permissions?: Permission[];
-  status: 'DRAFT' | 'ACTIVE';
+  status: 'CRAWLING' | 'ERROR' | 'STAGED' | 'PUBLISHED' | 'DRAFT';
 }
 
 export const getArchetypes = async (projectId: string | undefined): Promise<Archetype[]> => {

@@ -54,7 +54,7 @@ export const MultiStepArchetypeModal = ({
     high: { parent: {}, leaf: {} },
     detail: { parent: {}, leaf: {} },
   });
-  const { childrenById } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
+  const { childrenById, topKeys } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -148,7 +148,7 @@ export const MultiStepArchetypeModal = ({
 
   const handleCreate = async () => {
     setFormLoading(true);
-    const permissions = permissionsFromChecked(checkedByCol, childrenById);
+    const permissions = permissionsFromChecked(checkedByCol, childrenById, topKeys);
 
     const formData = {
       projectId: projectId,
@@ -171,7 +171,7 @@ export const MultiStepArchetypeModal = ({
         target: edge.target,
       })),
       permissions,
-      status: 'DRAFT' as const,
+      status: 'STAGED' as const,
     };
 
     try {

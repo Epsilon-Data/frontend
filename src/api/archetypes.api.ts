@@ -35,6 +35,20 @@ export const getArchetypes = async (projectId: string | undefined): Promise<Arch
   return response.data;
 };
 
+export const getArchetypeDetails = async (
+  projectId: string | undefined,
+  archetypeId: string | undefined,
+): Promise<Archetype> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+
+  console.log(response.data);
+
+  return response.data;
+};
+
 export const createArchetype = async (data: ArchetypeInfo): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   await httpClient.post(`${ARCHETYPE_API_URL}/${data.projectId}`, data, {

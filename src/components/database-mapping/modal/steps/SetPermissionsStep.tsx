@@ -8,7 +8,7 @@ import { ToggleRadio } from '@app/components/common/Modal/ToggleRadio/ToggleRadi
 import { usePermissionTable } from '@app/hooks/usePermissionTable';
 import { RxQuestionMarkCircled } from 'react-icons/rx';
 import { getColors } from '@app/constants/reactflow/reactflowOptions';
-import { CheckedByCol } from '../MultiStepArchetypeModal';
+import { CheckedByCol } from '@app/hooks/usePermissionTable';
 
 type SetPermissionsStepProps = {
   nodes: Node[];
@@ -22,12 +22,17 @@ type Mode = 'apply' | 'override';
 export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol }: SetPermissionsStepProps) => {
   const { t } = useTranslation();
 
-  const { rows, topKeys, modeByTop, setMode, isEnabled, getChecked, onParentToggle, onLeafToggle } = usePermissionTable(
-    nodes,
-    edges,
-    checkedByCol,
-    setCheckedByCol,
-  );
+  const {
+    rows,
+    topKeys,
+    modeByTop,
+    setMode,
+    hasAnyCategoryDescendants,
+    isEnabled,
+    getChecked,
+    onParentToggle,
+    onLeafToggle,
+  } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
   const [q, setQ] = useState('');
   const filtered = useMemo(() => {
     if (!q) return rows;
@@ -115,6 +120,8 @@ export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol
       align: 'right' as const,
       render: (_: unknown, row: TableRow) => {
         if (!topKeys.includes(row.key)) return null;
+        if (!hasAnyCategoryDescendants(row.key)) return null;
+
         const mode = modeByTop[row.key] ?? 'apply';
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -190,6 +197,11 @@ export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol
                 ].join(' ')
               : ''
           }
+          className="
+            [&_.ant-table-tbody_tr:hover_td]:!bg-[var(--row-bg)]
+            [&_.ant-table-tbody_tr:hover_.ant-table-cell]:!bg-[var(--row-bg)]
+            [&_.ant-table-tbody_tr:hover_.ant-table-cell]:!text-[var(--row-fg)]
+          "
         />
       </div>
     </div>

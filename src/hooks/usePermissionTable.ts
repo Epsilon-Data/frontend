@@ -26,14 +26,30 @@ export function usePermissionTable(
 
   const [modeByTop, setModeByTop] = useState<Record<string, Mode>>({});
 
+  const hasAnyCategoryDescendants = useCallback(
+    (id: string) => {
+      const q = [...(childrenById.get(id) ?? [])];
+      while (q.length) {
+        q.pop()!;
+        return true;
+      }
+      return false;
+    },
+    [childrenById],
+  );
+
   const isEnabled = useCallback(
     (row: TableRow) => {
       const topId = row.topCategoryId ?? row.key;
       const mode = modeByTop[topId] ?? 'apply';
+
+      const isTop = topKeys.includes(row.key);
+      if (isTop && !hasAnyCategoryDescendants(row.key)) return true;
+
       if (mode === 'apply') return row.kind === 'category';
       return row.kind === 'leaf';
     },
-    [modeByTop],
+    [hasAnyCategoryDescendants, modeByTop, topKeys],
   );
 
   const setMode = useCallback((topId: string, m: Mode) => {
@@ -110,6 +126,7 @@ export function usePermissionTable(
     parentById,
     modeByTop,
     setMode,
+    hasAnyCategoryDescendants,
     isEnabled,
     getChecked: (col: ColKey, row: TableRow) =>
       row.kind === 'category' ? !!checkedByCol[col].parent[row.key] : !!checkedByCol[col].leaf[row.key],

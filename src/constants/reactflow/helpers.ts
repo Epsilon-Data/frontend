@@ -247,6 +247,7 @@ export function permissionsFromChecked(
     detail: { parent: Record<string, boolean>; leaf: Record<string, boolean> };
   },
   childrenById: Map<string, string[]>,
+  topKeys: string[],
 ): Permission[] {
   const out: Permission[] = [];
   const covered = new Set<string>();
@@ -260,6 +261,17 @@ export function permissionsFromChecked(
       const kids = childrenById.get(cur);
       if (kids?.length) stack.push(...kids);
     }
+  };
+
+  const subtreeHasCovered = (id: string): boolean => {
+    const stack = [id];
+    while (stack.length) {
+      const cur = stack.pop()!;
+      if (covered.has(cur)) return true;
+      const kids = childrenById.get(cur);
+      if (kids?.length) stack.push(...kids);
+    }
+    return false;
   };
 
   for (const [id, checked] of Object.entries(checkedByCol.detail.parent)) {
@@ -284,6 +296,22 @@ export function permissionsFromChecked(
     if (!checked || covered.has(id)) continue;
     out.push({ id, permission: 'HIGH' });
     covered.add(id);
+  }
+
+  const emitNonePreorder = (id: string) => {
+    if (!subtreeHasCovered(id)) {
+      out.push({ id, permission: 'NONE' });
+      coverSubtree(id);
+      return;
+    }
+    const kids = childrenById.get(id) ?? [];
+    for (const k of kids) {
+      if (!covered.has(k)) emitNonePreorder(k);
+    }
+  };
+
+  for (const topId of topKeys) {
+    if (!covered.has(topId)) emitNonePreorder(topId);
   }
 
   return out;

@@ -17,7 +17,7 @@ import DashboardPage from '@app/pages/DashboardPages/DashboardPage';
 
 const Logout = React.lazy(() => import('./Logout'));
 const Login = React.lazy(() => import('./Login'));
-const DatabaseMappingPage = React.lazy(() => import('@app/pages/DatasourcePages/DatabaseMapping/DatabaseMappingPage'));
+const DatabaseMappingPage = React.lazy(() => import('@app/pages/ProjectDetailsPages/DatabaseMappingPage'));
 const BrowseDatasetPage = React.lazy(() => import('@app/pages/BrowseDatasetPages/BrowseDatasetPage'));
 
 export const DASHBOARD_PATH = '/';

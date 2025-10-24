@@ -248,7 +248,27 @@
           }
         },
         "step4": {
-          "title": "Set permissions"
+          "title": "Set permissions",
+          "instruction": {
+            "title": "Set database use and access permissions",
+            "subtitle": "Any permissions set at parent level affects their respective child."
+          },
+          "table": {
+            "header": {
+              "parent": "Parent node: {{name}}",
+              "analysis": {
+                "detail": {
+                  "title": "Detail analysis",
+                  "tooltip": "Access to perform analysis on the archetype entities"
+                },
+                "high": {
+                  "title": "High level analysis", 
+                  "tooltip": "Access to the archetype entities"
+                }
+              },
+              "searchPlaceholder": "Find a category"
+            }
+          }
         }
       }
     }

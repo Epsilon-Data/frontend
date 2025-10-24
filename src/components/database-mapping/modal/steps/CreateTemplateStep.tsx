@@ -1,5 +1,5 @@
 import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlow/ArchetypeFlow';
-import { Node, Edge, NodeChange, EdgeChange } from 'reactflow';
+import { Node, Edge, NodeChange, EdgeChange } from '@xyflow/react';
 
 type CreateTemplateStepProps = {
   nodes: Node[];

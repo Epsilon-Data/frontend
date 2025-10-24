@@ -1,6 +1,6 @@
 import { ARCHETYPE_API_URL } from '@app/constants/template';
 import { httpClient, getCsrfHeader } from './http.api';
-import { Node, Edge } from 'reactflow';
+import { Node, Edge } from '@xyflow/react';
 
 export interface Archetype {
   id: string;
@@ -11,11 +11,19 @@ export interface Archetype {
   status: string;
 }
 
+export type Permission = {
+  id: string;
+  permission: 'DETAILED' | 'HIGH' | 'NONE';
+};
+
 export interface ArchetypeInfo {
   projectId: string;
+  archetypeId?: string;
   name: string;
-  archetype: string;
-  columnMapping: string;
+  nodes: Node[];
+  edges: Edge[];
+  permissions?: Permission[];
+  status: 'DRAFT' | 'PUBLISHED';
 }
 
 export const getArchetypes = async (projectId: string | undefined): Promise<Archetype[]> => {

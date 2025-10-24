@@ -1,7 +1,19 @@
-import { BaseEdge, EdgeProps, getBezierPath } from 'reactflow';
+import { BaseEdge, EdgeProps, getBezierPath } from '@xyflow/react';
 
 export function MapEdge(props: EdgeProps) {
-  const { sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition } = props;
+  const {
+    id,
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    sourcePosition,
+    targetPosition,
+    markerStart,
+    markerEnd,
+    style,
+    interactionWidth,
+  } = props;
 
   const [edgePath] = getBezierPath({
     sourceX,
@@ -12,5 +24,14 @@ export function MapEdge(props: EdgeProps) {
     targetPosition,
   });
 
-  return <BaseEdge path={edgePath} {...props} style={{ stroke: '#808080', strokeWidth: '1.5px' }} />;
+  return (
+    <BaseEdge
+      id={id}
+      path={edgePath}
+      markerStart={markerStart}
+      markerEnd={markerEnd}
+      interactionWidth={interactionWidth}
+      style={{ stroke: '#808080', strokeWidth: 1.5, ...style }} // use number for strokeWidth
+    />
+  );
 }

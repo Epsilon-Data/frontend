@@ -1,4 +1,4 @@
-import { getProjectDetails } from '@app/api/datasources.api';
+import { getProjectDetails } from '@app/api/database.api';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ProjectDetails {

@@ -1,10 +1,10 @@
-import { ElementsSidebar } from '@app/components/reactflow-components/ElementsSidebar/ElementsSidebar';
+import { ArchetypeSidebar } from '@app/components/reactflow-components/ArchetypeSidebar/ArchetypeSidebar';
 import { ZoomControls } from '@app/components/reactflow-components/ZoomControls/ZoomControls';
 import { FlowMode } from '@app/context/ArchetypeFlow';
 import { useArchetypeFlow } from '@app/hooks/useArchetypeFlow';
 import { ArchetypeFlowProvider } from '@app/providers/ArchetypeFlowProvider';
 import React, { Dispatch, SetStateAction } from 'react';
-import ReactFlow, { Background, Edge, EdgeChange, Node, NodeChange } from 'reactflow';
+import { Background, Edge, EdgeChange, Node, NodeChange, ReactFlow } from '@xyflow/react';
 import { Anchor, ReactflowBridge } from '../ColumnToolbar/ReactflowBridge/ReactflowBridge';
 
 export interface ArchetypeProps {
@@ -61,14 +61,19 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
     nodeTypes,
     edgeTypes,
     onConnect,
-    onDrop,
-    onDragOver,
-    onNodeDrag,
-    onNodeDragStop,
+    onConnectEnd,
+    nodesConnectable,
+    isValidConnection,
     setReactFlowInstance,
     options,
     bgVariant,
-  } = useArchetypeFlow({ nodes, edges, setNodes, setEdges });
+  } = useArchetypeFlow({
+    nodes,
+    edges,
+    setNodes,
+    setEdges,
+    mode,
+  });
 
   return (
     <ReactFlow
@@ -77,20 +82,19 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
-      onNodeDrag={onNodeDrag}
-      onNodeDragStop={onNodeDragStop}
       onConnect={onConnect}
+      onConnectEnd={onConnectEnd}
       onInit={setReactFlowInstance}
-      onDrop={onDrop}
-      onDragOver={onDragOver}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       nodeOrigin={options?.nodeOrigin as [number, number]}
       fitView={options?.fitView}
       fitViewOptions={options?.fitViewOptions}
       proOptions={{ hideAttribution: true }}
+      nodesConnectable={nodesConnectable}
+      isValidConnection={isValidConnection}
     >
-      {name && <ElementsSidebar name={name} mode={mode} />}
+      {name && <ArchetypeSidebar name={name} mode={mode} />}
       <ZoomControls />
       <Background variant={bgVariant} />
       <ReactflowBridge onUpdate={(a) => onAnchorChange?.(a)} />

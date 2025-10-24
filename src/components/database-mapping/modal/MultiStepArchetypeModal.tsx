@@ -1,23 +1,32 @@
 import { Button, Modal } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
-import { useEdgesState, useNodesState } from 'reactflow';
+import { Edge, Node, useEdgesState, useNodesState } from '@xyflow/react';
 import { createArchetype } from '@app/api/archetypes.api';
 import { ArchetypeNameStep } from './steps/ArchetypeNameStep';
 import { CreateTemplateStep } from './steps/CreateTemplateStep';
 import { ColumnMappingStep } from './steps/ColumnMappingStep';
 import { SetPermissionsStep } from './steps/SetPermissionsStep';
+import { findDuplicateChildLabels, findUnmappedLeafs } from '@app/constants/reactflow/helpers';
 
 type MultiStepArchetypeModalProps = {
   fetchArchetypes: () => Promise<void>;
   projectId: string;
 } & React.ComponentProps<typeof Modal>;
 
-const initialNodes = [{ id: 'node_0', position: { x: 320, y: 200 }, data: { label: 'Object' }, type: 'object' }];
+const initialNodes: Node[] = [
+  {
+    id: 'node_0',
+    position: { x: 320, y: 200 },
+    data: { label: 'Main Entity', level: 0 },
+    type: 'root',
+    deletable: false,
+  },
+];
 
 export const MultiStepArchetypeModal = ({
   fetchArchetypes,
@@ -25,15 +34,104 @@ export const MultiStepArchetypeModal = ({
   ...modalProps
 }: MultiStepArchetypeModalProps) => {
   const [isFormLoading, setFormLoading] = useState(false);
-  const { modalStep, setModalStep, setIsModalOpen, isModalOpen, handleDraft, forms } = useArchetypeModalContext();
+  const {
+    modalStep,
+    setModalStep,
+    setIsModalOpen,
+    isModalOpen,
+    handleDraft,
+    forms,
+    columns,
+    setColumns,
+    fetchColumns,
+  } = useArchetypeModalContext();
 
   const [step1] = forms;
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [columns, setColumns] = useState<string[]>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const { t } = useTranslation();
 
-  const nextStep = () => setModalStep((prev) => Math.min(prev + 1, 4));
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchColumns(projectId);
+    return () => controller.abort();
+  }, [fetchColumns, projectId]);
+
+  const nextStep = () => {
+    let duplicateGroups: ReturnType<typeof findDuplicateChildLabels> = [];
+    let missingLeafs: string[] = [];
+
+    if (modalStep === 1 || modalStep === 2) {
+      duplicateGroups = findDuplicateChildLabels(nodes, edges);
+    }
+
+    if (modalStep === 2) {
+      missingLeafs = findUnmappedLeafs(nodes, edges);
+    }
+
+    if (duplicateGroups.length || missingLeafs.length) {
+      Modal.warning({
+        title: t('project.createTemplate.form.step3.validation.title'),
+        content: (
+          <div>
+            {duplicateGroups.length > 0 && (
+              <>
+                <div className="mb-2 font-medium">
+                  {t('project.createTemplate.form.step3.validation.duplicateLabels.title')}
+                </div>
+
+                <ul className="mb-3 pl-4">
+                  {duplicateGroups.map((g) => (
+                    <li key={g.parentId} className="mb-2">
+                      <div>
+                        <strong>
+                          {t('project.createTemplate.form.step3.validation.duplicateLabels.node', {
+                            name: g.parentLabel,
+                          })}
+                        </strong>
+                      </div>
+
+                      {g.labels?.length > 0 && (
+                        <div className="pl-4">
+                          <div className="text-blueDark">
+                            {t('project.createTemplate.form.step3.validation.duplicateLabels.siblings')}
+                          </div>
+                          <div className="font-light">{g.labels.join(', ')}</div>
+                        </div>
+                      )}
+
+                      {g.conflictsWithParent?.length > 0 && (
+                        <div className="pl-4 mt-1">
+                          <div className="text-blueDark">
+                            {t('project.createTemplate.form.step3.validation.duplicateLabels.parentConflict')}
+                          </div>
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {missingLeafs.length > 0 && (
+              <>
+                <div className="mb-2 font-medium">{t('project.createTemplate.form.step3.validation.missingLeafs')}</div>
+                <ul style={{ paddingLeft: 18 }}>
+                  {missingLeafs.map((name) => (
+                    <li key={name}>• {name}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+        ),
+      });
+      return;
+    }
+
+    // All good → advance
+    setModalStep((prev) => Math.min(prev + 1, 3));
+  };
 
   const stepTitles = [
     t('project.createTemplate.form.step1.title'),
@@ -44,12 +142,27 @@ export const MultiStepArchetypeModal = ({
 
   const handleCreate = async () => {
     setFormLoading(true);
-    //TODO: archetype and columnMapping formatting confirmation
     const formData = {
       projectId: projectId,
       name: step1.getFieldValue('name'),
-      archetype: '',
-      columnMapping: '',
+      nodes: nodes.map((node) => ({
+        id: node.id,
+        data: {
+          label: node.data.label,
+          level: node.data.level,
+        },
+        position: {
+          x: node.position.x,
+          y: node.position.y,
+        },
+        type: node.type,
+      })),
+      edges: edges.map((edge) => ({
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+      })),
+      status: 'DRAFT' as const,
     };
 
     try {

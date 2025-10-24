@@ -5,7 +5,7 @@ import { IoChevronForwardOutline } from 'react-icons/io5';
 import { DetailsRow } from './components/DetailsRow';
 import { ImageWithPreview } from './components/ImageWithPreview';
 import { useTranslation } from 'react-i18next';
-import { Edge, EdgeChange, Node, NodeChange } from 'reactflow';
+import { Edge, EdgeChange, Node, NodeChange } from '@xyflow/react';
 import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlow/ArchetypeFlow';
 import { AboutTabs } from './components/AboutTabs';
 

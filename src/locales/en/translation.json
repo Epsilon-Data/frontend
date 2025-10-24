@@ -205,21 +205,46 @@
         "step2": {
           "title": "Database structure",
           "sidebar": {
-            "blocks": "Mapping blocks: ",
-            "rules": "Connection rules",
-            "object": "Object",
-            "category": "Category",
-            "subcategory": "Sub-category"
+            "instructions": {
+              "title": "Instructions:",
+              "content": [
+                "Create a hierarchical structure to represent your database schema.",
+                "Starting with the root node, you can create a new node when you drop the connection line on the pane."
+              ],
+              "warning": { "title": "Note:", "content": "The main entity cannot be deleted." }
+            }
+          },
+          "error": {
+            "deleteRoot": "The root node cannot be deleted"
           }
         },
         "step3": {
           "title": "Mapping with nodes",
+          "sidebar": {
+            "instructions": {
+              "title": "Instructions:",
+              "content": ["Click on the leaf node to map it to a column in your database."],
+              "warning": { "title": "Note:", "content": "You can only map a leaf node to a single column." }
+            }
+          },
           "toolbar": {
             "title": "Columns",
             "searchPlaceholder": "Search columns",
-            "noColumns": "No columns found",
-            "subcategoryMapped": "This subcategory is already mapped to a column",
-            "disabled": "Please select a subcategory node"
+            "error": {
+              "noColumns": "No columns found",
+              "nodeMapped": "This leaf node is already mapped to a column",
+              "disabled": "Please select a leaf node"
+            }
+          },
+          "validation": {
+            "title": "Changes required before proceeding",
+            "duplicateLabels": {
+              "title": "Some parent nodes have label issues: ",
+              "node": "Node: {{name}}",
+              "siblings": "Duplicate child labels: ",
+              "parentConflict": "Child label(s) identical to parent label"
+            },
+            "missingLeafs": "Please map all leaf nodes to their respective columns. Following are the leaf nodes that are not mapped:"
           }
         },
         "step4": {
@@ -298,7 +323,7 @@
           "description": "Provide relevant information about your project.",
           "name": {
             "title": "Project name",
-            "placeholder":"e.g. Student Learning Analytics Study"
+            "placeholder": "e.g. Student Learning Analytics Study"
           },
           "duration": "Project duration",
           "describe": {
@@ -323,13 +348,13 @@
           }
         },
         "submit": {
-          "success" : {
-          "title": "Your submission has been successfully submitted.",
-          "description": "The project owner will review your application."
+          "success": {
+            "title": "Your submission has been successfully submitted.",
+            "description": "The project owner will review your application."
           },
           "next": {
             "title": "What happens next?",
-            "review":{
+            "review": {
               "title": "In Review",
               "description": "Your application is being reviewed by the project owner."
             },
@@ -374,7 +399,7 @@
       "min": "Please enter at least {{min}} keywords",
       "instruction": "Separate each one with a comma",
       "duplicate": "This keyword has already been added",
-      "invalidEmail":"Invalid team member's email"
+      "invalidEmail": "Invalid team member's email"
     }
   }
 }

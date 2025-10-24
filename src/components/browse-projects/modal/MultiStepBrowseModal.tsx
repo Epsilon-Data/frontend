@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ModalAccessHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { useBrowseModalContext } from '@app/hooks/useBrowseModalContext';
 import { AboutDatasetPage } from './pages/AboutDatasetPage/AboutDatasetPage';
-import { useNodesState, useEdgesState } from 'reactflow';
+import { Node, Edge, useNodesState, useEdgesState } from '@xyflow/react';
 import { RequestAccessPage } from './pages/RequestAccessPage';
 import { SubmissionResultPage } from './pages/SubmissionResultPage';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
@@ -16,8 +16,8 @@ type MultiStepBrowseModalProps = React.ComponentProps<typeof Modal>;
 
 export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProps) => {
   const { t } = useTranslation();
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [members, setMembers] = useState<string[]>([]);
   const [isFormLoading, setFormLoading] = useState(false);
   const { modalStep, setModalStep, setIsModalOpen, isModalOpen, form, project, validateMembers } =

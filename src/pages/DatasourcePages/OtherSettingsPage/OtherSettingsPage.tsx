@@ -7,7 +7,7 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { FaMinusCircle, FaPlus } from 'react-icons/fa';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { useParams } from 'react-router-dom';
-import { deleteCover, uploadProjectCover, uploadVis, syncDatasource } from '@app/api/datasources.api';
+import { deleteCover, uploadProjectCover, uploadVis, syncDatasource } from '@app/api/database.api';
 import { useMounted } from '@app/hooks/useMounted';
 import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
 import { Typography, Upload, UploadFile } from 'antd';

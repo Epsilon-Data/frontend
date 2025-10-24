@@ -1,10 +1,17 @@
-import type { Edge, Node } from 'reactflow';
+import type { Edge } from '@xyflow/react';
+import { TextNode } from '@app/components/reactflow-components/TextNode/TextNode';
+import { ColumnNode } from '@app/components/reactflow-components/ColumnNode/ColumnNode';
 
-export interface NodeLabelData {
+export type NodeData = {
   label: string;
-}
+  level: number;
+  table?: string;
+};
 
 export type TempEdge = Edge & { className?: string };
 
-export type RFNode = Node<NodeLabelData>;
-export type RFEdge = Edge;
+export const nodeTypes = {
+  root: TextNode,
+  category: TextNode,
+  column: ColumnNode,
+};

@@ -203,6 +203,10 @@ export default createGlobalStyle`
     .ant-modal-content {
       padding: 0;
       border-radius: 0.5rem;
+
+      .ant-modal-body .ant-modal-confirm-body-wrapper {
+        padding: 1rem;
+      }
     }
 
     .ant-modal-footer {
@@ -242,7 +246,7 @@ export default createGlobalStyle`
     .react-flow__nodes {
       .react-flow__node.selected {
         .text-node {
-          border: 1px solid var(--secondary-color);
+          border: 1px solid #6E6E6E;
         }
         .react-flow__handle {
           visibility: visible;

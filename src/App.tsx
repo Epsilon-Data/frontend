@@ -10,7 +10,7 @@ import { useLanguage } from './hooks/useLanguage';
 import { useAutoNightMode } from './hooks/useAutoNightMode';
 import { usePWA } from './hooks/usePWA';
 import { useThemeWatcher } from './hooks/useThemeWatcher';
-import 'reactflow/dist/style.css';
+import '@xyflow/react/dist/style.css';
 import 'antd/dist/reset.css';
 import './styles/tailwind.css';
 

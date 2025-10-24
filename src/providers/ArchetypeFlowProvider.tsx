@@ -1,10 +1,9 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { ArchetypeFlowContext, FlowMode } from '@app/context/ArchetypeFlow';
 import { BG_VARIANT, REACT_FLOW_OPTIONS } from '@app/constants/reactflow/reactflowOptions';
-import { editableNodeTypes, mappingNodeTypes, readonlyNodeTypes } from '@app/constants/reactflow/nodeTypes';
-import { isValidEdgeBase } from '@app/constants/reactflow/edgeRules';
+import { nodeTypes } from '@app/constants/reactflow/types';
 import { MapEdge } from '@app/components/reactflow-components/MapEdge/MapEdge';
-import type { Edge, EdgeTypes, Node } from 'reactflow';
+import type { Edge, EdgeTypes, Node } from '@xyflow/react';
 
 const EDGE_TYPES: EdgeTypes = { default: MapEdge };
 
@@ -17,9 +16,8 @@ export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, children }) => {
     mode === 'mapping'
       ? {
           mode,
-          nodeTypes: mappingNodeTypes,
+          nodeTypes: nodeTypes,
           edgeTypes: EDGE_TYPES,
-          isValidEdge: isValidEdgeBase,
           onConnectPost: ({
             source,
             target,
@@ -29,10 +27,10 @@ export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, children }) => {
             target: Node;
             setEdges: Dispatch<SetStateAction<Edge[]>>;
           }) => {
-            const isSubcatColumn =
-              (source.type === 'subcategory' && target.type === 'column') ||
-              (source.type === 'column' && target.type === 'subcategory');
-            if (!isSubcatColumn) return;
+            const isCategoryColumn =
+              (source.type === 'category' && target.type === 'column') ||
+              (source.type === 'column' && target.type === 'category');
+            if (!isCategoryColumn) return;
             setEdges((eds: Edge[]) =>
               eds.filter(
                 (e) =>
@@ -43,20 +41,10 @@ export const ArchetypeFlowProvider: React.FC<Props> = ({ mode, children }) => {
           options: REACT_FLOW_OPTIONS,
           bgVariant: BG_VARIANT,
         }
-      : mode === 'readonly'
-      ? {
-          mode,
-          nodeTypes: readonlyNodeTypes,
-          edgeTypes: EDGE_TYPES,
-          isValidEdge: isValidEdgeBase,
-          options: REACT_FLOW_OPTIONS,
-          bgVariant: BG_VARIANT,
-        }
       : {
           mode,
-          nodeTypes: editableNodeTypes,
+          nodeTypes: nodeTypes,
           edgeTypes: EDGE_TYPES,
-          isValidEdge: isValidEdgeBase,
           options: REACT_FLOW_OPTIONS,
           bgVariant: BG_VARIANT,
         };

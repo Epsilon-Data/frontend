@@ -5,37 +5,41 @@ import { ArchetypeModalProvider } from '@app/providers/ArchetypeModalProvider';
 import { MultiStepArchetypeModal } from '@app/components/database-mapping/modal/MultiStepArchetypeModal';
 import { Archetypes } from '@app/components/database-mapping/Archetypes';
 import { ArchetypeDetails } from '@app/components/database-mapping/ArchetypeDetails';
+import { useSearchParams } from 'react-router-dom';
 
 const DatabaseMappingPage: React.FC = () => {
-  const projectId = new URLSearchParams(window.location.search).get('id') || '';
-  const archetypeId = new URLSearchParams(window.location.search).get('archetypeId');
+  const [searchParams] = useSearchParams();
+  const projectId = searchParams.get('id') ?? '';
+  const archetypeId = searchParams.get('archetypeId');
 
-  const { archetypes, archetype, fetchArchetypes } = useArchetypes(projectId);
+  const { archetypes, tableLoading, fetchArchetypes } = useArchetypes(projectId);
 
   useEffect(() => {
     const controller = new AbortController();
-    !archetypeId && fetchArchetypes();
+    fetchArchetypes();
     return () => controller.abort();
-  }, [archetypeId, fetchArchetypes]);
+  }, [fetchArchetypes]);
 
   return (
     <div className="py-3 px-4 md:py-5 md:px-9">
+      <ArchetypeModalProvider>
+        <DatabaseMappingHeader
+          projectId={projectId}
+          mode={!archetypeId ? 'create' : 'edit'}
+          archetype={archetypeId ? archetypes.find((a) => a.id === archetypeId) : undefined}
+        />
+        <MultiStepArchetypeModal
+          fetchArchetypes={fetchArchetypes}
+          projectId={projectId}
+          mask
+          closable={false}
+          width={'60%'}
+        />
+      </ArchetypeModalProvider>
       {!archetypeId ? (
-        <>
-          <ArchetypeModalProvider>
-            <DatabaseMappingHeader />
-            <MultiStepArchetypeModal
-              fetchArchetypes={fetchArchetypes}
-              projectId={projectId}
-              mask
-              closable={false}
-              width={'60%'}
-            />
-          </ArchetypeModalProvider>
-          <Archetypes archetypes={archetypes} projectId={projectId} />
-        </>
+        <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
       ) : (
-        <ArchetypeDetails archetype={archetype} projectId={projectId} />
+        <ArchetypeDetails projectId={projectId} archetypeId={archetypeId} />
       )}
     </div>
   );

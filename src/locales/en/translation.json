@@ -6,7 +6,9 @@
     "back": "Back",
     "submit": "Submit",
     "saveDraft": "Save draft",
-    "logout": "Logout"
+    "logout": "Logout",
+    "manage": "Manage",
+    "delete": "Delete"
   },
   "notifications": {
     "basic": "Basic notification",
@@ -189,7 +191,31 @@
     "main": {
       "dbMapping": {
         "title": "Database mapping",
-        "newTemplate": "New template"
+        "newTemplate": "New template",
+        "table": {
+          "name": "Template name",
+          "status": "Status",
+          "createdBy": "Created by",
+          "lastModified": "Last modified",
+          "createdDate": "Created",
+          "manage": {
+            "edit": "Edit template",
+            "delete": {
+              "title": "Delete Archetype",
+              "description": "Are you sure you want to delete this template?"
+            },
+            "publish": "Publish",
+            "summary": {
+              "title": "Connected database summary",
+              "dbName": "Database name",
+              "dbType": "Database type"
+            },
+            "tabs": {
+              "mapping": "Database mapping",
+              "permissions": "Manage database permissions"
+            }
+          }
+        }
       }
     },
     "createTemplate": {

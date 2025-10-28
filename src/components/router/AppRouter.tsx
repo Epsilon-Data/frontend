@@ -14,6 +14,7 @@ import MainLayout from '@app/components/layouts/main/MainLayout/MainLayout';
 import RequireAuth from '@app/components/router/RequireAuth';
 import { withLoading } from '@app/hocs/withLoading.hoc';
 import DashboardPage from '@app/pages/DashboardPages/DashboardPage';
+import ProjectRouteScope from './ProjectRouteScope';
 
 const Logout = React.lazy(() => import('./Logout'));
 const Login = React.lazy(() => import('./Login'));
@@ -43,7 +44,9 @@ export const AppRouter: React.FC = () => {
         <Route path={DASHBOARD_PATH} element={protectedLayout}>
           <Route index element={<Dashboard />} />
           <Route path="browse" element={<BrowseDatasets />} />
-          <Route path="project/db-mapping" element={<DatabaseMapping />} />
+          <Route path="project" element={<ProjectRouteScope />}>
+            <Route path="db-mapping" element={<DatabaseMapping />} />
+          </Route>
           {/* <Route path="requests/database/:page" element={<ConnectionRequests />} />
           <Route path="requests/database/create/:page" element={<CreateRequest />} />
           <Route path="requests/database/view/:id" element={<ViewRequest />} />

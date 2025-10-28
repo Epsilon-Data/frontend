@@ -1,4 +1,5 @@
 import { Permission } from '@app/api/archetypes.api';
+import { CheckedByCol } from '@app/hooks/usePermissionTable';
 import { Node, Edge } from '@xyflow/react';
 
 const COLUMN_Y_OFFSET = 150;
@@ -8,14 +9,14 @@ const MAX_ROWS = 6;
 
 export type RowType = 'category' | 'leaf';
 
-export type TableRow = {
+export type PermissionTableRow = {
   key: string;
   label: string;
   kind: RowType;
   parentId?: string;
   topCategoryId?: string;
   level?: number;
-  children?: TableRow[];
+  children?: PermissionTableRow[];
 };
 
 export function computeNextColumnPosition(
@@ -133,7 +134,7 @@ function buildAdjacency(edges: Edge[]) {
   return { out, inMap };
 }
 
-function graphToTableRows(nodes: Node[], edges: Edge[]): TableRow[] {
+export function graphToTableRows(nodes: Node[], edges: Edge[]): PermissionTableRow[] {
   const byId = new Map(nodes.map((n) => [n.id, n]));
   const { out, inMap } = buildAdjacency(edges);
   const childrenOf = (id: string) => out.get(id) ?? [];
@@ -155,7 +156,7 @@ function graphToTableRows(nodes: Node[], edges: Edge[]): TableRow[] {
     return Number(raw);
   };
 
-  const buildCategory = (id: string, topId: string, parentId?: string): TableRow => {
+  const buildCategory = (id: string, topId: string, parentId?: string): PermissionTableRow => {
     const subcats = childrenOf(id)
       .map((cid) => byId.get(cid))
       .filter((n) => n && n.type === 'category') as Node[];
@@ -180,12 +181,12 @@ function graphToTableRows(nodes: Node[], edges: Edge[]): TableRow[] {
 export function buildPermissionTree(nodes: Node[], edges: Edge[]) {
   const rows = graphToTableRows(nodes, edges);
 
-  const byId = new Map<string, TableRow>();
+  const byId = new Map<string, PermissionTableRow>();
   const childrenById = new Map<string, string[]>();
   const parentById = new Map<string, string>();
   const topKeys = rows.map((r) => r.key);
 
-  const walk = (r: TableRow) => {
+  const walk = (r: PermissionTableRow) => {
     byId.set(r.key, r);
     if (r.children?.length) {
       childrenById.set(
@@ -315,4 +316,73 @@ export function permissionsFromChecked(
   }
 
   return out;
+}
+
+export function permissionsToCheckedByCol(permissions: Permission[], nodes: Node[], edges: Edge[]): CheckedByCol {
+  const rows = graphToTableRows(nodes, edges);
+  const byId = new Map<string, PermissionTableRow>();
+  const childrenById = new Map<string, string[]>();
+
+  const walk = (r: PermissionTableRow) => {
+    byId.set(r.key, r);
+    if (r.children?.length) {
+      childrenById.set(
+        r.key,
+        r.children.map((c) => c.key),
+      );
+      r.children.forEach(walk);
+    }
+  };
+  rows.forEach(walk);
+
+  const checked: CheckedByCol = {
+    high: { parent: {}, leaf: {} },
+    detail: { parent: {}, leaf: {} },
+  };
+
+  const markDescendants = (id: string, fn: (row: PermissionTableRow) => void) => {
+    const stack = [id];
+    while (stack.length) {
+      const cur = stack.pop()!;
+      const row = byId.get(cur);
+      if (!row) continue;
+      fn(row);
+      const kids = childrenById.get(cur);
+      if (kids?.length) stack.push(...kids);
+    }
+  };
+
+  for (const { id, permission } of permissions) {
+    const row = byId.get(id);
+    if (!row) continue;
+
+    if (permission === 'DETAILED') {
+      if (row.kind === 'category') {
+        markDescendants(id, (r) => {
+          if (r.kind === 'category') checked.detail.parent[r.key] = true;
+          else checked.detail.leaf[r.key] = true;
+        });
+      } else {
+        checked.detail.leaf[id] = true;
+      }
+    }
+  }
+
+  for (const { id, permission } of permissions) {
+    const row = byId.get(id);
+    if (!row) continue;
+
+    if (permission === 'HIGH_LEVEL') {
+      if (row.kind === 'category') {
+        markDescendants(id, (r) => {
+          if (r.kind === 'category') checked.high.parent[r.key] = true;
+          else checked.high.leaf[r.key] = true;
+        });
+      } else {
+        checked.high.leaf[id] = true;
+      }
+    }
+  }
+
+  return checked;
 }

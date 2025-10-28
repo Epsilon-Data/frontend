@@ -1,6 +1,6 @@
 // hooks/usePermissionMatrix.ts
 import { useMemo, useState, useCallback } from 'react';
-import type { TableRow } from '@app/constants/reactflow/helpers';
+import type { PermissionTableRow } from '@app/constants/reactflow/helpers';
 import { buildPermissionTree } from '@app/constants/reactflow/helpers';
 import { Node, Edge } from '@xyflow/react';
 
@@ -39,7 +39,7 @@ export function usePermissionTable(
   );
 
   const isEnabled = useCallback(
-    (row: TableRow) => {
+    (row: PermissionTableRow) => {
       const topId = row.topCategoryId ?? row.key;
       const mode = modeByTop[topId] ?? 'apply';
 
@@ -77,7 +77,7 @@ export function usePermissionTable(
   );
 
   const onParentToggle = useCallback(
-    (col: ColKey, row: TableRow, next: boolean) => {
+    (col: ColKey, row: PermissionTableRow, next: boolean) => {
       const topId = row.topCategoryId ?? row.key;
       setMode(topId, 'apply');
 
@@ -99,7 +99,7 @@ export function usePermissionTable(
   );
 
   const onLeafToggle = useCallback(
-    (col: ColKey, row: TableRow, next: boolean) => {
+    (col: ColKey, row: PermissionTableRow, next: boolean) => {
       const topId = row.topCategoryId ?? row.key;
       setMode(topId, 'override');
 
@@ -128,7 +128,7 @@ export function usePermissionTable(
     setMode,
     hasAnyCategoryDescendants,
     isEnabled,
-    getChecked: (col: ColKey, row: TableRow) =>
+    getChecked: (col: ColKey, row: PermissionTableRow) =>
       row.kind === 'category' ? !!checkedByCol[col].parent[row.key] : !!checkedByCol[col].leaf[row.key],
     onParentToggle,
     onLeafToggle,

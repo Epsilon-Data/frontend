@@ -1,14 +1,16 @@
-import { ARCHETYPE_API_URL } from '@app/constants/template';
+import { ARCHETYPE_API_URL } from '@app/constants/archetype';
 import { httpClient, getCsrfHeader } from './http.api';
 import { Node, Edge } from '@xyflow/react';
+
+type ArchetypeStatus = 'DRAFT' | 'PUBLISHED' | 'ACTIVE';
 
 export interface Archetype {
   id: string;
   name: string;
-  nodes: Node[];
-  edges: Edge[];
   lastModified: Date;
-  status: string;
+  created: Date;
+  createdBy: string;
+  status: ArchetypeStatus;
 }
 
 export type Permission = {
@@ -23,7 +25,8 @@ export interface ArchetypeInfo {
   nodes: Node[];
   edges: Edge[];
   permissions?: Permission[];
-  status: 'DRAFT' | 'PUBLISHED';
+  status: ArchetypeStatus;
+  lastModified: Date;
 }
 
 export const getArchetypes = async (projectId: string | undefined): Promise<Archetype[]> => {
@@ -38,15 +41,18 @@ export const getArchetypes = async (projectId: string | undefined): Promise<Arch
 export const getArchetypeDetails = async (
   projectId: string | undefined,
   archetypeId: string | undefined,
-): Promise<Archetype> => {
+): Promise<ArchetypeInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
-  console.log(response.data);
-
-  return response.data;
+  return {
+    ...response.data,
+    nodes: response.data.nodes?.map((n: Node) =>
+      n?.type === 'column' ? { ...n, position: { ...n.position, y: n.position.y + 200 } } : n,
+    ),
+  };
 };
 
 export const createArchetype = async (data: ArchetypeInfo): Promise<void> => {
@@ -56,9 +62,16 @@ export const createArchetype = async (data: ArchetypeInfo): Promise<void> => {
   });
 };
 
-export const deleteTemplate = async (projectId: string | undefined, templateId: string): Promise<void> => {
+export const publishArchetype = async (projectId: string | undefined, archetypeId: string): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.delete(`${ARCHETYPE_API_URL}/${projectId}/${templateId}`, {
+  await httpClient.post(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}/publish`, null, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+};
+
+export const deleteArchetype = async (projectId: string | undefined, archetypeId: string): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  await httpClient.delete(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 };

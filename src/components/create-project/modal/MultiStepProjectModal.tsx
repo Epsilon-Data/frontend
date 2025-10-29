@@ -188,12 +188,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       }
     >
       <div className="flex flex-col">
-        <ModalStepHeader
-          setModalStep={setModalStep}
-          modalStep={modalStep}
-          handleDraft={handleDraft}
-          stepTitles={stepTitles}
-        />
+        <ModalStepHeader modalStep={modalStep} handleDraft={handleDraft} stepTitles={stepTitles} />
         {renderStep()}
       </div>
     </Modal>

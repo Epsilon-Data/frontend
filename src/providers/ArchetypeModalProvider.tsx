@@ -1,9 +1,15 @@
 import { ColumnInfo, getDbColumns } from '@app/api/database.api';
-import { ArchetypeModalContext } from '@app/context/ArchetypeModal';
+import { ArchetypeModalContext, ModalMode } from '@app/context/ArchetypeModal';
 import { Form } from 'antd';
 import { useCallback, useMemo, useState } from 'react';
 
-export const ArchetypeModalProvider = ({ children }: { children: React.ReactElement[] | React.ReactElement }) => {
+export const ArchetypeModalProvider = ({
+  children,
+  mode,
+}: {
+  children: React.ReactElement[] | React.ReactElement;
+  mode: ModalMode;
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState(0);
   const [columns, setColumns] = useState<ColumnInfo[]>([]);
@@ -29,6 +35,7 @@ export const ArchetypeModalProvider = ({ children }: { children: React.ReactElem
 
   const contextValue = useMemo(
     () => ({
+      mode,
       modalStep,
       forms,
       showModal,
@@ -41,6 +48,7 @@ export const ArchetypeModalProvider = ({ children }: { children: React.ReactElem
       fetchColumns,
     }),
     [
+      mode,
       modalStep,
       forms,
       showModal,

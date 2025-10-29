@@ -35,8 +35,8 @@ export const ArchetypeDetails = ({ projectId, archetypeId }: ArchetypeDetailsPro
 
   return (
     <Spin spinning={spinning}>
-      <ArchetypeModalProvider>
-        <DatabaseMappingHeader projectId={projectId} mode={'edit'} archetype={archetype} />
+      <ArchetypeModalProvider mode="edit">
+        <DatabaseMappingHeader projectId={projectId} archetype={archetype} />
         {archetype && (
           <MultiStepArchetypeModal
             archetype={archetype}

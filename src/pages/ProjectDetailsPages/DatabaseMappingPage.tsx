@@ -24,8 +24,8 @@ const DatabaseMappingPage: React.FC = () => {
     <div className="py-3 px-4 md:py-5 md:px-9">
       {!archetypeId ? (
         <>
-          <ArchetypeModalProvider>
-            <DatabaseMappingHeader projectId={projectId} mode={'create'} />
+          <ArchetypeModalProvider mode="create">
+            <DatabaseMappingHeader projectId={projectId} />
             <MultiStepArchetypeModal
               fetchArchetypes={fetchArchetypes}
               projectId={projectId}

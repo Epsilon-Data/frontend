@@ -7,14 +7,13 @@ import { AiFillDelete } from 'react-icons/ai';
 import { FaPlus } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 type DatabaseMappingHeaderProps = {
-  mode: 'create' | 'edit';
   archetype?: ArchetypeInfo | undefined;
   projectId: string;
 };
 
-export const DatabaseMappingHeader = ({ mode, archetype, projectId }: DatabaseMappingHeaderProps) => {
+export const DatabaseMappingHeader = ({ archetype, projectId }: DatabaseMappingHeaderProps) => {
   const { t } = useTranslation();
-  const { showModal } = useArchetypeModalContext();
+  const { mode, showModal } = useArchetypeModalContext();
   const navigate = useNavigate();
 
   const confirmDeletion = async () => {

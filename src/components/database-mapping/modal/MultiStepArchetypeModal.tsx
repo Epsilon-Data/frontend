@@ -208,7 +208,7 @@ export const MultiStepArchetypeModal = ({
         target: edge.target,
       })),
       permissions,
-      status: 'DRAFT' as const,
+      status: 'ACTIVE' as const,
     };
 
     try {

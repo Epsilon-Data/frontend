@@ -10,7 +10,7 @@ type ArchetypeModalContextType = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   modalStep: number;
   setModalStep: React.Dispatch<React.SetStateAction<number>>;
-  handleDraft: () => void;
+  handleDraft: (formData: unknown) => void;
   showModal: () => void;
   forms: FormInstance<unknown>[];
   columns: ColumnInfo[];

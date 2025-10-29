@@ -183,23 +183,15 @@ export const MultiStepArchetypeModal = ({
     t('project.createTemplate.form.step4.title'),
   ];
 
-  const handleCreate = async () => {
-    setFormLoading(true);
+  const buildFormData = () => {
     const permissions = permissionsFromChecked(checkedByCol, childrenById, topKeys);
-
-    const formData = {
-      projectId: projectId,
+    return {
+      projectId,
       name: step1.getFieldValue('name'),
       nodes: nodes.map((node) => ({
         id: node.id,
-        data: {
-          label: node.data.label,
-          level: node.data.level,
-        },
-        position: {
-          x: node.position.x,
-          y: node.position.y,
-        },
+        data: { label: node.data.label, level: node.data.level },
+        position: { x: node.position.x, y: node.position.y },
         type: node.type,
       })),
       edges: edges.map((edge) => ({
@@ -208,8 +200,17 @@ export const MultiStepArchetypeModal = ({
         target: edge.target,
       })),
       permissions,
-      status: 'ACTIVE' as const,
     };
+  };
+
+  const onSaveDraft = async () => {
+    const payload = { ...buildFormData(), status: 'DRAFT' as const };
+    handleDraft(payload);
+  };
+
+  const handleCreate = async () => {
+    setFormLoading(true);
+    const formData = { ...buildFormData(), status: 'ACTIVE' as const };
 
     try {
       if (!isEditing) {
@@ -333,7 +334,7 @@ export const MultiStepArchetypeModal = ({
       }
     >
       <div className="flex flex-col">
-        <ModalStepHeader modalStep={modalStep} handleDraft={handleDraft} stepTitles={stepTitles} />
+        <ModalStepHeader modalStep={modalStep} handleDraft={onSaveDraft} stepTitles={stepTitles} />
         {renderStep()}
       </div>
     </Modal>

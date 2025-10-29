@@ -1,4 +1,4 @@
-import { Button, Modal } from 'antd';
+import { Button, message, Modal } from 'antd';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 
 import { useEffect, useMemo, useState } from 'react';
@@ -205,13 +205,19 @@ export const MultiStepArchetypeModal = ({
 
   const onSaveDraft = async () => {
     const payload = { ...buildFormData(), status: 'DRAFT' as const };
-    handleDraft(payload);
+    try {
+      handleDraft(payload);
+      message.success(t('project.createTemplate.form.draft.success'));
+    } catch (error) {
+      message.error(t('dashboard.createTemplate.form.draft.failed'));
+    } finally {
+      setIsModalOpen(false);
+    }
   };
 
   const handleCreate = async () => {
     setFormLoading(true);
     const formData = { ...buildFormData(), status: 'ACTIVE' as const };
-
     try {
       if (!isEditing) {
         console.log('Creating archetype with data:', formData);

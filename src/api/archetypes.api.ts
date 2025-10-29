@@ -62,13 +62,6 @@ export const createArchetype = async (data: ArchetypeInfo): Promise<void> => {
   });
 };
 
-export const publishArchetype = async (projectId: string | undefined, archetypeId: string): Promise<void> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.post(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}/publish`, null, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-};
-
 export const deleteArchetype = async (projectId: string | undefined, archetypeId: string): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   await httpClient.delete(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}`, {

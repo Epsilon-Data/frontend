@@ -1,4 +1,4 @@
-import { Archetype, deleteArchetype, publishArchetype } from '@app/api/archetypes.api';
+import { Archetype, deleteArchetype } from '@app/api/archetypes.api';
 import { STATUS_COLORS, toTitleCase } from '@app/constants/archetype';
 import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
 import { Button, Tag, Popconfirm } from 'antd';
@@ -23,7 +23,7 @@ export const DatabaseMappingHeader = ({ mode, archetype, projectId }: DatabaseMa
   };
 
   const handlePublish = async () => {
-    await publishArchetype(projectId, archetype?.id ?? '');
+    //TODO: publish archetype
     navigate(`/project/db-mapping?id=${projectId}`);
   };
 

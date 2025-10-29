@@ -22,22 +22,20 @@ const DatabaseMappingPage: React.FC = () => {
 
   return (
     <div className="py-3 px-4 md:py-5 md:px-9">
-      <ArchetypeModalProvider>
-        <DatabaseMappingHeader
-          projectId={projectId}
-          mode={!archetypeId ? 'create' : 'edit'}
-          archetype={archetypeId ? archetypes.find((a) => a.id === archetypeId) : undefined}
-        />
-        <MultiStepArchetypeModal
-          fetchArchetypes={fetchArchetypes}
-          projectId={projectId}
-          mask
-          closable={false}
-          width={'60%'}
-        />
-      </ArchetypeModalProvider>
       {!archetypeId ? (
-        <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
+        <>
+          <ArchetypeModalProvider>
+            <DatabaseMappingHeader projectId={projectId} mode={'create'} />
+            <MultiStepArchetypeModal
+              fetchArchetypes={fetchArchetypes}
+              projectId={projectId}
+              mask
+              closable={false}
+              width={'60%'}
+            />
+          </ArchetypeModalProvider>
+          <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
+        </>
       ) : (
         <ArchetypeDetails projectId={projectId} archetypeId={archetypeId} />
       )}

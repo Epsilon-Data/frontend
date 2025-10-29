@@ -1,4 +1,4 @@
-import { Archetype, deleteArchetype } from '@app/api/archetypes.api';
+import { ArchetypeInfo, deleteArchetype, updateArchetype } from '@app/api/archetypes.api';
 import { STATUS_COLORS, toTitleCase } from '@app/constants/archetype';
 import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
 import { Button, Tag, Popconfirm } from 'antd';
@@ -8,7 +8,7 @@ import { FaPlus } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 type DatabaseMappingHeaderProps = {
   mode: 'create' | 'edit';
-  archetype?: Archetype | undefined;
+  archetype?: ArchetypeInfo | undefined;
   projectId: string;
 };
 
@@ -18,12 +18,16 @@ export const DatabaseMappingHeader = ({ mode, archetype, projectId }: DatabaseMa
   const navigate = useNavigate();
 
   const confirmDeletion = async () => {
-    await deleteArchetype(projectId, archetype?.id ?? '');
+    await deleteArchetype(projectId, archetype?.archetypeId ?? '');
     navigate(`/project/db-mapping?id=${projectId}`);
   };
 
   const handlePublish = async () => {
-    //TODO: publish archetype
+    if (!archetype) return;
+    await updateArchetype(projectId, archetype?.archetypeId ?? '', {
+      ...archetype,
+      status: 'PUBLISHED',
+    });
     navigate(`/project/db-mapping?id=${projectId}`);
   };
 

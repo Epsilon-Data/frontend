@@ -28,7 +28,7 @@ export function useArchetypeFlow(params: useArchetypeFlowProps) {
 
   const isValidConnection = useCallback(
     (p?: Edge | Connection) => {
-      if (!isMapping) return false;
+      if (isMapping) return false;
       if (!p) return true;
 
       return p.source !== p.target;
@@ -48,7 +48,7 @@ export function useArchetypeFlow(params: useArchetypeFlowProps) {
   const onConnectEnd = useCallback(
     (event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
       if (!connectionState.isValid) {
-        if (!isMapping) return;
+        if (isMapping) return;
         const id = nextId();
 
         const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
@@ -82,7 +82,7 @@ export function useArchetypeFlow(params: useArchetypeFlowProps) {
     onConnect,
     onConnectEnd,
     isValidConnection,
-    nodesConnectable: isMapping,
+    nodesConnectable: !isMapping,
     setReactFlowInstance: setRf,
     options: ctx.options,
     bgVariant: ctx.bgVariant,

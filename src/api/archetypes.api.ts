@@ -26,7 +26,7 @@ export interface ArchetypeInfo {
   edges: Edge[];
   permissions?: Permission[];
   status: ArchetypeStatus;
-  lastModified: Date;
+  lastModified?: Date;
 }
 
 export const getArchetypes = async (projectId: string | undefined): Promise<Archetype[]> => {

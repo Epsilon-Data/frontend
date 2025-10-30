@@ -172,7 +172,6 @@ export const MultiStepArchetypeModal = ({
       })),
       permissions,
       status: 'DRAFT' as const,
-      lastModified: new Date(),
     };
 
     try {

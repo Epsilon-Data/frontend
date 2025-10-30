@@ -47,12 +47,7 @@ export const getArchetypeDetails = async (
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
-  return {
-    ...response.data,
-    nodes: response.data.nodes?.map((n: Node) =>
-      n?.type === 'column' ? { ...n, position: { ...n.position, y: n.position.y + 200 } } : n,
-    ),
-  };
+  return response.data;
 };
 
 export const createArchetype = async (data: ArchetypeInfo): Promise<void> => {

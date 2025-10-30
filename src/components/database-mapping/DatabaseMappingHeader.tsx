@@ -1,7 +1,7 @@
 import { ArchetypeInfo, deleteArchetype, updateArchetypeDetails } from '@app/api/archetypes.api';
 import { STATUS_COLORS, toTitleCase } from '@app/constants/archetype';
 import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
-import { Button, Tag, Popconfirm } from 'antd';
+import { Button, Tag, Popconfirm, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { AiFillDelete } from 'react-icons/ai';
 import { FaPlus } from 'react-icons/fa6';
@@ -17,13 +17,23 @@ export const DatabaseMappingHeader = ({ archetype, projectId }: DatabaseMappingH
   const navigate = useNavigate();
 
   const confirmDeletion = async () => {
-    await deleteArchetype(projectId, archetype?.archetypeId ?? '');
-    navigate(`/project/db-mapping?id=${projectId}`);
+    try {
+      await deleteArchetype(projectId, archetype?.archetypeId ?? '');
+      message.success(t('project.main.dbMapping.table.manage.delete.success'));
+    } catch (error) {
+      message.error(t('project.main.dbMapping.table.manage.delete.failed'));
+    }
+    navigate(`/project/db-mapping?id=${projectId}`, { state: { refetch: true } });
   };
 
   const handlePublish = async () => {
     if (!archetype) return;
-    await updateArchetypeDetails(projectId, archetype?.archetypeId ?? '', { status: 'PUBLISHED' });
+    try {
+      await updateArchetypeDetails(projectId, archetype?.archetypeId ?? '', { status: 'PUBLISHED' });
+      message.success(t('project.main.dbMapping.table.manage.publish.success'));
+    } catch (error) {
+      message.error(t('project.main.dbMapping.table.manage.publish.failed'));
+    }
     navigate(`/project/db-mapping?id=${projectId}`);
   };
 
@@ -77,7 +87,7 @@ export const DatabaseMappingHeader = ({ archetype, projectId }: DatabaseMappingH
               className="flex items-center px-8 h-9 text-xs font-medium font-inter text-blueDark border border-blueDark"
               onClick={handlePublish}
             >
-              {t('project.main.dbMapping.table.manage.publish')}
+              {t('project.main.dbMapping.table.manage.publish.title')}
             </Button>
           </>
         )}

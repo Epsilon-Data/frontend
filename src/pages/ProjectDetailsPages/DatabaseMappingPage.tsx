@@ -11,7 +11,6 @@ const DatabaseMappingPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get('id') ?? '';
   const archetypeId = searchParams.get('archetypeId');
-
   const { archetypes, tableLoading, fetchArchetypes } = useArchetypes(projectId);
 
   useEffect(() => {

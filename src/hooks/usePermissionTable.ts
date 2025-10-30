@@ -25,6 +25,27 @@ export function usePermissionTable(
     useMemo(() => buildPermissionTree(nodes, edges), [nodes, edges]);
 
   const [modeByTop, setModeByTop] = useState<Record<string, Mode>>({});
+  const otherCol = (col: ColKey): ColKey => (col === 'high' ? 'detail' : 'high');
+
+  const clearOpposite = useCallback(
+    (col: ColKey, bucket: 'parent' | 'leaf', updates: Record<string, boolean>) => {
+      const o = otherCol(col);
+      const off: Record<string, boolean> = {};
+      for (const k of Object.keys(updates)) off[k] = false;
+
+      setCheckedByCol((prev) => ({
+        ...prev,
+        [o]: {
+          ...prev[o],
+          [bucket]: {
+            ...prev[o][bucket],
+            ...off,
+          },
+        },
+      }));
+    },
+    [setCheckedByCol],
+  );
 
   const hasAnyCategoryDescendants = useCallback(
     (id: string) => {
@@ -88,14 +109,18 @@ export function usePermissionTable(
         const x: Record<string, boolean> = {};
         for (const id of cats) x[id] = next;
         setParentChecked(col, x);
+        if (next) clearOpposite(col, 'parent', { [row.key]: true, ...x });
+      } else {
+        if (next) clearOpposite(col, 'parent', { [row.key]: true });
       }
       if (leafs.length) {
         const y: Record<string, boolean> = {};
         for (const id of leafs) y[id] = next;
         setLeafChecked(col, y);
+        if (next) clearOpposite(col, 'leaf', y);
       }
     },
-    [findDescendants, setMode, setParentChecked, setLeafChecked],
+    [setMode, setParentChecked, findDescendants, clearOpposite, setLeafChecked],
   );
 
   const onLeafToggle = useCallback(
@@ -104,6 +129,8 @@ export function usePermissionTable(
       setMode(topId, 'override');
 
       setLeafChecked(col, { [row.key]: next });
+
+      if (next) clearOpposite(col, 'leaf', { [row.key]: true });
 
       setCheckedByCol((prev) => {
         const copy = { ...prev };
@@ -115,7 +142,7 @@ export function usePermissionTable(
         return copy;
       });
     },
-    [setMode, setLeafChecked, setCheckedByCol, ancestorsUpToTop, allDescLeafsChecked],
+    [setMode, setLeafChecked, clearOpposite, setCheckedByCol, ancestorsUpToTop, allDescLeafsChecked],
   );
 
   return {

@@ -6,3 +6,7 @@ export class ApiError<T> extends Error {
     this.options = options;
   }
 }
+
+export type ApiErrorData = {
+  message: string;
+};

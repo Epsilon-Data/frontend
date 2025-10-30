@@ -1,4 +1,4 @@
-import { ArchetypeInfo, deleteArchetype, updateArchetype } from '@app/api/archetypes.api';
+import { ArchetypeInfo, deleteArchetype, updateArchetypeDetails } from '@app/api/archetypes.api';
 import { STATUS_COLORS, toTitleCase } from '@app/constants/archetype';
 import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
 import { Button, Tag, Popconfirm } from 'antd';
@@ -23,10 +23,7 @@ export const DatabaseMappingHeader = ({ archetype, projectId }: DatabaseMappingH
 
   const handlePublish = async () => {
     if (!archetype) return;
-    await updateArchetype(projectId, archetype?.archetypeId ?? '', {
-      ...archetype,
-      status: 'PUBLISHED',
-    });
+    await updateArchetypeDetails(projectId, archetype?.archetypeId ?? '', { status: 'PUBLISHED' });
     navigate(`/project/db-mapping?id=${projectId}`);
   };
 

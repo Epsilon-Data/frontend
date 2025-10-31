@@ -23,30 +23,32 @@ export function useArchetypeFlow(params: useArchetypeFlowProps) {
   const nextId = useNodeIdCounter(nodes.length);
   const [rf, setRf] = useState<ReactFlowInstance>({} as ReactFlowInstance);
 
-  const mappingLocked = mode != 'editable';
+  const isMapping = mode == 'mapping';
+  const isReadonly = mode == 'readonly';
 
   const isValidConnection = useCallback(
     (p?: Edge | Connection) => {
-      if (!mappingLocked) return false;
+      if (isMapping) return false;
       if (!p) return true;
 
       return p.source !== p.target;
     },
-    [mappingLocked],
+    [isMapping],
   );
 
   const onConnect = useCallback(
     (p: Edge | Connection) => {
+      if (isReadonly) return;
       if (p.source === p.target) return;
       setEdges((eds) => addEdge(p, eds));
     },
-    [setEdges],
+    [isReadonly, setEdges],
   );
 
   const onConnectEnd = useCallback(
     (event: MouseEvent | TouchEvent, connectionState: FinalConnectionState) => {
       if (!connectionState.isValid) {
-        if (mappingLocked) return;
+        if (isMapping) return;
         const id = nextId();
 
         const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
@@ -69,7 +71,7 @@ export function useArchetypeFlow(params: useArchetypeFlowProps) {
         );
       }
     },
-    [mappingLocked, nextId, rf, setEdges, setNodes],
+    [isMapping, nextId, rf, setEdges, setNodes],
   );
 
   return {
@@ -80,7 +82,7 @@ export function useArchetypeFlow(params: useArchetypeFlowProps) {
     onConnect,
     onConnectEnd,
     isValidConnection,
-    nodesConnectable: !mappingLocked,
+    nodesConnectable: !isMapping,
     setReactFlowInstance: setRf,
     options: ctx.options,
     bgVariant: ctx.bgVariant,

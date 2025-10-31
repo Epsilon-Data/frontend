@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { IoSearch } from 'react-icons/io5';
 import { Node, Edge } from '@xyflow/react';
 import { useMemo, useState } from 'react';
-import { TableRow } from '@app/constants/reactflow/helpers';
-import { ToggleRadio } from '@app/components/common/Modal/ToggleRadio/ToggleRadio';
+import { PermissionTableRow } from '@app/constants/reactflow/helpers';
 import { usePermissionTable } from '@app/hooks/usePermissionTable';
 import { RxQuestionMarkCircled } from 'react-icons/rx';
 import { getColors } from '@app/constants/reactflow/reactflowOptions';
 import { CheckedByCol } from '@app/hooks/usePermissionTable';
+import { ToggleRadio } from '@app/components/common/Modal/ToggleRadio/ToggleRadio';
 
 type SetPermissionsStepProps = {
   nodes: Node[];
@@ -37,18 +37,18 @@ export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol
   const filtered = useMemo(() => {
     if (!q) return rows;
     const term = q.toLowerCase();
-    const filterTree = (rs: TableRow[]): TableRow[] =>
+    const filterTree = (rs: PermissionTableRow[]): PermissionTableRow[] =>
       rs
         .map((r) => {
           const kids = r.children ? filterTree(r.children) : [];
           const match = r.label.toLowerCase().includes(term);
           return match || kids.length ? { ...r, children: kids.length ? kids : undefined } : null;
         })
-        .filter(Boolean) as TableRow[];
+        .filter(Boolean) as PermissionTableRow[];
     return filterTree(rows);
   }, [q, rows]);
 
-  const renderRadio = (col: 'high' | 'detail') => (_: unknown, row: TableRow) => {
+  const renderRadio = (col: 'high' | 'detail') => (_: unknown, row: PermissionTableRow) => {
     const enabled = isEnabled(row);
     const checked = getChecked(col, row);
     const onChange = (next: boolean) =>
@@ -118,7 +118,7 @@ export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol
       key: 'mode',
       width: 200,
       align: 'right' as const,
-      render: (_: unknown, row: TableRow) => {
+      render: (_: unknown, row: PermissionTableRow) => {
         if (!topKeys.includes(row.key)) return null;
         if (!hasAnyCategoryDescendants(row.key)) return null;
 
@@ -156,7 +156,7 @@ export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol
         </div>
       </div>
       <div>
-        <Table<TableRow>
+        <Table<PermissionTableRow>
           size="small"
           rowKey="key"
           columns={columns}

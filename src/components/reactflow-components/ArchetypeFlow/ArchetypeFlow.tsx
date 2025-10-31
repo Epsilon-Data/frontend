@@ -75,6 +75,8 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
     mode,
   });
 
+  const isReadonly = mode === 'readonly';
+
   return (
     <ReactFlow
       {...rest}
@@ -93,6 +95,8 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
       proOptions={{ hideAttribution: true }}
       nodesConnectable={nodesConnectable}
       isValidConnection={isValidConnection}
+      nodesDraggable={!isReadonly}
+      elementsSelectable={!isReadonly}
     >
       {name && <ArchetypeSidebar name={name} mode={mode} />}
       <ZoomControls />

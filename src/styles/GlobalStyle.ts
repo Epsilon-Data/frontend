@@ -259,4 +259,26 @@ export default createGlobalStyle`
       }
     }
   }
+
+  .base-table .ant-table-thead > tr > th {
+    background-color: #9fcbf9;
+    border-radius: 0 !important;
+    border-right: 1px solid #e0e0e0;
+  }
+
+  .base-table .ant-table-thead > tr > th::before {
+    background-color: transparent !important;
+  }
+
+  .base-table .ant-table-tbody > tr > td {
+    border-right: 1px solid #e0e0e0;
+    border-bottom: none;
+  }
+  .base-table .ant-table-tbody > tr > td:last-child {
+    border-right: none;
+  }
+
+  .base-table .ant-table-tbody > tr:hover > td {
+    background: #eaeaea !important;
+  }
 `;

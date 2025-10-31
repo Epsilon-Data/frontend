@@ -1,6 +1,6 @@
 // hooks/usePermissionMatrix.ts
 import { useMemo, useState, useCallback } from 'react';
-import type { TableRow } from '@app/constants/reactflow/helpers';
+import type { PermissionTableRow } from '@app/constants/reactflow/helpers';
 import { buildPermissionTree } from '@app/constants/reactflow/helpers';
 import { Node, Edge } from '@xyflow/react';
 
@@ -25,6 +25,27 @@ export function usePermissionTable(
     useMemo(() => buildPermissionTree(nodes, edges), [nodes, edges]);
 
   const [modeByTop, setModeByTop] = useState<Record<string, Mode>>({});
+  const otherCol = (col: ColKey): ColKey => (col === 'high' ? 'detail' : 'high');
+
+  const clearOpposite = useCallback(
+    (col: ColKey, bucket: 'parent' | 'leaf', updates: Record<string, boolean>) => {
+      const o = otherCol(col);
+      const off: Record<string, boolean> = {};
+      for (const k of Object.keys(updates)) off[k] = false;
+
+      setCheckedByCol((prev) => ({
+        ...prev,
+        [o]: {
+          ...prev[o],
+          [bucket]: {
+            ...prev[o][bucket],
+            ...off,
+          },
+        },
+      }));
+    },
+    [setCheckedByCol],
+  );
 
   const hasAnyCategoryDescendants = useCallback(
     (id: string) => {
@@ -39,7 +60,7 @@ export function usePermissionTable(
   );
 
   const isEnabled = useCallback(
-    (row: TableRow) => {
+    (row: PermissionTableRow) => {
       const topId = row.topCategoryId ?? row.key;
       const mode = modeByTop[topId] ?? 'apply';
 
@@ -77,7 +98,7 @@ export function usePermissionTable(
   );
 
   const onParentToggle = useCallback(
-    (col: ColKey, row: TableRow, next: boolean) => {
+    (col: ColKey, row: PermissionTableRow, next: boolean) => {
       const topId = row.topCategoryId ?? row.key;
       setMode(topId, 'apply');
 
@@ -88,22 +109,28 @@ export function usePermissionTable(
         const x: Record<string, boolean> = {};
         for (const id of cats) x[id] = next;
         setParentChecked(col, x);
+        if (next) clearOpposite(col, 'parent', { [row.key]: true, ...x });
+      } else {
+        if (next) clearOpposite(col, 'parent', { [row.key]: true });
       }
       if (leafs.length) {
         const y: Record<string, boolean> = {};
         for (const id of leafs) y[id] = next;
         setLeafChecked(col, y);
+        if (next) clearOpposite(col, 'leaf', y);
       }
     },
-    [findDescendants, setMode, setParentChecked, setLeafChecked],
+    [setMode, setParentChecked, findDescendants, clearOpposite, setLeafChecked],
   );
 
   const onLeafToggle = useCallback(
-    (col: ColKey, row: TableRow, next: boolean) => {
+    (col: ColKey, row: PermissionTableRow, next: boolean) => {
       const topId = row.topCategoryId ?? row.key;
       setMode(topId, 'override');
 
       setLeafChecked(col, { [row.key]: next });
+
+      if (next) clearOpposite(col, 'leaf', { [row.key]: true });
 
       setCheckedByCol((prev) => {
         const copy = { ...prev };
@@ -115,7 +142,7 @@ export function usePermissionTable(
         return copy;
       });
     },
-    [setMode, setLeafChecked, setCheckedByCol, ancestorsUpToTop, allDescLeafsChecked],
+    [setMode, setLeafChecked, clearOpposite, setCheckedByCol, ancestorsUpToTop, allDescLeafsChecked],
   );
 
   return {
@@ -128,7 +155,7 @@ export function usePermissionTable(
     setMode,
     hasAnyCategoryDescendants,
     isEnabled,
-    getChecked: (col: ColKey, row: TableRow) =>
+    getChecked: (col: ColKey, row: PermissionTableRow) =>
       row.kind === 'category' ? !!checkedByCol[col].parent[row.key] : !!checkedByCol[col].leaf[row.key],
     onParentToggle,
     onLeafToggle,

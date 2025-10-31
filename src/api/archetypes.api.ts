@@ -78,7 +78,7 @@ export const deleteArchetype = async (projectId: string | undefined, archetypeId
 export const updateArchetypeDetails = async (
   projectId: string | undefined,
   archetypeId: string,
-  attributes: unknown,
+  attributes: Record<string, unknown>,
 ): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   await httpClient.patch(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}`, attributes, {

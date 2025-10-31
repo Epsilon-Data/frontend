@@ -7,6 +7,9 @@ import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DisplayTabs } from './DisplayTabs';
+import { ArchetypeModalProvider } from '@app/providers/ArchetypeModalProvider';
+import { DatabaseMappingHeader } from './DatabaseMappingHeader';
+import { MultiStepArchetypeModal } from './modal/MultiStepArchetypeModal';
 
 type ArchetypeDetailsProps = {
   projectId: string;
@@ -15,8 +18,7 @@ type ArchetypeDetailsProps = {
 
 export const ArchetypeDetails = ({ projectId, archetypeId }: ArchetypeDetailsProps) => {
   const { t } = useTranslation();
-  const { archetype, fetchArchetype, manageLoading } = useArchetypes(projectId);
-
+  const { archetype, fetchArchetype, manageLoading, fetchArchetypes } = useArchetypes(projectId);
   const { project, projectLoading } = useProjectContext();
 
   useEffect(() => {
@@ -33,6 +35,19 @@ export const ArchetypeDetails = ({ projectId, archetypeId }: ArchetypeDetailsPro
 
   return (
     <Spin spinning={spinning}>
+      <ArchetypeModalProvider mode="edit">
+        <DatabaseMappingHeader projectId={projectId} archetype={archetype} />
+        {archetype && (
+          <MultiStepArchetypeModal
+            archetype={archetype}
+            fetchArchetypes={fetchArchetypes}
+            projectId={projectId}
+            mask
+            closable={false}
+            width={'60%'}
+          />
+        )}
+      </ArchetypeModalProvider>
       <Row className="text-lg mt-8 mb-6">{t('project.main.dbMapping.table.manage.summary.title')}</Row>
       <Row gutter={[32, 16]}>
         <Col>

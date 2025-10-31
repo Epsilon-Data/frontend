@@ -1,20 +1,26 @@
 import { Button, Modal } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
 import { Edge, Node, useEdgesState, useNodesState } from '@xyflow/react';
-import { createArchetype } from '@app/api/archetypes.api';
+import { ArchetypeInfo, createArchetype, updateArchetype } from '@app/api/archetypes.api';
 import { ArchetypeNameStep } from './steps/ArchetypeNameStep';
 import { CreateTemplateStep } from './steps/CreateTemplateStep';
 import { ColumnMappingStep } from './steps/ColumnMappingStep';
 import { SetPermissionsStep } from './steps/SetPermissionsStep';
-import { findDuplicateChildLabels, findUnmappedLeafs, permissionsFromChecked } from '@app/constants/reactflow/helpers';
+import {
+  findDuplicateChildLabels,
+  findUnmappedLeafs,
+  permissionsFromChecked,
+  permissionsToCheckedByCol,
+} from '@app/constants/reactflow/helpers';
 import { CheckedByCol, usePermissionTable } from '@app/hooks/usePermissionTable';
 
 type MultiStepArchetypeModalProps = {
+  archetype?: ArchetypeInfo | undefined;
   fetchArchetypes: () => Promise<void>;
   projectId: string;
 } & React.ComponentProps<typeof Modal>;
@@ -30,6 +36,7 @@ const initialNodes: Node[] = [
 ];
 
 export const MultiStepArchetypeModal = ({
+  archetype,
   fetchArchetypes,
   projectId,
   ...modalProps
@@ -57,11 +64,30 @@ export const MultiStepArchetypeModal = ({
   const { childrenById, topKeys } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
   const { t } = useTranslation();
 
+  const isEditing = useMemo(() => Object.keys(archetype || {}).length != 0, [archetype]);
+
   useEffect(() => {
     const controller = new AbortController();
     fetchColumns(projectId);
     return () => controller.abort();
   }, [fetchColumns, projectId]);
+
+  useEffect(() => {
+    if (!isModalOpen) return;
+
+    if (isEditing) {
+      const a = archetype as ArchetypeInfo;
+      step1?.setFieldsValue?.({ name: a.name ?? '' });
+      setNodes((a.nodes && a.nodes.length > 0 ? a.nodes : initialNodes) as Node[]);
+      setEdges((a.edges ?? []) as Edge[]);
+      setCheckedByCol(permissionsToCheckedByCol(a.permissions || [], a.nodes, a.edges));
+    } else {
+      step1?.resetFields?.();
+      setNodes(initialNodes);
+      setEdges([]);
+      setCheckedByCol({ high: { parent: {}, leaf: {} }, detail: { parent: {}, leaf: {} } });
+    }
+  }, [isModalOpen, isEditing, archetype, setNodes, setEdges, step1]);
 
   const nextStep = () => {
     let duplicateGroups: ReturnType<typeof findDuplicateChildLabels> = [];
@@ -135,7 +161,6 @@ export const MultiStepArchetypeModal = ({
       return;
     }
 
-    // All good → advance
     setModalStep((prev) => Math.min(prev + 1, 3));
   };
 
@@ -175,8 +200,19 @@ export const MultiStepArchetypeModal = ({
     };
 
     try {
-      console.log('Creating archetype with data:', formData);
-      await createArchetype(formData);
+      if (!isEditing) {
+        console.log('Creating archetype with data:', formData);
+        await createArchetype(formData);
+      } else {
+        const archetypeId = archetype?.archetypeId;
+        if (!archetypeId) {
+          console.error('Cannot update archetype: missing archetypeId');
+          return;
+        }
+        const updateData = { ...formData, archetypeId };
+        console.log('Updating archetype with data:', updateData);
+        await updateArchetype(projectId, archetypeId, updateData);
+      }
       setIsModalOpen(false);
       await fetchArchetypes();
     } catch (error) {
@@ -199,6 +235,8 @@ export const MultiStepArchetypeModal = ({
             setEdges={setEdges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
+            columns={columns}
+            setColumns={setColumns}
             name={step1.getFieldValue('name')}
           />
         );

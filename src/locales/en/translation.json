@@ -202,9 +202,15 @@
             "edit": "Edit template",
             "delete": {
               "title": "Delete Archetype",
-              "description": "Are you sure you want to delete this template?"
+              "description": "Are you sure you want to delete this template?",
+              "success": "Archetype deleted successfully",
+              "failed": "Failed to delete archetype"
             },
-            "publish": "Publish",
+            "publish": {
+              "title": "Publish",
+              "success": "Archetype published successfully",
+              "failed": "Failed to publish archetype"
+            },
             "summary": {
               "title": "Connected database summary",
               "dbName": "Database name",

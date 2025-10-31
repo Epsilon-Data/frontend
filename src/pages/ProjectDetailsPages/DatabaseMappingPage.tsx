@@ -11,7 +11,6 @@ const DatabaseMappingPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get('id') ?? '';
   const archetypeId = searchParams.get('archetypeId');
-
   const { archetypes, tableLoading, fetchArchetypes } = useArchetypes(projectId);
 
   useEffect(() => {
@@ -22,22 +21,20 @@ const DatabaseMappingPage: React.FC = () => {
 
   return (
     <div className="py-3 px-4 md:py-5 md:px-9">
-      <ArchetypeModalProvider>
-        <DatabaseMappingHeader
-          projectId={projectId}
-          mode={!archetypeId ? 'create' : 'edit'}
-          archetype={archetypeId ? archetypes.find((a) => a.id === archetypeId) : undefined}
-        />
-        <MultiStepArchetypeModal
-          fetchArchetypes={fetchArchetypes}
-          projectId={projectId}
-          mask
-          closable={false}
-          width={'60%'}
-        />
-      </ArchetypeModalProvider>
       {!archetypeId ? (
-        <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
+        <>
+          <ArchetypeModalProvider mode="create">
+            <DatabaseMappingHeader projectId={projectId} />
+            <MultiStepArchetypeModal
+              fetchArchetypes={fetchArchetypes}
+              projectId={projectId}
+              mask
+              closable={false}
+              width={'60%'}
+            />
+          </ArchetypeModalProvider>
+          <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
+        </>
       ) : (
         <ArchetypeDetails projectId={projectId} archetypeId={archetypeId} />
       )}

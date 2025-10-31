@@ -2,7 +2,10 @@ import { ColumnInfo } from '@app/api/database.api';
 import { FormInstance } from 'antd';
 import { createContext } from 'react';
 
+export type ModalMode = 'create' | 'edit';
+
 type ArchetypeModalContextType = {
+  mode: ModalMode;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   modalStep: number;

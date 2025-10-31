@@ -3,12 +3,8 @@ import { authClient, AuthClientOptionsDto } from '@epsilon-data/epsilon-auth-cli
 import { AxiosError, AxiosRequestConfig } from 'axios';
 
 import config from '@app/config/config';
-import { ApiError } from './ApiError';
+import { ApiError, ApiErrorData } from './ApiError';
 import { readCsrf } from '@app/services/localStorage.service';
-
-type ApiErrorData = {
-  message: string;
-};
 
 const clientOptions: AuthClientOptionsDto = {
   tokenHandlerUri: `${config.apiPrefix}/token`,

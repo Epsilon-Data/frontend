@@ -222,6 +222,29 @@
             }
           }
         }
+      },
+      "metadata": {
+        "title": "Metadata summary",
+        "created": "Date Created",
+        "count": {
+          "schema": "Schema Count",
+          "table": "Total Tables Count",
+          "view": "View Count",
+          "column": "Total Columns Count"
+        },
+        "tabs": {
+          "erd": "ERD",
+          "table": {
+            "title": "Table Information",
+            "placeholder": "Please select a table",
+            "parentName": "Parent name",
+            "columnCount": "Column count",
+            "tableSchema": "Table schema",
+            "column": "Column",
+            "dataType": "Data Type",
+            "nullable":  "Nullable"
+          }
+        }
       }
     },
     "createTemplate": {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import mermaid from 'mermaid';
-import { BaseSpin } from '@app/components/common/BaseSpin/BaseSpin';
 import * as S from './ERD.styles';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import { Spin } from 'antd';
 
 const CustomToolbar: React.FC<{
   className: string;
@@ -23,35 +23,35 @@ export const ERD: React.FC<{ diagramCode: string }> = ({ diagramCode }) => {
   const [svgContent, setSvgContent] = useState<string | null>(null);
 
   useEffect(() => {
-    if (diagramCode) {
-      mermaid.initialize({ startOnLoad: true });
-      mermaid.render('erd-container', diagramCode).then((res) => {
-        setSvgContent(res.svg);
-      });
-    }
+    if (!diagramCode) return;
+
+    mermaid.initialize({ startOnLoad: false });
+    const svgId = 'erd-svg';
+
+    mermaid.render(svgId, diagramCode).then((res) => {
+      setSvgContent(res.svg);
+    });
   }, [diagramCode]);
 
   return (
-    <>
-      {svgContent !== null ? (
-        <TransformWrapper initialScale={2} initialPositionX={50} initialPositionY={0}>
+    <Spin spinning={!svgContent}>
+      <S.ERDContainer>
+        <TransformWrapper initialScale={1} initialPositionX={50} initialPositionY={0}>
           {({ zoomIn, zoomOut, resetTransform }) => (
-            <React.Fragment>
+            <>
               <CustomToolbar
                 className="tools"
-                handleZoomIn={() => zoomIn()}
-                handleZoomOut={() => zoomOut()}
-                handleReset={() => resetTransform()}
+                handleZoomIn={zoomIn}
+                handleZoomOut={zoomOut}
+                handleReset={resetTransform}
               />
               <TransformComponent>
-                <S.DiagramArea id="erd-container" dangerouslySetInnerHTML={{ __html: svgContent }} />
+                {svgContent && <div className="w-screen" dangerouslySetInnerHTML={{ __html: svgContent }} />}
               </TransformComponent>
-            </React.Fragment>
+            </>
           )}
         </TransformWrapper>
-      ) : (
-        <BaseSpin size="default" />
-      )}
-    </>
+      </S.ERDContainer>
+    </Spin>
   );
 };

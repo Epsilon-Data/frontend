@@ -2,11 +2,17 @@ import { styled } from 'styled-components';
 import { FiMaximize } from 'react-icons/fi';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
 
-export const DiagramArea = styled.div`
-  align-items: center;
-  justify-content: center;
+export const ERDContainer = styled.div`
+  position: relative;
   width: 100%;
-  min-height: 35rem;
+  background: #fff;
+  border-radius: 0.5rem;
+
+  svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
 `;
 
 export const ToolbarWrapper = styled.div`
@@ -22,7 +28,7 @@ export const ToolbarWrapper = styled.div`
 export const ToolbarTop = styled.div`
   flex: 0 0 auto;
   border-radius: 2px;
-  background: white;
+  background: #f2f2f2;
 `;
 
 const ToolCss = `

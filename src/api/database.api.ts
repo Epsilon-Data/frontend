@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { OverallDatabaseInfoValues, TemplatePermissions } from '@app/interfaces/interfaces';
 import { Priority } from '../constants/enums/priorities';
 import { CrawlStatus } from '@app/constants/enums/crawlStatus';
 import { DATE_FORMAT, DATABASE_API_URL } from '@app/constants/database';
@@ -7,6 +6,14 @@ import { format } from 'date-fns';
 import { httpClient, getCsrfHeader } from './http.api';
 import { AxiosProgressEvent } from 'axios';
 import { RcFile } from 'antd/es/upload';
+
+export interface OverallDatabaseInfo {
+  created?: Date;
+  schemaCount: number;
+  totalTableCount: number;
+  totalColCount: number;
+  viewCount?: number;
+}
 
 export interface Tag {
   value: string;
@@ -37,7 +44,7 @@ export interface SourceListData {
 }
 
 export interface DatabaseSummaryInfo {
-  overall: OverallDatabaseInfoValues;
+  overall: OverallDatabaseInfo;
   diagram: string;
 }
 
@@ -108,6 +115,7 @@ export const getDbSummary = async (projectId: string | undefined): Promise<Datab
   const response = await httpClient.get(`${DATABASE_API_URL}/${projectId}/summary`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
+
   return response.data;
 };
 
@@ -122,25 +130,6 @@ export const getDbTableInfo = async (projectId: string | undefined): Promise<Dat
 export const getDbColumns = async (projectId: string | undefined): Promise<ColumnInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${DATABASE_API_URL}/${projectId}/columns`, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-  return response.data;
-};
-
-export const getAccessPermissions = async (projectId: string | undefined): Promise<TemplatePermissions[]> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(`${DATABASE_API_URL}/${projectId}/permissions`, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-  return response.data;
-};
-
-export const addAccessPermissions = async (
-  projectId: string | undefined,
-  permissions: TemplatePermissions[],
-): Promise<{ projectId: string; permissions: TemplatePermissions[] }> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(`${DATABASE_API_URL}/${projectId}/permissions`, permissions, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;

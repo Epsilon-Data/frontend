@@ -77,12 +77,6 @@ export interface DatabaseInfoFormValues {
   password?: string;
 }
 
-export interface OverallDatabaseInfoValues {
-  schemaCount: number;
-  totalTableCount: number;
-  totalColCount: number;
-}
-
 export type DatabaseConnectionDetails = {
   readonly type: string;
   readonly host: string;

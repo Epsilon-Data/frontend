@@ -20,11 +20,13 @@ const Logout = React.lazy(() => import('./Logout'));
 const Login = React.lazy(() => import('./Login'));
 const DatabaseMappingPage = React.lazy(() => import('@app/pages/ProjectDetailsPages/DatabaseMappingPage'));
 const BrowseDatasetPage = React.lazy(() => import('@app/pages/BrowseDatasetPages/BrowseDatasetPage'));
+const MetadataPage = React.lazy(() => import('@app/pages/ProjectDetailsPages/MetadataPage'));
 
 export const DASHBOARD_PATH = '/';
 
 const Dashboard = withLoading(DashboardPage);
 const DatabaseMapping = withLoading(DatabaseMappingPage);
+const Metadata = withLoading(MetadataPage);
 const BrowseDatasets = withLoading(BrowseDatasetPage);
 
 const AuthLayoutFallback = withLoading(AuthLayout);
@@ -46,6 +48,7 @@ export const AppRouter: React.FC = () => {
           <Route path="browse" element={<BrowseDatasets />} />
           <Route path="project" element={<ProjectRouteScope />}>
             <Route path="db-mapping" element={<DatabaseMapping />} />
+            <Route path="metadata" element={<Metadata />} />
           </Route>
           {/* <Route path="requests/database/:page" element={<ConnectionRequests />} />
           <Route path="requests/database/create/:page" element={<CreateRequest />} />

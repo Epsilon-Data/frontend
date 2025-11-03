@@ -5,11 +5,11 @@ import { ArchetypeFlow } from '../reactflow-components/ArchetypeFlow/ArchetypeFl
 import { Node, Edge, useNodesState, useEdgesState } from '@xyflow/react';
 import { ReadOnlyPermissionsTable } from './ReadonlyPermissionTable';
 
-type AboutTabsProps = {
+type DisplayTabsProps = {
   archetype: ArchetypeInfo;
 };
 
-export const DisplayTabs = ({ archetype }: AboutTabsProps) => {
+export const DisplayTabs = ({ archetype }: DisplayTabsProps) => {
   const { t } = useTranslation();
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(archetype.nodes || []);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(archetype.edges || []);
@@ -38,5 +38,5 @@ export const DisplayTabs = ({ archetype }: AboutTabsProps) => {
       children: <ReadOnlyPermissionsTable nodes={nodes} edges={edges} permissions={archetype.permissions || []} />,
     },
   ];
-  return <Tabs className="details-tabs" defaultActiveKey="" items={items} />;
+  return <Tabs className="details-tabs" defaultActiveKey="mapping" items={items} />;
 };

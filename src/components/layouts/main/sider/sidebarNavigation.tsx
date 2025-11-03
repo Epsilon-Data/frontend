@@ -64,11 +64,11 @@ const projectNavigation: SidebarNavigationItem[] = [
       //   key: 'project/manage-permissions',
       //   url: '/project/manage-permissions',
       // },
-      // {
-      //   title: 'project.sidebar.projectDb.metadata',
-      //   key: 'project/metadata',
-      //   url: '/project/metadata',
-      // },
+      {
+        title: 'project.sidebar.projectDb.metadata',
+        key: 'project/metadata',
+        url: '/project/metadata',
+      },
     ],
   },
   // {

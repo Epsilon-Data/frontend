@@ -1,6 +1,6 @@
 # Start with a node 21 image with package info
 # Installs *all* pnpm packages and runs build script
-FROM node:21.1.0-alpine AS workspace
+FROM node:22.21.1-alpine AS workspace
 
 # private git packages
 ARG GITHUB_NPM_TOKEN

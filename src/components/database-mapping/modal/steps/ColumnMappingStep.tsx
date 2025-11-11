@@ -1,11 +1,12 @@
 import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlow/ArchetypeFlow';
 import { ColumnToolbar } from '@app/components/reactflow-components/ColumnToolbar/ColumnToolbar';
 import { Anchor } from '@app/components/reactflow-components/ColumnToolbar/ReactflowBridge/ReactflowBridge';
-import { computeNextColumnPosition } from '@app/constants/reactflow/helpers';
+import { computeNextColumnPosition } from '@app/utils/reactflow/helpers';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Node, Edge, NodeChange, EdgeChange, addEdge } from '@xyflow/react';
 import { ColumnInfo } from '@app/api/database.api';
+import { handleCascadeNodeChanges } from '@app/utils/reactflow/cascade';
 
 type ColumnMappingStepProps = {
   nodes: Node[];
@@ -49,28 +50,6 @@ export const ColumnMappingStep = ({
 
   const toolbarDisabled = !!anchor && connectedColumnCount >= 1;
   const disabledMessage = toolbarDisabled ? t('project.createTemplate.form.step3.toolbar.error.nodeMapped') : undefined;
-
-  useEffect(() => {
-    const byId = new Map(columns.map((c) => [c.id, c]));
-    setNodes((nds) =>
-      nds.map((n) => {
-        if (n.type !== 'column') return n;
-        const data: { label: string; level: string; table?: string } = n.data as {
-          label: string;
-          level: string;
-          table: string;
-        };
-        const hasTable = typeof data.table === 'string' && data.table.length > 0;
-        if (hasTable) return n;
-        const col = byId.get(n.id);
-        if (!col) return n;
-        return { ...n, data: { ...data, table: col.table } } as Node;
-      }),
-    );
-    const nodeColumnIds = new Set(nodes.filter((n) => n.type === 'column').map((n) => n.id));
-    if (nodeColumnIds.size === 0) return;
-    setColumns((prev) => prev.filter((c) => !nodeColumnIds.has(c.id)));
-  }, [columns, nodes, setColumns, setNodes]);
 
   useEffect(() => {
     if (!anchor) {
@@ -165,25 +144,24 @@ export const ColumnMappingStep = ({
 
   const handleNodesChangeMapping = useCallback(
     (changes: NodeChange[]) => {
-      const toAddBack: ColumnInfo[] = [];
-      for (const c of changes) {
-        if (c.type !== 'remove') continue;
-        const removedNode = nodes.find((n) => n.id === c.id);
-        if (removedNode?.type === 'column') {
-          if (removedNode?.data?.label) {
-            const col: ColumnInfo = {
-              id: removedNode.id,
-              name: typeof removedNode.data.label === 'string' ? removedNode.data.label : '',
-              table: typeof removedNode.data.table === 'string' ? removedNode.data.table : '',
-            };
-            toAddBack.push(col);
-          }
-        }
-      }
-      onNodesChange(changes);
-      toAddBack.forEach(addBackColumn);
+      handleCascadeNodeChanges(
+        {
+          changes,
+          nodes,
+          edges,
+          onNodesChange,
+          setNodes,
+          setEdges,
+        },
+        {
+          follow: 'out',
+          isColumn,
+          isCategory,
+          onColumnRemoved: addBackColumn,
+        },
+      );
     },
-    [nodes, onNodesChange, addBackColumn],
+    [nodes, edges, onNodesChange, setNodes, setEdges, addBackColumn],
   );
 
   const handleToolbarClose = useCallback(() => {

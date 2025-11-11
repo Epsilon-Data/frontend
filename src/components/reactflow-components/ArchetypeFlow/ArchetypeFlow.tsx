@@ -17,6 +17,7 @@ export interface ArchetypeProps {
   setNodes: Dispatch<SetStateAction<Node[]>>;
   setEdges: Dispatch<SetStateAction<Edge[]>>;
   onAnchorChange?: (a: Anchor) => void;
+  onLeafNodeBecameParent?: (nodeId: string) => void;
 }
 
 export const ArchetypeFlow: React.FC<ArchetypeProps> = ({
@@ -55,6 +56,7 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
   setNodes,
   setEdges,
   onAnchorChange,
+  onLeafNodeBecameParent,
   ...rest
 }) => {
   const {
@@ -73,6 +75,7 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
     setNodes,
     setEdges,
     mode,
+    onLeafNodeBecameParent,
   });
 
   const isReadonly = mode === 'readonly';

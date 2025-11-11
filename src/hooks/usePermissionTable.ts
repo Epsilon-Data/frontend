@@ -1,7 +1,7 @@
 // hooks/usePermissionMatrix.ts
 import { useMemo, useState, useCallback } from 'react';
-import type { PermissionTableRow } from '@app/constants/reactflow/helpers';
-import { buildPermissionTree } from '@app/constants/reactflow/helpers';
+import type { PermissionTableRow } from '@app/utils/reactflow/helpers';
+import { buildPermissionTree } from '@app/utils/reactflow/helpers';
 import { Node, Edge } from '@xyflow/react';
 
 export type Mode = 'apply' | 'override';

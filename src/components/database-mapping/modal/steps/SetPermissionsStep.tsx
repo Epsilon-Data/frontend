@@ -4,10 +4,9 @@ import { IoSearch } from 'react-icons/io5';
 import { Node, Edge } from '@xyflow/react';
 import { useMemo, useState } from 'react';
 import { PermissionTableRow } from '@app/utils/reactflow/helpers';
-import { usePermissionTable } from '@app/hooks/usePermissionTable';
+import { usePermissionTable, CheckedByCol } from '@app/hooks/usePermissionTable';
 import { RxQuestionMarkCircled } from 'react-icons/rx';
 import { getColors } from '@app/constants/reactflow/reactflowOptions';
-import { CheckedByCol } from '@app/hooks/usePermissionTable';
 import { ToggleRadio } from '@app/components/common/Modal/ToggleRadio/ToggleRadio';
 
 type SetPermissionsStepProps = {

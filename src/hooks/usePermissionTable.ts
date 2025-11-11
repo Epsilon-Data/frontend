@@ -73,9 +73,30 @@ export function usePermissionTable(
     [hasAnyCategoryDescendants, modeByTop, topKeys],
   );
 
-  const setMode = useCallback((topId: string, m: Mode) => {
-    setModeByTop((prev) => ({ ...prev, [topId]: m }));
-  }, []);
+  const setMode = useCallback(
+    (topId: string, m: Mode) => {
+      setModeByTop((prev) => ({ ...prev, [topId]: m }));
+      if (m === 'override') {
+        const { cats } = findDescendants(topId);
+        const targets = [topId, ...cats];
+        const off: Record<string, boolean> = {};
+        for (const id of targets) off[id] = false;
+
+        setCheckedByCol((prev) => ({
+          ...prev,
+          high: {
+            ...prev.high,
+            parent: { ...prev.high.parent, ...off },
+          },
+          detail: {
+            ...prev.detail,
+            parent: { ...prev.detail.parent, ...off },
+          },
+        }));
+      }
+    },
+    [findDescendants, setCheckedByCol],
+  );
 
   const setParentChecked = useCallback(
     (col: ColKey, updates: Record<string, boolean>) => {

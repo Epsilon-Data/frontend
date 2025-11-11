@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Node, Edge, NodeChange, EdgeChange, addEdge } from '@xyflow/react';
 import { ColumnInfo } from '@app/api/database.api';
+import { handleCascadeNodeChanges } from '@app/constants/reactflow/cascade';
 
 type ColumnMappingStepProps = {
   nodes: Node[];
@@ -165,25 +166,24 @@ export const ColumnMappingStep = ({
 
   const handleNodesChangeMapping = useCallback(
     (changes: NodeChange[]) => {
-      const toAddBack: ColumnInfo[] = [];
-      for (const c of changes) {
-        if (c.type !== 'remove') continue;
-        const removedNode = nodes.find((n) => n.id === c.id);
-        if (removedNode?.type === 'column') {
-          if (removedNode?.data?.label) {
-            const col: ColumnInfo = {
-              id: removedNode.id,
-              name: typeof removedNode.data.label === 'string' ? removedNode.data.label : '',
-              table: typeof removedNode.data.table === 'string' ? removedNode.data.table : '',
-            };
-            toAddBack.push(col);
-          }
-        }
-      }
-      onNodesChange(changes);
-      toAddBack.forEach(addBackColumn);
+      handleCascadeNodeChanges(
+        {
+          changes,
+          nodes,
+          edges,
+          onNodesChange,
+          setNodes,
+          setEdges,
+        },
+        {
+          follow: 'out',
+          isColumn,
+          isCategory,
+          onColumnRemoved: addBackColumn,
+        },
+      );
     },
-    [nodes, onNodesChange, addBackColumn],
+    [nodes, edges, onNodesChange, setNodes, setEdges, addBackColumn],
   );
 
   const handleToolbarClose = useCallback(() => {

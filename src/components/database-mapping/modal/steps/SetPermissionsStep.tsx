@@ -14,24 +14,24 @@ type SetPermissionsStepProps = {
   edges: Edge[];
   checkedByCol: CheckedByCol;
   setCheckedByCol: React.Dispatch<React.SetStateAction<CheckedByCol>>;
+  modeByTop: Record<string, Mode>;
+  setModeByTop: React.Dispatch<React.SetStateAction<Record<string, Mode>>>;
 };
 
 type Mode = 'apply' | 'override';
 
-export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol }: SetPermissionsStepProps) => {
+export const SetPermissionsStep = ({
+  nodes,
+  edges,
+  checkedByCol,
+  setCheckedByCol,
+  modeByTop,
+  setModeByTop,
+}: SetPermissionsStepProps) => {
   const { t } = useTranslation();
 
-  const {
-    rows,
-    topKeys,
-    modeByTop,
-    setMode,
-    hasAnyCategoryDescendants,
-    isEnabled,
-    getChecked,
-    onParentToggle,
-    onLeafToggle,
-  } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
+  const { rows, topKeys, setMode, hasAnyCategoryDescendants, isEnabled, getChecked, onParentToggle, onLeafToggle } =
+    usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol, modeByTop, setModeByTop);
   const [q, setQ] = useState('');
   const filtered = useMemo(() => {
     if (!q) return rows;
@@ -120,7 +120,6 @@ export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol
       render: (_: unknown, row: PermissionTableRow) => {
         if (!topKeys.includes(row.key)) return null;
         if (!hasAnyCategoryDescendants(row.key)) return null;
-
         const mode = modeByTop[row.key] ?? 'apply';
         return (
           <div onClick={(e) => e.stopPropagation()}>

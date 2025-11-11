@@ -17,7 +17,7 @@ import {
   permissionsFromChecked,
   permissionsToCheckedByCol,
 } from '@app/utils/reactflow/helpers';
-import { CheckedByCol, usePermissionTable } from '@app/hooks/usePermissionTable';
+import { CheckedByCol, Mode, usePermissionTable } from '@app/hooks/usePermissionTable';
 
 type MultiStepArchetypeModalProps = {
   archetype?: ArchetypeInfo | undefined;
@@ -61,7 +61,15 @@ export const MultiStepArchetypeModal = ({
     high: { parent: {}, leaf: {} },
     detail: { parent: {}, leaf: {} },
   });
-  const { childrenById, topKeys } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
+  const [modeByTop, setModeByTop] = useState<Record<string, Mode>>({});
+  const { childrenById, topKeys } = usePermissionTable(
+    nodes,
+    edges,
+    checkedByCol,
+    setCheckedByCol,
+    modeByTop,
+    setModeByTop,
+  );
   const { t } = useTranslation();
 
   const isEditing = useMemo(() => Object.keys(archetype || {}).length != 0, [archetype]);
@@ -80,14 +88,16 @@ export const MultiStepArchetypeModal = ({
       step1?.setFieldsValue?.({ name: a.name ?? '' });
       setNodes((a.nodes && a.nodes.length > 0 ? a.nodes : initialNodes) as Node[]);
       setEdges((a.edges ?? []) as Edge[]);
-      setCheckedByCol(permissionsToCheckedByCol(a.permissions || [], a.nodes, a.edges));
+      const { checkedByCol, modeByTop } = permissionsToCheckedByCol(a.permissions || [], a.nodes, a.edges);
+      setCheckedByCol(checkedByCol);
+      setModeByTop(modeByTop);
     } else {
       step1?.resetFields?.();
       setNodes(initialNodes);
       setEdges([]);
       setCheckedByCol({ high: { parent: {}, leaf: {} }, detail: { parent: {}, leaf: {} } });
     }
-  }, [isModalOpen, isEditing, archetype, setNodes, setEdges, step1]);
+  }, [isModalOpen, isEditing, archetype, setNodes, setEdges, step1, setModeByTop]);
 
   const nextStep = () => {
     let duplicateGroups: ReturnType<typeof findDuplicateChildLabels> = [];
@@ -261,6 +271,8 @@ export const MultiStepArchetypeModal = ({
             edges={edges}
             checkedByCol={checkedByCol}
             setCheckedByCol={setCheckedByCol}
+            modeByTop={modeByTop}
+            setModeByTop={setModeByTop}
           />
         );
       default:

@@ -3,7 +3,7 @@ import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlo
 import { handleCascadeNodeChanges } from '@app/utils/reactflow/cascade';
 import { pruneDirectColumnChildren } from '@app/utils/reactflow/prune';
 import { Node, Edge, NodeChange, EdgeChange } from '@xyflow/react';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 type CreateTemplateStepProps = {
   nodes: Node[];
@@ -24,6 +24,7 @@ export const CreateTemplateStep = ({
   onNodesChange,
   onEdgesChange,
   name,
+  columns,
   setColumns,
 }: CreateTemplateStepProps) => {
   const columnIds = useMemo(() => new Set(nodes.filter((n) => n.type === 'column').map((n) => n.id)), [nodes]);
@@ -44,6 +45,28 @@ export const CreateTemplateStep = ({
     },
     [setColumns],
   );
+
+  useEffect(() => {
+    const byId = new Map(columns.map((c) => [c.id, c]));
+    setNodes((nds) =>
+      nds.map((n) => {
+        if (n.type !== 'column') return n;
+        const data: { label: string; level: string; table?: string } = n.data as {
+          label: string;
+          level: string;
+          table: string;
+        };
+        const hasTable = typeof data.table === 'string' && data.table.length > 0;
+        if (hasTable) return n;
+        const col = byId.get(n.id);
+        if (!col) return n;
+        return { ...n, data: { ...data, table: col.table } } as Node;
+      }),
+    );
+    const nodeColumnIds = new Set(nodes.filter((n) => n.type === 'column').map((n) => n.id));
+    if (nodeColumnIds.size === 0) return;
+    setColumns((prev) => prev.filter((c) => !nodeColumnIds.has(c.id)));
+  }, [columns, nodes, setColumns, setNodes]);
 
   const handleNodesChangeEditable = useCallback(
     (changes: NodeChange[]) => {

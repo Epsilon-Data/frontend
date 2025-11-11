@@ -15,10 +15,11 @@ type useArchetypeFlowProps = {
   setNodes: Dispatch<SetStateAction<Node[]>>;
   setEdges: Dispatch<SetStateAction<Edge[]>>;
   mode: FlowMode;
+  onLeafNodeBecameParent?: (parentId: string) => void;
 };
 
 export function useArchetypeFlow(params: useArchetypeFlowProps) {
-  const { nodes, edges, setNodes, setEdges, mode } = params;
+  const { nodes, edges, setNodes, setEdges, mode, onLeafNodeBecameParent } = params;
   const ctx = useArchetypeFlowContext();
   const nextId = useNodeIdCounter(nodes.length);
   const [rf, setRf] = useState<ReactFlowInstance>({} as ReactFlowInstance);
@@ -41,8 +42,16 @@ export function useArchetypeFlow(params: useArchetypeFlowProps) {
       if (isReadonly) return;
       if (p.source === p.target) return;
       setEdges((eds) => addEdge(p, eds));
+
+      const src = nodes.find((n) => n.id === p.source);
+      const tgt = nodes.find((n) => n.id === p.target);
+      const isCategory = (n?: Node) => n?.type === 'category' || n?.type === 'root';
+
+      if (src && tgt && isCategory(src) && isCategory(tgt)) {
+        onLeafNodeBecameParent?.(src.id);
+      }
     },
-    [isReadonly, setEdges],
+    [isReadonly, setEdges, nodes, onLeafNodeBecameParent],
   );
 
   const onConnectEnd = useCallback(
@@ -69,9 +78,11 @@ export function useArchetypeFlow(params: useArchetypeFlowProps) {
         setEdges((eds) =>
           eds.concat({ id: `edge_${fromNode.id}_${newNodeId}`, source: fromNode.id, target: newNodeId }),
         );
+
+        onLeafNodeBecameParent?.(fromNode.id);
       }
     },
-    [isMapping, nextId, rf, setEdges, setNodes],
+    [isMapping, nextId, rf, setEdges, setNodes, onLeafNodeBecameParent],
   );
 
   return {

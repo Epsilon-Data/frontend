@@ -1,6 +1,7 @@
 import { ColumnInfo } from '@app/api/database.api';
 import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlow/ArchetypeFlow';
 import { handleCascadeNodeChanges } from '@app/utils/reactflow/cascade';
+import { pruneDirectColumnChildren } from '@app/utils/reactflow/prune';
 import { Node, Edge, NodeChange, EdgeChange } from '@xyflow/react';
 import { useCallback, useMemo } from 'react';
 
@@ -66,6 +67,20 @@ export const CreateTemplateStep = ({
     [nodes, edges, onNodesChange, setNodes, setEdges, onColumnRemoved],
   );
 
+  const handleLeafNodeBecameParent = useCallback(
+    (parentId: string) => {
+      pruneDirectColumnChildren({
+        parentId,
+        nodes,
+        edges,
+        setNodes,
+        setEdges,
+        onColumnRemoved,
+      });
+    },
+    [nodes, edges, setNodes, setEdges, onColumnRemoved],
+  );
+
   return (
     <div className="h-[33rem] overflow-y-auto flex flex-col justify-center bg-grey-4">
       <div className="flex flex-col bg-white">
@@ -79,6 +94,7 @@ export const CreateTemplateStep = ({
             setEdges={setEdges}
             mode="editable"
             name={name}
+            onLeafNodeBecameParent={handleLeafNodeBecameParent}
           />
         </div>
       </div>

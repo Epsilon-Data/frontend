@@ -12,7 +12,6 @@ export interface OverallDatabaseInfo {
   schemaCount: number;
   totalTableCount: number;
   totalColCount: number;
-  viewCount?: number;
 }
 
 export interface Tag {

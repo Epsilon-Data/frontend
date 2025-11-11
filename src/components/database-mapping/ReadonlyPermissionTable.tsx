@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { IoSearch } from 'react-icons/io5';
 import type { Node, Edge } from '@xyflow/react';
 
-import { graphToTableRows, permissionsToCheckedByCol, type PermissionTableRow } from '@app/constants/reactflow/helpers';
+import { graphToTableRows, permissionsToCheckedByCol, type PermissionTableRow } from '@app/utils/reactflow/helpers';
 import { type Permission } from '@app/api/archetypes.api';
 import { getColors } from '@app/constants/reactflow/reactflowOptions';
 import { RxQuestionMarkCircled } from 'react-icons/rx';

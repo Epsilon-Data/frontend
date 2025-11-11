@@ -16,7 +16,7 @@ import {
   findUnmappedLeafs,
   permissionsFromChecked,
   permissionsToCheckedByCol,
-} from '@app/constants/reactflow/helpers';
+} from '@app/utils/reactflow/helpers';
 import { CheckedByCol, usePermissionTable } from '@app/hooks/usePermissionTable';
 
 type MultiStepArchetypeModalProps = {

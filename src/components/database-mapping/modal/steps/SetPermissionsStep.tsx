@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { IoSearch } from 'react-icons/io5';
 import { Node, Edge } from '@xyflow/react';
 import { useMemo, useState } from 'react';
-import { PermissionTableRow } from '@app/constants/reactflow/helpers';
+import { PermissionTableRow } from '@app/utils/reactflow/helpers';
 import { usePermissionTable } from '@app/hooks/usePermissionTable';
 import { RxQuestionMarkCircled } from 'react-icons/rx';
 import { getColors } from '@app/constants/reactflow/reactflowOptions';

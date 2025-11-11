@@ -1,6 +1,6 @@
 import { ColumnInfo } from '@app/api/database.api';
 import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlow/ArchetypeFlow';
-import { handleCascadeNodeChanges } from '@app/constants/reactflow/cascade';
+import { handleCascadeNodeChanges } from '@app/utils/reactflow/cascade';
 import { Node, Edge, NodeChange, EdgeChange } from '@xyflow/react';
 import { useCallback, useMemo } from 'react';
 

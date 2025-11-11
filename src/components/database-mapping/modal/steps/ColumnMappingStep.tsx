@@ -1,12 +1,12 @@
 import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlow/ArchetypeFlow';
 import { ColumnToolbar } from '@app/components/reactflow-components/ColumnToolbar/ColumnToolbar';
 import { Anchor } from '@app/components/reactflow-components/ColumnToolbar/ReactflowBridge/ReactflowBridge';
-import { computeNextColumnPosition } from '@app/constants/reactflow/helpers';
+import { computeNextColumnPosition } from '@app/utils/reactflow/helpers';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Node, Edge, NodeChange, EdgeChange, addEdge } from '@xyflow/react';
 import { ColumnInfo } from '@app/api/database.api';
-import { handleCascadeNodeChanges } from '@app/constants/reactflow/cascade';
+import { handleCascadeNodeChanges } from '@app/utils/reactflow/cascade';
 
 type ColumnMappingStepProps = {
   nodes: Node[];

@@ -54,7 +54,7 @@ export function useArchetypeFlow(params: useArchetypeFlowProps) {
         const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
         const fromNode = connectionState.fromNode;
         if (!fromNode) return;
-        const newNodeId = `node_${id}`;
+        const newNodeId = Date.now().toString(36);
         const newNode = {
           id: newNodeId,
           position: rf.screenToFlowPosition({

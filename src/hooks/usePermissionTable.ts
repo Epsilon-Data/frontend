@@ -1,5 +1,4 @@
-// hooks/usePermissionMatrix.ts
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 import type { PermissionTableRow } from '@app/utils/reactflow/helpers';
 import { buildPermissionTree } from '@app/utils/reactflow/helpers';
 import { Node, Edge } from '@xyflow/react';
@@ -20,11 +19,12 @@ export function usePermissionTable(
   edges: Edge[],
   checkedByCol: CheckedByCol,
   setCheckedByCol: React.Dispatch<React.SetStateAction<CheckedByCol>>,
+  modeByTop: Record<string, Mode>,
+  setModeByTop: React.Dispatch<React.SetStateAction<Record<string, Mode>>>,
 ) {
   const { rows, byId, childrenById, parentById, topKeys, findDescendants, ancestorsUpToTop, allDescLeafsChecked } =
     useMemo(() => buildPermissionTree(nodes, edges), [nodes, edges]);
 
-  const [modeByTop, setModeByTop] = useState<Record<string, Mode>>({});
   const otherCol = (col: ColKey): ColKey => (col === 'high' ? 'detail' : 'high');
 
   const clearOpposite = useCallback(
@@ -73,9 +73,30 @@ export function usePermissionTable(
     [hasAnyCategoryDescendants, modeByTop, topKeys],
   );
 
-  const setMode = useCallback((topId: string, m: Mode) => {
-    setModeByTop((prev) => ({ ...prev, [topId]: m }));
-  }, []);
+  const setMode = useCallback(
+    (topId: string, m: Mode) => {
+      setModeByTop((prev) => ({ ...prev, [topId]: m }));
+      if (m === 'override') {
+        const { cats } = findDescendants(topId);
+        const targets = [topId, ...cats];
+        const off: Record<string, boolean> = {};
+        for (const id of targets) off[id] = false;
+
+        setCheckedByCol((prev) => ({
+          ...prev,
+          high: {
+            ...prev.high,
+            parent: { ...prev.high.parent, ...off },
+          },
+          detail: {
+            ...prev.detail,
+            parent: { ...prev.detail.parent, ...off },
+          },
+        }));
+      }
+    },
+    [findDescendants, setCheckedByCol, setModeByTop],
+  );
 
   const setParentChecked = useCallback(
     (col: ColKey, updates: Record<string, boolean>) => {
@@ -151,7 +172,6 @@ export function usePermissionTable(
     byId,
     childrenById,
     parentById,
-    modeByTop,
     setMode,
     hasAnyCategoryDescendants,
     isEnabled,

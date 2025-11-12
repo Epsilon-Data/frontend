@@ -19,7 +19,10 @@ type Props = {
 export function ReadOnlyPermissionsTable({ nodes, edges, permissions }: Props) {
   const { t } = useTranslation();
   const rows = useMemo(() => graphToTableRows(nodes, edges), [nodes, edges]);
-  const checkedByCol = useMemo(() => permissionsToCheckedByCol(permissions, nodes, edges), [permissions, nodes, edges]);
+  const checkedByCol = useMemo(
+    () => permissionsToCheckedByCol(permissions, nodes, edges).checkedByCol,
+    [permissions, nodes, edges],
+  );
 
   const [q, setQ] = useState('');
   const filtered = useMemo(() => {

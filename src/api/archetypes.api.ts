@@ -3,6 +3,7 @@ import { httpClient, getCsrfHeader } from './http.api';
 import { Node, Edge } from '@xyflow/react';
 
 type ArchetypeStatus = 'DRAFT' | 'PUBLISHED' | 'ACTIVE';
+export type PermissionType = 'HIGH_LEVEL' | 'DETAILED' | 'NONE';
 
 export interface Archetype {
   id: string;
@@ -15,7 +16,7 @@ export interface Archetype {
 
 export type Permission = {
   id: string;
-  permission: 'DETAILED' | 'HIGH_LEVEL' | 'NONE';
+  permission: PermissionType;
 };
 
 export interface ArchetypeInfo {

@@ -43,11 +43,6 @@ const MetadataPage: React.FC = () => {
         />
         <DetailsRow
           titleWidth={6}
-          title={t('project.main.metadata.count.view')}
-          content={info?.viewCount?.toString() || '-'}
-        />
-        <DetailsRow
-          titleWidth={6}
           title={t('project.main.metadata.count.column')}
           content={info.totalColCount?.toString() || '-'}
         />

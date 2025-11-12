@@ -1,5 +1,5 @@
-import { Permission } from '@app/api/archetypes.api';
-import { CheckedByCol } from '@app/hooks/usePermissionTable';
+import { Permission, PermissionType } from '@app/api/archetypes.api';
+import { Mode } from '@app/hooks/usePermissionTable';
 import { Node, Edge } from '@xyflow/react';
 
 const COLUMN_Y_OFFSET = 150;
@@ -318,71 +318,98 @@ export function permissionsFromChecked(
   return out;
 }
 
-export function permissionsToCheckedByCol(permissions: Permission[], nodes: Node[], edges: Edge[]): CheckedByCol {
+export function permissionsToCheckedByCol(permissions: Permission[], nodes: Node[], edges: Edge[]) {
   const rows = graphToTableRows(nodes, edges);
+
   const byId = new Map<string, PermissionTableRow>();
   const childrenById = new Map<string, string[]>();
+  const parentById = new Map<string, string>();
+  const topKeys = rows.map((r) => r.key);
 
   const walk = (r: PermissionTableRow) => {
     byId.set(r.key, r);
     if (r.children?.length) {
-      childrenById.set(
-        r.key,
-        r.children.map((c) => c.key),
-      );
-      r.children.forEach(walk);
+      const kids = r.children.map((c) => c.key);
+      childrenById.set(r.key, kids);
+      for (const c of r.children) {
+        parentById.set(c.key, r.key);
+        walk(c);
+      }
     }
   };
   rows.forEach(walk);
 
-  const checked: CheckedByCol = {
-    high: { parent: {}, leaf: {} },
-    detail: { parent: {}, leaf: {} },
+  const normalize = (p?: string) => p as PermissionType;
+  const pMap = new Map<string, 'DETAILED' | 'HIGH_LEVEL' | 'NONE' | undefined>();
+  for (const p of permissions) pMap.set(p.id, normalize(p.permission));
+
+  const checkedByCol = {
+    high: { parent: {} as Record<string, boolean>, leaf: {} as Record<string, boolean> },
+    detail: { parent: {} as Record<string, boolean>, leaf: {} as Record<string, boolean> },
+  };
+  const modeByTop: Record<string, Mode> = {};
+
+  const setChecked = (perm: PermissionType, id: string) => {
+    const r = byId.get(id);
+    if (!r) return;
+    const col = perm === 'DETAILED' ? 'detail' : 'high';
+    if (r.kind === 'category') checkedByCol[col].parent[id] = true;
+    else checkedByCol[col].leaf[id] = true;
   };
 
-  const markDescendants = (id: string, fn: (row: PermissionTableRow) => void) => {
-    const stack = [id];
+  const cascade = (startId: string, perm: PermissionType) => {
+    const stack = [startId];
     while (stack.length) {
       const cur = stack.pop()!;
-      const row = byId.get(cur);
-      if (!row) continue;
-      fn(row);
+      setChecked(perm, cur);
       const kids = childrenById.get(cur);
       if (kids?.length) stack.push(...kids);
     }
   };
 
-  for (const { id, permission } of permissions) {
-    const row = byId.get(id);
-    if (!row) continue;
+  // Process top-level categories
+  for (const topId of topKeys) {
+    const topPerm = pMap.get(topId);
+    const kids = childrenById.get(topId) ?? [];
+    const kidPerms = kids.map((k) => pMap.get(k)).filter(Boolean) as PermissionType[];
+    const nDedicated = kidPerms.length;
+    const allDedicated = kids.length && nDedicated === kids.length;
+    const someDedicated = nDedicated > 0 && nDedicated < kids.length;
 
-    if (permission === 'DETAILED') {
-      if (row.kind === 'category') {
-        markDescendants(id, (r) => {
-          if (r.kind === 'category') checked.detail.parent[r.key] = true;
-          else checked.detail.leaf[r.key] = true;
+    if (topPerm && topPerm !== 'NONE') {
+      if (allDedicated) {
+        modeByTop[topId] = 'override';
+        kids.forEach((kid) => {
+          const perm = pMap.get(kid)! as PermissionType;
+          setChecked(perm, kid);
         });
+        setChecked(topPerm, topId);
+      } else if (someDedicated) {
+        modeByTop[topId] = 'override';
+        kids.forEach((kid) => {
+          const perm = pMap.get(kid);
+          if (perm) setChecked(perm, kid);
+          else cascade(kid, topPerm as PermissionType);
+        });
+        setChecked(topPerm, topId);
       } else {
-        checked.detail.leaf[id] = true;
+        modeByTop[topId] = 'apply';
+        setChecked(topPerm, topId);
+        cascade(topId, topPerm as PermissionType);
       }
+      continue;
+    }
+
+    if (allDedicated || someDedicated) {
+      modeByTop[topId] = 'override';
+      kids.forEach((kid) => {
+        const perm = pMap.get(kid);
+        if (perm && perm !== 'NONE') setChecked(perm as PermissionType, kid);
+      });
+    } else {
+      modeByTop[topId] = 'apply';
     }
   }
 
-  for (const { id, permission } of permissions) {
-    const row = byId.get(id);
-    if (!row) continue;
-
-    if (permission === 'HIGH_LEVEL') {
-      if (row.kind === 'category') {
-        markDescendants(id, (r) => {
-          if (r.kind === 'category') checked.high.parent[r.key] = true;
-          else checked.high.leaf[r.key] = true;
-        });
-      } else {
-        checked.high.leaf[id] = true;
-      }
-    }
-  }
-
-  return checked;
+  return { checkedByCol, modeByTop };
 }

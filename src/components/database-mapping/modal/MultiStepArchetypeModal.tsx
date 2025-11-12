@@ -17,7 +17,7 @@ import {
   permissionsFromChecked,
   permissionsToCheckedByCol,
 } from '@app/utils/reactflow/helpers';
-import { CheckedByCol, usePermissionTable } from '@app/hooks/usePermissionTable';
+import { CheckedByCol, Mode, usePermissionTable } from '@app/hooks/usePermissionTable';
 
 type MultiStepArchetypeModalProps = {
   archetype?: ArchetypeInfo | undefined;
@@ -61,7 +61,15 @@ export const MultiStepArchetypeModal = ({
     high: { parent: {}, leaf: {} },
     detail: { parent: {}, leaf: {} },
   });
-  const { childrenById, topKeys } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
+  const [modeByTop, setModeByTop] = useState<Record<string, Mode>>({});
+  const { childrenById, topKeys } = usePermissionTable(
+    nodes,
+    edges,
+    checkedByCol,
+    setCheckedByCol,
+    modeByTop,
+    setModeByTop,
+  );
   const { t } = useTranslation();
 
   const isEditing = useMemo(() => Object.keys(archetype || {}).length != 0, [archetype]);
@@ -80,36 +88,16 @@ export const MultiStepArchetypeModal = ({
       step1?.setFieldsValue?.({ name: a.name ?? '' });
       setNodes((a.nodes && a.nodes.length > 0 ? a.nodes : initialNodes) as Node[]);
       setEdges((a.edges ?? []) as Edge[]);
-      setCheckedByCol(permissionsToCheckedByCol(a.permissions || [], a.nodes, a.edges));
+      const { checkedByCol, modeByTop } = permissionsToCheckedByCol(a.permissions || [], a.nodes, a.edges);
+      setCheckedByCol(checkedByCol);
+      setModeByTop(modeByTop);
     } else {
       step1?.resetFields?.();
       setNodes(initialNodes);
       setEdges([]);
       setCheckedByCol({ high: { parent: {}, leaf: {} }, detail: { parent: {}, leaf: {} } });
     }
-  }, [isModalOpen, isEditing, archetype, setNodes, setEdges, step1]);
-
-  useEffect(() => {
-    const byId = new Map(columns.map((c) => [c.id, c]));
-    setNodes((nds) =>
-      nds.map((n) => {
-        if (n.type !== 'column') return n;
-        const data: { label: string; level: string; table?: string } = n.data as {
-          label: string;
-          level: string;
-          table: string;
-        };
-        const hasTable = typeof data.table === 'string' && data.table.length > 0;
-        if (hasTable) return n;
-        const col = byId.get(n.id);
-        if (!col) return n;
-        return { ...n, data: { ...data, table: col.table } } as Node;
-      }),
-    );
-    const nodeColumnIds = new Set(nodes.filter((n) => n.type === 'column').map((n) => n.id));
-    if (nodeColumnIds.size === 0) return;
-    setColumns((prev) => prev.filter((c) => !nodeColumnIds.has(c.id)));
-  }, [columns, nodes, setColumns, setNodes]);
+  }, [isModalOpen, isEditing, archetype, setNodes, setEdges, step1, setModeByTop]);
 
   const nextStep = () => {
     let duplicateGroups: ReturnType<typeof findDuplicateChildLabels> = [];
@@ -283,6 +271,8 @@ export const MultiStepArchetypeModal = ({
             edges={edges}
             checkedByCol={checkedByCol}
             setCheckedByCol={setCheckedByCol}
+            modeByTop={modeByTop}
+            setModeByTop={setModeByTop}
           />
         );
       default:

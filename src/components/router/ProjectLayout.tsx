@@ -1,8 +1,8 @@
-import React from 'react';
-import { Outlet, useSearchParams, Navigate, useLocation } from 'react-router-dom';
+import { useSearchParams, Navigate, useLocation } from 'react-router-dom';
 import { ProjectProvider } from '@app/providers/ProjectProvider';
+import MainLayout from '../layouts/main/MainLayout/MainLayout';
 
-export default function ProjectRouteScope() {
+export default function ProjectLayout() {
   const [params] = useSearchParams();
   const location = useLocation();
   const projectId = params.get('id');
@@ -13,7 +13,7 @@ export default function ProjectRouteScope() {
 
   return (
     <ProjectProvider initialProjectId={projectId}>
-      <Outlet />
+      <MainLayout />
     </ProjectProvider>
   );
 }

@@ -42,7 +42,7 @@
     "main": {
       "newProject": "New project",
       "personalProjects": {
-        "title": "Personal projects",
+        "title": "My projects",
         "description": "View and manage all your personal projects in one place"
       },
       "analysisProjects": {

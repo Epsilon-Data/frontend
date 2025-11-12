@@ -186,6 +186,7 @@ export const MultiStepArchetypeModal = ({
   const buildFormData = () => {
     const permissions = permissionsFromChecked(checkedByCol, childrenById, topKeys);
     return {
+      archetypeId: archetype?.archetypeId,
       projectId,
       name: step1.getFieldValue('name'),
       nodes: nodes.map((node) => ({
@@ -204,7 +205,11 @@ export const MultiStepArchetypeModal = ({
   };
 
   const onSaveDraft = async () => {
-    const payload = { ...buildFormData(), status: 'DRAFT' as const };
+    let payload = { ...buildFormData(), status: 'DRAFT' as const };
+    if (archetype?.archetypeId) {
+      payload = { ...payload, archetypeId: archetype.archetypeId };
+    }
+
     try {
       handleDraft(payload);
       message.success(t('project.createTemplate.form.draft.success'));

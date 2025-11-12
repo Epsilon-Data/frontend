@@ -2,6 +2,7 @@ import React from 'react';
 import { PiCirclesThreeBold } from 'react-icons/pi';
 import { TiPointOfInterest } from 'react-icons/ti';
 import { RiLogoutCircleLine } from 'react-icons/ri';
+import { AiOutlineDatabase } from 'react-icons/ai';
 
 export interface SidebarNavigationItem {
   title: string;
@@ -53,6 +54,7 @@ const projectNavigation: SidebarNavigationItem[] = [
   {
     title: 'project.sidebar.projectDb.title',
     key: 'project',
+    icon: <AiOutlineDatabase size={17} />,
     children: [
       {
         title: 'project.sidebar.projectDb.dbMapping',
@@ -70,6 +72,12 @@ const projectNavigation: SidebarNavigationItem[] = [
         url: '/project/metadata',
       },
     ],
+  },
+  {
+    title: 'common.logout',
+    key: 'logout',
+    url: '/logout',
+    icon: <RiLogoutCircleLine size={17} />,
   },
   // {
   //   title: 'project.sidebar.projectAccess',

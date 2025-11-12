@@ -27,7 +27,7 @@ type MultiStepArchetypeModalProps = {
 
 const initialNodes: Node[] = [
   {
-    id: 'node_0',
+    id: Date.now().toString(36),
     position: { x: 320, y: 200 },
     data: { label: 'Main Entity', level: 0 },
     type: 'root',

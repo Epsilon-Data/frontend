@@ -114,15 +114,12 @@ vi.mock('./steps/ConfirmStep', () => ({
 }));
 
 vi.mock('@app/components/common/Modal/ModalHeaders/ModalHeaders', () => ({
-  ModalStepHeader: ({ modalStep, setModalStep, handleDraft, stepTitles }: ModalStepHeaderProps) => (
+  ModalStepHeader: ({ modalStep, handleDraft, stepTitles }: ModalStepHeaderProps) => (
     <div data-testid="modal-step-header">
       <span data-testid="current-step">{modalStep}</span>
       <span data-testid="step-title">{stepTitles[modalStep]}</span>
       <button data-testid="draft-button" onClick={handleDraft}>
         Save Draft
-      </button>
-      <button data-testid="go-to-next-step" onClick={() => setModalStep((prev) => prev + 1)}>
-        Go to Next Step
       </button>
     </div>
   ),

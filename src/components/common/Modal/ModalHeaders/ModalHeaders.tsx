@@ -5,7 +5,6 @@ import { Breadcrumb, Button } from 'antd';
 import clsx from 'clsx';
 
 export type ModalStepHeaderProps = {
-  setModalStep: React.Dispatch<React.SetStateAction<number>>;
   modalStep: number;
   handleDraft: () => void;
   stepTitles: string[];
@@ -17,31 +16,19 @@ export type ModalAccessHeaderProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const ModalStepHeader: React.FC<ModalStepHeaderProps> = ({
-  setModalStep,
-  modalStep,
-  handleDraft,
-  stepTitles,
-}) => {
+export const ModalStepHeader: React.FC<ModalStepHeaderProps> = ({ modalStep, handleDraft, stepTitles }) => {
   const { t } = useTranslation();
-
-  const goToStep = (step: number) => {
-    const next = Math.max(0, Math.min(step, stepTitles.length - 1));
-    setModalStep(next);
-  };
 
   const breadcrumbItems = stepTitles.map((title, index) => ({
     title: (
-      <button
-        type="button"
-        onClick={() => goToStep(index)}
+      <span
         className={clsx(
           'bg-transparent border-none cursor-pointer p-0',
           index === modalStep ? 'text-[#1677ff]' : 'text-grey-2 hover:text-grey-1',
         )}
       >
         {index + 1}. {title}
-      </button>
+      </span>
     ),
   }));
 

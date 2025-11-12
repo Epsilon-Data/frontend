@@ -1,3 +1,4 @@
+import { ArchetypeInfo, createArchetype, updateArchetype } from '@app/api/archetypes.api';
 import { ColumnInfo, getDbColumns } from '@app/api/database.api';
 import { ArchetypeModalContext, ModalMode } from '@app/context/ArchetypeModal';
 import { Form } from 'antd';
@@ -29,7 +30,19 @@ export const ArchetypeModalProvider = ({
     setModalStep(0);
   }, [setIsModalOpen, setModalStep]);
 
-  const handleDraft = useCallback(() => {}, []);
+  const handleDraft = useCallback(
+    async (formData: unknown) => {
+      const data = formData as ArchetypeInfo;
+      console.log('Saving archetype draft:', data);
+      if (mode === 'create') {
+        await createArchetype(data);
+      } else {
+        if (!data.archetypeId) return;
+        await updateArchetype(data.projectId, data.archetypeId, data);
+      }
+    },
+    [mode],
+  );
 
   const forms = useMemo(() => [step1], [step1]);
 

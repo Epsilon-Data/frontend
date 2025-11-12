@@ -2,7 +2,7 @@ import { ARCHETYPE_API_URL } from '@app/constants/archetype';
 import { httpClient, getCsrfHeader } from './http.api';
 import { Node, Edge } from '@xyflow/react';
 
-type ArchetypeStatus = 'DRAFT' | 'PUBLISHED' | 'ACTIVE';
+export type ArchetypeStatus = 'DRAFT' | 'PUBLISHED' | 'ACTIVE';
 export type PermissionType = 'HIGH_LEVEL' | 'DETAILED' | 'NONE';
 
 export interface Archetype {

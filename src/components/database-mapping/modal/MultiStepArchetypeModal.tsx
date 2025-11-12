@@ -1,5 +1,5 @@
-import { Button, Modal } from 'antd';
-import { IoChevronForwardOutline } from 'react-icons/io5';
+import { Button, message, Modal } from 'antd';
+import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -174,6 +174,8 @@ export const MultiStepArchetypeModal = ({
     setModalStep((prev) => Math.min(prev + 1, 3));
   };
 
+  const prevStep = () => setModalStep((prev) => Math.max(prev - 1, 0));
+
   const stepTitles = [
     t('project.createTemplate.form.step1.title'),
     t('project.createTemplate.form.step2.title'),
@@ -181,23 +183,16 @@ export const MultiStepArchetypeModal = ({
     t('project.createTemplate.form.step4.title'),
   ];
 
-  const handleCreate = async () => {
-    setFormLoading(true);
+  const buildFormData = () => {
     const permissions = permissionsFromChecked(checkedByCol, childrenById, topKeys);
-
-    const formData = {
-      projectId: projectId,
+    return {
+      archetypeId: archetype?.archetypeId,
+      projectId,
       name: step1.getFieldValue('name'),
       nodes: nodes.map((node) => ({
         id: node.id,
-        data: {
-          label: node.data.label,
-          level: node.data.level,
-        },
-        position: {
-          x: node.position.x,
-          y: node.position.y,
-        },
+        data: { label: node.data.label, level: node.data.level },
+        position: { x: node.position.x, y: node.position.y },
         type: node.type,
       })),
       edges: edges.map((edge) => ({
@@ -206,9 +201,28 @@ export const MultiStepArchetypeModal = ({
         target: edge.target,
       })),
       permissions,
-      status: 'DRAFT' as const,
     };
+  };
 
+  const onSaveDraft = async () => {
+    let payload = { ...buildFormData(), status: 'DRAFT' as const };
+    if (archetype?.archetypeId) {
+      payload = { ...payload, archetypeId: archetype.archetypeId };
+    }
+
+    try {
+      handleDraft(payload);
+      message.success(t('project.createTemplate.form.draft.success'));
+    } catch (error) {
+      message.error(t('dashboard.createTemplate.form.draft.failed'));
+    } finally {
+      setIsModalOpen(false);
+    }
+  };
+
+  const handleCreate = async () => {
+    setFormLoading(true);
+    const formData = { ...buildFormData(), status: 'ACTIVE' as const };
     try {
       if (!isEditing) {
         console.log('Creating archetype with data:', formData);
@@ -286,40 +300,52 @@ export const MultiStepArchetypeModal = ({
       open={isModalOpen}
       onCancel={() => setIsModalOpen(false)}
       {...modalProps}
-      footer={[
-        modalStep < 3 ? (
-          <Button
-            key="next"
-            type="primary"
-            onClick={nextStep}
-            icon={<IoChevronForwardOutline />}
-            iconPosition="end"
-            className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
-          >
-            {t('common.next')}
-          </Button>
-        ) : (
-          <Button
-            key="submit"
-            type="primary"
-            onClick={handleCreate}
-            icon={<IoChevronForwardOutline />}
-            iconPosition="end"
-            loading={isFormLoading}
-            className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
-          >
-            {t('project.createTemplate.form.submit')}
-          </Button>
-        ),
-      ]}
+      footer={
+        <div className="flex items-center justify-between w-full">
+          <div>
+            {modalStep > 0 && (
+              <Button
+                key="back"
+                onClick={prevStep}
+                disabled={isFormLoading}
+                icon={<IoChevronBackOutline />}
+                className="flex items-center h-9 text-blueDark text-xs font-medium font-inter"
+              >
+                {t('common.back')}
+              </Button>
+            )}
+          </div>
+          <div>
+            {modalStep < 3 ? (
+              <Button
+                key="next"
+                type="primary"
+                onClick={nextStep}
+                icon={<IoChevronForwardOutline />}
+                iconPosition="end"
+                className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
+              >
+                {t('common.next')}
+              </Button>
+            ) : (
+              <Button
+                key="submit"
+                type="primary"
+                onClick={handleCreate}
+                icon={<IoChevronForwardOutline />}
+                iconPosition="end"
+                loading={isFormLoading}
+                className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
+              >
+                {t('project.createTemplate.form.submit')}
+              </Button>
+            )}
+          </div>
+        </div>
+      }
     >
       <div className="flex flex-col">
-        <ModalStepHeader
-          setModalStep={setModalStep}
-          modalStep={modalStep}
-          handleDraft={handleDraft}
-          stepTitles={stepTitles}
-        />
+        <ModalStepHeader modalStep={modalStep} handleDraft={onSaveDraft} stepTitles={stepTitles} />
         {renderStep()}
       </div>
     </Modal>

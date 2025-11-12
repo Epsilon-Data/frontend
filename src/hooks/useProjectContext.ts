@@ -9,3 +9,7 @@ export const useProjectContext = () => {
   }
   return context;
 };
+
+export const useProjectOptional = () => {
+  return useContext(ProjectContext);
+};

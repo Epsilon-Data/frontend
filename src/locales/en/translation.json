@@ -42,12 +42,12 @@
     "main": {
       "newProject": "New project",
       "personalProjects": {
-        "title": "Personal projects",
+        "title": "My projects",
         "description": "View and manage all your personal projects in one place"
       },
       "sharedProjects": {
         "title": "Shared projects",
-        "description": "View, use and analyse datasets"
+        "description": "Collaborate and manage projects shared with you"
       }
     },
     "createProject": {

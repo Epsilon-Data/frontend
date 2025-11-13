@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 
 export const useUserProjects = () => {
   const [ownedProjects, setOwnedProjects] = useState<ProjectSummaryInfo[]>([]);
-  const [sharedProjects, setSharedProjects] = useState<ProjectSummaryInfo[]>([]);
+  const [analysisProjects, setAnalysisProjects] = useState<ProjectSummaryInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchProjects = useCallback(async (signal?: AbortSignal) => {
@@ -11,7 +11,7 @@ export const useUserProjects = () => {
     try {
       const [owned, shared] = await Promise.all([getUserOwnedProjects(signal), getUserSharedProjects(signal)]);
       setOwnedProjects(owned);
-      setSharedProjects(shared);
+      setAnalysisProjects(shared);
     } catch (error) {
       console.error('Failed to fetch projects:', error);
     } finally {
@@ -19,5 +19,5 @@ export const useUserProjects = () => {
     }
   }, []);
 
-  return { ownedProjects, sharedProjects, loading, fetchProjects };
+  return { ownedProjects, analysisProjects, loading, fetchProjects };
 };

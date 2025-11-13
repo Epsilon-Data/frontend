@@ -36,7 +36,7 @@ const DatabaseMappingPage: React.FC = () => {
           <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
         </>
       ) : (
-        <ArchetypeDetails projectId={projectId} archetypeId={archetypeId} />
+        <ArchetypeDetails projectId={projectId} archetypeId={archetypeId} archetypes={archetypes} />
       )}
     </div>
   );

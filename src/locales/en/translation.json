@@ -213,7 +213,8 @@
               "title": "Publish Archetype",
               "description": "Publish this template as your project's public archetype?",
               "success": "Archetype published successfully",
-              "failed": "Failed to publish archetype"
+              "failed": "Failed to publish archetype",
+              "existingWithdrawnFailed": "Existing published archetype withdrawal failed, please try again"
             },
             "withdraw": {
               "title": "Withdraw Archetype",

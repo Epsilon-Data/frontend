@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
     "paths": {
-      "@app/*" : ["./src/*"]
+      "@app/*": ["./src/*"]
     },
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "types": ["vite/client", "vite-plugin-svgr/client"],
     "allowJs": false,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,

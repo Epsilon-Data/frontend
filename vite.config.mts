@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import svgr from 'vite-plugin-svgr';
+import checker from 'vite-plugin-checker';
 
 // ESM-compatible __dirname workaround
 const __filename = fileURLToPath(import.meta.url);
@@ -11,7 +12,13 @@ const __dirname = path.dirname(__filename);
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/',
-  plugins: [svgr(), react()],
+  plugins: [
+    svgr(),
+    react(),
+    checker({
+      typescript: true,
+    }),
+  ],
   server: {
     port: 3000,
   },

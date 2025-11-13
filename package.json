@@ -60,6 +60,7 @@
     "typescript": "^5.2.2"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "start": "pnpm set \"VITE_CJS_TRACE=true\" && vite",
     "build": "pnpm vite build",
     "serve": "vite preview",

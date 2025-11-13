@@ -33,7 +33,7 @@ export interface ConnectionInfo {
 
 export interface ProjectInfo {
   projectId?: string;
-  status?: 'CRAWLING' | 'ACTIVE' | 'ERROR' | 'MAPPED' | 'LINKED';
+  status?: 'PENDING' | 'CRAWLING' | 'READY' | 'ERROR' | 'MAPPED';
   customId?: string;
   ownerId: string;
   name: string;
@@ -44,7 +44,7 @@ export interface ProjectInfo {
   description: string;
   startDate: Date;
   endDate: Date;
-  members: string;
+  members: string[];
   participantsNum: string;
   lastModified?: Date;
   dbKeywords?: string[];

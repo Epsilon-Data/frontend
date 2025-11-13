@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { AiFillDelete } from 'react-icons/ai';
 import { FaPlus } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
+import { BsFillQuestionCircleFill } from 'react-icons/bs';
+
 type DatabaseMappingHeaderProps = {
   archetype?: ArchetypeInfo | undefined;
   projectId: string;
@@ -70,6 +72,7 @@ export const DatabaseMappingHeader = ({ archetype, projectId }: DatabaseMappingH
               okText="Yes"
               cancelText="No"
               onConfirm={confirmDeletion}
+              icon={<BsFillQuestionCircleFill color="#ff4d4f" size={16} className="mr-2 mt-0.5" />}
             >
               <Button type="primary" danger icon={<AiFillDelete />} className="font-medium font-inter h-9 text-xs">
                 {t('common.delete')}
@@ -82,13 +85,22 @@ export const DatabaseMappingHeader = ({ archetype, projectId }: DatabaseMappingH
             >
               {t('project.main.dbMapping.table.manage.edit')}
             </Button>
-            <Button
-              variant="outlined"
-              className="flex items-center px-8 h-9 text-xs font-medium font-inter text-blueDark border border-blueDark"
-              onClick={handlePublish}
+            <Popconfirm
+              placement="bottom"
+              title={t('project.main.dbMapping.table.manage.publish.title')}
+              description={t('project.main.dbMapping.table.manage.publish.description')}
+              okText="Yes"
+              cancelText="No"
+              onConfirm={handlePublish}
+              icon={<BsFillQuestionCircleFill color="#1677ff" size={16} className="mr-2 mt-0.5" />}
             >
-              {t('project.main.dbMapping.table.manage.publish.title')}
-            </Button>
+              <Button
+                variant="outlined"
+                className="flex items-center px-8 h-9 text-xs font-medium font-inter text-blueDark border border-blueDark"
+              >
+                {t('common.publish')}
+              </Button>
+            </Popconfirm>
           </>
         )}
       </div>

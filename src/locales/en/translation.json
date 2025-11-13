@@ -8,7 +8,8 @@
     "saveDraft": "Save draft",
     "logout": "Logout",
     "manage": "Manage",
-    "delete": "Delete"
+    "delete": "Delete",
+    "publish": "Publish"
   },
   "notifications": {
     "basic": "Basic notification",
@@ -207,7 +208,8 @@
               "failed": "Failed to delete archetype"
             },
             "publish": {
-              "title": "Publish",
+              "title": "Publish Archetype",
+              "description": "Publish this template as your project's public archetype?",
               "success": "Archetype published successfully",
               "failed": "Failed to publish archetype"
             },

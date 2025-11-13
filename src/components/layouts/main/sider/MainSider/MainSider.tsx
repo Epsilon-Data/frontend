@@ -25,13 +25,13 @@ const MainSider: React.FC<MainSiderProps> = ({ selectedNav, hidden }) => {
       >
         {projectName && (
           <>
-            <div className="px-6 pt-8 text-lg text-white flex flex-col gap-4">
+            <div className="px-6 pt-8 flex flex-col gap-4">
               <Button
-                icon={<IoChevronBack />}
-                className="bg-white rounded-full items-center"
+                icon={<IoChevronBack color="black" />}
+                className="bg-white !rounded-full items-center"
                 onClick={() => navigate('/')}
               />
-              {projectName}
+              <span className="text-lg text-white">{projectName}</span>
             </div>
             <div className="border-b border-white-3 mt-3 mx-6" />
           </>

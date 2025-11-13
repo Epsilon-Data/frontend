@@ -27,7 +27,7 @@ const DashboardPage: React.FC = () => {
         <DashboardHeader user={user} handleLayoutChange={setLayout} layout={layout} />
         <MultiStepProjectModal fetchProjects={fetchProjects} mask closable={false} width={'60%'} />
       </ProjectModalProvider>
-      <Projects analysisProjects={analysisProjects} ownedProjects={ownedProjects} layout={layout} />
+      <Projects sharedProjects={analysisProjects} ownedProjects={ownedProjects} layout={layout} />
     </div>
   );
 };

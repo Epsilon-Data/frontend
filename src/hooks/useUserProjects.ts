@@ -1,4 +1,4 @@
-import { getUserOwnedProjects, getUserAnalysisProjects, ProjectSummaryInfo } from '@app/api/projects.api';
+import { getUserOwnedProjects, getUserSharedProjects, ProjectSummaryInfo } from '@app/api/projects.api';
 import { useCallback, useState } from 'react';
 
 export const useUserProjects = () => {
@@ -9,7 +9,7 @@ export const useUserProjects = () => {
   const fetchProjects = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     try {
-      const [owned, shared] = await Promise.all([getUserOwnedProjects(signal), getUserAnalysisProjects(signal)]);
+      const [owned, shared] = await Promise.all([getUserOwnedProjects(signal), getUserSharedProjects(signal)]);
       setOwnedProjects(owned);
       setAnalysisProjects(shared);
     } catch (error) {

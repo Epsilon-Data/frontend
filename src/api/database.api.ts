@@ -77,8 +77,8 @@ export const updateCrawlStatus = (status: number) => {
     case CrawlStatus.CRAWL:
       statusTag = { value: 'Crawling', priority: Priority.DISABLED, status: CrawlStatus.CRAWL };
       break;
-    case CrawlStatus.ACTIVE:
-      statusTag = { value: 'Active', priority: Priority.LOW, status: CrawlStatus.ACTIVE };
+    case CrawlStatus.READY:
+      statusTag = { value: 'Ready', priority: Priority.LOW, status: CrawlStatus.READY };
       break;
     // Add more cases if needed
     default:

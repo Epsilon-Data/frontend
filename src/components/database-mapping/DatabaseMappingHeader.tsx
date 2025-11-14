@@ -1,10 +1,4 @@
-import {
-  Archetype,
-  ArchetypeInfo,
-  ArchetypeStatus,
-  deleteArchetype,
-  updateArchetypeDetails,
-} from '@app/api/archetypes.api';
+import { ArchetypeInfo, ArchetypeStatus, deleteArchetype, updateArchetypeDetails } from '@app/api/archetypes.api';
 import { STATUS_COLORS, toTitleCase } from '@app/constants/archetype';
 import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
 import { Button, Tag, Popconfirm, message } from 'antd';
@@ -15,12 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import { BsFillQuestionCircleFill } from 'react-icons/bs';
 
 type DatabaseMappingHeaderProps = {
-  archetypes?: Archetype[] | undefined;
   archetype?: ArchetypeInfo | undefined;
   projectId: string;
 };
 
-export const DatabaseMappingHeader = ({ archetypes, archetype, projectId }: DatabaseMappingHeaderProps) => {
+export const DatabaseMappingHeader = ({ archetype, projectId }: DatabaseMappingHeaderProps) => {
   const { t } = useTranslation();
   const { mode, showModal } = useArchetypeModalContext();
   const navigate = useNavigate();
@@ -40,20 +33,6 @@ export const DatabaseMappingHeader = ({ archetypes, archetype, projectId }: Data
   const handlePublish = async () => {
     if (!archetype) return;
     const isPublished = archetype.status === 'PUBLISHED';
-
-    if (!isPublished) {
-      const existingPublished = archetypes?.find((a) => a.status === 'PUBLISHED' && a.id !== archetype?.archetypeId);
-      if (existingPublished) {
-        try {
-          await updateArchetypeDetails(projectId, existingPublished.id, {
-            status: 'ACTIVE',
-          });
-        } catch (error) {
-          message.error(t('project.main.dbMapping.table.manage.publish.existingWithdrawFailed'));
-          return;
-        }
-      }
-    }
 
     try {
       await updateArchetypeDetails(projectId, archetype?.archetypeId ?? '', {

@@ -2,7 +2,7 @@ import { render, screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { DatabaseMappingHeader } from '@app/components/database-mapping/DatabaseMappingHeader';
-import type { Archetype, ArchetypeInfo } from '@app/api/archetypes.api';
+import type { ArchetypeInfo } from '@app/api/archetypes.api';
 import { updateArchetypeDetails, deleteArchetype } from '@app/api/archetypes.api';
 
 const mockNavigate = vi.fn();
@@ -32,19 +32,8 @@ vi.mock('react-i18next', () => ({
         'project.main.dbMapping.table.manage.continueEdit': 'Continue editing',
         'project.main.dbMapping.table.manage.edit': 'Edit template',
         'project.main.dbMapping.table.manage.publish.title': 'Publish Archetype',
-        'project.main.dbMapping.table.manage.publish.description':
-          "Publish this template as your project's public archetype?",
         'project.main.dbMapping.table.manage.withdraw.title': 'Withdraw Archetype',
-        'project.main.dbMapping.table.manage.withdraw.description':
-          "Withdraw this template as your project's public archetype?",
         'project.main.dbMapping.table.manage.delete.title': 'Delete Archetype',
-        'project.main.dbMapping.table.manage.delete.description': 'Are you sure you want to delete this template?',
-        'project.main.dbMapping.table.manage.publish.success': 'Archetype published successfully',
-        'project.main.dbMapping.table.manage.publish.failed': 'Failed to publish archetype',
-        'project.main.dbMapping.table.manage.withdraw.success': 'Archetype withdrawn successfully',
-        'project.main.dbMapping.table.manage.withdraw.failed': 'Failed to withdraw archetype',
-        'project.main.dbMapping.table.manage.delete.success': 'Archetype deleted successfully',
-        'project.main.dbMapping.table.manage.delete.failed': 'Failed to delete archetype',
       };
       return map[k] ?? k;
     },
@@ -57,11 +46,7 @@ vi.mock('@app/api/archetypes.api', () => ({
   deleteArchetype: vi.fn(),
 }));
 
-const renderHeader = (opts: {
-  status: 'DRAFT' | 'ACTIVE' | 'PUBLISHED';
-  projectId?: string;
-  archetypes?: Archetype[];
-}) => {
+const renderHeader = (opts: { status: 'DRAFT' | 'ACTIVE' | 'PUBLISHED'; projectId?: string }) => {
   const archetype = {
     archetypeId: 'A1',
     projectId: opts.projectId ?? 'P1',
@@ -72,9 +57,7 @@ const renderHeader = (opts: {
     status: opts.status,
   } as unknown as ArchetypeInfo;
 
-  render(
-    <DatabaseMappingHeader projectId={opts.projectId ?? 'P1'} archetype={archetype} archetypes={opts.archetypes} />,
-  );
+  render(<DatabaseMappingHeader projectId={opts.projectId ?? 'P1'} archetype={archetype} />);
 
   return { archetype };
 };
@@ -121,24 +104,6 @@ describe('DatabaseMappingHeader component', () => {
     await waitFor(() => {
       expect(updateArchetypeDetails).toHaveBeenCalledTimes(1);
       expect(updateArchetypeDetails).toHaveBeenCalledWith('P1', 'A1', { status: 'PUBLISHED' });
-    });
-  });
-
-  it('Publishing flips existing PUBLISHED to ACTIVE first, then publishes current', async () => {
-    const existingPublished = { id: 'A2', status: 'PUBLISHED', name: 'Old' } as Archetype;
-
-    renderHeader({
-      status: 'ACTIVE',
-      archetypes: [existingPublished],
-    });
-
-    const user = userEvent.setup();
-    await user.click(screen.getByRole('button', { name: /publish/i }));
-    await user.click(within(document.body).getByRole('button', { name: /yes/i }));
-
-    await waitFor(() => {
-      expect(updateArchetypeDetails).toHaveBeenNthCalledWith(1, 'P1', 'A2', { status: 'ACTIVE' });
-      expect(updateArchetypeDetails).toHaveBeenNthCalledWith(2, 'P1', 'A1', { status: 'PUBLISHED' });
     });
   });
 

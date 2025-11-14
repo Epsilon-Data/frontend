@@ -10,15 +10,13 @@ import { DisplayTabs } from './DisplayTabs';
 import { ArchetypeModalProvider } from '@app/providers/ArchetypeModalProvider';
 import { DatabaseMappingHeader } from './DatabaseMappingHeader';
 import { MultiStepArchetypeModal } from './modal/MultiStepArchetypeModal';
-import { Archetype } from '@app/api/archetypes.api';
 
 type ArchetypeDetailsProps = {
   projectId: string;
   archetypeId: string;
-  archetypes: Archetype[] | undefined;
 };
 
-export const ArchetypeDetails = ({ projectId, archetypeId, archetypes }: ArchetypeDetailsProps) => {
+export const ArchetypeDetails = ({ projectId, archetypeId }: ArchetypeDetailsProps) => {
   const { t } = useTranslation();
   const { archetype, fetchArchetype, manageLoading, fetchArchetypes } = useArchetypes(projectId);
   const { project, projectLoading } = useProjectContext();
@@ -38,7 +36,7 @@ export const ArchetypeDetails = ({ projectId, archetypeId, archetypes }: Archety
   return (
     <Spin spinning={spinning}>
       <ArchetypeModalProvider mode="edit">
-        <DatabaseMappingHeader projectId={projectId} archetype={archetype} archetypes={archetypes} />
+        <DatabaseMappingHeader projectId={projectId} archetype={archetype} />
         {archetype && (
           <MultiStepArchetypeModal
             archetype={archetype}

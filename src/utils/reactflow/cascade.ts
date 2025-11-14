@@ -112,4 +112,6 @@ export function handleCascadeNodeChanges(
   if (opts.onColumnRemoved && toAddBack.length) {
     toAddBack.forEach(opts.onColumnRemoved);
   }
+
+  return { removedNodeIds: nodeIdsToRemove, removedEdgeIds: edgesToRemove };
 }

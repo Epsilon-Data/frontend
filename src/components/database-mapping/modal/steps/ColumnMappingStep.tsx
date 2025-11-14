@@ -18,6 +18,7 @@ type ColumnMappingStepProps = {
   columns: ColumnInfo[];
   setColumns: React.Dispatch<React.SetStateAction<ColumnInfo[]>>;
   name: string;
+  onNodesDeleted?: (ids: Set<string>) => void;
 };
 
 export const ColumnMappingStep = ({
@@ -30,6 +31,7 @@ export const ColumnMappingStep = ({
   columns,
   setColumns,
   name,
+  onNodesDeleted,
 }: ColumnMappingStepProps) => {
   const { t } = useTranslation();
   const [anchor, setAnchor] = useState<Anchor>(null);
@@ -144,7 +146,7 @@ export const ColumnMappingStep = ({
 
   const handleNodesChangeMapping = useCallback(
     (changes: NodeChange[]) => {
-      handleCascadeNodeChanges(
+      const result = handleCascadeNodeChanges(
         {
           changes,
           nodes,
@@ -160,8 +162,9 @@ export const ColumnMappingStep = ({
           onColumnRemoved: addBackColumn,
         },
       );
+      if (result?.removedNodeIds?.size) onNodesDeleted?.(result.removedNodeIds);
     },
-    [nodes, edges, onNodesChange, setNodes, setEdges, addBackColumn],
+    [nodes, edges, onNodesChange, setNodes, setEdges, addBackColumn, onNodesDeleted],
   );
 
   const handleToolbarClose = useCallback(() => {

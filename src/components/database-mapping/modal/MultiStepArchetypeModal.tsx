@@ -74,6 +74,39 @@ export const MultiStepArchetypeModal = ({
 
   const isEditing = useMemo(() => Object.keys(archetype || {}).length != 0, [archetype]);
 
+  const clearPermissionsFor = (ids: Set<string>) => {
+    if (!ids.size) return;
+
+    setCheckedByCol((prev) => {
+      const next = {
+        high: {
+          parent: { ...prev.high.parent },
+          leaf: { ...prev.high.leaf },
+        },
+        detail: {
+          parent: { ...prev.detail.parent },
+          leaf: { ...prev.detail.leaf },
+        },
+      };
+
+      for (const id of ids) {
+        delete next.high.parent[id];
+        delete next.high.leaf[id];
+        delete next.detail.parent[id];
+        delete next.detail.leaf[id];
+      }
+      return next;
+    });
+
+    setModeByTop((prev) => {
+      const next = { ...prev };
+      for (const id of ids) {
+        delete next[id];
+      }
+      return next;
+    });
+  };
+
   useEffect(() => {
     const controller = new AbortController();
     fetchColumns(projectId);
@@ -262,6 +295,7 @@ export const MultiStepArchetypeModal = ({
             columns={columns}
             setColumns={setColumns}
             name={step1.getFieldValue('name')}
+            onNodesDeleted={clearPermissionsFor}
           />
         );
       case 2:
@@ -276,6 +310,7 @@ export const MultiStepArchetypeModal = ({
             columns={columns}
             setColumns={setColumns}
             name={step1.getFieldValue('name')}
+            onNodesDeleted={clearPermissionsFor}
           />
         );
       case 3:

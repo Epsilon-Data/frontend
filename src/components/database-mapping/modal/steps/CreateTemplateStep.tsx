@@ -15,6 +15,7 @@ type CreateTemplateStepProps = {
   columns: ColumnInfo[];
   setColumns: React.Dispatch<React.SetStateAction<ColumnInfo[]>>;
   name: string;
+  onNodesDeleted?: (ids: Set<string>) => void;
 };
 export const CreateTemplateStep = ({
   nodes,
@@ -26,6 +27,7 @@ export const CreateTemplateStep = ({
   name,
   columns,
   setColumns,
+  onNodesDeleted,
 }: CreateTemplateStepProps) => {
   const columnIds = useMemo(() => new Set(nodes.filter((n) => n.type === 'column').map((n) => n.id)), [nodes]);
 
@@ -70,7 +72,7 @@ export const CreateTemplateStep = ({
 
   const handleNodesChangeEditable = useCallback(
     (changes: NodeChange[]) => {
-      handleCascadeNodeChanges(
+      const result = handleCascadeNodeChanges(
         {
           changes,
           nodes,
@@ -86,8 +88,9 @@ export const CreateTemplateStep = ({
           onColumnRemoved,
         },
       );
+      if (result?.removedNodeIds?.size) onNodesDeleted?.(result.removedNodeIds);
     },
-    [nodes, edges, onNodesChange, setNodes, setEdges, onColumnRemoved],
+    [nodes, edges, onNodesChange, setNodes, setEdges, onColumnRemoved, onNodesDeleted],
   );
 
   const handleLeafNodeBecameParent = useCallback(

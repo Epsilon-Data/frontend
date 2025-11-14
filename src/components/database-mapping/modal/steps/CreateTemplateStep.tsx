@@ -5,7 +5,7 @@ import { pruneDirectColumnChildren } from '@app/utils/reactflow/prune';
 import { Node, Edge, NodeChange, EdgeChange } from '@xyflow/react';
 import { useCallback, useEffect, useMemo } from 'react';
 
-type CreateTemplateStepProps = {
+export type CreateTemplateStepProps = {
   nodes: Node[];
   edges: Edge[];
   setNodes: React.Dispatch<React.SetStateAction<Node[]>>;

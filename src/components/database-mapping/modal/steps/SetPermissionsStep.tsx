@@ -9,7 +9,7 @@ import { RxQuestionMarkCircled } from 'react-icons/rx';
 import { getColors } from '@app/constants/reactflow/reactflowOptions';
 import { ToggleRadio } from '@app/components/common/Modal/ToggleRadio/ToggleRadio';
 
-type SetPermissionsStepProps = {
+export type SetPermissionsStepProps = {
   nodes: Node[];
   edges: Edge[];
   checkedByCol: CheckedByCol;

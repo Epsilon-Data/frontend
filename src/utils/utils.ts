@@ -1,5 +1,5 @@
 import { NotificationType } from '@app/components/common/BaseNotification/BaseNotification';
-import { Priority } from '@app//constants/enums/priorities';
+import { Priority } from '@app/constants/enums/priorities';
 import { CurrencyTypeEnum } from '@app/interfaces/interfaces';
 import { currencies } from '@app/constants/config/currencies';
 

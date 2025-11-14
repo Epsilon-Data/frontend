@@ -221,25 +221,7 @@ export function buildPermissionTree(nodes: Node[], edges: Edge[]) {
     return { cats, leafs };
   };
 
-  const ancestorsUpToTop = (nodeId: string) => {
-    const res: string[] = [];
-    let cur: string | undefined = nodeId;
-    while (true) {
-      const p = parentById.get(cur!);
-      if (!p) break;
-      res.push(p);
-      cur = p;
-    }
-    return res;
-  };
-
-  const allDescLeafsChecked = (catId: string, leafCheckedMap: Record<string, boolean>) => {
-    const { leafs } = findDescendants(catId);
-    if (leafs.length === 0) return false;
-    return leafs.every((id) => !!leafCheckedMap[id]);
-  };
-
-  return { rows, byId, childrenById, parentById, topKeys, findDescendants, ancestorsUpToTop, allDescLeafsChecked };
+  return { rows, byId, childrenById, parentById, topKeys, findDescendants };
 }
 
 export function permissionsFromChecked(

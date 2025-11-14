@@ -126,6 +126,19 @@ describe('MultiStepArchetypeModal', () => {
     expect(screen.getByTestId('modal-step-header')).toBeInTheDocument();
   });
 
+  it('invalid name blocks next on step 0', async () => {
+    modalStepState = 0;
+
+    mockForms[0].validateFields.mockRejectedValueOnce(new Error('invalid'));
+
+    renderModal();
+
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: /common.next/i }));
+
+    expect(mockSetModalStep).not.toHaveBeenCalled();
+  });
+
   it('submit creates ACTIVE archetype when creating on final step', async () => {
     modalStepState = 3;
 

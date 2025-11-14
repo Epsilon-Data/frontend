@@ -132,9 +132,16 @@ export const MultiStepArchetypeModal = ({
     }
   }, [isModalOpen, isEditing, archetype, setNodes, setEdges, step1, setModeByTop]);
 
-  const nextStep = () => {
+  const nextStep = async () => {
     let duplicateGroups: ReturnType<typeof findDuplicateChildLabels> = [];
     let missingLeafs: string[] = [];
+    if (modalStep === 0) {
+      try {
+        await forms[0].validateFields();
+      } catch (err) {
+        return;
+      }
+    }
 
     if (modalStep === 1 || modalStep === 2) {
       duplicateGroups = findDuplicateChildLabels(nodes, edges);
@@ -253,7 +260,7 @@ export const MultiStepArchetypeModal = ({
     }
   };
 
-  const handleCreate = async () => {
+  const handleSubmit = async () => {
     setFormLoading(true);
     const formData = { ...buildFormData(), status: 'ACTIVE' as const };
     try {
@@ -366,7 +373,7 @@ export const MultiStepArchetypeModal = ({
               <Button
                 key="submit"
                 type="primary"
-                onClick={handleCreate}
+                onClick={handleSubmit}
                 icon={<IoChevronForwardOutline />}
                 iconPosition="end"
                 loading={isFormLoading}

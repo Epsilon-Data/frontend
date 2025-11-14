@@ -63,7 +63,7 @@
     "typecheck": "tsc --noEmit",
     "start": "pnpm set \"VITE_CJS_TRACE=true\" && vite",
     "build": "pnpm vite build",
-    "serve": "vite preview",
+    "serve": "pnpm vite build && vite preview",
     "test": "vitest",
     "lint": "eslint \"*/**/*.{js,ts,tsx}\" --fix",
     "lint:styles": "stylelint '*/**/*.{js,ts,tsx}'",

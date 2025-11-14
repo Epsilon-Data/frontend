@@ -22,8 +22,10 @@ export function usePermissionTable(
   modeByTop: Record<string, Mode>,
   setModeByTop: React.Dispatch<React.SetStateAction<Record<string, Mode>>>,
 ) {
-  const { rows, byId, childrenById, parentById, topKeys, findDescendants, ancestorsUpToTop, allDescLeafsChecked } =
-    useMemo(() => buildPermissionTree(nodes, edges), [nodes, edges]);
+  const { rows, byId, childrenById, parentById, topKeys, findDescendants } = useMemo(
+    () => buildPermissionTree(nodes, edges),
+    [nodes, edges],
+  );
 
   const otherCol = (col: ColKey): ColKey => (col === 'high' ? 'detail' : 'high');
 
@@ -152,18 +154,8 @@ export function usePermissionTable(
       setLeafChecked(col, { [row.key]: next });
 
       if (next) clearOpposite(col, 'leaf', { [row.key]: true });
-
-      setCheckedByCol((prev) => {
-        const copy = { ...prev };
-        const colState = copy[col];
-        const toRecompute = ancestorsUpToTop(row.key);
-        for (const catId of toRecompute) {
-          colState.parent[catId] = allDescLeafsChecked(catId, { ...colState.leaf, [row.key]: next });
-        }
-        return copy;
-      });
     },
-    [setMode, setLeafChecked, clearOpposite, setCheckedByCol, ancestorsUpToTop, allDescLeafsChecked],
+    [setMode, setLeafChecked, clearOpposite],
   );
 
   return {

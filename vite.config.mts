@@ -9,6 +9,8 @@ import checker from 'vite-plugin-checker';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/',
@@ -16,7 +18,7 @@ export default defineConfig({
     svgr(),
     react(),
     checker({
-      typescript: true,
+      typescript: isDev ? true : false,
     }),
   ],
   server: {

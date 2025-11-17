@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Priority } from '../constants/enums/priorities';
-import { CrawlStatus } from '@app/constants/enums/crawlStatus';
-import { DATE_FORMAT, DATABASE_API_URL } from '@app/constants/database';
-import { format } from 'date-fns';
+import { DATABASE_API_URL } from '@app/constants/database';
 import { httpClient, getCsrfHeader } from './http.api';
 import { AxiosProgressEvent } from 'axios';
 import { RcFile } from 'antd/es/upload';
@@ -66,48 +63,6 @@ export interface ColumnInfo {
   name: string;
   table: string;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const updateCrawlStatus = (status: number) => {
-  let statusTag = { value: 'Pending', priority: Priority.INFO, status: CrawlStatus.PENDING };
-
-  switch (status) {
-    case CrawlStatus.PENDING:
-      break;
-    case CrawlStatus.CRAWL:
-      statusTag = { value: 'Crawling', priority: Priority.DISABLED, status: CrawlStatus.CRAWL };
-      break;
-    case CrawlStatus.READY:
-      statusTag = { value: 'Ready', priority: Priority.LOW, status: CrawlStatus.READY };
-      break;
-    // Add more cases if needed
-    default:
-      break;
-  }
-
-  return statusTag;
-};
-
-export const getSourceList = async (pagination: Pagination): Promise<SourceListData> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(DATABASE_API_URL, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-
-  let formattedData = response.data.map((item: any) => {
-    const result = {
-      ...item,
-      connectDate: item && item.connectDate ? format(new Date(item.connectDate), DATE_FORMAT) : '-',
-      crawlStatus:
-        item && item.crawlStatus ? updateCrawlStatus(item.crawlStatus) : { value: 'Pending', priority: Priority.INFO },
-    };
-    return result;
-  });
-
-  formattedData = formattedData.filter((item: any) => item.databaseName);
-
-  return { data: formattedData, pagination: { ...pagination, total: formattedData.length } };
-};
 
 export const getDbSummary = async (projectId: string | undefined): Promise<DatabaseSummaryInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();

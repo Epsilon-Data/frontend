@@ -28,11 +28,11 @@ const homeNavigation: SidebarNavigationItem[] = [
         key: 'browse',
         url: '/browse',
       },
-      // {
-      //   title: 'dashboard.sidebar.browserHub.trackRequests',
-      //   key: 'track-requests',
-      //   url: '/track-requests',
-      // },
+      {
+        title: 'dashboard.sidebar.browserHub.trackRequests',
+        key: 'track-requests',
+        url: '/track-requests',
+      },
     ],
     icon: <TiPointOfInterest size={17} />,
   },

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { RequestSummaryInfo } from '@app/api/analysisRequests.api';
 import { STATUS_COLORS, STATUS_NAMES } from '@app/constants/analysisRequest';
+import { useNavigate } from 'react-router-dom';
 
 dayjs.extend(relativeTime);
 
@@ -14,6 +15,7 @@ type AnalysisRequestsProps = {
 
 export const AnalysisRequests = ({ loading, analysisRequests }: AnalysisRequestsProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const renderDate = (value: string | Date) => {
     const now = dayjs();
@@ -70,7 +72,7 @@ export const AnalysisRequests = ({ loading, analysisRequests }: AnalysisRequests
       render: (text: string) => {
         const color = STATUS_COLORS[text];
         return (
-          <Tag className="font-inter rounded-2xl px-3 font-light" color={color}>
+          <Tag className="font-inter rounded-xl px-3 font-light" bordered color={color}>
             {STATUS_NAMES[text]}
           </Tag>
         );
@@ -99,12 +101,11 @@ export const AnalysisRequests = ({ loading, analysisRequests }: AnalysisRequests
   ];
 
   const handleRequestClick = (requestId?: string) => {
-    if (!requestId) return;
-    console.log(requestId);
+    navigate(`/track-requests?id=${requestId}`);
   };
 
   return (
-    <div className="mt-10">
+    <div className="mt-4">
       <Table<RequestSummaryInfo>
         loading={loading}
         pagination={false}

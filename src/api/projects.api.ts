@@ -92,9 +92,6 @@ export const getProjectDetails = async (projectId: string | undefined): Promise<
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
-  const memberData = JSON.stringify(response.data.members);
-  response.data.members = memberData;
-
   const dbData = JSON.parse(response.data.connection.tempDbDetails);
   response.data.connection.tempDbDetails = dbData;
 

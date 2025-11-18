@@ -190,6 +190,11 @@
       "team": "Your team",
       "settings": "Settings"
     },
+    "breadcrumb": {
+      "home": "My projects",
+      "metadata": "Metadata",
+      "dbMapping": "Database mapping"
+    },
     "main": {
       "dbMapping": {
         "title": "Database mapping",
@@ -344,6 +349,10 @@
     }
   },
   "browse": {
+    "breadcrumb": {
+      "home": "Browser hub",
+      "trackRequests": "Track requests"
+    },
     "title": "Browse Datasets",
     "main": {
       "title": "Explore Available Datasets",

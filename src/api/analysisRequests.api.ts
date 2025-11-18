@@ -5,21 +5,37 @@ import { httpClient, getCsrfHeader } from './http.api';
 export type AnalysisRequestStatus = 'PENDING' | 'REJECTED' | 'REVISION' | 'REVIEW' | 'APPROVED';
 
 export interface AnalysisRequest {
-  requestId?: string;
-  projectId: string;
-  requestorId?: string;
+  project?: {
+    projectId: string;
+    name: string;
+    description: string;
+    dbKeywords: string[];
+    university: string;
+    faculty: string;
+    ethicsId: string;
+    startDate: Date;
+    endDate: Date;
+    participantsNum: number;
+    owner: string;
+    members: string[];
+  };
+  request?: {
+    createdDate: Date;
+    lastModified: Date;
+    status: AnalysisRequestStatus;
+  };
+  requestId: string;
   requestorName: string;
   requestorEmail: string;
   requestorOrgName: string;
-  requestorPosition: string;
   projectName: string;
   projectStartDate: Date;
   projectEndDate: Date;
   projectDescription: string;
+  projectEthicsId: string;
   projectObjective: string;
   projectOutcome: string;
   projectMembers: string;
-  projectEthicsId: string;
 }
 
 export interface Tag {

@@ -11,6 +11,7 @@ import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import { useState } from 'react';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { createRequest } from '@app/api/analysisRequests.api';
+import { Member } from '@app/api/projects.api';
 
 type MultiStepBrowseModalProps = React.ComponentProps<typeof Modal>;
 
@@ -18,7 +19,7 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
   const { t } = useTranslation();
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const [members, setMembers] = useState<string[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [isFormLoading, setFormLoading] = useState(false);
   const { modalStep, setModalStep, setIsModalOpen, isModalOpen, form, project, validateMembers } =
     useBrowseModalContext();

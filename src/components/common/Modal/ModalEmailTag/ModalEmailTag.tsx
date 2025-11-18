@@ -4,22 +4,23 @@ import { Form, Select, SelectProps, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { InputLabel } from '../InputLabel/InputLabel';
 import { CustomTagProps } from 'rc-select/lib/BaseSelect';
+import { Member } from '@app/api/projects.api';
 
-const norm = (s: string) => s.trim().toLowerCase();
-const isEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+const norm = (m: Member) => m.email?.trim().toLowerCase();
+const isEmail = (m: Member) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m.email ?? '');
 
 export const ModalEmailTag: React.FC<{
   name: string;
   className?: string;
   inputTitle: string;
   inputDescription?: string;
-  value: string[];
-  setValue: (value: string[]) => void;
+  value: Member[];
+  setValue: (value: Member[]) => void;
   labelLarge?: boolean;
   selectProps?: SelectProps;
 }> = ({ name, className, inputTitle, inputDescription, value, setValue, labelLarge = true, selectProps }) => {
   const { t } = useTranslation();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState<Member>({});
   const form = Form.useFormInstance();
   const normalizedSet = useMemo(() => new Set(value.map(norm)), [value]);
 

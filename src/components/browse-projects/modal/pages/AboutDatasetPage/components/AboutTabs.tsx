@@ -16,6 +16,7 @@ export const AboutTabs = ({ project }: AboutTabsProps) => {
   const [showToggle, setShowToggle] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
   const members = project.members.length > 0 ? project.members : null;
+  const members = project.members.length > 0 ? project.members : null;
 
   useEffect(() => {
     if (descriptionRef.current) {

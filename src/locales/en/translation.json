@@ -258,7 +258,7 @@
             "tableSchema": "Table schema",
             "column": "Column",
             "dataType": "Data Type",
-            "nullable":  "Nullable"
+            "nullable": "Nullable"
           }
         }
       }
@@ -333,7 +333,7 @@
                   "tooltip": "Access to perform analysis on the archetype entities"
                 },
                 "high": {
-                  "title": "High level analysis", 
+                  "title": "High level analysis",
                   "tooltip": "Access to the archetype entities"
                 }
               },
@@ -485,7 +485,42 @@
         "organization": "Organization",
         "submitted": "Submitted",
         "status": "Status",
-        "lastUpdated": "Last updated"
+        "lastUpdated": "Last updated",
+        "manage": {
+          "tabs": {
+            "application": {
+              "title": "My application",
+              "details": {
+                "title": "Details",
+                "submitted": "Submitted",
+                "lastUpdated": "Last updated"
+              },
+              "requestor": {
+                "title": "Requestor details",
+                "firstName": "Requestor's first name",
+                "lastName": "Requestor's last name",
+                "position": "Position/title",
+                "email": "Email address",
+                "orgName": "Organisation name"
+              },
+              "project": {
+                "title": "Project details",
+                "name": "Project name",
+                "duration": "Project duration",
+                "describe": "Project description",
+                "ethics": "Project approval ethics ID",
+                "objective": "Project objective",
+                "outcome": "Project outcome",
+                "members": "Project team members"
+              }
+            },
+            "comments": {
+              "title": "Comments",
+              "add": "Add comment",
+              "inputPlaceholder": "Leave your comment here"
+            }
+          }
+        }
       }
     }
   },

@@ -2,17 +2,19 @@ import { DetailsRow } from '@app/components/browse-projects/modal/pages/AboutDat
 import { MetadataTabs } from '@app/components/metadata-summary/MetadataTabs';
 import { DATE_FORMAT } from '@app/constants/database';
 import { useMetadata } from '@app/hooks/useMetadata';
-import { Spin } from 'antd';
+import { useProjectContext } from '@app/hooks/useProjectContext';
+import { Breadcrumb, Spin } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const MetadataPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get('id') ?? '';
   const { t } = useTranslation();
   const { info, diagramCode, selectItems, tableInfo, loading, fetchMetadata } = useMetadata(projectId);
+  const { project } = useProjectContext();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -20,9 +22,16 @@ const MetadataPage: React.FC = () => {
     return () => controller.abort();
   }, [fetchMetadata]);
 
+  const breadcrumbItems = [
+    { title: <Link to="/">{t('project.breadcrumb.home')}</Link> },
+    { title: project?.name || '' },
+    { title: <Link to={`/project/metadata?id=${projectId}`}>{t('project.breadcrumb.metadata')}</Link> },
+  ];
+
   return (
-    <Spin spinning={loading}>
-      <div className="py-3 px-4 md:py-5 md:px-9">
+    <div className="py-3 px-4 md:py-5 md:px-9">
+      <Breadcrumb separator=">" className="my-4" items={breadcrumbItems} />
+      <Spin spinning={loading}>
         <div className="flex items-start w-full mt-8 pb-4 mb-4 border-b border-grey-3">
           <div className="text-xl font-medium font-sans">{t('project.main.metadata.title')}</div>
         </div>
@@ -47,8 +56,8 @@ const MetadataPage: React.FC = () => {
           content={info.totalColCount?.toString() || '-'}
         />
         <MetadataTabs erd={diagramCode} selectItems={selectItems} tableInfo={tableInfo} />
-      </div>
-    </Spin>
+      </Spin>
+    </div>
   );
 };
 

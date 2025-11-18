@@ -121,7 +121,7 @@ export const RequestTabs = ({ request }: RequestTabsProps) => {
               content={request?.requestorOrgName ?? '-'}
             />
           </div>
-          <div className="flex flex-col w-full mt-8 pb-4 border-b border-grey-3">
+          <div className="flex flex-col w-full mt-8 pb-4">
             <span className="text-lg font-semibold mb-4">
               {t('browse.trackRequests.table.manage.tabs.application.project.title')}
             </span>

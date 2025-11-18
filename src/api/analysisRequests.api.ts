@@ -35,16 +35,12 @@ export interface Pagination {
 
 export interface RequestSummaryInfo {
   requestId: string;
-  project: {
-    projectId: string;
-    name: string;
-    university: string;
-  };
-  request: {
-    status: AnalysisRequestStatus;
-    createdDate: Date;
-    lastModified: Date;
-  };
+  projectId: string;
+  projectName: string;
+  projectUniversity: string;
+  status: AnalysisRequestStatus;
+  createdDate: Date;
+  lastModified: Date;
 }
 
 export const getRequestDetails = async (requestId: string | undefined): Promise<AnalysisRequest> => {
@@ -60,8 +56,6 @@ export const getRequests = async (): Promise<RequestSummaryInfo[]> => {
   const response = await httpClient.get(ANALYSIS_REQUEST_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-
-  console.log(response.data);
   return response.data;
 };
 

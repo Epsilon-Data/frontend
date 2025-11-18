@@ -467,6 +467,17 @@
         "viewRequests": "View my requests",
         "return": "Return to Browser Hub"
       }
+    },
+    "trackRequests": {
+      "title": "Track requests",
+      "subtitle": "Review your submitted requests",
+      "table": {
+        "projectName": "Project Name",
+        "organization": "Organization",
+        "submitted": "Submitted",
+        "status": "Status",
+        "lastUpdated": "Last updated"
+      }
     }
   },
   "dbTypeLabels": {

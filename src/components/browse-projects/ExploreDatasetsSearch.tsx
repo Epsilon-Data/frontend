@@ -66,7 +66,7 @@ export const ExploreDatasetsSearch = () => {
           onChange={handleFieldChange}
         >
           {SEARCH_FIELDS.map<React.ReactNode>((field) => (
-            <Radio key={field.value} value={field.value}>
+            <Radio key={field.value} value={field.value} className="text-black">
               {field.label}
             </Radio>
           ))}

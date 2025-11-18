@@ -44,7 +44,7 @@ export interface ProjectInfo {
   description: string;
   startDate: Date;
   endDate: Date;
-  members: string[];
+  members: string;
   participantsNum: string;
   lastModified?: Date;
   dbKeywords?: string[];

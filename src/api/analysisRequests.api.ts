@@ -16,7 +16,7 @@ export interface AnalysisRequest {
     startDate: Date;
     endDate: Date;
     participantsNum: number;
-    owner: string;
+    lead: string;
     members: string[];
   };
   request?: {
@@ -24,7 +24,9 @@ export interface AnalysisRequest {
     lastModified: Date;
     status: AnalysisRequestStatus;
   };
-  requestId: string;
+  requestId?: string;
+  requestorId?: string;
+  requestorPosition: string;
   requestorName: string;
   requestorEmail: string;
   requestorOrgName: string;
@@ -32,10 +34,10 @@ export interface AnalysisRequest {
   projectStartDate: Date;
   projectEndDate: Date;
   projectDescription: string;
-  projectEthicsId: string;
   projectObjective: string;
   projectOutcome: string;
-  projectMembers: string;
+  projectMembers: string[];
+  projectEthicsId: string;
 }
 
 export interface Tag {
@@ -64,6 +66,8 @@ export const getRequestDetails = async (requestId: string | undefined): Promise<
   const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/${requestId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
+  response.data.projectMembers = JSON.parse(response.data.projectMembers);
+
   return response.data;
 };
 

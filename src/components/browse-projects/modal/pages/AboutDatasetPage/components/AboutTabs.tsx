@@ -78,7 +78,11 @@ export const AboutTabs = ({ project }: AboutTabsProps) => {
           <DetailsRow title={t('browse.main.details.projectDetails.info.lead')} content={project.lead} />
           <DetailsRow
             title={t('browse.main.details.projectDetails.info.members')}
-            content={members ? members.join(', ') : t('browse.main.details.projectDetails.info.notAvailable')}
+            content={
+              members
+                ? members.map((member) => member.name).join(', ')
+                : t('browse.main.details.projectDetails.info.notAvailable')
+            }
           />
         </>
       ),

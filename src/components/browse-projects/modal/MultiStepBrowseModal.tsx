@@ -45,10 +45,10 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
     const [startDate, endDate] = form.getFieldValue('projectDuration') || [];
 
     const formData = {
-      requestorId: user?.id,
+      requestorId: user?.sub,
       projectId: project.projectId || '',
-      requestorName: user?.firstName + ' ' + user?.lastName || '',
-      requestorEmail: user?.email.name || '',
+      requestorName: user?.given_name + ' ' + user?.family_name || '',
+      requestorEmail: user?.email || '',
       requestorOrgName: '',
       requestorPosition: '',
       projectName: form.getFieldValue('projectName'),
@@ -58,7 +58,7 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
       projectEthicsId: form.getFieldValue('projectEthicsId'),
       projectObjective: form.getFieldValue('projectObjective'),
       projectOutcome: form.getFieldValue('projectOutcome'),
-      projectMembers: JSON.stringify(normalized),
+      projectMembers: normalized.map((email) => ({ email })),
     };
 
     try {

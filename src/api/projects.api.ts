@@ -44,11 +44,17 @@ export interface ProjectInfo {
   description: string;
   startDate: Date;
   endDate: Date;
-  members: string;
+  members: Member[];
   participantsNum: string;
   lastModified?: Date;
   dbKeywords?: string[];
   connection: ConnectionInfo;
+}
+
+export interface Member {
+  email?: string;
+  role?: string;
+  name?: string;
 }
 
 export const createProject = async (data: ProjectInfo): Promise<void> => {

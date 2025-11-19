@@ -1,4 +1,4 @@
-import { UserDetails } from '@app/domain/UserModel';
+import { UserDetails } from '@app/domain/UserDetails';
 // const avatarImg = import.meta.env.VITE_ASSETS_BUCKET + '/avatars/avatar5.webp';
 
 // const testUser = {

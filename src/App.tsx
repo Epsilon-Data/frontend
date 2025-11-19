@@ -7,7 +7,6 @@ import GlobalStyle from './styles/GlobalStyle';
 import '@fontsource/inter';
 import { AppRouter } from './components/router/AppRouter';
 import { useLanguage } from './hooks/useLanguage';
-import { useAutoNightMode } from './hooks/useAutoNightMode';
 import { usePWA } from './hooks/usePWA';
 import { useThemeWatcher } from './hooks/useThemeWatcher';
 import '@xyflow/react/dist/style.css';
@@ -18,8 +17,6 @@ const App: React.FC = () => {
   const { language } = useLanguage();
 
   usePWA();
-
-  useAutoNightMode();
 
   useThemeWatcher();
 

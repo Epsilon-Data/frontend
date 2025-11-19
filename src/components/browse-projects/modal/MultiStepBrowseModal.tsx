@@ -58,7 +58,7 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
       projectEthicsId: form.getFieldValue('projectEthicsId'),
       projectObjective: form.getFieldValue('projectObjective'),
       projectOutcome: form.getFieldValue('projectOutcome'),
-      projectMembers: JSON.stringify(normalized),
+      projectMembers: normalized.map((email) => ({ email })),
     };
 
     try {

@@ -36,8 +36,14 @@ export interface AnalysisRequest {
   projectDescription: string;
   projectObjective: string;
   projectOutcome: string;
-  projectMembers: string[];
+  projectMembers: Members[];
   projectEthicsId: string;
+}
+
+export interface Members {
+  email: string;
+  role?: string;
+  name?: string;
 }
 
 export interface Tag {

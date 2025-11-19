@@ -15,7 +15,7 @@ import {
 import { setUser } from '@app/store/slices/userSlice';
 import { deleteCsrf, deleteUser, persistCsrf, readCsrf } from '@app/services/localStorage.service';
 import { getUserClaims } from '@app/api/http.api';
-import { UserDetails } from '@app/domain/UserModel';
+import { UserDetails } from '@app/domain/UserDetails';
 
 export interface AuthSlice {
   csrf: string | null;

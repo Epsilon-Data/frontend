@@ -10,8 +10,8 @@ import { IoSearch } from 'react-icons/io5';
 
 type DashboardHeaderProps = {
   user: {
-    firstName: string;
-    lastName: string;
+    given_name: string;
+    family_name: string;
   } | null;
   handleLayoutChange: React.Dispatch<React.SetStateAction<'grid' | 'list'>>;
   layout: 'grid' | 'list';
@@ -26,7 +26,7 @@ export const DashboardHeader = ({ user, handleLayoutChange, layout }: DashboardH
 
   return (
     <div className="flex items-center justify-between w-full mt-8 pb-4 border-b border-grey-3">
-      <div className="text-xl font-medium font-sans">{user?.firstName + "'s workspace"}</div>
+      <div className="text-xl font-medium font-sans">{user?.given_name + "'s workspace"}</div>
       <div className="flex items-center gap-4 flex-wrap justify-end">
         <Space.Compact className="rounded-lg">
           <Input

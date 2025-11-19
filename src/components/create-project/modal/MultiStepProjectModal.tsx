@@ -68,16 +68,16 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
     const [startDate, endDate] = step1.getFieldValue('duration') || [];
 
     const formData = {
-      ownerId: user?.id ?? '',
+      ownerId: user?.sub ?? '',
       name: step1.getFieldValue('name'),
-      lead: (user?.firstName ?? '') + ' ' + (user?.lastName ?? ''),
+      lead: (user?.given_name ?? '') + ' ' + (user?.family_name ?? ''),
       university: step2.getFieldValue('university'),
       faculty: step2.getFieldValue('faculty'),
       ethicsId: step2.getFieldValue('ethicsId'),
       description: step1.getFieldValue('description'),
       startDate: startDate?.toDate() || null,
       endDate: endDate?.toDate() || null,
-      members: JSON.stringify(members),
+      members: members,
       participantsNum: step1.getFieldValue('participantsNum'),
       dbKeywords: dbKeywords,
       connection: {

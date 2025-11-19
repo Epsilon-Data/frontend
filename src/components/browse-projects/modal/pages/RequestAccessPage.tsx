@@ -43,13 +43,13 @@ export const RequestAccessPage = ({ project, form, members, setMembers }: Reques
             <div className="mb-12">
               <DetailsRow
                 title={t('browse.createRequest.form.requestor.firstName')}
-                content={user?.firstName || ''}
+                content={user?.given_name || ''}
                 titleWidth={7}
                 contentWidth={15}
               />
               <DetailsRow
                 title={t('browse.createRequest.form.requestor.lastName')}
-                content={user?.lastName || ''}
+                content={user?.family_name || ''}
                 titleWidth={7}
                 contentWidth={15}
               />
@@ -61,7 +61,7 @@ export const RequestAccessPage = ({ project, form, members, setMembers }: Reques
               />
               <DetailsRow
                 title={t('browse.createRequest.form.requestor.email')}
-                content={user?.email.name || ''}
+                content={user?.email || ''}
                 titleWidth={7}
                 contentWidth={15}
               />

@@ -1,25 +1,42 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Priority } from '../constants/enums/priorities';
-import { RequestStatus } from '@app/constants/enums/requestStatus';
-import { format } from 'date-fns';
-import { DATE_FORMAT, ANALYSIS_REQUEST_API_URL } from '@app/constants/analysisRequest';
+import { ANALYSIS_REQUEST_API_URL } from '@app/constants/analysisRequest';
 import { httpClient, getCsrfHeader } from './http.api';
 
+export type AnalysisRequestStatus = 'PENDING' | 'REJECTED' | 'REVISION' | 'REVIEW' | 'APPROVED';
+
 export interface AnalysisRequest {
+  project?: {
+    projectId: string;
+    name: string;
+    description: string;
+    dbKeywords: string[];
+    university: string;
+    faculty: string;
+    ethicsId: string;
+    startDate: Date;
+    endDate: Date;
+    participantsNum: number;
+    lead: string;
+    members: string[];
+  };
+  request?: {
+    createdDate: Date;
+    lastModified: Date;
+    status: AnalysisRequestStatus;
+  };
   requestId?: string;
-  projectId: string;
   requestorId?: string;
+  requestorPosition: string;
   requestorName: string;
   requestorEmail: string;
   requestorOrgName: string;
-  requestorPosition: string;
   projectName: string;
   projectStartDate: Date;
   projectEndDate: Date;
   projectDescription: string;
   projectObjective: string;
   projectOutcome: string;
-  projectMembers: string;
+  projectMembers: string[];
   projectEthicsId: string;
 }
 
@@ -34,20 +51,14 @@ export interface Pagination {
   total?: number;
 }
 
-export interface RequestTableRow {
-  key: number;
-  id: string;
-  requestor: string;
-  statusTag: Tag;
-  createdDate: string;
+export interface RequestSummaryInfo {
+  requestId: string;
+  projectId: string;
   projectName: string;
-  requestingProjectId: string;
-  requestingProject: string;
-}
-
-export interface RequestTableData {
-  data: RequestTableRow[];
-  pagination: Pagination;
+  projectUniversity: string;
+  status: AnalysisRequestStatus;
+  createdDate: Date;
+  lastModified: Date;
 }
 
 export const getRequestDetails = async (requestId: string | undefined): Promise<AnalysisRequest> => {
@@ -55,64 +66,17 @@ export const getRequestDetails = async (requestId: string | undefined): Promise<
   const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/${requestId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
+  response.data.projectMembers = JSON.parse(response.data.projectMembers);
+
   return response.data;
 };
 
-export const getRequestTableData = async (
-  pagination: Pagination,
-): Promise<{ sent: RequestTableData; receive: RequestTableData }> => {
+export const getRequests = async (): Promise<RequestSummaryInfo[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(ANALYSIS_REQUEST_API_URL, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-
-  const formatRequests = (requests: any[]) => {
-    return requests.map(
-      (
-        item: {
-          id: string;
-          requestorName: string;
-          status: number;
-          createdDate: Date;
-          projectName: string;
-          Project: { id: string; name: string };
-        },
-        index: number,
-      ) => {
-        let statusTag = { value: 'Pending', priority: Priority.INFO };
-        switch (item.status) {
-          case RequestStatus.PENDING:
-            break;
-          case RequestStatus.REVISION:
-            statusTag = { value: 'Requires Revision', priority: Priority.HIGH };
-            break;
-          case RequestStatus.APPROVED:
-            statusTag = { value: 'Approved', priority: Priority.LOW };
-            break;
-          case RequestStatus.REJECTED:
-            statusTag = { value: 'Rejected', priority: Priority.DISABLED };
-            break;
-        }
-        return {
-          key: index + 1,
-          id: item.id,
-          requestor: item.requestorName,
-          statusTag: statusTag,
-          createdDate: format(item.createdDate, DATE_FORMAT),
-          projectName: item.projectName,
-          requestingProjectId: item.Project.id,
-          requestingProject: item.Project.name,
-        };
-      },
-    );
-  };
-
-  const formattedReceiveData = formatRequests(response.data.requests.receive);
-  const formattedSentData = formatRequests(response.data.requests.sent);
-  return {
-    sent: { data: formattedSentData, pagination: { ...pagination, total: formattedSentData.length } },
-    receive: { data: formattedReceiveData, pagination: { ...pagination, total: formattedReceiveData.length } },
-  };
+  return response.data;
 };
 
 export const reviseRequest = async (data: { requestId: string | undefined; revisionInfo: string }): Promise<string> => {

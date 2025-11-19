@@ -1,5 +1,5 @@
 import { useProjectModalContext } from '@app/hooks/useProjectModalContext';
-import { Button, Input, Radio, Select, Space } from 'antd';
+import { Button, Input, Segmented, Select, Space } from 'antd';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaPlus } from 'react-icons/fa6';
@@ -47,20 +47,15 @@ export const DashboardHeader = ({ user, handleLayoutChange, layout }: DashboardH
             { value: 'last-modified', label: 'Last modified' },
           ]}
         />
-        <Space>
-          <Radio.Group
-            value={layout}
-            onChange={(e) => handleLayoutChange(e.target.value)}
-            className="flex bg-grey-3 rounded-md p-1 gap-1"
-          >
-            <Radio.Button value="grid" className="flex items-center rounded-r-md z-2">
-              <HiOutlineViewGrid />
-            </Radio.Button>
-            <Radio.Button value="list" className="flex items-center rounded-l-md z-2 border">
-              <HiMiniListBullet />
-            </Radio.Button>
-          </Radio.Group>
-        </Space>
+        <Segmented
+          value={layout}
+          onChange={(value) => handleLayoutChange(value as 'grid' | 'list')}
+          className="bg-grey-3"
+          options={[
+            { value: 'grid', icon: <HiOutlineViewGrid className="mt-1.5" /> },
+            { value: 'list', icon: <HiMiniListBullet className="mt-1.5" /> },
+          ]}
+        />
         <Button
           className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
           type="primary"

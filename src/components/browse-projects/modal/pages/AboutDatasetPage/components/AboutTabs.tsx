@@ -15,7 +15,7 @@ export const AboutTabs = ({ project }: AboutTabsProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
-  const members = JSON.parse(project.members).length > 0 ? JSON.parse(project.members) : null;
+  const members = project.members.length > 0 ? project.members : null;
 
   useEffect(() => {
     if (descriptionRef.current) {
@@ -38,7 +38,8 @@ export const AboutTabs = ({ project }: AboutTabsProps) => {
           </div>
           {showToggle && (
             <Button
-              className="border-none shadow-none text-blueDark text-xs font-medium font-inter cursor-pointer mt-2 p-0 inline-flex items-center gap-2"
+              type="link"
+              className="text-xs font-medium font-inter cursor-pointer mt-2 p-0 inline-flex items-center gap-2"
               onClick={() => setIsExpanded((prev) => !prev)}
             >
               {isExpanded ? t('browse.main.details.about.showLess') : t('browse.main.details.about.showMore')}
@@ -77,15 +78,7 @@ export const AboutTabs = ({ project }: AboutTabsProps) => {
           <DetailsRow title={t('browse.main.details.projectDetails.info.lead')} content={project.lead} />
           <DetailsRow
             title={t('browse.main.details.projectDetails.info.members')}
-            content={
-              members
-                ? members
-                    .map((member: { email: string; role: string }) => {
-                      return `${member.email} (${member.role})`;
-                    })
-                    .join(', ')
-                : t('browse.main.details.projectDetails.info.notAvailable')
-            }
+            content={members ? members.join(', ') : t('browse.main.details.projectDetails.info.notAvailable')}
           />
         </>
       ),

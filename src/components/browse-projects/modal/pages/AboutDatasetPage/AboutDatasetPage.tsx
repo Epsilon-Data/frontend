@@ -1,8 +1,6 @@
 import { ProjectInfo } from '@app/api/projects.api';
-import { DB_TYPE_LABELS } from '@app/constants/projects';
 import { Button, Col, Row, Tag } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
-import { DetailsRow } from './components/DetailsRow';
 import { ImageWithPreview } from './components/ImageWithPreview';
 import { useTranslation } from 'react-i18next';
 import { Edge, EdgeChange, Node, NodeChange } from '@xyflow/react';
@@ -74,29 +72,6 @@ export const AboutDatasetPage = ({
         </Col>
       </Row>
       <Row className="mt-8 mx-24 border-t border-t-grey-3 pt-8 flex flex-col mb-12">
-        {project.connection.tempDbDetails && (
-          <>
-            <div className="text-xs font-medium font-inter text-blueDark mb-4">
-              {t('browse.main.details.aboutDb.title')}
-            </div>
-            <div className="font-light text-xs font-inter">
-              <DetailsRow
-                title={t('browse.main.details.aboutDb.info.dbName')}
-                content={project.connection.tempDbDetails.name}
-                titleWidth={6}
-                contentWidth={15}
-              />
-              <DetailsRow
-                title={t('browse.main.details.aboutDb.info.dbNature')}
-                content={t(
-                  DB_TYPE_LABELS[project.connection.tempDbDetails.type] ?? project.connection.tempDbDetails.type,
-                )}
-                titleWidth={6}
-                contentWidth={15}
-              />
-            </div>
-          </>
-        )}
         <div className="text-xs font-medium font-inter text-blueDark mb-4">
           {t('browse.main.details.dbPreview.title')}
         </div>

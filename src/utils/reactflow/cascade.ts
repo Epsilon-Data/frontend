@@ -1,4 +1,4 @@
-import type { Edge, Node, NodeChange } from '@xyflow/react';
+import type { Edge, Node, NodeChange, NodeRemoveChange } from '@xyflow/react';
 import type { ColumnInfo } from '@app/api/database.api';
 
 export type CascadeOptions = {
@@ -99,7 +99,9 @@ export function handleCascadeNodeChanges(
   const { changes, nodes, edges, onNodesChange, setNodes, setEdges } = params;
   onNodesChange(changes);
 
-  const removedRootIds = new Set(changes.filter((c) => c.type === 'remove').map((c) => c.id));
+  const isNodeRemove = (c: NodeChange): c is NodeRemoveChange => c.type === 'remove';
+
+  const removedRootIds = new Set(changes.filter(isNodeRemove).map((c) => c.id));
   if (removedRootIds.size === 0) return;
 
   const { nodeIdsToRemove, edgesToRemove, toAddBack } = computeCascade(nodes, edges, removedRootIds, opts);

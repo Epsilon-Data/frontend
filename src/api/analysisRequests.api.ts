@@ -17,7 +17,7 @@ export interface AnalysisRequest {
     endDate: Date;
     participantsNum: number;
     lead: string;
-    members: string[];
+    members: Member[];
   };
   request?: {
     createdDate: Date;

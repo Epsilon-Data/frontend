@@ -33,8 +33,8 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
         {
           name: 'projectMembers',
           errors: [
-            invalid.length ? `Invalid email(s): ${invalid.join(', ')}` : '',
-            duplicates.length ? `Duplicate email(s): ${duplicates.join(', ')}` : '',
+            invalid.length ? `Invalid email(s): ${invalid.map((m) => m.email).join(', ')}` : '',
+            duplicates.length ? `Duplicate email(s): ${duplicates.map((m) => m.email).join(', ')}` : '',
           ].filter(Boolean),
         },
       ]);

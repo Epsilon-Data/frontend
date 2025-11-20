@@ -35,15 +35,8 @@ export const ModalEmailTag: React.FC<{
       const s = normEmail(search);
       if (!s) return;
 
-      console.log(s);
-      console.log(normalizedSet);
       if (normalizedSet.has(s)) {
         form.setFields([{ name, errors: [t('fieldMessages.tags.duplicate')] }]);
-        return;
-      }
-
-      if (!isEmail(s)) {
-        form.setFields([{ name, errors: [t('fieldMessages.tags.invalidEmail')] }]);
         return;
       }
 
@@ -54,14 +47,20 @@ export const ModalEmailTag: React.FC<{
     }
   };
 
-  const onChange = (nextEmails: string[]) => {
-    const nextMembers: Member[] = nextEmails
-      .map(normEmail)
-      .filter(Boolean)
-      .map((e) => {
-        const existing = value.find((v) => normEmail(v.email) === e);
-        return existing ?? ({ email: e } as Member);
-      });
+  const onChange = (nextEmailsRaw: string[]) => {
+    const nextEmails = Array.from(new Set(nextEmailsRaw.map(normEmail).filter(Boolean)));
+
+    const invalids = nextEmails.filter((e) => !isEmail(e));
+    if (invalids.length) {
+      form.setFields([{ name, errors: [t('fieldMessages.tags.invalidEmail')] }]);
+      return;
+    }
+
+    const nextMembers: Member[] = nextEmails.map((e) => {
+      const existing = value.find((v) => normEmail(v.email) === e);
+      return existing ?? ({ email: e } as Member);
+    });
+
     setValue(nextMembers);
     form.setFields([{ name, errors: [] }]);
   };

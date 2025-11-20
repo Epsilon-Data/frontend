@@ -19,7 +19,7 @@ const BrowseDatasetPage: React.FC = () => {
     <>
       <ExploreDatasetsSearch />
       <div className="py-0 px-4 flex flex-col">
-        <SearchResultsHeader />
+        <SearchResultsHeader count={projects.length} />
         <BrowseModalProvider>
           <Projects projects={projects} layout={'grid'} />
           <MultiStepBrowseModal mask closable={false} width={'60%'} />

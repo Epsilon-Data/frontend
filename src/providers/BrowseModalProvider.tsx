@@ -1,3 +1,4 @@
+import { ArchetypeInfo, getPublishedArchetype } from '@app/api/archetypes.api';
 import { getProjectPublicDetails, Member } from '@app/api/projects.api';
 import { ProjectInfo } from '@app/api/projects.api';
 import { BrowseModalContext } from '@app/context/BrowseModal';
@@ -7,6 +8,7 @@ import { useCallback, useMemo, useState } from 'react';
 
 export const BrowseModalProvider = ({ children }: { children: React.ReactElement[] }) => {
   const [project, setProject] = useState<ProjectInfo>({} as ProjectInfo);
+  const [archetype, setArchetype] = useState<ArchetypeInfo>({} as ArchetypeInfo);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState(0);
   const [form] = Form.useForm();
@@ -15,7 +17,9 @@ export const BrowseModalProvider = ({ children }: { children: React.ReactElement
     async (projectId: string) => {
       try {
         const selectedProject = await getProjectPublicDetails(projectId);
+        const publishedArchetype = await getPublishedArchetype(projectId);
         setProject(selectedProject);
+        setArchetype(publishedArchetype);
         form.setFieldsValue({
           description: '',
           startDate: dayjs(new Date().toISOString()),
@@ -58,6 +62,7 @@ export const BrowseModalProvider = ({ children }: { children: React.ReactElement
 
   const contextValue = useMemo(
     () => ({
+      archetype,
       isModalOpen,
       setIsModalOpen,
       modalStep,
@@ -67,7 +72,7 @@ export const BrowseModalProvider = ({ children }: { children: React.ReactElement
       project,
       validateMembers,
     }),
-    [isModalOpen, setIsModalOpen, modalStep, setModalStep, showModal, form, project, validateMembers],
+    [archetype, isModalOpen, setIsModalOpen, modalStep, setModalStep, showModal, form, project, validateMembers],
   );
 
   return <BrowseModalContext.Provider value={contextValue}>{...children}</BrowseModalContext.Provider>;

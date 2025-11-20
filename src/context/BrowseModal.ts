@@ -1,8 +1,10 @@
+import { ArchetypeInfo } from '@app/api/archetypes.api';
 import { Member, ProjectInfo } from '@app/api/projects.api';
 import { FormInstance } from 'antd';
 import { createContext } from 'react';
 
 type BrowseModalContextType = {
+  archetype: ArchetypeInfo;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   modalStep: number;

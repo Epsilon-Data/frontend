@@ -3,32 +3,21 @@ import { Button, Col, Row, Tag } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 import { ImageWithPreview } from './components/ImageWithPreview';
 import { useTranslation } from 'react-i18next';
-import { Edge, EdgeChange, Node, NodeChange } from '@xyflow/react';
+import { Edge, Node, useEdgesState, useNodesState } from '@xyflow/react';
 import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlow/ArchetypeFlow';
 import { AboutTabs } from './components/AboutTabs';
+import { ArchetypeInfo } from '@app/api/archetypes.api';
 
 type AboutDatasetPageProps = {
   project: ProjectInfo;
-  nodes: Node[];
-  edges: Edge[];
-  setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
-  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
-  onNodesChange: (value: NodeChange[]) => void;
-  onEdgesChange: (value: EdgeChange[]) => void;
+  archetype: ArchetypeInfo;
   setModalStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const AboutDatasetPage = ({
-  project,
-  nodes,
-  edges,
-  setNodes,
-  setEdges,
-  onNodesChange,
-  onEdgesChange,
-  setModalStep,
-}: AboutDatasetPageProps) => {
+export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutDatasetPageProps) => {
   const { t } = useTranslation();
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>(archetype.nodes || []);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(archetype.edges || []);
   return (
     <div className="h-[48rem] p-0 overflow-y-auto flex flex-col -mt-8 rounded-3xl">
       <Row className="bg-grey-4 h-[33rem]">

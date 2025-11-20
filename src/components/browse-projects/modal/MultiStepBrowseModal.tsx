@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { ModalAccessHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { useBrowseModalContext } from '@app/hooks/useBrowseModalContext';
 import { AboutDatasetPage } from './pages/AboutDatasetPage/AboutDatasetPage';
-import { Node, Edge, useNodesState, useEdgesState } from '@xyflow/react';
 import { RequestAccessPage } from './pages/RequestAccessPage';
 import { SubmissionResultPage } from './pages/SubmissionResultPage';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
@@ -17,11 +16,9 @@ type MultiStepBrowseModalProps = React.ComponentProps<typeof Modal>;
 
 export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProps) => {
   const { t } = useTranslation();
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [isFormLoading, setFormLoading] = useState(false);
-  const { modalStep, setModalStep, setIsModalOpen, isModalOpen, form, project, validateMembers } =
+  const { archetype, modalStep, setModalStep, setIsModalOpen, isModalOpen, form, project, validateMembers } =
     useBrowseModalContext();
   const user = useAppSelector((state) => state.user.user);
 
@@ -83,18 +80,7 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
   const renderStep = () => {
     switch (modalStep) {
       case 0:
-        return (
-          <AboutDatasetPage
-            project={project}
-            nodes={nodes}
-            edges={edges}
-            setNodes={setNodes}
-            setEdges={setEdges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            setModalStep={setModalStep}
-          />
-        );
+        return <AboutDatasetPage project={project} archetype={archetype} setModalStep={setModalStep} />;
       case 1:
         return <RequestAccessPage project={project} form={form} members={members} setMembers={setMembers} />;
       case 2:

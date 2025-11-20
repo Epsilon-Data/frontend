@@ -25,7 +25,6 @@ export interface AnalysisRequest {
     status: AnalysisRequestStatus;
   };
   requestId?: string;
-  requestorId?: string;
   requestorPosition: string;
   requestorName: string;
   requestorEmail: string;

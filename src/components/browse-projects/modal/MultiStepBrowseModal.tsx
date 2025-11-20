@@ -43,7 +43,7 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
     const [startDate, endDate] = form.getFieldValue('projectDuration') || [];
 
     const formData = {
-      requestorId: user?.sub,
+      requestorId: user?.sub, // TODO: should this be here???
       projectId: project.projectId || '',
       requestorName: user?.given_name + ' ' + user?.family_name || '',
       requestorEmail: user?.email || '',

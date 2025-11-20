@@ -72,7 +72,6 @@ export const getRequestDetails = async (requestId: string | undefined): Promise<
   const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/${requestId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-  response.data.projectMembers = JSON.parse(response.data.projectMembers);
 
   return response.data;
 };

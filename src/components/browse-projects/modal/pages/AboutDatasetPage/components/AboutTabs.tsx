@@ -15,7 +15,6 @@ export const AboutTabs = ({ project }: AboutTabsProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
-  const members = project.members.length > 0 ? project.members : null;
 
   useEffect(() => {
     if (descriptionRef.current) {
@@ -79,8 +78,8 @@ export const AboutTabs = ({ project }: AboutTabsProps) => {
           <DetailsRow
             title={t('browse.main.details.projectDetails.info.members')}
             content={
-              members
-                ? members.map((member) => member.name).join(', ')
+              project.members
+                ? project.members.map((member) => member.name).join(', ')
                 : t('browse.main.details.projectDetails.info.notAvailable')
             }
           />

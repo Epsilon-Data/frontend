@@ -60,11 +60,9 @@ export const RequestTabs = ({ request }: RequestTabsProps) => {
           <DetailsRow
             title={t('browse.main.details.projectDetails.info.members')}
             content={
-              request?.project?.members === undefined
-                ? t('browse.main.details.projectDetails.info.notAvailable')
-                : request.project.members.length === 0
-                ? '-'
-                : request.project.members.join(', ')
+              request?.project?.members
+                ? request?.project?.members.map((member) => member.name).join(', ')
+                : t('browse.main.details.projectDetails.info.notAvailable')
             }
           />
         </>
@@ -164,11 +162,9 @@ export const RequestTabs = ({ request }: RequestTabsProps) => {
             <DetailsRow
               title={t('browse.trackRequests.table.manage.tabs.application.project.members')}
               content={
-                request?.projectMembers === undefined
-                  ? t('browse.main.details.projectDetails.info.notAvailable')
-                  : request.projectMembers.length === 0
-                  ? '-'
-                  : request.projectMembers.join(', ')
+                request?.projectMembers
+                  ? request?.projectMembers.map((member) => member.name).join(', ')
+                  : t('browse.main.details.projectDetails.info.notAvailable')
               }
             />
           </div>

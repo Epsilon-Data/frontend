@@ -98,7 +98,11 @@ export const createRequest = async (data: AnalysisRequest): Promise<void> => {
   });
 };
 
-export const approveRequest = async (data: { requestId: string | undefined; isApproved: boolean }): Promise<string> => {
+export const approveRequest = async (data: {
+  projectId: string | undefined;
+  requestId: string | undefined;
+  isApproved: boolean;
+}): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.patch(
     `${ANALYSIS_REQUEST_API_URL}/${data.requestId}`,

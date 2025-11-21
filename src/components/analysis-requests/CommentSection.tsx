@@ -6,17 +6,15 @@ import { IoChevronForwardOutline } from 'react-icons/io5';
 
 type CommentSectionProps = {
   setShowComment: React.Dispatch<React.SetStateAction<boolean>>;
-  form: FormInstance<{ content: string }>;
-  onSubmit: (values: { content: string }) => void;
-  submitting?: boolean;
+  form: FormInstance<unknown>;
 };
 
-export const CommentSection = ({ setShowComment, form, onSubmit, submitting }: CommentSectionProps) => {
+export const CommentSection = ({ setShowComment, form }: CommentSectionProps) => {
   const { t } = useTranslation();
 
   return (
-    <Form form={form} onFinish={onSubmit}>
-      <FormItem name="content">
+    <Form form={form}>
+      <FormItem>
         <TextArea
           placeholder={t('browse.trackRequests.table.manage.tabs.comments.inputPlaceholder')}
           rows={4}
@@ -33,12 +31,9 @@ export const CommentSection = ({ setShowComment, form, onSubmit, submitting }: C
         </Button>
         <Button
           key="submit"
-          htmlType="submit"
           type="primary"
           icon={<IoChevronForwardOutline />}
           iconPosition="end"
-          loading={submitting}
-          disabled={submitting}
           className="flex items-center h-8 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
         >
           {t('common.submit')}

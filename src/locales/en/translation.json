@@ -517,7 +517,9 @@
             "comments": {
               "title": "Comments",
               "add": "Add comment",
-              "inputPlaceholder": "Leave your comment here"
+              "inputPlaceholder": "Leave your comment here",
+              "createdSuccess": "Comment added successfully",
+              "createdFailed": "Failed to add comment"
             }
           }
         }

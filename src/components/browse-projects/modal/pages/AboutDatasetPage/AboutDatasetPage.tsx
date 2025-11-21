@@ -7,6 +7,7 @@ import { Edge, Node, useEdgesState, useNodesState } from '@xyflow/react';
 import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlow/ArchetypeFlow';
 import { AboutTabs } from './components/AboutTabs';
 import { ArchetypeInfo } from '@app/api/archetypes.api';
+import { useEffect } from 'react';
 
 type AboutDatasetPageProps = {
   project: ProjectInfo;
@@ -18,6 +19,15 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
   const { t } = useTranslation();
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(archetype.nodes || []);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(archetype.edges || []);
+
+  useEffect(() => {
+    setNodes(archetype.nodes || []);
+  }, [archetype.nodes, setNodes]);
+
+  useEffect(() => {
+    setEdges(archetype.edges || []);
+  }, [archetype.edges, setEdges]);
+
   return (
     <div className="h-[48rem] p-0 overflow-y-auto flex flex-col -mt-8 rounded-3xl">
       <Row className="bg-grey-4 h-[33rem]">

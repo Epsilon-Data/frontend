@@ -1,9 +1,9 @@
 import { Button, Col, Form, message, Tabs, TabsProps } from 'antd';
 import { DetailsRow } from '@app/components/browse-projects/modal/pages/AboutDatasetPage/components/DetailsRow';
 import { useTranslation } from 'react-i18next';
-import { AnalysisRequest, createComment, RequestComment } from '@app/api/analysisRequests.api';
+import { AnalysisRequest, createComment, getComments, RequestComment } from '@app/api/analysisRequests.api';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CommentSection } from './CommentSection';
 import { IoPersonCircle } from 'react-icons/io5';
 import { useAppSelector } from '@app/hooks/reduxHooks';
@@ -24,6 +24,11 @@ export const RequestTabs = ({ request }: RequestTabsProps) => {
     setComments(request?.request?.comments || []);
   }, [request?.request?.comments]);
 
+  const sortedComments = useMemo(
+    () => [...comments].sort((a, b) => new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()),
+    [comments],
+  );
+
   const handleSubmit = async (values: { content: string }) => {
     const content = values?.content?.trim();
     if (!content) return;
@@ -32,15 +37,24 @@ export const RequestTabs = ({ request }: RequestTabsProps) => {
 
     const optimistic: RequestComment = {
       authorId: user?.sub ?? '',
-      authorName: `${user?.given_name} ${user?.family_name}`,
+      authorName: user?.name ?? user?.email ?? 'Unknown',
       content,
       createdDate: new Date(),
     };
 
-    setComments((prev) => [optimistic, ...prev]);
+    setComments((prev) => [...prev, optimistic]);
 
     try {
       await createComment(optimistic, request?.requestId);
+
+      const fresh = await getComments(request?.requestId);
+
+      fresh.sort(
+        (a: { createdDate: Date }, b: { createdDate: Date }) =>
+          new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime(),
+      );
+      setComments(fresh);
+
       message.success(t('browse.trackRequests.table.manage.tabs.comments.createdSuccess'));
       form.resetFields();
       setShowComment(false);
@@ -227,30 +241,28 @@ export const RequestTabs = ({ request }: RequestTabsProps) => {
             </span>
             <span className="text-sm ml-3 font-normal font-inter text-grey-2">{`(${comments.length})`}</span>
           </div>
-          {[...comments]
-            .sort((a, b) => new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime())
-            .map((comment) => {
-              let authorName = comment.authorName;
-              if (comment.authorId === user?.sub) {
-                authorName = 'You';
-              }
-              return (
-                <div key={comment.commentId} className="flex flex-col border-b border-grey-3 mb-8">
-                  <div className="flex justify-between">
-                    <div className="flex items-start">
-                      <IoPersonCircle size={20} className="text-grey-2 mr-2" />
-                      <span className="text-sm text-grey-2 font-light">{authorName}</span>
-                    </div>
-                    <span className="text-sm text-grey-2 font-light">
-                      {dayjs(comment.createdDate).format('D MMM YYYY [at] h.mma')}
-                    </span>
+          {sortedComments.map((comment) => {
+            let authorName = comment.authorName;
+            if (comment.authorId === user?.sub) authorName = 'You';
+
+            const key = comment.commentId ?? Date.now().toString(36);
+            return (
+              <div key={key} className="flex flex-col border-b border-grey-3 mb-8">
+                <div className="flex justify-between">
+                  <div className="flex items-start">
+                    <IoPersonCircle size={20} className="text-grey-2 mr-2" />
+                    <span className="text-sm text-grey-2 font-light">{authorName}</span>
                   </div>
-                  <div className="my-4">
-                    <span className="text-sm text-grey-1 font-light">{comment.content}</span>
-                  </div>
+                  <span className="text-sm text-grey-2 font-light">
+                    {dayjs(comment.createdDate).format('D MMM YYYY [at] h.mma')}
+                  </span>
                 </div>
-              );
-            })}
+                <div className="my-4">
+                  <span className="text-sm text-grey-1 font-light">{comment.content}</span>
+                </div>
+              </div>
+            );
+          })}
           {showComment ? (
             <Col span={12}>
               <CommentSection

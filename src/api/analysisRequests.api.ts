@@ -4,6 +4,14 @@ import { httpClient, getCsrfHeader } from './http.api';
 
 export type AnalysisRequestStatus = 'PENDING' | 'REJECTED' | 'REVISION' | 'REVIEW' | 'APPROVED';
 
+export interface RequestComment {
+  commentId?: string;
+  authorId: string;
+  authorName: string;
+  content: string;
+  createdDate: Date;
+}
+
 export interface AnalysisRequest {
   project?: {
     projectId: string;
@@ -20,6 +28,7 @@ export interface AnalysisRequest {
     members: string[];
   };
   request?: {
+    comments: RequestComment[];
     createdDate: Date;
     lastModified: Date;
     status: AnalysisRequestStatus;
@@ -66,6 +75,22 @@ export interface RequestSummaryInfo {
   createdDate: Date;
   lastModified: Date;
 }
+
+export const createComment = async (data: RequestComment, requestId: string | undefined): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  await httpClient.post(`${ANALYSIS_REQUEST_API_URL}/${requestId}/comment`, data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+};
+
+export const getComments = async (requestId: string | undefined): Promise<RequestComment[]> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/${requestId}/comment`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+
+  return response.data;
+};
 
 export const getRequestDetails = async (requestId: string | undefined): Promise<AnalysisRequest> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();

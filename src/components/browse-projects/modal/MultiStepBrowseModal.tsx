@@ -11,11 +11,13 @@ import { useState } from 'react';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { createRequest } from '@app/api/analysisRequests.api';
 import { Member } from '@app/api/projects.api';
+import { useNavigate } from 'react-router-dom';
 
 type MultiStepBrowseModalProps = React.ComponentProps<typeof Modal>;
 
 export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [members, setMembers] = useState<Member[]>([]);
   const [isFormLoading, setFormLoading] = useState(false);
   const { archetype, modalStep, setModalStep, setIsModalOpen, isModalOpen, form, project, validateMembers } =
@@ -115,6 +117,7 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
               key="view-requests"
               icon={<IoChevronBackOutline />}
               className="flex items-center h-9 text-blueDark text-xs font-medium font-inter"
+              onClick={() => navigate('/track-requests')}
             >
               {t('browse.createRequest.nextSteps.viewRequests')}
             </Button>

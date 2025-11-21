@@ -36,8 +36,9 @@ export const RequestTabs = ({ request }: RequestTabsProps) => {
     setSubmitting(true);
 
     const optimistic: RequestComment = {
+      requestId: request?.requestId ?? '',
       authorId: user?.sub ?? '',
-      authorName: user?.name ?? user?.email ?? 'Unknown',
+      authorName: `${user?.given_name} ${user?.family_name}`,
       content,
       createdDate: new Date(),
     };

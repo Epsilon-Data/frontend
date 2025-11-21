@@ -5,6 +5,7 @@ import { httpClient, getCsrfHeader } from './http.api';
 export type AnalysisRequestStatus = 'PENDING' | 'REJECTED' | 'REVISION' | 'REVIEW' | 'APPROVED';
 
 export interface RequestComment {
+  requestId: string;
   commentId?: string;
   authorId: string;
   authorName: string;

@@ -51,6 +51,15 @@ export const getArchetypeDetails = async (
   return response.data;
 };
 
+export const getPublishedArchetype = async (projectId: string | undefined): Promise<ArchetypeInfo> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`${ARCHETYPE_API_URL}/${projectId}/published`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+
+  return response.data;
+};
+
 export const createArchetype = async (data: ArchetypeInfo): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   await httpClient.post(`${ARCHETYPE_API_URL}/${data.projectId}`, data, {

@@ -5,15 +5,15 @@ import { Form, FormInstance, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { DetailsRow } from './AboutDatasetPage/components/DetailsRow';
 import { InputLabel } from '@app/components/common/Modal/InputLabel/InputLabel';
-import { ProjectInfo } from '@app/api/projects.api';
+import { Member, ProjectInfo } from '@app/api/projects.api';
 import { ModalDatePicker } from '@app/components/common/Modal/ModalDatePicker/ModalDatePicker';
 import { ModalEmailTag } from '@app/components/common/Modal/ModalEmailTag/ModalEmailTag';
 
 export type RequestAccessPageProps = {
   project: ProjectInfo;
   form: FormInstance<unknown>;
-  members: string[];
-  setMembers: React.Dispatch<React.SetStateAction<string[]>>;
+  members: Member[];
+  setMembers: React.Dispatch<React.SetStateAction<Member[]>>;
 };
 
 export const RequestAccessPage = ({ project, form, members, setMembers }: RequestAccessPageProps) => {

@@ -24,11 +24,17 @@ export interface ConnectionInfo {
   tempDbDetails?: {
     name: string;
     type: string;
-    url: string;
-    username: string;
-    password: string;
+    url?: string;
+    username?: string;
+    password?: string;
   };
   additionalInfo?: string;
+}
+
+export interface Member {
+  email?: string;
+  role?: string;
+  name?: string;
 }
 
 export interface ProjectInfo {
@@ -98,8 +104,14 @@ export const getProjectDetails = async (projectId: string | undefined): Promise<
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 
-  const dbData = JSON.parse(response.data.connection.tempDbDetails);
-  response.data.connection.tempDbDetails = dbData;
+  return response.data;
+};
+
+export const getProjectPublicDetails = async (projectId: string | undefined): Promise<ProjectInfo> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`${PROJECT_API_URL}/${projectId}/public`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
 
   return response.data;
 };

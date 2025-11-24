@@ -17,7 +17,7 @@ export interface AnalysisRequest {
     endDate: Date;
     participantsNum: number;
     lead: string;
-    members: string[];
+    members: Member[];
   };
   request?: {
     createdDate: Date;
@@ -25,7 +25,6 @@ export interface AnalysisRequest {
     status: AnalysisRequestStatus;
   };
   requestId?: string;
-  requestorId?: string;
   requestorPosition: string;
   requestorName: string;
   requestorEmail: string;
@@ -72,7 +71,6 @@ export const getRequestDetails = async (requestId: string | undefined): Promise<
   const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/${requestId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
-  response.data.projectMembers = JSON.parse(response.data.projectMembers);
 
   return response.data;
 };
@@ -100,16 +98,19 @@ export const createRequest = async (data: AnalysisRequest): Promise<void> => {
   });
 };
 
-export const approveRequest = async (data: { requestId: string | undefined; isApproved: boolean }): Promise<string> => {
+export const approveRequest = async (data: {
+  projectId: string | undefined;
+  requestId: string | undefined;
+  isApproved: boolean;
+}): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.patch(
-    `${ANALYSIS_REQUEST_API_URL}/${data.requestId}`,
+  await httpClient.patch(
+    `${ANALYSIS_REQUEST_API_URL}/${data.projectId}/${data.requestId}`,
     { isApproved: data.isApproved },
     {
       headers: { [csrfHeaderName]: `${csrf}` },
     },
   );
-  return response.data;
 };
 
 export const editRequest = async (data: AnalysisRequest): Promise<AnalysisRequest> => {

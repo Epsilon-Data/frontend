@@ -1,34 +1,38 @@
 import React, { useMemo, useState } from 'react';
-import FormItem from 'antd/es/form/FormItem';
-import { Form, Select, SelectProps, Tag } from 'antd';
+import { Form, Select, Tag } from 'antd';
+import type { SelectProps } from 'antd';
+import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import { useTranslation } from 'react-i18next';
 import { InputLabel } from '../InputLabel/InputLabel';
-import { CustomTagProps } from 'rc-select/lib/BaseSelect';
+import { Member } from '@app/api/projects.api';
 
-const norm = (s: string) => s.trim().toLowerCase();
-const isEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+const normEmail = (s?: string) => (s ?? '').trim().toLowerCase();
+const isEmail = (s?: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s ?? '');
 
 export const ModalEmailTag: React.FC<{
   name: string;
   className?: string;
   inputTitle: string;
   inputDescription?: string;
-  value: string[];
-  setValue: (value: string[]) => void;
+  value: Member[];
+  setValue: (value: Member[]) => void;
   labelLarge?: boolean;
-  selectProps?: SelectProps;
+  selectProps?: SelectProps<string[]>;
 }> = ({ name, className, inputTitle, inputDescription, value, setValue, labelLarge = true, selectProps }) => {
   const { t } = useTranslation();
-  const [search, setSearch] = useState('');
   const form = Form.useFormInstance();
-  const normalizedSet = useMemo(() => new Set(value.map(norm)), [value]);
+
+  const [search, setSearch] = useState<string>('');
+
+  const emails = useMemo(() => value.map((v) => normEmail(v.email)), [value]);
+  const normalizedSet = useMemo(() => new Set(emails), [emails]);
 
   const onInputKeyDown: React.KeyboardEventHandler = (e) => {
     if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
       e.stopPropagation();
 
-      const s = norm(search);
+      const s = normEmail(search);
       if (!s) return;
 
       if (normalizedSet.has(s)) {
@@ -36,15 +40,32 @@ export const ModalEmailTag: React.FC<{
         return;
       }
 
-      if (!isEmail(s)) {
-        form.setFields([{ name, errors: [t('fieldMessages.tags.invalidEmail')] }]);
-        return;
-      }
+      const nextMembers: Member[] = [...value, { email: s } as Member];
+      setValue(nextMembers);
+      form.setFields([{ name, errors: [] }]);
+      setSearch('');
     }
   };
 
-  const tagRender = (props: CustomTagProps) => {
-    const { label, closable, onClose } = props;
+  const onChange = (nextEmailsRaw: string[]) => {
+    const nextEmails = Array.from(new Set(nextEmailsRaw.map(normEmail).filter(Boolean)));
+
+    const invalids = nextEmails.filter((e) => !isEmail(e));
+    if (invalids.length) {
+      form.setFields([{ name, errors: [t('fieldMessages.tags.invalidEmail')] }]);
+      return;
+    }
+
+    const nextMembers: Member[] = nextEmails.map((e) => {
+      const existing = value.find((v) => normEmail(v.email) === e);
+      return existing ?? ({ email: e } as Member);
+    });
+
+    setValue(nextMembers);
+    form.setFields([{ name, errors: [] }]);
+  };
+
+  const tagRender = ({ label, closable, onClose }: CustomTagProps) => {
     return (
       <Tag className="rounded-full m-1 px-3 py-1 text-xs" closable={closable} onClose={onClose}>
         {label}
@@ -55,14 +76,14 @@ export const ModalEmailTag: React.FC<{
   return (
     <div className="flex flex-col mb-12">
       <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} large={labelLarge} />
-      <FormItem name={name} className={className}>
-        <Select
+      <Form.Item name={name} className={className}>
+        <Select<string[]>
           {...selectProps}
           mode="tags"
           open={false}
           notFoundContent={null}
-          value={value}
-          onChange={setValue}
+          value={emails}
+          onChange={onChange}
           onInputKeyDown={onInputKeyDown}
           tokenSeparators={[',']}
           onSearch={setSearch}
@@ -70,7 +91,7 @@ export const ModalEmailTag: React.FC<{
           className="select-field w-full"
           tagRender={tagRender}
         />
-      </FormItem>
+      </Form.Item>
     </div>
   );
 };

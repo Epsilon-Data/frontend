@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { MultiStepBrowseModal } from './MultiStepBrowseModal';
 import { RequestAccessPageProps } from './pages/RequestAccessPage';
 import { ModalAccessHeaderProps } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
+import { Member } from '@app/api/analysisRequests.api';
 
 const mockSetModalStep = vi.fn();
 const mockSetIsModalOpen = vi.fn();
@@ -77,7 +78,12 @@ vi.mock('./pages/RequestAccessPage', () => ({
   RequestAccessPage: ({ members, setMembers }: RequestAccessPageProps) => (
     <div data-testid="request-access-page">
       Request Access Page
-      <button data-testid="add-member" onClick={() => setMembers([...(members || []), 'a@b.com'])}>
+      <button
+        data-testid="add-member"
+        onClick={() =>
+          setMembers([...(members || ([] as Member[])), { email: 'test@example.com', role: 'researcher' } as Member])
+        }
+      >
         Add Member
       </button>
     </div>

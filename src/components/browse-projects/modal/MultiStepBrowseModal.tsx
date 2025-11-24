@@ -4,23 +4,23 @@ import { useTranslation } from 'react-i18next';
 import { ModalAccessHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { useBrowseModalContext } from '@app/hooks/useBrowseModalContext';
 import { AboutDatasetPage } from './pages/AboutDatasetPage/AboutDatasetPage';
-import { Node, Edge, useNodesState, useEdgesState } from '@xyflow/react';
 import { RequestAccessPage } from './pages/RequestAccessPage';
 import { SubmissionResultPage } from './pages/SubmissionResultPage';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import { useState } from 'react';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { createRequest } from '@app/api/analysisRequests.api';
+import { Member } from '@app/api/projects.api';
+import { useNavigate } from 'react-router-dom';
 
 type MultiStepBrowseModalProps = React.ComponentProps<typeof Modal>;
 
 export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProps) => {
   const { t } = useTranslation();
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const [members, setMembers] = useState<string[]>([]);
+  const navigate = useNavigate();
+  const [members, setMembers] = useState<Member[]>([]);
   const [isFormLoading, setFormLoading] = useState(false);
-  const { modalStep, setModalStep, setIsModalOpen, isModalOpen, form, project, validateMembers } =
+  const { archetype, modalStep, setModalStep, setIsModalOpen, isModalOpen, form, project, validateMembers } =
     useBrowseModalContext();
   const user = useAppSelector((state) => state.user.user);
 
@@ -32,8 +32,8 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
         {
           name: 'projectMembers',
           errors: [
-            invalid.length ? `Invalid email(s): ${invalid.join(', ')}` : '',
-            duplicates.length ? `Duplicate email(s): ${duplicates.join(', ')}` : '',
+            invalid.length ? `Invalid email(s): ${invalid.map((m) => m.email).join(', ')}` : '',
+            duplicates.length ? `Duplicate email(s): ${duplicates.map((m) => m.email).join(', ')}` : '',
           ].filter(Boolean),
         },
       ]);
@@ -45,7 +45,7 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
     const [startDate, endDate] = form.getFieldValue('projectDuration') || [];
 
     const formData = {
-      requestorId: user?.sub,
+      requestorId: user?.sub, // TODO: should this be here???
       projectId: project.projectId || '',
       requestorName: user?.given_name + ' ' + user?.family_name || '',
       requestorEmail: user?.email || '',
@@ -58,7 +58,7 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
       projectEthicsId: form.getFieldValue('projectEthicsId'),
       projectObjective: form.getFieldValue('projectObjective'),
       projectOutcome: form.getFieldValue('projectOutcome'),
-      projectMembers: normalized.map((email) => ({ email })),
+      projectMembers: normalized,
     };
 
     try {
@@ -82,18 +82,7 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
   const renderStep = () => {
     switch (modalStep) {
       case 0:
-        return (
-          <AboutDatasetPage
-            project={project}
-            nodes={nodes}
-            edges={edges}
-            setNodes={setNodes}
-            setEdges={setEdges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            setModalStep={setModalStep}
-          />
-        );
+        return <AboutDatasetPage project={project} archetype={archetype} setModalStep={setModalStep} />;
       case 1:
         return <RequestAccessPage project={project} form={form} members={members} setMembers={setMembers} />;
       case 2:
@@ -128,6 +117,7 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
               key="view-requests"
               icon={<IoChevronBackOutline />}
               className="flex items-center h-9 text-blueDark text-xs font-medium font-inter"
+              onClick={() => navigate('/track-requests')}
             >
               {t('browse.createRequest.nextSteps.viewRequests')}
             </Button>

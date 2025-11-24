@@ -1,36 +1,33 @@
 import { ProjectInfo } from '@app/api/projects.api';
-import { DB_TYPE_LABELS } from '@app/constants/projects';
 import { Button, Col, Row, Tag } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
-import { DetailsRow } from './components/DetailsRow';
 import { ImageWithPreview } from './components/ImageWithPreview';
 import { useTranslation } from 'react-i18next';
-import { Edge, EdgeChange, Node, NodeChange } from '@xyflow/react';
+import { Edge, Node, useEdgesState, useNodesState } from '@xyflow/react';
 import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlow/ArchetypeFlow';
 import { AboutTabs } from './components/AboutTabs';
+import { ArchetypeInfo } from '@app/api/archetypes.api';
+import { useEffect } from 'react';
 
 type AboutDatasetPageProps = {
   project: ProjectInfo;
-  nodes: Node[];
-  edges: Edge[];
-  setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
-  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
-  onNodesChange: (value: NodeChange[]) => void;
-  onEdgesChange: (value: EdgeChange[]) => void;
+  archetype: ArchetypeInfo;
   setModalStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const AboutDatasetPage = ({
-  project,
-  nodes,
-  edges,
-  setNodes,
-  setEdges,
-  onNodesChange,
-  onEdgesChange,
-  setModalStep,
-}: AboutDatasetPageProps) => {
+export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutDatasetPageProps) => {
   const { t } = useTranslation();
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>(archetype.nodes || []);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(archetype.edges || []);
+
+  useEffect(() => {
+    setNodes(archetype.nodes || []);
+  }, [archetype.nodes, setNodes]);
+
+  useEffect(() => {
+    setEdges(archetype.edges || []);
+  }, [archetype.edges, setEdges]);
+
   return (
     <div className="h-[48rem] p-0 overflow-y-auto flex flex-col -mt-8 rounded-3xl">
       <Row className="bg-grey-4 h-[33rem]">
@@ -74,29 +71,6 @@ export const AboutDatasetPage = ({
         </Col>
       </Row>
       <Row className="mt-8 mx-24 border-t border-t-grey-3 pt-8 flex flex-col mb-12">
-        {project.connection.tempDbDetails && (
-          <>
-            <div className="text-xs font-medium font-inter text-blueDark mb-4">
-              {t('browse.main.details.aboutDb.title')}
-            </div>
-            <div className="font-light text-xs font-inter">
-              <DetailsRow
-                title={t('browse.main.details.aboutDb.info.dbName')}
-                content={project.connection.tempDbDetails.name}
-                titleWidth={6}
-                contentWidth={15}
-              />
-              <DetailsRow
-                title={t('browse.main.details.aboutDb.info.dbNature')}
-                content={t(
-                  DB_TYPE_LABELS[project.connection.tempDbDetails.type] ?? project.connection.tempDbDetails.type,
-                )}
-                titleWidth={6}
-                contentWidth={15}
-              />
-            </div>
-          </>
-        )}
         <div className="text-xs font-medium font-inter text-blueDark mb-4">
           {t('browse.main.details.dbPreview.title')}
         </div>

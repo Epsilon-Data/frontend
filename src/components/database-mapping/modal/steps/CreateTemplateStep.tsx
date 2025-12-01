@@ -43,18 +43,12 @@ export const CreateTemplateStep = ({
 
   const onColumnRemoved = useCallback(
     (col: ColumnInfo) => {
-      console.log('[create] adding column back to picker:', col);
       setColumns((prev) => {
         const exists = prev.some((c) => c.id === col.id);
         if (exists) {
-          console.log('[create] column already in picker, skipping:', col.id);
           return prev;
         }
         const next = [...prev, col];
-        console.log(
-          '[create] picker columns after add-back:',
-          next.map((c) => ({ id: c.id, name: c.name, table: c.table })),
-        );
         return next;
       });
     },

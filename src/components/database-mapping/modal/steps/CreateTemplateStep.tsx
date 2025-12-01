@@ -56,10 +56,13 @@ export const CreateTemplateStep = ({
   );
 
   useEffect(() => {
+    let nodeColumnIds: Set<string> = new Set();
     setNodes((nds) => {
       const byId = new Map(columns.map((c) => [c.id, c]));
+
       const updated = nds.map((n) => {
         if (n.type !== 'column') return n;
+
         const data: { label: string; level: string; table?: string } = n.data as {
           label: string;
           level: string;
@@ -67,17 +70,21 @@ export const CreateTemplateStep = ({
         };
         const hasTable = typeof data.table === 'string' && data.table.length > 0;
         if (hasTable) return n;
+
         const col = byId.get(n.id);
         if (!col) return n;
+
         return { ...n, data: { ...data, table: col.table } } as Node;
       });
 
-      const nodeColumnIds = new Set(updated.filter((n) => n.type === 'column').map((n) => n.id));
-      if (nodeColumnIds.size === 0) return updated;
+      nodeColumnIds = new Set(updated.filter((n) => n.type === 'column').map((n) => n.id));
 
-      setColumns((prev) => prev.filter((c) => !nodeColumnIds.has(c.id)));
       return updated;
     });
+
+    if (nodeColumnIds.size === 0) return;
+
+    setColumns((prev) => prev.filter((c) => !nodeColumnIds.has(c.id)));
   }, [columns, setColumns, setNodes]);
 
   const handleNodesChangeEditable = useCallback(

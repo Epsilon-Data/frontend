@@ -10,10 +10,10 @@ const KeywordGuidance = () => {
   const { t } = useTranslation();
   const goodExamples: string[] = t('dashboard.createProject.form.step1.keywordGuidance.examples.good.list', {
     returnObjects: true,
-  });
+  }) as string[];
   const badExamples: string[] = t('dashboard.createProject.form.step1.keywordGuidance.examples.bad.list', {
     returnObjects: true,
-  });
+  }) as string[];
   const [showExamples, setShowExamples] = useState(true);
 
   const toggleExamples = () => {

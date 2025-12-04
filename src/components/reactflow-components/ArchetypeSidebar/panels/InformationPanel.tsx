@@ -15,7 +15,7 @@ export const InformationPanel: React.FC<Props> = ({ mode }) => {
     {
       returnObjects: true,
     },
-  );
+  ) as string[];
 
   return (
     <div

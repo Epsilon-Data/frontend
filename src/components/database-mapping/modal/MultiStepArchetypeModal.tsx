@@ -364,7 +364,7 @@ export const MultiStepArchetypeModal = ({
                 type="primary"
                 onClick={nextStep}
                 icon={<IoChevronForwardOutline />}
-                iconPosition="end"
+                iconPlacement="end"
                 className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
               >
                 {t('common.next')}
@@ -375,7 +375,7 @@ export const MultiStepArchetypeModal = ({
                 type="primary"
                 onClick={handleSubmit}
                 icon={<IoChevronForwardOutline />}
-                iconPosition="end"
+                iconPlacement="end"
                 loading={isFormLoading}
                 className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
               >

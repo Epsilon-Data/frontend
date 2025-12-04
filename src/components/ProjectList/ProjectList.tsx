@@ -31,7 +31,7 @@ export const ProjectList: React.FC<{
                       <Button
                         onClick={() => onProjectClick(project.projectId)}
                         icon={<IoChevronForwardOutline />}
-                        iconPosition="end"
+                        iconPlacement="end"
                         className="view-project-btn flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo border-none text-white hover:from-primaryGradientFrom hover:to-primaryGradientTo hover:text-white hover:shadow-none focus:from-primaryGradientFrom focus:to-primaryGradientTo focus:text-white focus:shadow-none active:from-primaryGradientFrom active:to-primaryGradientTo active:text-white active:shadow-none"
                       >
                         View project

@@ -128,9 +128,9 @@ vi.mock('@app/components/common/Modal/ModalHeaders/ModalHeaders', () => ({
 // Mock Ant Design Modal
 vi.mock('antd', () => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Modal: ({ children, open, onCancel, footer, ...props }: any) =>
+  Modal: ({ children, open, onCancel, footer }: any) =>
     open ? (
-      <div data-testid="modal" {...props}>
+      <div data-testid="modal">
         <div data-testid="modal-content">{children}</div>
         <div data-testid="modal-footer">{footer}</div>
         <button data-testid="modal-close" onClick={onCancel}>

@@ -41,7 +41,7 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
             className="mt-8 flex items-center w-60 h-10 text-xs font-medium font-inter"
             type="primary"
             icon={<IoChevronForwardOutline />}
-            iconPosition="end"
+            iconPlacement="end"
             onClick={() => setModalStep((prev) => prev + 1)}
           >
             {t('browse.main.details.requestAccess')}

@@ -81,7 +81,7 @@ const RequireAuth = ({ children }: WithChildrenProps): ReactElement | null => {
         // catch errors
         if (!isMountedRef.current) return;
         notificationController.error({
-          message: (err as ApiErrorData)?.message ?? 'Authentication failed',
+          title: (err as ApiErrorData)?.message ?? 'Authentication failed',
         });
         const cleanedCurrent = stripAuthParams(window.location.href);
         window.history.replaceState({}, document.title, cleanedCurrent);

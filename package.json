@@ -11,7 +11,7 @@
     "url": "https://github.com/epsilon-data/frontend/issues"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.6.1",
+    "@ant-design/icons": "^6.1.0",
     "@epsilon-data/epsilon-auth-client": "^0.0.6",
     "@epsilon-data/epsilon-connector": "^0.0.9",
     "@fontsource/inter": "^5.2.8",
@@ -19,7 +19,7 @@
     "@tailwindcss/line-clamp": "^0.4.4",
     "@vitejs/plugin-react-swc": "^3.11.0",
     "@xyflow/react": "^12.9.3",
-    "antd": "^5.29.1",
+    "antd": "^6.0.1",
     "axios": "^1.13.2",
     "axios-mock-adapter": "^1.22.0",
     "clsx": "^2.1.1",
@@ -29,8 +29,8 @@
     "i18next": "^23.16.8",
     "mermaid": "^10.9.5",
     "micromatch": "^4.0.8",
-    "rc-field-form": "^1.44.0",
-    "rc-picker": "^3.14.7",
+    "rc-field-form": "^2.7.1",
+    "rc-picker": "^4.11.3",
     "rc-select": "^14.16.8",
     "rc-table": "^7.55.1",
     "react": "^18.3.1",

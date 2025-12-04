@@ -49,7 +49,7 @@ export const ProjectList: React.FC<{
                       <div className="text-xs font-normal font-inter">{project.name}</div>
                     </Col>
                     <Col>
-                      <Tag className="text-xs font-normal font-inter py-1" bordered={false} color="#000">
+                      <Tag className="text-xs font-normal font-inter py-1" variant="filled" color="#000">
                         {project.status
                           .toLowerCase()
                           .split(' ')

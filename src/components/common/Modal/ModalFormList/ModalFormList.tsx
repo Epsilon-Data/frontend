@@ -75,7 +75,7 @@ export const ModalFormList: React.FC<{
         <div key={index} className="flex justify-between mt-4">
           <div className="text-xs font-normal text-inter">{`${index + 1}. ${member.email}`}</div>
           <div className="flex items-center gap-6 mr-1">
-            <Tag bordered={false} color="default">
+            <Tag variant="filled" color="default">
               {member.role}
             </Tag>
             <RiDeleteBinLine size={20} className="cursor-pointer" onClick={() => handleRemove(index)} />

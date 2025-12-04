@@ -63,7 +63,7 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
             <Tag
               className="w-max mb-2 text-xs font-normal font-inter rounded-2xl py-1 px-3 text-center bg-grey-1 text-white break-words"
               key={index}
-              bordered={false}
+              variant="filled"
             >
               {keyword}
             </Tag>

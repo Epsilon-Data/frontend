@@ -51,7 +51,7 @@ const KeywordGuidance = () => {
               </Text>{' '}
               <Space wrap>
                 {goodExamples.map((item, idx) => (
-                  <Tag key={idx} bordered={false} color="blue">
+                  <Tag key={idx} variant="filled" color="blue">
                     {item}
                   </Tag>
                 ))}
@@ -62,7 +62,7 @@ const KeywordGuidance = () => {
               <Text className="mr-4">{t('dashboard.createProject.form.step1.keywordGuidance.examples.bad.title')}</Text>{' '}
               <Space wrap>
                 {badExamples.map((item, idx) => (
-                  <Tag key={idx} bordered={false} color="red">
+                  <Tag key={idx} variant="filled" color="red">
                     {item}
                   </Tag>
                 ))}

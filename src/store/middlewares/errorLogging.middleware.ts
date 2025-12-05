@@ -6,7 +6,19 @@ import { notificationController } from '@app/controllers/notificationController'
  */
 export const errorLoggingMiddleware: Middleware = () => (next) => (action) => {
   if (isRejectedWithValue(action)) {
-    notificationController.error({ title: action.payload });
+    const payload = action.payload;
+
+    let title: React.ReactNode;
+
+    if (typeof payload === 'string') {
+      title = payload;
+    } else if (payload && typeof payload === 'object' && 'message' in payload) {
+      title = String((payload as { message: unknown }).message);
+    } else {
+      title = 'An unexpected error occurred';
+    }
+
+    notificationController.error({ title });
   }
 
   return next(action);

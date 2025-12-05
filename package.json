@@ -66,7 +66,7 @@
     "test": "vitest",
     "lint": "eslint \"*/**/*.{js,ts,tsx}\" --fix",
     "lint:styles": "stylelint '*/**/*.{js,ts,tsx}'",
-    "prepare": "husky install",
+    "prepare": "husky",
     "clean": "rm -rf node_modules/.vite node_modules/.cache && pnpm i && pnpm prune && pnpm store prune"
   },
   "browserslist": [
@@ -87,22 +87,22 @@
     "@types/react-responsive": "^8.0.8",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.36",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
+    "@typescript-eslint/eslint-plugin": "^8.48.1",
+    "@typescript-eslint/parser": "^8.48.1",
     "autoprefixer": "^10.4.22",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.2",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "form-data": "4.0.5",
-    "husky": "^8.0.3",
-    "jsdom": "^23.2.0",
+    "husky": "^9.1.7",
+    "jsdom": "^27.2.0",
     "less": "^4.4.2",
-    "lint-staged": "^15.5.2",
+    "lint-staged": "^16.2.7",
     "postcss": "^8.5.6",
     "prettier": "^3.7.4",
-    "stylelint": "^15.11.0",
+    "stylelint": "^16.26.1",
     "tailwindcss": "^3.4.18",
     "vite": "^7.2.6",
     "vite-plugin-checker": "^0.11.0",
@@ -118,12 +118,5 @@
   "resolutions": {
     "@types/react": "^18.0.28",
     "react-error-overlay": "6.0.9"
-  },
-  "keywords": [
-    "lightence",
-    "admin",
-    "admin-dashboard",
-    "ant-design",
-    "react"
-  ]
+  }
 }

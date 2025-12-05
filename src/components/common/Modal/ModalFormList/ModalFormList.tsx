@@ -38,7 +38,7 @@ export const ModalFormList: React.FC<{
         throw new Error();
       }
       setMembers([...members, { email, role }]);
-    } catch (errorInfo) {
+    } catch {
       message.error(t('dashboard.createProject.form.error.invalidEmail'));
     }
   };

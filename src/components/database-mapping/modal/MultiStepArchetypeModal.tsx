@@ -138,7 +138,7 @@ export const MultiStepArchetypeModal = ({
     if (modalStep === 0) {
       try {
         await forms[0].validateFields();
-      } catch (err) {
+      } catch {
         return;
       }
     }
@@ -253,7 +253,7 @@ export const MultiStepArchetypeModal = ({
     try {
       handleDraft(payload);
       message.success(t('project.createTemplate.form.draft.success'));
-    } catch (error) {
+    } catch {
       message.error(t('dashboard.createTemplate.form.draft.failed'));
     } finally {
       setIsModalOpen(false);

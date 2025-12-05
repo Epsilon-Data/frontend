@@ -117,10 +117,10 @@ export const DatabaseConnectionStep = ({
         await testConnection(connectionData);
         setConnected(true);
         setDbUrl(dbUrl);
-      } catch (error) {
+      } catch {
         setConnected(false);
       }
-    } catch (error) {
+    } catch {
       setConnected(false);
     }
 

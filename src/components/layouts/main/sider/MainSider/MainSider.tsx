@@ -7,22 +7,16 @@ import { useNavigate } from 'react-router-dom';
 
 interface MainSiderProps {
   selectedNav: string;
-  hidden: boolean;
 }
 
-const MainSider: React.FC<MainSiderProps> = ({ selectedNav, hidden }) => {
+const MainSider: React.FC<MainSiderProps> = ({ selectedNav }) => {
   const projectContext = useProjectOptional();
   const projectName = projectContext?.project?.name;
   const navigate = useNavigate();
 
   return (
     <>
-      <Layout.Sider
-        trigger={null}
-        width={260}
-        hidden={hidden}
-        className="bg-grey-1 right-0 overflow-hidden h-auto shadow-sider"
-      >
+      <Layout.Sider trigger={null} width={260} className="bg-grey-1 right-0 overflow-hidden h-auto shadow-sider">
         {projectName && (
           <>
             <div className="px-6 pt-8 flex flex-col gap-4">

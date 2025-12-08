@@ -95,10 +95,18 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
             key: nav.key,
             title: t(nav.title),
             label: isSubMenu ? (
-              <div ref={(el) => (itemRefs.current[nav.key] = el)}>{t(nav.title)}</div>
+              <div
+                ref={(el: HTMLDivElement | null) => {
+                  itemRefs.current[nav.key] = el;
+                }}
+              >
+                {t(nav.title)}
+              </div>
             ) : (
               <div
-                ref={(el) => (itemRefs.current[nav.key] = el)}
+                ref={(el: HTMLDivElement | null) => {
+                  itemRefs.current[nav.key] = el;
+                }}
                 data-key={searchParams.size !== 0 ? `${navUrl}?${searchParams.toString()}` : navUrl}
                 style={{ flex: 1 }}
               >
@@ -107,6 +115,7 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
                 </Link>
               </div>
             ),
+
             icon: nav.icon,
             children:
               isSubMenu &&
@@ -117,7 +126,9 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
                   key: childNav.key,
                   label: (
                     <div
-                      ref={(el) => (itemRefs.current[childNav.key] = el)}
+                      ref={(el: HTMLDivElement | null) => {
+                        itemRefs.current[childNav.key] = el;
+                      }}
                       data-key={searchParams.size !== 0 ? `${childUrl}?${searchParams.toString()}` : childUrl}
                     >
                       <Link to={searchParams.size !== 0 ? `${childUrl}?${searchParams.toString()}` : childUrl}>

@@ -14,7 +14,7 @@ const MainLayout: React.FC = () => {
       <Layout className="fixed top-0 left-0 z-10 flex h-14 w-full gap-2 bg-header px-8 py-1 text-2xl font-semibold text-white">
         <Link to={'/'} className="flex items-center gap-2 text-white hover:text-white">
           <Logo />
-          <span style={{ marginBottom: '0.2rem' }}>epsilon</span>
+          <span className="mb-1">epsilon</span>
         </Link>
       </Layout>
       <Layout className="overflow-hidden">

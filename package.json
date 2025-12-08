@@ -16,7 +16,7 @@
     "@epsilon-data/epsilon-auth-client": "^0.0.6",
     "@epsilon-data/epsilon-connector": "^0.1.2",
     "@fontsource/inter": "^5.2.8",
-    "@reduxjs/toolkit": "^2.11.0",
+    "@reduxjs/toolkit": "^2.11.1",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@vitejs/plugin-react-swc": "^4.2.2",
     "@xyflow/react": "^12.10.0",

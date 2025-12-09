@@ -10,10 +10,10 @@ const KeywordGuidance = () => {
   const { t } = useTranslation();
   const goodExamples: string[] = t('dashboard.createProject.form.step1.keywordGuidance.examples.good.list', {
     returnObjects: true,
-  });
+  }) as string[];
   const badExamples: string[] = t('dashboard.createProject.form.step1.keywordGuidance.examples.bad.list', {
     returnObjects: true,
-  });
+  }) as string[];
   const [showExamples, setShowExamples] = useState(true);
 
   const toggleExamples = () => {
@@ -51,7 +51,7 @@ const KeywordGuidance = () => {
               </Text>{' '}
               <Space wrap>
                 {goodExamples.map((item, idx) => (
-                  <Tag key={idx} bordered={false} color="blue">
+                  <Tag key={idx} variant="filled" color="blue">
                     {item}
                   </Tag>
                 ))}
@@ -62,7 +62,7 @@ const KeywordGuidance = () => {
               <Text className="mr-4">{t('dashboard.createProject.form.step1.keywordGuidance.examples.bad.title')}</Text>{' '}
               <Space wrap>
                 {badExamples.map((item, idx) => (
-                  <Tag key={idx} bordered={false} color="red">
+                  <Tag key={idx} variant="filled" color="red">
                     {item}
                   </Tag>
                 ))}

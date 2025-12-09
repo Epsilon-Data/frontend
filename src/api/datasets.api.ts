@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DATASET_API_URL, DATE_FORMAT } from '@app/constants/datasets';
 import { Priority } from '@app/constants/enums/priorities';
 import { format } from 'date-fns';

@@ -10,7 +10,7 @@ import { Member } from '@app/api/analysisRequests.api';
 const mockSetModalStep = vi.fn();
 const mockSetIsModalOpen = vi.fn();
 
-const mockValidateMembers = vi.fn((): { normalized: string[]; invalid: string[]; duplicates: string[] } => ({
+const mockValidateMembers = vi.fn((): { normalized: Member[]; invalid: Member[]; duplicates: Member[] } => ({
   normalized: [],
   invalid: [],
   duplicates: [],
@@ -26,6 +26,14 @@ const mockForm = {
 };
 
 let modalStepValue = 0;
+
+vi.mock('react-router-dom', () => ({
+  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
+    <a href={to} data-testid="mock-link">
+      {children}
+    </a>
+  ),
+}));
 
 // Mock context hook
 vi.mock('@app/hooks/useBrowseModalContext', () => ({
@@ -112,9 +120,9 @@ vi.mock('@app/components/common/Modal/ModalHeaders/ModalHeaders', () => ({
 // Ant Design Modal/Button
 vi.mock('antd', () => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Modal: ({ children, open, onCancel, footer, ...props }: any) =>
+  Modal: ({ children, open, onCancel, footer }: any) =>
     open ? (
-      <div data-testid="modal" {...props}>
+      <div data-testid="modal">
         <div data-testid="modal-content">{children}</div>
         <div data-testid="modal-footer">{footer}</div>
         <button data-testid="modal-close" onClick={onCancel}>
@@ -151,6 +159,7 @@ describe('MultiStepBrowseModal', () => {
     mockT.mockImplementation((key: string) => key);
     mockForm.validateFields.mockResolvedValue(undefined);
     mockValidateMembers.mockReturnValue({ normalized: [], invalid: [], duplicates: [] });
+    vi.spyOn(console, 'log').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -197,8 +206,8 @@ describe('MultiStepBrowseModal', () => {
     modalStepValue = 1;
     mockValidateMembers.mockReturnValue({
       normalized: [],
-      invalid: ['bad@'],
-      duplicates: ['dup@example.com'],
+      invalid: [{ email: 'bad@', role: 'researcher' } as Member],
+      duplicates: [{ email: 'dup@example.com', role: 'researcher' } as Member],
     });
 
     render(<MultiStepBrowseModal />);

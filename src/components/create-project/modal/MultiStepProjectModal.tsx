@@ -165,7 +165,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
                 type="primary"
                 onClick={nextStep}
                 icon={<IoChevronForwardOutline />}
-                iconPosition="end"
+                iconPlacement="end"
                 className="flex items-center w-60 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
               >
                 {t('common.next')}
@@ -176,7 +176,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
                 type="primary"
                 onClick={handleCreate}
                 icon={<IoChevronForwardOutline />}
-                iconPosition="end"
+                iconPlacement="end"
                 loading={isFormLoading}
                 className="flex items-center w-60 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
               >

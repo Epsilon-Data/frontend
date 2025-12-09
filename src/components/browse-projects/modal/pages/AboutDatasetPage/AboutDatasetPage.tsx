@@ -41,7 +41,7 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
             className="mt-8 flex items-center w-60 h-10 text-xs font-medium font-inter"
             type="primary"
             icon={<IoChevronForwardOutline />}
-            iconPosition="end"
+            iconPlacement="end"
             onClick={() => setModalStep((prev) => prev + 1)}
           >
             {t('browse.main.details.requestAccess')}
@@ -63,7 +63,7 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
             <Tag
               className="w-max mb-2 text-xs font-normal font-inter rounded-2xl py-1 px-3 text-center bg-grey-1 text-white break-words"
               key={index}
-              bordered={false}
+              variant="filled"
             >
               {keyword}
             </Tag>

@@ -2,7 +2,7 @@ import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlo
 import { ColumnToolbar } from '@app/components/reactflow-components/ColumnToolbar/ColumnToolbar';
 import { Anchor } from '@app/components/reactflow-components/ColumnToolbar/ReactflowBridge/ReactflowBridge';
 import { computeNextColumnPosition } from '@app/utils/reactflow/helpers';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Node, Edge, NodeChange, EdgeChange, addEdge } from '@xyflow/react';
 import { ColumnInfo } from '@app/api/database.api';
@@ -57,17 +57,20 @@ export const ColumnMappingStep = ({
   const toolbarDisabled = !!anchor && connectedColumnCount >= 1;
   const disabledMessage = toolbarDisabled ? t('project.createTemplate.form.step3.toolbar.error.nodeMapped') : undefined;
 
-  useEffect(() => {
-    if (!anchor) {
+  const handleAnchorChange = useCallback((nextAnchor: Anchor) => {
+    setAnchor(nextAnchor);
+
+    if (!nextAnchor) {
       setToolbarOpen(false);
       lastSelectedIdRef.current = null;
       return;
     }
-    if (anchor.selectedId !== lastSelectedIdRef.current) {
+
+    if (nextAnchor.selectedId !== lastSelectedIdRef.current) {
       setToolbarOpen(true);
-      lastSelectedIdRef.current = anchor.selectedId;
+      lastSelectedIdRef.current = nextAnchor.selectedId;
     }
-  }, [anchor]);
+  }, []);
 
   const handlePick = useCallback(
     (col: ColumnInfo) => {
@@ -191,7 +194,7 @@ export const ColumnMappingStep = ({
             onEdgesChange={handleEdgesChangeMapping}
             setNodes={setNodes}
             setEdges={setEdges}
-            onAnchorChange={setAnchor}
+            onAnchorChange={handleAnchorChange}
             mode="mapping"
           />
           {anchor && toolbarOpen && (

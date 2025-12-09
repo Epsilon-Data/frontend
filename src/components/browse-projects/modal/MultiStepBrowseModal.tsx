@@ -11,13 +11,11 @@ import { useState } from 'react';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { createRequest } from '@app/api/analysisRequests.api';
 import { Member } from '@app/api/projects.api';
-import { useNavigate } from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
 type MultiStepBrowseModalProps = React.ComponentProps<typeof Modal>;
 
 export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProps) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [members, setMembers] = useState<Member[]>([]);
   const [isFormLoading, setFormLoading] = useState(false);
   const { archetype, modalStep, setModalStep, setIsModalOpen, isModalOpen, form, project, validateMembers } =
@@ -103,7 +101,7 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
             type="primary"
             onClick={createAnalysisRequest}
             icon={<IoChevronForwardOutline />}
-            iconPosition="end"
+            iconPlacement="end"
             loading={isFormLoading}
             className="flex items-center w-60 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
           >
@@ -113,20 +111,21 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
       case 2:
         return (
           <>
-            <Button
-              key="view-requests"
-              icon={<IoChevronBackOutline />}
-              className="flex items-center h-9 text-blueDark text-xs font-medium font-inter"
-              onClick={() => navigate('/track-requests')}
-            >
-              {t('browse.createRequest.nextSteps.viewRequests')}
-            </Button>
+            <Link to="/track-requests">
+              <Button
+                key="view-requests"
+                icon={<IoChevronBackOutline />}
+                className="flex items-center h-9 text-blueDark text-xs font-medium font-inter"
+              >
+                {t('browse.createRequest.nextSteps.viewRequests')}
+              </Button>
+            </Link>
             <Button
               key="return"
               type="primary"
               onClick={() => setIsModalOpen(false)}
               icon={<IoChevronForwardOutline />}
-              iconPosition="end"
+              iconPlacement="end"
               className="flex items-center w-60 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
             >
               {t('browse.createRequest.nextSteps.return')}

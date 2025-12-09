@@ -1,9 +1,17 @@
 import { render, screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
 import { DatabaseMappingHeader } from '@app/components/database-mapping/DatabaseMappingHeader';
 import type { ArchetypeInfo } from '@app/api/archetypes.api';
 import { updateArchetypeDetails, deleteArchetype } from '@app/api/archetypes.api';
+
+beforeAll(() => {
+  global.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+});
 
 const mockNavigate = vi.fn();
 

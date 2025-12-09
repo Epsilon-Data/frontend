@@ -1,5 +1,5 @@
 import { ProjectInfo } from '@app/api/projects.api';
-import { Button, Col, Row, Tag } from 'antd';
+import { Button, Col, Row, Tag, message } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 import { ImageWithPreview } from './components/ImageWithPreview';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,10 @@ import { Edge, Node, useEdgesState, useNodesState } from '@xyflow/react';
 import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlow/ArchetypeFlow';
 import { AboutTabs } from './components/AboutTabs';
 import { ArchetypeInfo } from '@app/api/archetypes.api';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useAppSelector } from '@app/hooks/reduxHooks';
+import { useNavigate } from 'react-router-dom';
+import { getRequestByProject } from '@app/api/analysisRequests.api';
 
 type AboutDatasetPageProps = {
   project: ProjectInfo;
@@ -15,10 +18,15 @@ type AboutDatasetPageProps = {
   setModalStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
+type ButtonMode = 'OWNER' | 'APPLIED' | 'DEFAULT';
+
 export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutDatasetPageProps) => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(archetype.nodes || []);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(archetype.edges || []);
+  const user = useAppSelector((state) => state.user.user);
+  const [hasRequested, setHasRequested] = useState<boolean>(false);
 
   useEffect(() => {
     setNodes(archetype.nodes || []);
@@ -27,6 +35,44 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
   useEffect(() => {
     setEdges(archetype.edges || []);
   }, [archetype.edges, setEdges]);
+
+  useEffect(() => {
+    const checkRequest = async () => {
+      if (!project?.projectId) return;
+
+      try {
+        const result = await getRequestByProject(project.projectId);
+        setHasRequested(result !== null);
+      } catch {
+        message.error(t('browse.main.details.proceed.requestCheckError'));
+      }
+    };
+
+    void checkRequest();
+  }, [project.projectId, t]);
+
+  const buttonConfig: Record<ButtonMode, { label: string; onClick: () => void }> = {
+    OWNER: {
+      label: t('browse.main.details.proceed.manageProject'),
+      onClick: () => navigate(`/project/db-mapping?id=${project.projectId}`),
+    },
+    APPLIED: {
+      label: t('browse.main.details.proceed.manageRequest'),
+      onClick: () => {
+        setModalStep(0);
+      },
+    },
+    DEFAULT: {
+      label: t('browse.main.details.proceed.requestAccess'),
+      onClick: () => setModalStep((prev) => prev + 1),
+    },
+  };
+
+  const renderButtonMode = () => {
+    if (project.ownerId === user?.sub) return buttonConfig.OWNER;
+    if (hasRequested) return buttonConfig.APPLIED;
+    return buttonConfig.DEFAULT;
+  };
 
   return (
     <div className="h-[48rem] p-0 overflow-y-auto flex flex-col -mt-8 rounded-3xl">
@@ -42,9 +88,9 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
             type="primary"
             icon={<IoChevronForwardOutline />}
             iconPlacement="end"
-            onClick={() => setModalStep((prev) => prev + 1)}
+            onClick={renderButtonMode().onClick}
           >
-            {t('browse.main.details.requestAccess')}
+            {renderButtonMode().label}
           </Button>
         </Col>
         <Col span={10}>

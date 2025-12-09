@@ -68,7 +68,8 @@
     "lint": "eslint \"*/**/*.{js,ts,tsx}\" --fix",
     "lint:styles": "stylelint '*/**/*.{js,ts,tsx}'",
     "prepare": "husky install",
-    "clean": "rm -rf node_modules/.vite node_modules/.cache && pnpm i && pnpm prune && pnpm store prune"
+    "clean": "rm -rf node_modules/.vite node_modules/.cache && pnpm i && pnpm prune && pnpm store prune",
+    "cy:open": "cypress open"
   },
   "browserslist": [
     ">0.2%",
@@ -91,6 +92,7 @@
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "autoprefixer": "^10.4.21",
+    "cypress": "^15.7.1",
     "eslint": "^8.53.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",

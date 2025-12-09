@@ -10,7 +10,7 @@ import { ArchetypeInfo } from '@app/api/archetypes.api';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { useNavigate } from 'react-router-dom';
-import { getRequestByProject } from '@app/api/analysisRequests.api';
+import { getRequestByProject, RequestSummaryInfo } from '@app/api/analysisRequests.api';
 
 type AboutDatasetPageProps = {
   project: ProjectInfo;
@@ -26,7 +26,7 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(archetype.nodes || []);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(archetype.edges || []);
   const user = useAppSelector((state) => state.user.user);
-  const [hasRequested, setHasRequested] = useState<boolean>(false);
+  const [request, setRequest] = useState<RequestSummaryInfo | null>(null);
 
   useEffect(() => {
     setNodes(archetype.nodes || []);
@@ -42,7 +42,7 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
 
       try {
         const result = await getRequestByProject(project.projectId);
-        setHasRequested(result !== null);
+        setRequest(result);
       } catch {
         message.error(t('browse.main.details.proceed.requestCheckError'));
       }
@@ -59,7 +59,7 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
     APPLIED: {
       label: t('browse.main.details.proceed.manageRequest'),
       onClick: () => {
-        setModalStep(0);
+        navigate(`/track-requests?id=${request?.requestId}`);
       },
     },
     DEFAULT: {
@@ -70,7 +70,7 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
 
   const renderButtonMode = () => {
     if (project.ownerId === user?.sub) return buttonConfig.OWNER;
-    if (hasRequested) return buttonConfig.APPLIED;
+    if (request !== null) return buttonConfig.APPLIED;
     return buttonConfig.DEFAULT;
   };
 

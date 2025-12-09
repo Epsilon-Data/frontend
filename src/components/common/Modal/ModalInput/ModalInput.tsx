@@ -7,6 +7,7 @@ import { InputLabel } from '../InputLabel/InputLabel';
 
 export const ModalInput: React.FC<
   {
+    placeholder?: string;
     name: string;
     suffix?: React.ReactNode;
     disabled?: boolean;
@@ -16,7 +17,18 @@ export const ModalInput: React.FC<
     inputRules?: RuleObject[];
     labelLarge?: boolean;
   } & HtmlHTMLAttributes<HTMLInputElement>
-> = ({ name, suffix, disabled, className, inputTitle, inputDescription, inputRules, labelLarge = true, ...props }) => {
+> = ({
+  placeholder,
+  name,
+  suffix,
+  disabled,
+  className,
+  inputTitle,
+  inputDescription,
+  inputRules,
+  labelLarge = true,
+  ...props
+}) => {
   const { t } = useTranslation();
   const rules = [
     {
@@ -35,6 +47,7 @@ export const ModalInput: React.FC<
       <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} large={labelLarge} />
       <FormItem rules={rules} name={name} className={className}>
         <Input
+          placeholder={placeholder}
           {...props}
           suffix={suffix}
           disabled={disabled}

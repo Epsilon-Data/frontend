@@ -59,7 +59,7 @@ export const RequestTabs = ({ request }: RequestTabsProps) => {
       message.success(t('browse.trackRequests.table.manage.tabs.comments.createdSuccess'));
       form.resetFields();
       setShowComment(false);
-    } catch (err) {
+    } catch {
       setComments((prev) => prev.filter((c) => c !== optimistic));
       message.error(t('browse.trackRequests.table.manage.tabs.comments.createdError'));
     } finally {

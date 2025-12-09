@@ -130,7 +130,7 @@ export const MultiStepArchetypeModal = ({
     if (modalStep === 0) {
       try {
         await forms[0].validateFields();
-      } catch (err) {
+      } catch {
         return;
       }
     }
@@ -245,7 +245,7 @@ export const MultiStepArchetypeModal = ({
     try {
       handleDraft(payload);
       message.success(t('project.createTemplate.form.draft.success'));
-    } catch (error) {
+    } catch {
       message.error(t('dashboard.createTemplate.form.draft.failed'));
     } finally {
       setIsModalOpen(false);
@@ -354,7 +354,7 @@ export const MultiStepArchetypeModal = ({
                 type="primary"
                 onClick={nextStep}
                 icon={<IoChevronForwardOutline />}
-                iconPosition="end"
+                iconPlacement="end"
                 className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
               >
                 {t('common.next')}
@@ -365,7 +365,7 @@ export const MultiStepArchetypeModal = ({
                 type="primary"
                 onClick={handleSubmit}
                 icon={<IoChevronForwardOutline />}
-                iconPosition="end"
+                iconPlacement="end"
                 loading={isFormLoading}
                 className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
               >

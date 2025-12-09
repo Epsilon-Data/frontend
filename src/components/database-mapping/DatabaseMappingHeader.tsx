@@ -24,7 +24,7 @@ export const DatabaseMappingHeader = ({ archetype, projectId }: DatabaseMappingH
     try {
       await deleteArchetype(projectId, archetype?.archetypeId ?? '');
       message.success(t('project.main.dbMapping.table.manage.delete.success'));
-    } catch (error) {
+    } catch {
       message.error(t('project.main.dbMapping.table.manage.delete.failed'));
     }
     navigate(`/project/db-mapping?id=${projectId}`, { state: { refetch: true } });
@@ -39,7 +39,7 @@ export const DatabaseMappingHeader = ({ archetype, projectId }: DatabaseMappingH
         status: isPublished ? 'ACTIVE' : 'PUBLISHED',
       });
       message.success(t(`project.main.dbMapping.table.manage.${isPublished ? 'withdraw' : 'publish'}.success`));
-    } catch (error) {
+    } catch {
       message.error(t(`project.main.dbMapping.table.manage.${isPublished ? 'withdraw' : 'publish'}.failed`));
     }
     navigate(`/project/db-mapping?id=${projectId}`);

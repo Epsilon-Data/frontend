@@ -18,7 +18,9 @@ export const useLanguage = (): { language: LanguageType; setLanguage: (locale: L
   );
 
   useEffect(() => {
-    localLanguage && handleChangeLanguage(localLanguage);
+    if (localLanguage) {
+      handleChangeLanguage(localLanguage);
+    }
   }, [handleChangeLanguage]);
 
   return useMemo(

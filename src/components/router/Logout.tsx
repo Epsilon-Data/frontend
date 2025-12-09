@@ -12,7 +12,7 @@ const Logout: React.FC = () => {
       .unwrap()
       .then((res) => (window.location.href = res))
       .catch((err) => {
-        notificationController.error({ message: err.message });
+        notificationController.error({ title: err.message });
       });
   }, [dispatch]);
 

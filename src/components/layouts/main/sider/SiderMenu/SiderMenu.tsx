@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { returnCurrentNav, SidebarNavigationItem } from '../sidebarNavigation';
 import { useTranslation } from 'react-i18next';
@@ -17,24 +17,17 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
   const isMounted = useMounted();
   const itemRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const indicatorRef = useRef<HTMLDivElement | null>(null);
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
-  const [openKeys, setOpenKeys] = useState<string[]>([]);
 
-  useEffect(() => {
-    const sidebarNavFlat = currentNav.reduce(
-      (result: SidebarNavigationItem[], item) => result.concat(item.children?.length ? item.children : item),
-      [],
-    );
+  const sidebarNavFlat = currentNav.reduce(
+    (result: SidebarNavigationItem[], item) => result.concat(item.children?.length ? item.children : item),
+    [],
+  );
 
-    const currentMenuItem = sidebarNavFlat.find(({ url }) => url === location.pathname);
-    const selected = currentMenuItem ? [currentMenuItem.key] : [];
+  const currentMenuItem = sidebarNavFlat.find(({ url }) => url === location.pathname);
+  const selectedKeys = currentMenuItem ? [currentMenuItem.key] : [];
 
-    const parent = currentNav.find((nav) => nav.children?.some((child) => child.url === location.pathname));
-    const open = parent ? [parent.key] : [];
-
-    setSelectedKeys(selected);
-    setOpenKeys(open);
-  }, [selectedNav, location.pathname, currentNav]);
+  const parent = currentNav.find((nav) => nav.children?.some((child) => child.url === location.pathname));
+  const defaultOpenKeys = parent ? [parent.key] : [];
 
   useEffect(() => {
     if (!isMounted) return;
@@ -83,7 +76,6 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
         indicatorRef.current.style.transform = `translateY(${top}px)`;
       }
     });
-    setOpenKeys(e);
   }
 
   return (
@@ -92,8 +84,8 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
       <Menu
         className="bg-transparent border-r-0"
         mode="inline"
-        openKeys={openKeys}
         selectedKeys={selectedKeys}
+        defaultOpenKeys={defaultOpenKeys}
         onOpenChange={handleOpenChange}
         disabledOverflow={true}
         items={currentNav.map((nav) => {
@@ -103,10 +95,18 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
             key: nav.key,
             title: t(nav.title),
             label: isSubMenu ? (
-              <div ref={(el) => (itemRefs.current[nav.key] = el)}>{t(nav.title)}</div>
+              <div
+                ref={(el: HTMLDivElement | null) => {
+                  itemRefs.current[nav.key] = el;
+                }}
+              >
+                {t(nav.title)}
+              </div>
             ) : (
               <div
-                ref={(el) => (itemRefs.current[nav.key] = el)}
+                ref={(el: HTMLDivElement | null) => {
+                  itemRefs.current[nav.key] = el;
+                }}
                 data-key={searchParams.size !== 0 ? `${navUrl}?${searchParams.toString()}` : navUrl}
                 style={{ flex: 1 }}
               >
@@ -115,6 +115,7 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
                 </Link>
               </div>
             ),
+
             icon: nav.icon,
             children:
               isSubMenu &&
@@ -125,7 +126,9 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
                   key: childNav.key,
                   label: (
                     <div
-                      ref={(el) => (itemRefs.current[childNav.key] = el)}
+                      ref={(el: HTMLDivElement | null) => {
+                        itemRefs.current[childNav.key] = el;
+                      }}
                       data-key={searchParams.size !== 0 ? `${childUrl}?${searchParams.toString()}` : childUrl}
                     >
                       <Link to={searchParams.size !== 0 ? `${childUrl}?${searchParams.toString()}` : childUrl}>

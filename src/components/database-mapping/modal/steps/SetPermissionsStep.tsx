@@ -1,4 +1,4 @@
-import { Input, Segmented, Space, Table, Tooltip } from 'antd';
+import { Input, Space, Table, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { IoSearch } from 'react-icons/io5';
 import { Node, Edge } from '@xyflow/react';
@@ -14,24 +14,17 @@ export type SetPermissionsStepProps = {
   edges: Edge[];
   checkedByCol: CheckedByCol;
   setCheckedByCol: React.Dispatch<React.SetStateAction<CheckedByCol>>;
-  modeByTop: Record<string, Mode>;
-  setModeByTop: React.Dispatch<React.SetStateAction<Record<string, Mode>>>;
 };
 
-type Mode = 'apply' | 'override';
-
-export const SetPermissionsStep = ({
-  nodes,
-  edges,
-  checkedByCol,
-  setCheckedByCol,
-  modeByTop,
-  setModeByTop,
-}: SetPermissionsStepProps) => {
+export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol }: SetPermissionsStepProps) => {
   const { t } = useTranslation();
 
-  const { rows, topKeys, setMode, hasAnyCategoryDescendants, isEnabled, getChecked, onParentToggle, onLeafToggle } =
-    usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol, modeByTop, setModeByTop);
+  const { rows, getChecked, onParentToggle, onLeafToggle } = usePermissionTable(
+    nodes,
+    edges,
+    checkedByCol,
+    setCheckedByCol,
+  );
   const [q, setQ] = useState('');
   const filtered = useMemo(() => {
     if (!q) return rows;
@@ -47,12 +40,16 @@ export const SetPermissionsStep = ({
     return filterTree(rows);
   }, [q, rows]);
 
-  const renderRadio = (col: 'high' | 'detail') => (_: unknown, row: PermissionTableRow) => {
-    const enabled = isEnabled(row);
-    const checked = getChecked(col, row);
-    const onChange = (next: boolean) =>
-      row.kind === 'category' ? onParentToggle(col, row, next) : onLeafToggle(col, row, next);
-    return <ToggleRadio checked={checked} disabled={!enabled} onChange={onChange} />;
+  const renderRadio = (col: 'high' | 'detail') => {
+    const RadioRenderer = (_: unknown, row: PermissionTableRow) => {
+      const checked = getChecked(col, row);
+      const onChange = (next: boolean) =>
+        row.kind === 'category' ? onParentToggle(col, row, next) : onLeafToggle(col, row, next);
+
+      return <ToggleRadio checked={checked} disabled={false} onChange={onChange} />;
+    };
+    RadioRenderer.displayName = `RadioRenderer(${col})`;
+    return RadioRenderer;
   };
 
   const columns = [
@@ -117,29 +114,7 @@ export const SetPermissionsStep = ({
       key: 'mode',
       width: 200,
       align: 'right' as const,
-      render: (_: unknown, row: PermissionTableRow) => {
-        if (!topKeys.includes(row.key)) return null;
-        if (!hasAnyCategoryDescendants(row.key)) return null;
-        const mode = modeByTop[row.key] ?? 'apply';
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <Segmented
-              size="small"
-              options={[
-                { label: 'Apply all', value: 'apply' },
-                { label: 'Override', value: 'override' },
-              ]}
-              value={mode}
-              onChange={(v) => setMode(row.key, v as Mode)}
-              className="
-                [&_.ant-segmented-thumb]:!bg-black
-                [&_.ant-segmented-item-selected]:!bg-black
-                [&_.ant-segmented-item-selected]:!text-white
-              "
-            />
-          </div>
-        );
-      },
+      render: () => null,
     },
   ];
 

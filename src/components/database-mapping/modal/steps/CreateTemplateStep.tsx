@@ -43,32 +43,49 @@ export const CreateTemplateStep = ({
 
   const onColumnRemoved = useCallback(
     (col: ColumnInfo) => {
-      setColumns((prev) => (prev.some((c) => c.id === col.id) ? prev : [...prev, col]));
+      setColumns((prev) => {
+        const exists = prev.some((c) => c.id === col.id);
+        if (exists) {
+          return prev;
+        }
+        const next = [...prev, col];
+        return next;
+      });
     },
     [setColumns],
   );
 
   useEffect(() => {
-    const byId = new Map(columns.map((c) => [c.id, c]));
-    setNodes((nds) =>
-      nds.map((n) => {
+    let nodeColumnIds: Set<string> = new Set();
+    setNodes((nds) => {
+      const byId = new Map(columns.map((c) => [c.id, c]));
+
+      const updated = nds.map((n) => {
         if (n.type !== 'column') return n;
+
         const data: { label: string; level: string; table?: string } = n.data as {
           label: string;
           level: string;
-          table: string;
+          table?: string;
         };
         const hasTable = typeof data.table === 'string' && data.table.length > 0;
         if (hasTable) return n;
+
         const col = byId.get(n.id);
         if (!col) return n;
+
         return { ...n, data: { ...data, table: col.table } } as Node;
-      }),
-    );
-    const nodeColumnIds = new Set(nodes.filter((n) => n.type === 'column').map((n) => n.id));
+      });
+
+      nodeColumnIds = new Set(updated.filter((n) => n.type === 'column').map((n) => n.id));
+
+      return updated;
+    });
+
     if (nodeColumnIds.size === 0) return;
+
     setColumns((prev) => prev.filter((c) => !nodeColumnIds.has(c.id)));
-  }, [columns, nodes, setColumns, setNodes]);
+  }, [columns, setColumns, setNodes]);
 
   const handleNodesChangeEditable = useCallback(
     (changes: NodeChange[]) => {

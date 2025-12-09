@@ -38,6 +38,10 @@ export const ColumnMappingStep = ({
   const [toolbarOpen, setToolbarOpen] = useState(false);
   const lastSelectedIdRef = useRef<string | null>(null);
 
+  const mappedColumnIds = useMemo(() => new Set(nodes.filter((n) => n.type === 'column').map((n) => n.id)), [nodes]);
+
+  const availableColumns = useMemo(() => columns.filter((c) => !mappedColumnIds.has(c.id)), [columns, mappedColumnIds]);
+
   const connectedColumnCount = useMemo(() => {
     if (!anchor) return 0;
     const subcatId = anchor.selectedId;
@@ -195,7 +199,7 @@ export const ColumnMappingStep = ({
           />
           {anchor && toolbarOpen && (
             <ColumnToolbar
-              columns={columns}
+              columns={availableColumns}
               disabled={!anchor || toolbarDisabled}
               disabledMessage={disabledMessage}
               style={{ left: anchor.left, top: anchor.top }}

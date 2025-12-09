@@ -1,5 +1,4 @@
 import { Permission, PermissionType } from '@app/api/archetypes.api';
-import { Mode } from '@app/hooks/usePermissionTable';
 import { Node, Edge } from '@xyflow/react';
 
 const COLUMN_Y_OFFSET = 150;
@@ -228,73 +227,57 @@ export function permissionsFromChecked(
   checkedByCol: {
     high: { parent: Record<string, boolean>; leaf: Record<string, boolean> };
     detail: { parent: Record<string, boolean>; leaf: Record<string, boolean> };
+    none: { parent: Record<string, boolean>; leaf: Record<string, boolean> };
   },
   childrenById: Map<string, string[]>,
   topKeys: string[],
 ): Permission[] {
   const out: Permission[] = [];
-  const covered = new Set<string>();
 
-  const coverSubtree = (id: string) => {
-    const stack = [id];
-    while (stack.length) {
-      const cur = stack.pop()!;
-      if (covered.has(cur)) continue;
-      covered.add(cur);
-      const kids = childrenById.get(cur);
-      if (kids?.length) stack.push(...kids);
-    }
-  };
+  type Perm = 'DETAILED' | 'HIGH_LEVEL' | 'NONE';
 
-  const subtreeHasCovered = (id: string): boolean => {
-    const stack = [id];
-    while (stack.length) {
-      const cur = stack.pop()!;
-      if (covered.has(cur)) return true;
-      const kids = childrenById.get(cur);
-      if (kids?.length) stack.push(...kids);
-    }
-    return false;
-  };
+  const explicit = new Map<string, Perm>();
 
   for (const [id, checked] of Object.entries(checkedByCol.detail.parent)) {
-    if (!checked || covered.has(id)) continue;
-    out.push({ id, permission: 'DETAILED' });
-    coverSubtree(id);
+    if (checked) explicit.set(id, 'DETAILED');
   }
-
   for (const [id, checked] of Object.entries(checkedByCol.detail.leaf)) {
-    if (!checked || covered.has(id)) continue;
-    out.push({ id, permission: 'DETAILED' });
-    covered.add(id);
+    if (checked) explicit.set(id, 'DETAILED');
   }
 
   for (const [id, checked] of Object.entries(checkedByCol.high.parent)) {
-    if (!checked || covered.has(id)) continue;
-    out.push({ id, permission: 'HIGH_LEVEL' });
-    coverSubtree(id);
+    if (checked && !explicit.has(id)) explicit.set(id, 'HIGH_LEVEL');
   }
-
   for (const [id, checked] of Object.entries(checkedByCol.high.leaf)) {
-    if (!checked || covered.has(id)) continue;
-    out.push({ id, permission: 'HIGH_LEVEL' });
-    covered.add(id);
+    if (checked && !explicit.has(id)) explicit.set(id, 'HIGH_LEVEL');
   }
 
-  const emitNonePreorder = (id: string) => {
-    if (!subtreeHasCovered(id)) {
-      out.push({ id, permission: 'NONE' });
-      coverSubtree(id);
-      return;
+  for (const [id, checked] of Object.entries(checkedByCol.none.parent)) {
+    if (checked) explicit.set(id, 'NONE');
+  }
+  for (const [id, checked] of Object.entries(checkedByCol.none.leaf)) {
+    if (checked) explicit.set(id, 'NONE');
+  }
+
+  const visit = (id: string, inherited: Perm | null, isTop: boolean) => {
+    const own = explicit.get(id);
+    const effective: Perm = own ?? inherited ?? 'NONE';
+
+    const inheritedOrDefault: Perm = inherited ?? 'NONE';
+    const shouldEmit = isTop || effective !== inheritedOrDefault;
+
+    if (shouldEmit) {
+      out.push({ id, permission: effective });
     }
+
     const kids = childrenById.get(id) ?? [];
     for (const k of kids) {
-      if (!covered.has(k)) emitNonePreorder(k);
+      visit(k, effective, false);
     }
   };
 
   for (const topId of topKeys) {
-    if (!covered.has(topId)) emitNonePreorder(topId);
+    visit(topId, null, true);
   }
 
   return out;
@@ -308,90 +291,67 @@ export function permissionsToCheckedByCol(permissions: Permission[], nodes: Node
   const parentById = new Map<string, string>();
   const topKeys = rows.map((r) => r.key);
 
-  const walk = (r: PermissionTableRow) => {
+  const walkBuild = (r: PermissionTableRow) => {
     byId.set(r.key, r);
     if (r.children?.length) {
       const kids = r.children.map((c) => c.key);
       childrenById.set(r.key, kids);
       for (const c of r.children) {
         parentById.set(c.key, r.key);
-        walk(c);
+        walkBuild(c);
       }
     }
   };
-  rows.forEach(walk);
+  rows.forEach(walkBuild);
 
   const normalize = (p?: string) => p as PermissionType;
-  const pMap = new Map<string, 'DETAILED' | 'HIGH_LEVEL' | 'NONE' | undefined>();
+  const pMap = new Map<string, PermissionType | undefined>();
   for (const p of permissions) pMap.set(p.id, normalize(p.permission));
 
   const checkedByCol = {
     high: { parent: {} as Record<string, boolean>, leaf: {} as Record<string, boolean> },
     detail: { parent: {} as Record<string, boolean>, leaf: {} as Record<string, boolean> },
+    none: { parent: {} as Record<string, boolean>, leaf: {} as Record<string, boolean> },
   };
-  const modeByTop: Record<string, Mode> = {};
 
   const setChecked = (perm: PermissionType, id: string) => {
-    const r = byId.get(id);
-    if (!r) return;
+    const row = byId.get(id);
+    if (!row) return;
+
+    if (perm === 'NONE') {
+      const bucket = row.kind === 'category' ? 'parent' : 'leaf';
+      checkedByCol.none[bucket][id] = true;
+      return;
+    }
+
     const col = perm === 'DETAILED' ? 'detail' : 'high';
-    if (r.kind === 'category') checkedByCol[col].parent[id] = true;
-    else checkedByCol[col].leaf[id] = true;
+    const bucket = row.kind === 'category' ? 'parent' : 'leaf';
+    checkedByCol[col][bucket][id] = true;
   };
 
-  const cascade = (startId: string, perm: PermissionType) => {
-    const stack = [startId];
-    while (stack.length) {
-      const cur = stack.pop()!;
-      setChecked(perm, cur);
-      const kids = childrenById.get(cur);
-      if (kids?.length) stack.push(...kids);
-    }
-  };
+  type EffPerm = PermissionType;
 
-  // Process top-level categories
-  for (const topId of topKeys) {
-    const topPerm = pMap.get(topId);
-    const kids = childrenById.get(topId) ?? [];
-    const kidPerms = kids.map((k) => pMap.get(k)).filter(Boolean) as PermissionType[];
-    const nDedicated = kidPerms.length;
-    const allDedicated = kids.length && nDedicated === kids.length;
-    const someDedicated = nDedicated > 0 && nDedicated < kids.length;
+  const dfs = (id: string, inherited: EffPerm | null) => {
+    const own = pMap.get(id);
+    const effective: EffPerm = own !== undefined ? own : inherited ?? 'NONE';
 
-    if (topPerm && topPerm !== 'NONE') {
-      if (allDedicated) {
-        modeByTop[topId] = 'override';
-        kids.forEach((kid) => {
-          const perm = pMap.get(kid)! as PermissionType;
-          setChecked(perm, kid);
-        });
-        setChecked(topPerm, topId);
-      } else if (someDedicated) {
-        modeByTop[topId] = 'override';
-        kids.forEach((kid) => {
-          const perm = pMap.get(kid);
-          if (perm) setChecked(perm, kid);
-          else cascade(kid, topPerm as PermissionType);
-        });
-        setChecked(topPerm, topId);
-      } else {
-        modeByTop[topId] = 'apply';
-        setChecked(topPerm, topId);
-        cascade(topId, topPerm as PermissionType);
+    if (effective === 'NONE') {
+      if (own === 'NONE' || (inherited && inherited !== 'NONE')) {
+        setChecked('NONE', id);
       }
-      continue;
+    } else {
+      setChecked(effective, id);
     }
 
-    if (allDedicated || someDedicated) {
-      modeByTop[topId] = 'override';
-      kids.forEach((kid) => {
-        const perm = pMap.get(kid);
-        if (perm && perm !== 'NONE') setChecked(perm as PermissionType, kid);
-      });
-    } else {
-      modeByTop[topId] = 'apply';
+    const kids = childrenById.get(id) ?? [];
+    for (const k of kids) {
+      dfs(k, effective);
     }
+  };
+
+  for (const topId of topKeys) {
+    dfs(topId, null);
   }
 
-  return { checkedByCol, modeByTop };
+  return { checkedByCol };
 }

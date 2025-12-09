@@ -3,10 +3,8 @@ import type { PermissionTableRow } from '@app/utils/reactflow/helpers';
 import { buildPermissionTree } from '@app/utils/reactflow/helpers';
 import { Node, Edge } from '@xyflow/react';
 
-export type Mode = 'apply' | 'override';
-
-type ColKey = 'high' | 'detail';
-
+type AnalysisColKey = 'high' | 'detail';
+type ColKey = AnalysisColKey | 'none';
 type Checked = {
   parent: Record<string, boolean>;
   leaf: Record<string, boolean>;
@@ -19,18 +17,16 @@ export function usePermissionTable(
   edges: Edge[],
   checkedByCol: CheckedByCol,
   setCheckedByCol: React.Dispatch<React.SetStateAction<CheckedByCol>>,
-  modeByTop: Record<string, Mode>,
-  setModeByTop: React.Dispatch<React.SetStateAction<Record<string, Mode>>>,
 ) {
   const { rows, byId, childrenById, parentById, topKeys, findDescendants } = useMemo(
     () => buildPermissionTree(nodes, edges),
     [nodes, edges],
   );
 
-  const otherCol = (col: ColKey): ColKey => (col === 'high' ? 'detail' : 'high');
+  const otherCol = (col: AnalysisColKey): AnalysisColKey => (col === 'high' ? 'detail' : 'high');
 
   const clearOpposite = useCallback(
-    (col: ColKey, bucket: 'parent' | 'leaf', updates: Record<string, boolean>) => {
+    (col: AnalysisColKey, bucket: 'parent' | 'leaf', updates: Record<string, boolean>) => {
       const o = otherCol(col);
       const off: Record<string, boolean> = {};
       for (const k of Object.keys(updates)) off[k] = false;
@@ -47,57 +43,6 @@ export function usePermissionTable(
       }));
     },
     [setCheckedByCol],
-  );
-
-  const hasAnyCategoryDescendants = useCallback(
-    (id: string) => {
-      const q = [...(childrenById.get(id) ?? [])];
-      while (q.length) {
-        q.pop()!;
-        return true;
-      }
-      return false;
-    },
-    [childrenById],
-  );
-
-  const isEnabled = useCallback(
-    (row: PermissionTableRow) => {
-      const topId = row.topCategoryId ?? row.key;
-      const mode = modeByTop[topId] ?? 'apply';
-
-      const isTop = topKeys.includes(row.key);
-      if (isTop && !hasAnyCategoryDescendants(row.key)) return true;
-
-      if (mode === 'apply') return row.kind === 'category';
-      return row.kind === 'leaf';
-    },
-    [hasAnyCategoryDescendants, modeByTop, topKeys],
-  );
-
-  const setMode = useCallback(
-    (topId: string, m: Mode) => {
-      setModeByTop((prev) => ({ ...prev, [topId]: m }));
-      if (m === 'override') {
-        const { cats } = findDescendants(topId);
-        const targets = [topId, ...cats];
-        const off: Record<string, boolean> = {};
-        for (const id of targets) off[id] = false;
-
-        setCheckedByCol((prev) => ({
-          ...prev,
-          high: {
-            ...prev.high,
-            parent: { ...prev.high.parent, ...off },
-          },
-          detail: {
-            ...prev.detail,
-            parent: { ...prev.detail.parent, ...off },
-          },
-        }));
-      }
-    },
-    [findDescendants, setCheckedByCol, setModeByTop],
   );
 
   const setParentChecked = useCallback(
@@ -120,42 +65,114 @@ export function usePermissionTable(
     [setCheckedByCol],
   );
 
-  const onParentToggle = useCallback(
-    (col: ColKey, row: PermissionTableRow, next: boolean) => {
-      const topId = row.topCategoryId ?? row.key;
-      setMode(topId, 'apply');
+  const setNoneFor = useCallback(
+    (row: PermissionTableRow, next: boolean) => {
+      const bucket = row.kind === 'category' ? 'parent' : 'leaf';
 
+      setCheckedByCol((prev) => {
+        const nextBucket = { ...prev.none[bucket] };
+        if (next) nextBucket[row.key] = true;
+        else delete nextBucket[row.key];
+
+        return {
+          ...prev,
+          none: {
+            ...prev.none,
+            [bucket]: nextBucket,
+          },
+        };
+      });
+    },
+    [setCheckedByCol],
+  );
+
+  const setNoneForMany = useCallback(
+    (ids: string[], bucket: 'parent' | 'leaf', next: boolean) => {
+      if (!ids.length) return;
+
+      setCheckedByCol((prev) => {
+        const nextBucket = { ...prev.none[bucket] };
+        for (const id of ids) {
+          if (next) nextBucket[id] = true;
+          else delete nextBucket[id];
+        }
+        return {
+          ...prev,
+          none: {
+            ...prev.none,
+            [bucket]: nextBucket,
+          },
+        };
+      });
+    },
+    [setCheckedByCol],
+  );
+
+  const onParentToggle = useCallback(
+    (col: AnalysisColKey, row: PermissionTableRow, next: boolean) => {
       setParentChecked(col, { [row.key]: next });
 
       const { cats, leafs } = findDescendants(row.key);
-      if (cats.length) {
-        const x: Record<string, boolean> = {};
-        for (const id of cats) x[id] = next;
-        setParentChecked(col, x);
-        if (next) clearOpposite(col, 'parent', { [row.key]: true, ...x });
-      } else {
-        if (next) clearOpposite(col, 'parent', { [row.key]: true });
+
+      const parentIds = [row.key, ...cats];
+      const leafIds = leafs;
+
+      if (parentIds.length > 0) {
+        const parentUpdates: Record<string, boolean> = {};
+        for (const id of parentIds) parentUpdates[id] = next;
+        setParentChecked(col, parentUpdates);
       }
-      if (leafs.length) {
-        const y: Record<string, boolean> = {};
-        for (const id of leafs) y[id] = next;
-        setLeafChecked(col, y);
-        if (next) clearOpposite(col, 'leaf', y);
+
+      if (leafIds.length > 0) {
+        const leafUpdates: Record<string, boolean> = {};
+        for (const id of leafIds) leafUpdates[id] = next;
+        setLeafChecked(col, leafUpdates);
+      }
+
+      if (next) {
+        const parentMap: Record<string, boolean> = {};
+        for (const id of parentIds) parentMap[id] = true;
+        clearOpposite(col, 'parent', parentMap);
+
+        const leafMap: Record<string, boolean> = {};
+        for (const id of leafIds) leafMap[id] = true;
+        if (leafIds.length) clearOpposite(col, 'leaf', leafMap);
+
+        setNoneFor(row, false);
+        setNoneForMany(cats, 'parent', false);
+        setNoneForMany(leafIds, 'leaf', false);
+      } else {
+        setNoneFor(row, true);
+        setNoneForMany(cats, 'parent', true);
+        setNoneForMany(leafIds, 'leaf', true);
       }
     },
-    [setMode, setParentChecked, findDescendants, clearOpposite, setLeafChecked],
+    [findDescendants, setParentChecked, setLeafChecked, clearOpposite, setNoneFor, setNoneForMany],
   );
 
   const onLeafToggle = useCallback(
-    (col: ColKey, row: PermissionTableRow, next: boolean) => {
-      const topId = row.topCategoryId ?? row.key;
-      setMode(topId, 'override');
-
+    (col: AnalysisColKey, row: PermissionTableRow, next: boolean) => {
       setLeafChecked(col, { [row.key]: next });
 
-      if (next) clearOpposite(col, 'leaf', { [row.key]: true });
+      if (next) {
+        clearOpposite(col, 'leaf', { [row.key]: true });
+        setNoneFor(row, false);
+      } else {
+        const other = otherCol(col);
+        const stillOther = !!checkedByCol[other].leaf[row.key] || !!checkedByCol[other].parent[row.key];
+
+        if (!stillOther) {
+          setNoneFor(row, true);
+        }
+      }
     },
-    [setMode, setLeafChecked, clearOpposite],
+    [setLeafChecked, clearOpposite, setNoneFor, checkedByCol],
+  );
+
+  const getChecked = useCallback(
+    (col: AnalysisColKey, row: PermissionTableRow) =>
+      row.kind === 'category' ? !!checkedByCol[col].parent[row.key] : !!checkedByCol[col].leaf[row.key],
+    [checkedByCol],
   );
 
   return {
@@ -164,11 +181,7 @@ export function usePermissionTable(
     byId,
     childrenById,
     parentById,
-    setMode,
-    hasAnyCategoryDescendants,
-    isEnabled,
-    getChecked: (col: ColKey, row: PermissionTableRow) =>
-      row.kind === 'category' ? !!checkedByCol[col].parent[row.key] : !!checkedByCol[col].leaf[row.key],
+    getChecked,
     onParentToggle,
     onLeafToggle,
   };

@@ -17,7 +17,7 @@ import {
   permissionsFromChecked,
   permissionsToCheckedByCol,
 } from '@app/utils/reactflow/helpers';
-import { CheckedByCol, Mode, usePermissionTable } from '@app/hooks/usePermissionTable';
+import { CheckedByCol, usePermissionTable } from '@app/hooks/usePermissionTable';
 
 type MultiStepArchetypeModalProps = {
   archetype?: ArchetypeInfo | undefined;
@@ -60,16 +60,9 @@ export const MultiStepArchetypeModal = ({
   const [checkedByCol, setCheckedByCol] = useState<CheckedByCol>({
     high: { parent: {}, leaf: {} },
     detail: { parent: {}, leaf: {} },
+    none: { parent: {}, leaf: {} },
   });
-  const [modeByTop, setModeByTop] = useState<Record<string, Mode>>({});
-  const { childrenById, topKeys } = usePermissionTable(
-    nodes,
-    edges,
-    checkedByCol,
-    setCheckedByCol,
-    modeByTop,
-    setModeByTop,
-  );
+  const { childrenById, topKeys } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
   const { t } = useTranslation();
 
   const isEditing = useMemo(() => Object.keys(archetype || {}).length != 0, [archetype]);
@@ -87,6 +80,10 @@ export const MultiStepArchetypeModal = ({
           parent: { ...prev.detail.parent },
           leaf: { ...prev.detail.leaf },
         },
+        none: {
+          parent: { ...prev.none.parent },
+          leaf: { ...prev.none.leaf },
+        },
       };
 
       for (const id of ids) {
@@ -94,14 +91,6 @@ export const MultiStepArchetypeModal = ({
         delete next.high.leaf[id];
         delete next.detail.parent[id];
         delete next.detail.leaf[id];
-      }
-      return next;
-    });
-
-    setModeByTop((prev) => {
-      const next = { ...prev };
-      for (const id of ids) {
-        delete next[id];
       }
       return next;
     });
@@ -121,16 +110,19 @@ export const MultiStepArchetypeModal = ({
       step1?.setFieldsValue?.({ name: a.name ?? '' });
       setNodes((a.nodes && a.nodes.length > 0 ? a.nodes : initialNodes) as Node[]);
       setEdges((a.edges ?? []) as Edge[]);
-      const { checkedByCol, modeByTop } = permissionsToCheckedByCol(a.permissions || [], a.nodes, a.edges);
+      const { checkedByCol } = permissionsToCheckedByCol(a.permissions || [], a.nodes, a.edges);
       setCheckedByCol(checkedByCol);
-      setModeByTop(modeByTop);
     } else {
       step1?.resetFields?.();
       setNodes(initialNodes);
       setEdges([]);
-      setCheckedByCol({ high: { parent: {}, leaf: {} }, detail: { parent: {}, leaf: {} } });
+      setCheckedByCol({
+        high: { parent: {}, leaf: {} },
+        detail: { parent: {}, leaf: {} },
+        none: { parent: {}, leaf: {} },
+      });
     }
-  }, [isModalOpen, isEditing, archetype, setNodes, setEdges, step1, setModeByTop]);
+  }, [isModalOpen, isEditing, archetype, setNodes, setEdges, step1]);
 
   const nextStep = async () => {
     let duplicateGroups: ReturnType<typeof findDuplicateChildLabels> = [];
@@ -327,8 +319,6 @@ export const MultiStepArchetypeModal = ({
             edges={edges}
             checkedByCol={checkedByCol}
             setCheckedByCol={setCheckedByCol}
-            modeByTop={modeByTop}
-            setModeByTop={setModeByTop}
           />
         );
       default:

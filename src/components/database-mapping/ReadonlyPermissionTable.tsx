@@ -39,9 +39,13 @@ export function ReadOnlyPermissionsTable({ nodes, edges, permissions }: Props) {
     return filterTree(rows);
   }, [q, rows]);
 
-  const renderRadio = (col: 'high' | 'detail') => (_: unknown, row: PermissionTableRow) => {
-    const checked = row.kind === 'category' ? !!checkedByCol[col].parent[row.key] : !!checkedByCol[col].leaf[row.key];
-    return <Radio checked={checked} />;
+  const renderRadio = (col: 'high' | 'detail') => {
+    const RadioRenderer = (_: unknown, row: PermissionTableRow) => {
+      const checked = row.kind === 'category' ? !!checkedByCol[col].parent[row.key] : !!checkedByCol[col].leaf[row.key];
+      return <Radio checked={checked} />;
+    };
+    RadioRenderer.displayName = `RadioRenderer(${col})`;
+    return RadioRenderer;
   };
 
   const columns = [

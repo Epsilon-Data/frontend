@@ -8,7 +8,7 @@ type ImageWithPreviewProps = {
 };
 
 export const ImageWithPreview: React.FC<ImageWithPreviewProps> = ({ src, alt }) => {
-  const [visible, setVisible] = useState(false);
+  const [open, setOpen] = useState(false);
   return (
     <div className="relative w-75 h-48 rounded-lg overflow-hidden bg-[#eee]">
       <Image.PreviewGroup>
@@ -18,10 +18,10 @@ export const ImageWithPreview: React.FC<ImageWithPreviewProps> = ({ src, alt }) 
           className="w-full h-full object-cover block pointer-events-none"
           preview={{
             mask: false,
-            visible,
-            onVisibleChange: (value) => {
+            open,
+            onOpenChange: (value) => {
               console.log('visible', value);
-              setVisible(value);
+              setOpen(value);
             },
             src: src,
           }}
@@ -29,7 +29,7 @@ export const ImageWithPreview: React.FC<ImageWithPreviewProps> = ({ src, alt }) 
       </Image.PreviewGroup>
 
       <button
-        onClick={() => setVisible(true)}
+        onClick={() => setOpen(true)}
         className="absolute bottom-3 right-3 bg-white rounded-lg border-none padding py-2 px-2 cursor-pointer shadow-button"
       >
         <RxEnterFullScreen />

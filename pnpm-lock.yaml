@@ -29,7 +29,7 @@ importers:
         version: 5.2.8
       '@reduxjs/toolkit':
         specifier: ^2.11.1
-        version: 2.11.1(react-redux@9.2.0(@types/react@19.2.7)(react@19.2.1)(redux@5.0.1))(react@19.2.1)
+        version: 2.11.1(react-redux@9.2.0(@types/react@18.3.27)(react@19.2.1)(redux@5.0.1))(react@19.2.1)
       '@tailwindcss/line-clamp':
         specifier: ^0.4.4
         version: 0.4.4(tailwindcss@3.4.18(yaml@2.8.2))
@@ -38,7 +38,7 @@ importers:
         version: 4.2.2(vite@7.2.7(@types/node@22.15.21)(jiti@1.21.7)(less@4.4.2)(terser@5.39.2)(yaml@2.8.2))
       '@xyflow/react':
         specifier: ^12.10.0
-        version: 12.10.0(@types/react@19.2.7)(immer@11.0.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        version: 12.10.0(@types/react@18.3.27)(immer@11.0.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       antd:
         specifier: ^6.0.1
         version: 6.0.1(date-fns@4.1.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -101,10 +101,10 @@ importers:
         version: 5.5.0(react@19.2.1)
       react-markdown:
         specifier: ^10.1.0
-        version: 10.1.0(@types/react@19.2.7)(react@19.2.1)
+        version: 10.1.0(@types/react@18.3.27)(react@19.2.1)
       react-redux:
         specifier: ^9.2.0
-        version: 9.2.0(@types/react@19.2.7)(react@19.2.1)(redux@5.0.1)
+        version: 9.2.0(@types/react@18.3.27)(react@19.2.1)(redux@5.0.1)
       react-responsive:
         specifier: ^10.0.1
         version: 10.0.1(react@19.2.1)
@@ -156,16 +156,16 @@ importers:
         version: 6.9.1
       '@testing-library/react':
         specifier: ^16.3.0
-        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@testing-library/user-event':
         specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.1)
       '@types/react':
-        specifier: ^19.2.7
-        version: 19.2.7
+        specifier: ^18.0.28
+        version: 18.3.27
       '@types/react-dom':
         specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.7)
+        version: 19.2.3(@types/react@18.3.27)
       '@types/react-highlight-words':
         specifier: ^0.20.0
         version: 0.20.0
@@ -1504,9 +1504,6 @@ packages:
 
   '@types/react@18.3.27':
     resolution: {integrity: sha512-cisd7gxkzjBKU2GgdYrTdtQx1SORymWyaAFhaxQPK9bYO9ot3Y5OikQRvY0VYQtvwjeQnizCINJAenh/V7MK2w==}
-
-  '@types/react@19.2.7':
-    resolution: {integrity: sha512-MWtvHrGZLFttgeEj28VXHxpmwYbor/ATPYbBfSFZEIRK0ecCFLl2Qo55z52Hss+UV9CRN7trSeq1zbgx7YDWWg==}
 
   '@types/styled-components@5.1.36':
     resolution: {integrity: sha512-pGMRNY5G2rNDKEv2DOiFYa7Ft1r0jrhmgBwHhOMzPTgCjO76bCot0/4uEfqj7K0Jf1KdQmDtAuaDk9EAs9foSw==}
@@ -5574,7 +5571,7 @@ snapshots:
       react-dom: 19.2.1(react@19.2.1)
       react-is: 18.3.1
 
-  '@reduxjs/toolkit@2.11.1(react-redux@9.2.0(@types/react@19.2.7)(react@19.2.1)(redux@5.0.1))(react@19.2.1)':
+  '@reduxjs/toolkit@2.11.1(react-redux@9.2.0(@types/react@18.3.27)(react@19.2.1)(redux@5.0.1))(react@19.2.1)':
     dependencies:
       '@standard-schema/spec': 1.0.0
       '@standard-schema/utils': 0.3.0
@@ -5584,7 +5581,7 @@ snapshots:
       reselect: 5.1.1
     optionalDependencies:
       react: 19.2.1
-      react-redux: 9.2.0(@types/react@19.2.7)(react@19.2.1)(redux@5.0.1)
+      react-redux: 9.2.0(@types/react@18.3.27)(react@19.2.1)(redux@5.0.1)
 
   '@rolldown/pluginutils@1.0.0-beta.47': {}
 
@@ -5812,15 +5809,15 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
 
-  '@testing-library/react@16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
+  '@testing-library/react@16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@testing-library/dom': 10.4.1
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
     optionalDependencies:
-      '@types/react': 19.2.7
-      '@types/react-dom': 19.2.3(@types/react@19.2.7)
+      '@types/react': 18.3.27
+      '@types/react-dom': 19.2.3(@types/react@18.3.27)
 
   '@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1)':
     dependencies:
@@ -6000,9 +5997,9 @@ snapshots:
 
   '@types/prop-types@15.7.15': {}
 
-  '@types/react-dom@19.2.3(@types/react@19.2.7)':
+  '@types/react-dom@19.2.3(@types/react@18.3.27)':
     dependencies:
-      '@types/react': 19.2.7
+      '@types/react': 18.3.27
 
   '@types/react-highlight-words@0.20.0':
     dependencies:
@@ -6022,10 +6019,6 @@ snapshots:
   '@types/react@18.3.27':
     dependencies:
       '@types/prop-types': 15.7.15
-      csstype: 3.2.3
-
-  '@types/react@19.2.7':
-    dependencies:
       csstype: 3.2.3
 
   '@types/styled-components@5.1.36':
@@ -6186,13 +6179,13 @@ snapshots:
       '@vitest/pretty-format': 4.0.15
       tinyrainbow: 3.0.3
 
-  '@xyflow/react@12.10.0(@types/react@19.2.7)(immer@11.0.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
+  '@xyflow/react@12.10.0(@types/react@18.3.27)(immer@11.0.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
     dependencies:
       '@xyflow/system': 0.0.74
       classcat: 5.0.5
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
-      zustand: 4.5.7(@types/react@19.2.7)(immer@11.0.1)(react@19.2.1)
+      zustand: 4.5.7(@types/react@18.3.27)(immer@11.0.1)(react@19.2.1)
     transitivePeerDependencies:
       - '@types/react'
       - immer
@@ -8836,11 +8829,11 @@ snapshots:
 
   react-is@18.3.1: {}
 
-  react-markdown@10.1.0(@types/react@19.2.7)(react@19.2.1):
+  react-markdown@10.1.0(@types/react@18.3.27)(react@19.2.1):
     dependencies:
       '@types/hast': 3.0.4
       '@types/mdast': 4.0.4
-      '@types/react': 19.2.7
+      '@types/react': 18.3.27
       devlop: 1.1.0
       hast-util-to-jsx-runtime: 2.3.6
       html-url-attributes: 3.0.1
@@ -8854,13 +8847,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  react-redux@9.2.0(@types/react@19.2.7)(react@19.2.1)(redux@5.0.1):
+  react-redux@9.2.0(@types/react@18.3.27)(react@19.2.1)(redux@5.0.1):
     dependencies:
       '@types/use-sync-external-store': 0.0.6
       react: 19.2.1
       use-sync-external-store: 1.6.0(react@19.2.1)
     optionalDependencies:
-      '@types/react': 19.2.7
+      '@types/react': 18.3.27
       redux: 5.0.1
 
   react-responsive@10.0.1(react@19.2.1):
@@ -9888,11 +9881,11 @@ snapshots:
 
   zod@4.1.13: {}
 
-  zustand@4.5.7(@types/react@19.2.7)(immer@11.0.1)(react@19.2.1):
+  zustand@4.5.7(@types/react@18.3.27)(immer@11.0.1)(react@19.2.1):
     dependencies:
       use-sync-external-store: 1.6.0(react@19.2.1)
     optionalDependencies:
-      '@types/react': 19.2.7
+      '@types/react': 18.3.27
       immer: 11.0.1
       react: 19.2.1
 

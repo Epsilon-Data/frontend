@@ -109,6 +109,17 @@ export const getRequests = async (): Promise<RequestSummaryInfo[]> => {
   return response.data;
 };
 
+export const getRequestByProject = async (projectId: string | undefined): Promise<RequestSummaryInfo | null> => {
+  if (!projectId) return null;
+
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/${projectId}`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+
+  return response.data;
+};
+
 export const reviseRequest = async (data: { requestId: string | undefined; revisionInfo: string }): Promise<string> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.put(`${ANALYSIS_REQUEST_API_URL}/${data.requestId}/revision`, data, {

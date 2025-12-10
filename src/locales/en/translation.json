@@ -193,7 +193,8 @@
     "breadcrumb": {
       "home": "My projects",
       "metadata": "Metadata",
-      "dbMapping": "Database mapping"
+      "dbMapping": "Database mapping",
+      "projectAccess": "Project access"
     },
     "main": {
       "dbMapping": {
@@ -261,6 +262,9 @@
             "nullable": "Nullable"
           }
         }
+      },
+      "projectAccess": {
+        "title": "Project access"
       }
     },
     "createTemplate": {

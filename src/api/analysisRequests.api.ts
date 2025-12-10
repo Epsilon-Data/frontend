@@ -113,11 +113,17 @@ export const getRequestByProject = async (projectId: string | undefined): Promis
   if (!projectId) return null;
 
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/${projectId}`, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
 
-  return response.data;
+  try {
+    const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/${projectId}`, {
+      headers: { [csrfHeaderName]: `${csrf}` },
+    });
+
+    return response.data;
+  } catch (err: unknown) {
+    if (err instanceof Error && err.message.startsWith('No requests found for requestor ID')) return null;
+    throw err;
+  }
 };
 
 export const reviseRequest = async (data: { requestId: string | undefined; revisionInfo: string }): Promise<string> => {

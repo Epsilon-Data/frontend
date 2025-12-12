@@ -372,7 +372,12 @@
         "count": "{{count}} projects found"
       },
       "details": {
-        "requestAccess": "Request access",
+        "proceed": {
+          "requestAccess": "Request access",
+          "manageProject": "Manage project",
+          "manageRequest": "Manage request access",
+          "requestCheckError": "Error checking existing requests for this project"
+        },
         "about": {
           "title": "About",
           "showMore": "Show more",

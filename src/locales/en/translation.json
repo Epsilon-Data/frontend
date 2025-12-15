@@ -264,7 +264,19 @@
         }
       },
       "projectAccess": {
-        "title": "Project access"
+        "title": "Project access",
+        "subtitle": "Review requests and manage access",
+        "tabs": {
+          "connection": "Connection requests",
+          "analysis": "Analysis requests"
+        },
+        "table": {
+          "requestorName": "Requestor name",
+          "emailId": "Email ID",
+          "orgName": "Organisation name",
+          "projectName": "Project name",
+          "status": "Status"
+        }
       }
     },
     "createTemplate": {

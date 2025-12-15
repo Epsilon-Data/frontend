@@ -2,45 +2,52 @@ import { Button, Table, TableProps, Tag } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { RequestSummaryInfo } from '@app/api/analysisRequests.api';
 import { STATUS_COLORS, STATUS_NAMES } from '@app/constants/analysisRequest';
-import { useNavigate } from 'react-router-dom';
+import { IoIosArrowForward } from 'react-icons/io';
+import { RequestSummaryInfo } from '@app/api/projects.api';
 
 dayjs.extend(relativeTime);
 
-type AnalysisRequestsProps = {
+type AccessRequestsProps = {
   loading: boolean;
-  analysisRequests: RequestSummaryInfo[];
+  accessRequests: RequestSummaryInfo[];
+  setOpenDrawer: (open: boolean) => void;
+  fetchRequest: (requestId: string) => void;
 };
 
-export const AccessRequests = ({ loading, analysisRequests }: AnalysisRequestsProps) => {
+export const AccessRequests = ({ loading, accessRequests, setOpenDrawer, fetchRequest }: AccessRequestsProps) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-
-  const renderDate = (value: string | Date) => {
-    const now = dayjs();
-    const modified = dayjs(value);
-
-    const daysDiff = now.diff(modified, 'day');
-    const monthsDiff = now.diff(modified, 'month');
-
-    if (daysDiff === 0) {
-      return <span className="font-light">{'today'}</span>;
-    }
-
-    if (monthsDiff >= 1) {
-      const remainingDays = now.diff(modified.add(monthsDiff, 'month'), 'day');
-      return `${monthsDiff} month${monthsDiff > 1 ? 's' : ''}${
-        remainingDays > 0 ? `, ${remainingDays} day${remainingDays > 1 ? 's' : ''}` : ''
-      } ago`;
-    }
-
-    return <span className="font-light">{`${daysDiff} day${daysDiff > 1 ? 's' : ''} ago`}</span>;
-  };
 
   const columns: TableProps<RequestSummaryInfo>['columns'] = [
     {
-      title: t('browse.trackRequests.table.projectName'),
+      title: t('project.main.projectAccess.table.requestorName'),
+      dataIndex: 'requestorName',
+      key: 'requestorName',
+      sorter: (a: { requestorName: string }, b: { requestorName: string }) =>
+        a.requestorName.localeCompare(b.requestorName),
+      sortDirections: ['ascend', 'descend'],
+      render: (text: string) => <span className="font-light">{text}</span>,
+    },
+    {
+      title: t('project.main.projectAccess.table.emailId'),
+      dataIndex: 'requestorEmail',
+      key: 'requestorEmail',
+      sorter: (a: { requestorEmail: string }, b: { requestorEmail: string }) =>
+        a.requestorEmail.localeCompare(b.requestorEmail),
+      sortDirections: ['ascend', 'descend'],
+      render: (text: string) => <span className="font-light">{text}</span>,
+    },
+    {
+      title: t('project.main.projectAccess.table.orgName'),
+      dataIndex: 'requestorOrgName',
+      key: 'requestorOrgName',
+      sorter: (a: { requestorOrgName: string }, b: { requestorOrgName: string }) =>
+        a.requestorOrgName.localeCompare(b.requestorOrgName),
+      sortDirections: ['ascend', 'descend'],
+      render: (text: string) => <span className="font-light">{text}</span>,
+    },
+    {
+      title: t('project.main.projectAccess.table.projectName'),
       dataIndex: 'projectName',
       key: 'projectName',
       sorter: (a: { projectName: string }, b: { projectName: string }) => a.projectName.localeCompare(b.projectName),
@@ -48,60 +55,27 @@ export const AccessRequests = ({ loading, analysisRequests }: AnalysisRequestsPr
       render: (text: string) => <span className="font-light">{text}</span>,
     },
     {
-      title: t('browse.trackRequests.table.organization'),
-      dataIndex: 'projectUniversity',
-      key: 'projectUniversity',
-      sorter: (a: { projectUniversity: string }, b: { projectUniversity: string }) =>
-        a.projectUniversity.localeCompare(b.projectUniversity),
-      sortDirections: ['ascend', 'descend'],
-      render: (text: string) => <span className="font-light">{text}</span>,
-    },
-    {
-      title: t('browse.trackRequests.table.submitted'),
-      dataIndex: 'createdDate',
-      key: 'createdDate',
-      sorter: (a: { createdDate: Date }, b: { createdDate: Date }) =>
-        dayjs(a.createdDate).valueOf() - dayjs(b.createdDate).valueOf(),
-      sortDirections: ['ascend', 'descend'],
-      render: (value: string | Date) => renderDate(value),
-    },
-    {
-      title: t('browse.trackRequests.table.status'),
+      title: t('project.main.projectAccess.table.status'),
       dataIndex: 'status',
       key: 'status',
+      width: 250,
       render: (text: string) => {
         const color = STATUS_COLORS[text];
         return (
-          <Tag className="font-inter rounded-xl px-3 font-light" bordered color={color}>
-            {STATUS_NAMES[text]}
-          </Tag>
+          <div className="flex justify-between items-center">
+            <Tag className="font-inter rounded-xl px-3 font-light" color={color}>
+              {STATUS_NAMES[text]}
+            </Tag>
+            <Button type="text" icon={<IoIosArrowForward />} onClick={() => handleRequestClick(text)} />
+          </div>
         );
       },
     },
-    {
-      title: t('browse.trackRequests.table.lastUpdated'),
-      dataIndex: 'lastModified',
-      key: 'lastModified',
-      sorter: (a: { lastModified: Date }, b: { lastModified: Date }) =>
-        dayjs(a.lastModified).valueOf() - dayjs(b.lastModified).valueOf(),
-      sortDirections: ['ascend', 'descend'],
-      render: (value: string | Date) => renderDate(value),
-    },
-    {
-      title: '',
-      key: 'manage',
-      align: 'right' as const,
-      width: 1,
-      render: (_: unknown, row: RequestSummaryInfo) => (
-        <Button ghost type="primary" onClick={() => handleRequestClick(row.requestId)}>
-          {t('common.manage')}
-        </Button>
-      ),
-    },
   ];
 
-  const handleRequestClick = (requestId?: string) => {
-    navigate(`/track-requests?id=${requestId}`);
+  const handleRequestClick = (requestId: string) => {
+    fetchRequest(requestId);
+    setOpenDrawer(true);
   };
 
   return (
@@ -112,7 +86,7 @@ export const AccessRequests = ({ loading, analysisRequests }: AnalysisRequestsPr
         className="base-table"
         size="small"
         columns={columns}
-        dataSource={analysisRequests}
+        dataSource={accessRequests}
         rowKey={(record) => record.requestId}
         onRow={(_, index) => ({
           style: {

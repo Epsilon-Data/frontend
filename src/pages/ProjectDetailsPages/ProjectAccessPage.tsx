@@ -1,6 +1,10 @@
+import { AccessRequestHeader } from '@app/components/access-requests/AccessRequestHeader';
+import { RequestDetailsDrawer } from '@app/components/access-requests/RequestDetailsDrawer';
+import { RequestTabs } from '@app/components/access-requests/RequestTabs';
+import { useAccessRequests } from '@app/hooks/useAccessRequests';
 import { useProjectContext } from '@app/hooks/useProjectContext';
-import { Breadcrumb, Drawer } from 'antd';
-import React from 'react';
+import { Breadcrumb } from 'antd';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
 
@@ -9,9 +13,14 @@ const ProjectAccessPage: React.FC = () => {
   const projectId = searchParams.get('id') ?? '';
   const { t } = useTranslation();
   const { project } = useProjectContext();
-  const [openDrawer, setOpenDrawer] = React.useState(true);
-  // const { requests, tableLoading, fetchRequests } = useAccessRequests(projectId);
-  // const [request, setRequest] = useState<AnalysisRequest | null>(null);
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const { requests, request, tableLoading, fetchRequests, fetchRequest } = useAccessRequests(projectId);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchRequests();
+    return () => controller.abort();
+  }, [fetchRequests]);
 
   const breadcrumbItems = [
     { title: <Link to="/">{t('project.breadcrumb.home')}</Link> },
@@ -25,9 +34,14 @@ const ProjectAccessPage: React.FC = () => {
       <div className="flex items-start w-full mt-8 pb-4 mb-4 border-b border-grey-3">
         <div className="text-xl font-medium font-sans">{t('project.main.projectAccess.title')}</div>
       </div>
-      <Drawer size={640} placement="right" closable={false} onClose={() => setOpenDrawer(false)} open={openDrawer}>
-        <p className="border-b border-grey-3 mb-2">{t('project.main.projectAccess.title')}</p>
-      </Drawer>
+      <AccessRequestHeader />
+      <RequestTabs
+        loading={tableLoading}
+        accessRequests={requests}
+        setOpenDrawer={setOpenDrawer}
+        fetchRequest={fetchRequest}
+      />
+      <RequestDetailsDrawer open={openDrawer} setOpen={setOpenDrawer} request={request} />
     </div>
   );
 };

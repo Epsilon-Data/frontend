@@ -1,8 +1,8 @@
 import { Priority } from '../constants/enums/priorities';
-import { ANALYSIS_REQUEST_API_URL } from '@app/constants/analysisRequest';
+import { ANALYSIS_REQUEST_API_URL } from '@app/constants/accessRequest';
 import { httpClient, getCsrfHeader } from './http.api';
 
-export type AnalysisRequestStatus = 'PENDING' | 'REJECTED' | 'REVISION' | 'REVIEW' | 'APPROVED';
+export type AnalysisRequestStatus = 'PENDING' | 'REJECTED' | 'REVISION' | 'APPROVED';
 
 export interface RequestComment {
   requestId: string;

@@ -1,6 +1,40 @@
 import { DatabaseConnectionDetails, DatabaseInfoFormValues } from '@app/interfaces/interfaces';
-import { CONNECTION_REQUEST_API_URL } from '@app/constants/connectionRequest';
+import { CONNECTION_REQUEST_API_URL } from '@app/constants/accessRequest';
 import { httpClient, getCsrfHeader } from './http.api';
+import { Member, RequestComment } from './analysisRequests.api';
+
+export type ConnectionRequestStatus = 'PENDING' | 'REJECTED' | 'REVISION' | 'APPROVED';
+
+export interface ConnectionRequest {
+  project?: {
+    projectId: string;
+    name: string;
+    description: string;
+    university: string;
+    faculty: string;
+    ethicsId: string;
+    startDate: Date;
+    endDate: Date;
+    participantsNum: number;
+    lead: string;
+    members: Member[];
+  };
+  request?: {
+    comments: RequestComment[];
+    createdDate: Date;
+    lastModified: Date;
+    status: ConnectionRequestStatus;
+  };
+}
+
+export const getRequestDetails = async (requestId: string | undefined): Promise<ConnectionRequest> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`${CONNECTION_REQUEST_API_URL}/${requestId}`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+
+  return response.data;
+};
 
 export const approveRequest = async (data: DatabaseInfoFormValues, requestId: string | undefined): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();

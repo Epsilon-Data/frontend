@@ -2,7 +2,7 @@ import { Button, Table, TableProps, Tag } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { STATUS_COLORS, STATUS_NAMES } from '@app/constants/analysisRequest';
+import { STATUS_COLORS, STATUS_NAMES } from '@app/constants/accessRequest';
 import { IoIosArrowForward } from 'react-icons/io';
 import { RequestSummaryInfo } from '@app/api/projects.api';
 
@@ -12,10 +12,11 @@ type AccessRequestsProps = {
   loading: boolean;
   accessRequests: RequestSummaryInfo[];
   setOpenDrawer: (open: boolean) => void;
-  fetchRequest: (requestId: string) => void;
+  fetchRequest: (record: RequestSummaryInfo, mode: string) => void;
+  mode: 'CONNECTION' | 'ANALYSIS';
 };
 
-export const AccessRequests = ({ loading, accessRequests, setOpenDrawer, fetchRequest }: AccessRequestsProps) => {
+export const AccessRequests = ({ loading, accessRequests, setOpenDrawer, fetchRequest, mode }: AccessRequestsProps) => {
   const { t } = useTranslation();
 
   const columns: TableProps<RequestSummaryInfo>['columns'] = [
@@ -59,22 +60,22 @@ export const AccessRequests = ({ loading, accessRequests, setOpenDrawer, fetchRe
       dataIndex: 'status',
       key: 'status',
       width: 250,
-      render: (text: string) => {
+      render: (text: string, record: RequestSummaryInfo) => {
         const color = STATUS_COLORS[text];
         return (
           <div className="flex justify-between items-center">
             <Tag className="font-inter rounded-xl px-3 font-light" color={color}>
               {STATUS_NAMES[text]}
             </Tag>
-            <Button type="text" icon={<IoIosArrowForward />} onClick={() => handleRequestClick(text)} />
+            <Button type="text" icon={<IoIosArrowForward />} onClick={() => handleRequestClick(record)} />
           </div>
         );
       },
     },
   ];
 
-  const handleRequestClick = (requestId: string) => {
-    fetchRequest(requestId);
+  const handleRequestClick = (record: RequestSummaryInfo) => {
+    fetchRequest(record, mode);
     setOpenDrawer(true);
   };
 

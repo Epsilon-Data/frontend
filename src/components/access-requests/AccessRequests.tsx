@@ -14,7 +14,7 @@ type AccessRequestsProps = {
   accessRequests: RequestSummaryInfo[];
   setOpenDrawer: (open: boolean) => void;
   fetchRequest: (record: RequestSummaryInfo, mode: AccessRequestType) => void;
-  mode: 'CONNECTION' | 'ANALYSIS';
+  mode: AccessRequestType;
 };
 
 export const AccessRequests = ({ loading, accessRequests, setOpenDrawer, fetchRequest, mode }: AccessRequestsProps) => {

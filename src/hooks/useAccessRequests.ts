@@ -16,7 +16,7 @@ export const useAccessRequests = (projectId: string) => {
     } finally {
       setTableLoading(false);
     }
-  }, []);
+  }, [projectId]);
 
   const fetchRequest = useCallback(async (requestId: string) => {
     try {

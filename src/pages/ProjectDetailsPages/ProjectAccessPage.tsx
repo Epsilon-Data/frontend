@@ -1,6 +1,6 @@
 import { AccessRequestHeader } from '@app/components/access-requests/AccessRequestHeader';
+import { AccessRequests } from '@app/components/access-requests/AccessRequests';
 import { RequestDetailsDrawer } from '@app/components/access-requests/RequestDetailsDrawer';
-import { RequestTabs } from '@app/components/access-requests/RequestTabs';
 import { useAccessRequests } from '@app/hooks/useAccessRequests';
 import { useProjectContext } from '@app/hooks/useProjectContext';
 import { Breadcrumb } from 'antd';
@@ -35,9 +35,9 @@ const ProjectAccessPage: React.FC = () => {
         <div className="text-xl font-medium font-sans">{t('project.main.projectAccess.title')}</div>
       </div>
       <AccessRequestHeader />
-      <RequestTabs
+      <AccessRequests
         loading={tableLoading}
-        accessRequests={requests}
+        accessRequests={requests.analysis}
         setOpenDrawer={setOpenDrawer}
         fetchRequest={fetchRequest}
       />

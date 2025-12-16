@@ -121,7 +121,7 @@ export const RequestAccessPage = ({ project, form, members, setMembers }: Reques
             <ModalEmailTag
               name="projectMembers"
               inputTitle={t('browse.createRequest.form.project.members.title')}
-              selectProps={{ placeholder: t('browse.createRequest.form.project.members.placeholder') }}
+              placeholder={t('browse.createRequest.form.project.members.placeholder')}
               value={members}
               setValue={setMembers}
               labelLarge={false}

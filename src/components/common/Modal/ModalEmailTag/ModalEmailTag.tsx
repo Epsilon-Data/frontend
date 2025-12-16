@@ -17,8 +17,19 @@ export const ModalEmailTag: React.FC<{
   value: Member[];
   setValue: (value: Member[]) => void;
   labelLarge?: boolean;
+  placeholder?: string;
   selectProps?: SelectProps<string[]>;
-}> = ({ name, className, inputTitle, inputDescription, value, setValue, labelLarge = true, selectProps }) => {
+}> = ({
+  name,
+  className,
+  inputTitle,
+  inputDescription,
+  value,
+  setValue,
+  labelLarge = true,
+  placeholder,
+  selectProps,
+}) => {
   const { t } = useTranslation();
   const form = Form.useFormInstance();
 
@@ -79,6 +90,7 @@ export const ModalEmailTag: React.FC<{
       <Form.Item name={name} className={className}>
         <Select<string[]>
           {...selectProps}
+          placeholder={placeholder}
           mode="tags"
           open={false}
           notFoundContent={null}

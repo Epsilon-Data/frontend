@@ -333,7 +333,7 @@ export function permissionsToCheckedByCol(permissions: Permission[], nodes: Node
 
   const dfs = (id: string, inherited: EffPerm | null) => {
     const own = pMap.get(id);
-    const effective: EffPerm = own !== undefined ? own : inherited ?? 'NONE';
+    const effective: EffPerm = own !== undefined ? own : (inherited ?? 'NONE');
 
     if (effective === 'NONE') {
       if (own === 'NONE' || (inherited && inherited !== 'NONE')) {

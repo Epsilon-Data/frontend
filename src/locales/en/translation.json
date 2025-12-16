@@ -276,6 +276,20 @@
           "orgName": "Organisation name",
           "projectName": "Project name",
           "status": "Status"
+        },
+        "drawer": {
+          "requestor": {
+            "title": "1. Requestor details",
+            "position": "Position/title",
+            "email": "Email address",
+            "orgName": "Organisation name"
+          },
+          "project": {
+            "title": "2. Project details",
+            "name": "Project name",
+            "duration": "Project duration",
+            "describe": "Project description"
+          }
         }
       }
     },

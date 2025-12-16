@@ -5,6 +5,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { STATUS_COLORS, STATUS_NAMES } from '@app/constants/accessRequest';
 import { IoIosArrowForward } from 'react-icons/io';
 import { RequestSummaryInfo } from '@app/api/projects.api';
+import { AccessRequestType } from '@app/hooks/useAccessRequests';
 
 dayjs.extend(relativeTime);
 
@@ -12,7 +13,7 @@ type AccessRequestsProps = {
   loading: boolean;
   accessRequests: RequestSummaryInfo[];
   setOpenDrawer: (open: boolean) => void;
-  fetchRequest: (record: RequestSummaryInfo, mode: string) => void;
+  fetchRequest: (record: RequestSummaryInfo, mode: AccessRequestType) => void;
   mode: 'CONNECTION' | 'ANALYSIS';
 };
 

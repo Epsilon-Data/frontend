@@ -2,12 +2,13 @@ import { Tabs, TabsProps } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { RequestListInfo, RequestSummaryInfo } from '@app/api/projects.api';
 import { AccessRequests } from './AccessRequests';
+import { AccessRequestType } from '@app/hooks/useAccessRequests';
 
 type RequestTabsProps = {
   loading: boolean;
   accessRequests: RequestListInfo;
   setOpenDrawer: (open: boolean) => void;
-  fetchRequest: (record: RequestSummaryInfo, mode: string) => void;
+  fetchRequest: (record: RequestSummaryInfo, mode: AccessRequestType) => void;
 };
 
 export const RequestTabs = ({ loading, accessRequests, setOpenDrawer, fetchRequest }: RequestTabsProps) => {

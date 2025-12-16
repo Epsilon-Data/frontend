@@ -7,6 +7,8 @@ import { ConnectionRequest, getRequestDetails as getConnectionRequestDetails } f
 import { getProjectRequests, RequestListInfo, RequestSummaryInfo } from '@app/api/projects.api';
 import { useCallback, useState } from 'react';
 
+export type AccessRequestType = 'CONNECTION' | 'ANALYSIS';
+
 export type AccessRequest = {
   requestor: {
     name: string;
@@ -23,6 +25,7 @@ export type AccessRequest = {
   requestId: string;
   status: string;
   comments: RequestComment[];
+  type: AccessRequestType;
 };
 
 export const useAccessRequests = (projectId: string) => {
@@ -42,7 +45,7 @@ export const useAccessRequests = (projectId: string) => {
     }
   }, [projectId]);
 
-  const fetchRequest = useCallback(async (record: RequestSummaryInfo, mode: string) => {
+  const fetchRequest = useCallback(async (record: RequestSummaryInfo, mode: AccessRequestType) => {
     setDrawerLoading(true);
     try {
       let request: ConnectionRequest | AnalysisRequest = {};
@@ -71,6 +74,7 @@ export const useAccessRequests = (projectId: string) => {
         requestId: record.requestId,
         status: request.request?.status || '-',
         comments: request.request?.comments || [],
+        type: mode,
       };
       setRequest(accessRequest);
     } catch (error) {

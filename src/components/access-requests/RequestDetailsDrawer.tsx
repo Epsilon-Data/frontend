@@ -4,20 +4,30 @@ import { Button, Col, Drawer, Form, message, Select, Tag } from 'antd';
 import { IoIosArrowDown } from 'react-icons/io';
 import { DetailsRow } from '../browse-projects/modal/pages/AboutDatasetPage/components/DetailsRow';
 import { useTranslation } from 'react-i18next';
-import { createComment, getComments, RequestComment } from '@app/api/analysisRequests.api';
+import { approveRequest, createComment, getComments, RequestComment } from '@app/api/analysisRequests.api';
 import { useEffect, useMemo, useState } from 'react';
 import { IoPersonCircle } from 'react-icons/io5';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { CommentSection } from '../analysis-requests/CommentSection';
 import dayjs from 'dayjs';
+import { useSearchParams } from 'react-router-dom';
 
 type RequestDetailsDrawerProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
   request: AccessRequest | null;
   drawerLoading: boolean;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: RequestDetailsDrawerProps) => {
+export const RequestDetailsDrawer = ({
+  open,
+  setOpen,
+  request,
+  drawerLoading,
+  setShowModal,
+}: RequestDetailsDrawerProps) => {
+  const [searchParams] = useSearchParams();
+  const projectId = searchParams.get('id') ?? '';
   const user = useAppSelector((state) => state.user.user);
   const { t } = useTranslation();
   const [comments, setComments] = useState<RequestComment[]>(request?.comments ?? []);
@@ -90,6 +100,17 @@ export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: 
     { value: 'REVISION', label: renderTag('REVISION') },
   ];
 
+  const handleStatusChange = async (value: string) => {
+    if (value === request?.status) return;
+    if (value === 'APPROVED') {
+      if (request?.type === 'ANALYSIS') {
+        await approveRequest({ projectId: projectId, requestId: request?.requestId, isApproved: true });
+      } else {
+        setShowModal(true);
+      }
+    }
+  };
+
   return (
     <Drawer
       loading={drawerLoading}
@@ -105,6 +126,7 @@ export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: 
             <>
               <span>{request.requestor.name}</span>{' '}
               <Select
+                onChange={handleStatusChange}
                 defaultValue={request?.status}
                 size="small"
                 style={{ width: 170, border: 'none' }}

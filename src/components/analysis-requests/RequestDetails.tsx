@@ -79,9 +79,7 @@ export const RequestDetails = ({ requestId }: RequestDetailsProps) => {
           </Col>
         </Row>
         <Row className="mt-24 w-full">
-          <Col span={24}>
-            <RequestTabs request={request} />
-          </Col>
+          <Col span={24}>{request && <RequestTabs request={request} />}</Col>
         </Row>
       </Row>
     </Spin>

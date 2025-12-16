@@ -9,7 +9,7 @@ import { IoPersonCircle } from 'react-icons/io5';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 
 type RequestTabsProps = {
-  request: AnalysisRequest | null;
+  request: AnalysisRequest;
 };
 
 export const RequestTabs = ({ request }: RequestTabsProps) => {

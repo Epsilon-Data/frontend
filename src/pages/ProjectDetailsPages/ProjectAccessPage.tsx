@@ -1,6 +1,6 @@
 import { AccessRequestHeader } from '@app/components/access-requests/AccessRequestHeader';
-import { AccessRequests } from '@app/components/access-requests/AccessRequests';
 import { RequestDetailsDrawer } from '@app/components/access-requests/RequestDetailsDrawer';
+import { RequestTabs } from '@app/components/access-requests/RequestTabs';
 import { useAccessRequests } from '@app/hooks/useAccessRequests';
 import { useProjectContext } from '@app/hooks/useProjectContext';
 import { Breadcrumb } from 'antd';
@@ -14,7 +14,7 @@ const ProjectAccessPage: React.FC = () => {
   const { t } = useTranslation();
   const { project } = useProjectContext();
   const [openDrawer, setOpenDrawer] = React.useState(false);
-  const { requests, request, tableLoading, fetchRequests, fetchRequest } = useAccessRequests(projectId);
+  const { requests, request, drawerLoading, tableLoading, fetchRequests, fetchRequest } = useAccessRequests(projectId);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -35,13 +35,13 @@ const ProjectAccessPage: React.FC = () => {
         <div className="text-xl font-medium font-sans">{t('project.main.projectAccess.title')}</div>
       </div>
       <AccessRequestHeader />
-      <AccessRequests
+      <RequestTabs
         loading={tableLoading}
-        accessRequests={requests.analysis}
+        accessRequests={requests}
         setOpenDrawer={setOpenDrawer}
         fetchRequest={fetchRequest}
       />
-      <RequestDetailsDrawer open={openDrawer} setOpen={setOpenDrawer} request={request} />
+      <RequestDetailsDrawer open={openDrawer} setOpen={setOpenDrawer} request={request} drawerLoading={drawerLoading} />
     </div>
   );
 };

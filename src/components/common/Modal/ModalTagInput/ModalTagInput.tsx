@@ -61,6 +61,7 @@ export const ModalTagInput: React.FC<{
       >
         <Select
           {...selectProps}
+          data-testid="tag-input"
           mode="tags"
           open={false}
           notFoundContent={null}

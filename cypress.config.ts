@@ -6,6 +6,10 @@ export default defineConfig({
     baseUrl: 'http://localhost:3000',
     specPattern: 'cypress/e2e/**/*.cy.{js,ts,jsx,tsx}',
     supportFile: 'cypress/support/e2e.ts',
+
+    // cross-origin testing for keycloak SSO
+    experimentalModifyObstructiveThirdPartyCode: true,
+    chromeWebSecurity: false,
     env: {
       // can't use values from config.ts due to config.ts using import.meta.env,
       // so just hard code it and change manually if needed

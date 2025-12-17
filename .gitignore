@@ -13,6 +13,9 @@
 # testing
 /coverage
 
+# cypress env
+cypress.env.json
+
 # production
 build
 dist

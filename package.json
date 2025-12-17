@@ -67,8 +67,9 @@
     "test": "vitest",
     "lint": "eslint \"*/**/*.{js,ts,tsx}\" --fix",
     "lint:styles": "stylelint '*/**/*.{js,ts,tsx}'",
-    "prepare": "husky",
-    "clean": "rm -rf node_modules/.vite node_modules/.cache && pnpm i && pnpm prune && pnpm store prune"
+    "prepare": "husky install",
+    "clean": "rm -rf node_modules/.vite node_modules/.cache && pnpm i && pnpm prune && pnpm store prune",
+    "cy:open": "cypress open"
   },
   "browserslist": [
     ">0.2%",
@@ -86,6 +87,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/react-highlight-words": "^0.20.0",
     "@types/react-router-dom": "^5.3.3",
+    "cypress": "^15.7.1",
     "@types/styled-components": "^5.1.36",
     "@typescript-eslint/eslint-plugin": "^8.48.1",
     "@typescript-eslint/parser": "^8.48.1",

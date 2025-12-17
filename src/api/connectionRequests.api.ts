@@ -1,4 +1,3 @@
-import { DatabaseConnectionDetails, DatabaseInfoFormValues } from '@app/interfaces/interfaces';
 import { CONNECTION_REQUEST_API_URL } from '@app/constants/accessRequest';
 import { httpClient, getCsrfHeader } from './http.api';
 import { Member, RequestComment } from './analysisRequests.api';
@@ -27,6 +26,28 @@ export interface ConnectionRequest {
   };
 }
 
+export interface ConnectionDecision {
+  isApproved: boolean;
+  tempDbDetails: {
+    name: string;
+    type: string;
+    host?: string;
+    port?: string;
+    username?: string;
+    password?: string;
+  };
+}
+
+export type DatabaseConnectionDetails = {
+  readonly type: string;
+  readonly host: string;
+  readonly port: string;
+  readonly username: string;
+  readonly password: string;
+  readonly name: string;
+  readonly ssl?: boolean;
+};
+
 export const getRequestDetails = async (requestId: string | undefined): Promise<ConnectionRequest> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${CONNECTION_REQUEST_API_URL}/${requestId}`, {
@@ -36,9 +57,13 @@ export const getRequestDetails = async (requestId: string | undefined): Promise<
   return response.data;
 };
 
-export const approveRequest = async (data: DatabaseInfoFormValues, requestId: string | undefined): Promise<void> => {
+export const approveRequest = async (
+  data: ConnectionDecision,
+  projectId: string | undefined,
+  requestId: string | undefined,
+): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.patch(`${CONNECTION_REQUEST_API_URL}/${requestId}`, data, {
+  await httpClient.patch(`${CONNECTION_REQUEST_API_URL}/${projectId}/${requestId}`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 };

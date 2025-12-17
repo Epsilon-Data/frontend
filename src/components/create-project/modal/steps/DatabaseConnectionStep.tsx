@@ -167,6 +167,7 @@ export const DatabaseConnectionStep = ({
                 radioGroupOptions={configureOptions}
                 handleChange={handleIsDbUrlChange}
                 isDbUrl={isDbUrl}
+                number={4}
               />
             ) : (
               <NumberedFormItem number={4} showDivider={false}>

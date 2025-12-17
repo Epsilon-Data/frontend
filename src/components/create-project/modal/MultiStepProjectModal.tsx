@@ -67,6 +67,8 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
 
     const [startDate, endDate] = step1.getFieldValue('duration') || [];
 
+    const parsedUrl = new URL(dbUrl);
+
     const formData = {
       ownerId: user?.sub ?? '',
       name: step1.getFieldValue('name'),
@@ -83,11 +85,13 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       connection: {
         orgAdminEmail: step3.getFieldValue('orgAdminEmail'),
         tempDbDetails: {
-          name: step3.getFieldValue('dbName'),
+          name: step3.getFieldValue('name') || parsedUrl.pathname.replace(/^\//, ''),
           type: step3.getFieldValue('dbType'),
+          host: step3.getFieldValue('hostname') || parsedUrl.hostname,
+          port: step3.getFieldValue('port') || parsedUrl.port,
           url: dbUrl,
-          username: step3.getFieldValue('username'),
-          password: step3.getFieldValue('password'),
+          username: step3.getFieldValue('username') || parsedUrl.username,
+          password: step3.getFieldValue('password') || parsedUrl.password,
         },
       },
     };

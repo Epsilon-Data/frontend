@@ -20,7 +20,27 @@ export default defineConfig({
       cookiePrefix: 'epsilon',
     },
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+      // cleanup task which deletes test projects created during e2e tests to not bloat the database and screen
+      on('task', {
+        async cleanupTestProjects() {
+          const { exec } = require('child_process');
+          return new Promise((resolve, reject) => {
+            exec(
+              'sudo docker exec pg_platform psql -U epsilon_admin -d epsilon -c "DELETE FROM \\"Project\\" WHERE upper(name) LIKE \'%TEST%\' OR upper(name) LIKE \'%CYPRESS%\';"',
+              (error: Error | null, stdout: string, stderr: string) => {
+                if (error) {
+                  console.error(`Error: ${error}`);
+                  reject(error);
+                  return;
+                }
+                console.log(`stdout: ${stdout}`);
+                console.error(`stderr: ${stderr}`);
+                resolve(null);
+              },
+            );
+          });
+        },
+      });
     },
   },
 

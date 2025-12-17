@@ -1,10 +1,12 @@
+// NOTE: When creating project names please add "Test" or "Cypress" in the name so that it can be deleted later on
+
 describe('Projects', () => {
   beforeEach(() => {
     cy.login();
   });
 
   // test the happy path of creating a project
-  it('can create a project', () => {
+  it('can create a project without database connection', () => {
     const projectName = 'E2E Project 1 TESTING PENDING';
 
     cy.viewport(1920, 1080);
@@ -79,5 +81,11 @@ describe('Projects', () => {
     cy.contains('.ant-card', projectName, { timeout: 10000 }).within(() => {
       cy.get('.ant-tag').should('contain.text', 'Pending');
     });
+  });
+
+  after(() => {
+    // you can comment this out if you dont want to delete test projects after running to see if it
+    // still works with multiple projects lying around
+    cy.task('cleanupTestProjects');
   });
 });

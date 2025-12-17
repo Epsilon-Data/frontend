@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 export type ModalStepHeaderProps = {
   modalStep: number;
-  handleDraft: () => void;
+  handleDraft?: () => void;
   stepTitles: string[];
 };
 
@@ -37,15 +37,17 @@ export const ModalStepHeader: React.FC<ModalStepHeaderProps> = ({ modalStep, han
       <div>
         <Breadcrumb className="my-6 mx-4" separator=">" items={breadcrumbItems} />
       </div>
-      <div>
-        <Button
-          className="flex items-center h-10 border border-grey-3 bg-white text-blueDark text-xs font-medium font-inter m-4"
-          hidden={modalStep == 0}
-          onClick={handleDraft}
-        >
-          {t('common.saveDraft')}
-        </Button>
-      </div>
+      {handleDraft && (
+        <div>
+          <Button
+            className="flex items-center h-10 border border-grey-3 bg-white text-blueDark text-xs font-medium font-inter m-4"
+            hidden={modalStep == 0}
+            onClick={handleDraft}
+          >
+            {t('common.saveDraft')}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

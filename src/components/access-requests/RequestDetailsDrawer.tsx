@@ -11,21 +11,15 @@ import { useAppSelector } from '@app/hooks/reduxHooks';
 import { CommentSection } from '../analysis-requests/CommentSection';
 import dayjs from 'dayjs';
 import { useSearchParams } from 'react-router-dom';
+import { useDatabaseModalContext } from '@app/hooks/useDatabaseModalContext';
 
 type RequestDetailsDrawerProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
   request: AccessRequest | null;
   drawerLoading: boolean;
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export const RequestDetailsDrawer = ({
-  open,
-  setOpen,
-  request,
-  drawerLoading,
-  setShowModal,
-}: RequestDetailsDrawerProps) => {
+export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: RequestDetailsDrawerProps) => {
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get('id') ?? '';
   const user = useAppSelector((state) => state.user.user);
@@ -33,6 +27,7 @@ export const RequestDetailsDrawer = ({
   const [comments, setComments] = useState<RequestComment[]>(request?.comments ?? []);
   const [showComment, setShowComment] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const { showModal } = useDatabaseModalContext();
 
   const [form] = Form.useForm();
 
@@ -58,8 +53,6 @@ export const RequestDetailsDrawer = ({
       content,
       createdDate: new Date(),
     };
-
-    console.log(optimistic);
 
     setComments((prev) => [...prev, optimistic]);
 
@@ -106,7 +99,7 @@ export const RequestDetailsDrawer = ({
       if (request?.type === 'ANALYSIS') {
         await approveRequest({ projectId: projectId, requestId: request?.requestId, isApproved: true });
       } else {
-        setShowModal(true);
+        showModal();
       }
     }
   };
@@ -127,7 +120,7 @@ export const RequestDetailsDrawer = ({
               <span>{request.requestor.name}</span>{' '}
               <Select
                 onChange={handleStatusChange}
-                defaultValue={request?.status}
+                value={request?.status}
                 size="small"
                 style={{ width: 170, border: 'none' }}
                 suffixIcon={<IoIosArrowDown className="mt-1" color="black" />}

@@ -1,10 +1,12 @@
 import { AccessRequestHeader } from '@app/components/access-requests/AccessRequestHeader';
+import { MultiStepDatabaseModal } from '@app/components/access-requests/modal/MultiStepDatabaseModal';
 import { RequestDetailsDrawer } from '@app/components/access-requests/RequestDetailsDrawer';
 import { RequestTabs } from '@app/components/access-requests/RequestTabs';
 import { useAccessRequests } from '@app/hooks/useAccessRequests';
 import { useProjectContext } from '@app/hooks/useProjectContext';
+import { DatabaseModalProvider } from '@app/providers/DatabaseModalProvider';
 import { Breadcrumb } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
 
@@ -15,7 +17,6 @@ const ProjectAccessPage: React.FC = () => {
   const { project } = useProjectContext();
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const { requests, request, drawerLoading, tableLoading, fetchRequests, fetchRequest } = useAccessRequests(projectId);
-  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -42,13 +43,22 @@ const ProjectAccessPage: React.FC = () => {
         setOpenDrawer={setOpenDrawer}
         fetchRequest={fetchRequest}
       />
-      <RequestDetailsDrawer
-        open={openDrawer}
-        setOpen={setOpenDrawer}
-        request={request}
-        drawerLoading={drawerLoading}
-        setShowModal={setShowModal}
-      />
+      <DatabaseModalProvider>
+        <RequestDetailsDrawer
+          open={openDrawer}
+          setOpen={setOpenDrawer}
+          request={request}
+          drawerLoading={drawerLoading}
+        />
+        <MultiStepDatabaseModal
+          fetchRequests={fetchRequests}
+          requestId={request?.requestId ?? ''}
+          projectId={projectId}
+          mask
+          closable={false}
+          width={'60%'}
+        />
+      </DatabaseModalProvider>
     </div>
   );
 };

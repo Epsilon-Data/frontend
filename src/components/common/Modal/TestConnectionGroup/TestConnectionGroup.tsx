@@ -21,6 +21,7 @@ type TestConnectionGroupProps = {
   radioGroupOptions: CheckboxGroupProps<boolean>['options'];
   handleChange: (e: RadioChangeEvent) => void;
   isDbUrl: boolean;
+  number: number;
 };
 
 export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
@@ -33,6 +34,7 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
   radioGroupOptions,
   handleChange,
   isDbUrl,
+  number,
 }) => {
   const { t } = useTranslation();
   const inputRules = [
@@ -48,7 +50,7 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
 
   return (
     <div className="flex flex-col pb-12">
-      <NumberedFormItem number={4} showDivider={false}>
+      <NumberedFormItem number={number} showDivider={false}>
         <ModalRadioGroup
           name="isDbUrl"
           inputTitle={t('dashboard.createProject.form.step3.dbCred.configuration.title')}

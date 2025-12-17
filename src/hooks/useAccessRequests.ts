@@ -72,7 +72,7 @@ export const useAccessRequests = (projectId: string) => {
           endDate: request.project?.endDate || new Date(),
         },
         requestId: record.requestId,
-        status: request.request?.status || '-',
+        status: record.status || '-',
         comments: request.request?.comments || [],
         type: mode,
       };

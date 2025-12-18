@@ -25,16 +25,18 @@ export default defineConfig({
         async cleanupTestProjects() {
           const { exec } = require('child_process');
           return new Promise((resolve, reject) => {
+            // Increased timeout to 10 seconds for the exec command
             exec(
-              'sudo docker exec pg_platform psql -U epsilon_admin -d epsilon -c "DELETE FROM \\"Project\\" WHERE upper(name) LIKE \'%TEST%\' OR upper(name) LIKE \'%CYPRESS%\';"',
+              'docker exec pg_platform psql -U epsilon_admin -d epsilon -c "DELETE FROM \\"Project\\" WHERE upper(name) LIKE \'%TEST%\' OR upper(name) LIKE \'%CYPRESS%\';"',
+              { timeout: 10000 },
               (error: Error | null, stdout: string, stderr: string) => {
                 if (error) {
-                  console.error(`Error: ${error}`);
+                  console.error(`Error executing cleanup: ${error.message}`);
                   reject(error);
                   return;
                 }
-                console.log(`stdout: ${stdout}`);
-                console.error(`stderr: ${stderr}`);
+                console.log(`Cleanup result: ${stdout}`);
+                if (stderr) console.error(`stderr: ${stderr}`);
                 resolve(null);
               },
             );

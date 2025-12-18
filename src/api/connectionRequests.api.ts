@@ -28,7 +28,7 @@ export interface ConnectionRequest {
 
 export interface ConnectionDecision {
   isApproved: boolean;
-  tempDbDetails: {
+  dbDetails: {
     name: string;
     type: string;
     host?: string;

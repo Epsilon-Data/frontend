@@ -21,7 +21,7 @@ export interface ProjectSummaryInfo {
 export interface ConnectionInfo {
   requestId?: string;
   orgAdminEmail?: string;
-  tempDbDetails?: {
+  dbDetails?: {
     name: string;
     type: string;
     url?: string;

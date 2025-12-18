@@ -63,7 +63,7 @@ export const MultiStepDatabaseModal = ({
 
     const formData = {
       isApproved: true,
-      tempDbDetails: {
+      dbDetails: {
         name: step1.getFieldValue('name') || parsedUrl.pathname.replace(/^\//, ''),
         type: step1.getFieldValue('dbType'),
         host: step1.getFieldValue('hostname') || parsedUrl.hostname,

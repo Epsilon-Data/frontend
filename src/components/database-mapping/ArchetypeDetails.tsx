@@ -52,12 +52,12 @@ export const ArchetypeDetails = ({ projectId, archetypeId }: ArchetypeDetailsPro
       <Row gutter={[32, 16]}>
         <Col>
           <div>{t('project.main.dbMapping.table.manage.summary.dbName')}</div>
-          <div className="font-light">{project.connection.tempDbDetails?.name ?? '-'}</div>
+          <div className="font-light">{project.connection.dbDetails?.name ?? '-'}</div>
         </Col>
         <Col>
           <div>{t('project.main.dbMapping.table.manage.summary.dbType')}</div>
           <div className="font-light">
-            {project.connection.tempDbDetails?.type ? t(DB_TYPE_LABELS[project.connection.tempDbDetails?.type]) : '-'}
+            {project.connection.dbDetails?.type ? t(DB_TYPE_LABELS[project.connection.dbDetails?.type]) : '-'}
           </div>
         </Col>
         <Col>

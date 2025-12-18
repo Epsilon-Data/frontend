@@ -67,7 +67,15 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
 
     const [startDate, endDate] = step1.getFieldValue('duration') || [];
 
-    const parsedUrl = new URL(dbUrl);
+    let parsedUrl: URL | null = null;
+
+    if (dbUrl && dbUrl.trim() !== '') {
+      try {
+        parsedUrl = new URL(dbUrl);
+      } catch {
+        console.warn('Invalid DB URL provided, skipping parsing.');
+      }
+    }
 
     const formData = {
       ownerId: user?.sub ?? '',
@@ -84,14 +92,14 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       dbKeywords: dbKeywords,
       connection: {
         orgAdminEmail: step3.getFieldValue('orgAdminEmail'),
-        tempDbDetails: {
-          name: step3.getFieldValue('name') || parsedUrl.pathname.replace(/^\//, ''),
-          type: step3.getFieldValue('dbType'),
-          host: step3.getFieldValue('hostname') || parsedUrl.hostname,
-          port: step3.getFieldValue('port') || parsedUrl.port,
+        dbDetails: {
+          name: step3.getFieldValue('name') || parsedUrl?.pathname.replace(/^\//, '') || '',
+          type: step3.getFieldValue('dbType') || '',
+          host: step3.getFieldValue('hostname') || parsedUrl?.hostname || '',
+          port: step3.getFieldValue('port') || parsedUrl?.port || '',
           url: dbUrl,
-          username: step3.getFieldValue('username') || parsedUrl.username,
-          password: step3.getFieldValue('password') || parsedUrl.password,
+          username: step3.getFieldValue('username') || parsedUrl?.username || '',
+          password: step3.getFieldValue('password') || parsedUrl?.password || '',
         },
       },
     };

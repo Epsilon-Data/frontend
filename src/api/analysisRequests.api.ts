@@ -83,9 +83,13 @@ export const createComment = async (data: RequestComment, requestId: string | un
   });
 };
 
-export const getComments = async (requestId: string | undefined): Promise<RequestComment[]> => {
+export const getComments = async (
+  data: { isRequestor: boolean },
+  requestId: string | undefined,
+): Promise<RequestComment[]> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/${requestId}/comment`, {
+    params: data,
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 

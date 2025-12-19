@@ -48,7 +48,7 @@ export const RequestTabs = ({ request }: RequestTabsProps) => {
     try {
       await createComment(optimistic, request?.requestId);
 
-      const fresh = await getComments(request?.requestId);
+      const fresh = await getComments({ isRequestor: true }, request?.requestId);
 
       fresh.sort(
         (a: { createdDate: Date }, b: { createdDate: Date }) =>

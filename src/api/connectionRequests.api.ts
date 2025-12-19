@@ -76,3 +76,16 @@ export const testConnection = async (data: DatabaseConnectionDetails): Promise<u
   });
   return response.data;
 };
+
+export const getComments = async (
+  data: { isRequestor: boolean },
+  requestId: string | undefined,
+): Promise<RequestComment[]> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`${CONNECTION_REQUEST_API_URL}/${requestId}/comment`, {
+    params: data,
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+
+  return response.data;
+};

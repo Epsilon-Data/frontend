@@ -4,7 +4,13 @@ import { Button, Col, Drawer, Form, message, Select, Tag } from 'antd';
 import { IoIosArrowDown } from 'react-icons/io';
 import { DetailsRow } from '../browse-projects/modal/pages/AboutDatasetPage/components/DetailsRow';
 import { useTranslation } from 'react-i18next';
-import { approveRequest, createComment, getComments, RequestComment } from '@app/api/analysisRequests.api';
+import {
+  approveRequest,
+  createComment,
+  getComments as getAnalysisRequestComments,
+  RequestComment,
+} from '@app/api/analysisRequests.api';
+import { getComments as getConnectionRequestComments } from '@app/api/connectionRequests.api';
 import { useEffect, useMemo, useState } from 'react';
 import { IoPersonCircle } from 'react-icons/io5';
 import { useAppSelector } from '@app/hooks/reduxHooks';
@@ -59,7 +65,12 @@ export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: 
     try {
       await createComment(optimistic, request?.requestId);
 
-      const fresh = await getComments(request?.requestId);
+      let fresh = [] as RequestComment[];
+      if (request?.type === 'CONNECTION') {
+        fresh = await getConnectionRequestComments({ isRequestor: false }, request?.requestId);
+      } else if (request?.type === 'ANALYSIS') {
+        fresh = await getAnalysisRequestComments({ isRequestor: false }, request?.requestId);
+      }
 
       fresh.sort(
         (a: { createdDate: Date }, b: { createdDate: Date }) =>

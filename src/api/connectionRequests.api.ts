@@ -29,6 +29,7 @@ export interface ConnectionRequest {
 export interface ConnectionDecision {
   isApproved: boolean;
   dbDetails: {
+    url?: string;
     name: string;
     type: string;
     host?: string;

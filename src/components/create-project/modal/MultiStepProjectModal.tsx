@@ -12,6 +12,7 @@ import { useAppSelector } from '@app/hooks/reduxHooks';
 import { useProjectModalContext } from '@app/hooks/useProjectModalContext';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import { AboutProjectStep } from './steps/AboutProjectStep';
+import { buildDatabaseUrl } from '@app/utils/databaseUrl';
 
 type MultiStepProjectModalProps = {
   fetchProjects: () => Promise<void>;
@@ -67,13 +68,27 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
 
     const [startDate, endDate] = step1.getFieldValue('duration') || [];
 
-    let parsedUrl: URL | null = null;
+    const rawDbUrl = dbUrl?.trim() ?? '';
 
-    if (dbUrl && dbUrl.trim() !== '') {
+    const type = step3.getFieldValue('dbType') || '';
+    const host = step3.getFieldValue('hostname') || '';
+    const port = step3.getFieldValue('port') || '';
+    const username = step3.getFieldValue('username') || '';
+    const password = step3.getFieldValue('password') || '';
+    const name = step3.getFieldValue('name') || '';
+
+    let finalUrl = rawDbUrl;
+    if (!finalUrl) {
+      const built = buildDatabaseUrl({ type, host, port, username, password, name });
+      if (built) finalUrl = built;
+    }
+
+    let parsedUrl: URL | null = null;
+    if (finalUrl) {
       try {
-        parsedUrl = new URL(dbUrl);
+        parsedUrl = new URL(finalUrl);
       } catch {
-        console.warn('Invalid DB URL provided, skipping parsing.');
+        console.warn('Invalid DB URL generated/provided, skipping parsing.');
       }
     }
 
@@ -93,13 +108,13 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       connection: {
         orgAdminEmail: step3.getFieldValue('orgAdminEmail'),
         dbDetails: {
-          name: step3.getFieldValue('name') || parsedUrl?.pathname.replace(/^\//, '') || '',
-          type: step3.getFieldValue('dbType') || '',
-          host: step3.getFieldValue('hostname') || parsedUrl?.hostname || '',
-          port: step3.getFieldValue('port') || parsedUrl?.port || '',
-          url: dbUrl,
-          username: step3.getFieldValue('username') || parsedUrl?.username || '',
-          password: step3.getFieldValue('password') || parsedUrl?.password || '',
+          name: name || parsedUrl?.pathname.replace(/^\//, '') || '',
+          type: type || (parsedUrl?.protocol.replace(':', '') ?? ''),
+          host: host || parsedUrl?.hostname || '',
+          port: port || parsedUrl?.port || '',
+          url: finalUrl || undefined,
+          username: username || parsedUrl?.username || '',
+          password: password || parsedUrl?.password || '',
         },
       },
     };

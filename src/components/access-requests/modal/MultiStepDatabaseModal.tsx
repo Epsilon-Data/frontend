@@ -9,6 +9,7 @@ import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/Modal
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import { approveRequest } from '@app/api/connectionRequests.api';
 import { useDatabaseModalContext } from '@app/hooks/useDatabaseModalContext';
+import { buildDatabaseUrl } from '@app/utils/databaseUrl';
 
 type MultiStepDatabaseModalProps = {
   fetchRequests: () => Promise<void>;
@@ -56,21 +57,45 @@ export const MultiStepDatabaseModal = ({
 
   const stepTitles = [t('dashboard.createProject.form.step3.title'), t('dashboard.createProject.form.step4.title')];
 
-  const handleCreate = async () => {
+  const handleApproval = async () => {
     setFormLoading(true);
 
-    const parsedUrl = new URL(dbUrl);
+    const rawDbUrl = dbUrl?.trim() ?? '';
+
+    const type = step1.getFieldValue('dbType') || '';
+    const host = step1.getFieldValue('hostname') || '';
+    const port = step1.getFieldValue('port') || '';
+    const username = step1.getFieldValue('username') || '';
+    const password = step1.getFieldValue('password') || '';
+    const name = step1.getFieldValue('name') || '';
+
+    let finalUrl = rawDbUrl;
+    if (!finalUrl) {
+      const built = buildDatabaseUrl({ type, host, port, username, password, name });
+      if (built) {
+        finalUrl = built;
+      }
+    }
+
+    let parsedUrl: URL | null = null;
+    if (finalUrl) {
+      try {
+        parsedUrl = new URL(finalUrl);
+      } catch {
+        console.warn('Invalid DB URL generated/provided, skipping parsing.');
+      }
+    }
 
     const formData = {
       isApproved: true,
       dbDetails: {
-        name: step1.getFieldValue('name') || parsedUrl.pathname.replace(/^\//, ''),
-        type: step1.getFieldValue('dbType'),
-        host: step1.getFieldValue('hostname') || parsedUrl.hostname,
-        port: step1.getFieldValue('port') || parsedUrl.port,
-        url: dbUrl,
-        username: step1.getFieldValue('username') || parsedUrl.username,
-        password: step1.getFieldValue('password') || parsedUrl.password,
+        name: name || parsedUrl?.pathname.replace(/^\//, '') || '',
+        type: type || (parsedUrl?.protocol.replace(':', '') ?? ''),
+        host: host || parsedUrl?.hostname || '',
+        port: port || parsedUrl?.port || '',
+        url: finalUrl || undefined,
+        username: username || parsedUrl?.username || '',
+        password: password || parsedUrl?.password || '',
       },
     };
 
@@ -144,7 +169,7 @@ export const MultiStepDatabaseModal = ({
               <Button
                 key="submit"
                 type="primary"
-                onClick={handleCreate}
+                onClick={handleApproval}
                 icon={<IoChevronForwardOutline />}
                 iconPlacement="end"
                 loading={isFormLoading}

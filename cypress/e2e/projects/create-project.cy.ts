@@ -3,17 +3,14 @@
 describe('Projects', () => {
   beforeEach(() => {
     cy.login();
+    cy.viewport(1920, 1080);
+    cy.visit('/');
+    cy.contains('New project').click();
   });
 
   // test the happy path of creating a project without db connection
   it('can create a project WITHOUT database connection', () => {
     const projectName = 'E2E Project 1 TESTING PENDING';
-
-    cy.viewport(1920, 1080);
-    cy.visit('/');
-
-    // creating a new project
-    cy.contains('New project').click();
 
     // About Project modal
     // project name
@@ -85,12 +82,6 @@ describe('Projects', () => {
   // test the happy path of creating a project
   it('can create a project WITH database connection', () => {
     const projectName = 'E2E Project 3 TESTING CRAWLING or ACTIVE';
-
-    cy.viewport(1920, 1080);
-    cy.visit('/');
-
-    // creating a new project
-    cy.contains('New project').click();
 
     // About Project modal
     // project name

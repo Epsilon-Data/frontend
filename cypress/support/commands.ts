@@ -25,13 +25,28 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 //
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+
+/**
+ * log into Epsilon
+ */
+Cypress.Commands.add('login', () => {
+  cy.session('user-session', () => {
+    cy.visit('/auth/login');
+
+    // intercept the login requests to add the correct origin header
+    // this took me 5 hours to figure out
+    cy.intercept('POST', '/api/v1/token/login/start', (req) => {
+      req.headers['origin'] = 'http://localhost:3000';
+    }).as('loginRequest');
+
+    cy.get('#username').type(Cypress.env('username'));
+    cy.get('#password').type(Cypress.env('password'));
+    cy.get('#kc-login').click();
+
+    cy.intercept('POST', '/api/v1/token/login/end', (req) => {
+      req.headers['origin'] = 'http://localhost:3000';
+    }).as('loginRequest');
+
+    cy.url().should('not.include', 'keycloak');
+  });
+});

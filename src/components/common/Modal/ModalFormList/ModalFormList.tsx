@@ -61,11 +61,20 @@ export const ModalFormList: React.FC<{
         <Col span={6} className="flex-1 ml-1">
           <p className="mb-0.3 text-xs">{t('dashboard.createProject.form.step1.members.role')}</p>
           <FormItem name="role" initialValue="Collaborator">
-            <Select className="select-field w-full" suffixIcon={<FaChevronDown />} options={roles} />
+            <Select
+              data-testid="role-select"
+              className="select-field w-full"
+              suffixIcon={<FaChevronDown />}
+              options={roles}
+            />
           </FormItem>
         </Col>
         <Col>
-          <Button className="mt-4 ml-1 bg-black border-none text-white !hover:bg-black" onClick={handleAdd}>
+          <Button
+            data-testid="add-member"
+            className="mt-4 ml-1 bg-black border-none text-white !hover:bg-black"
+            onClick={handleAdd}
+          >
             <FaPlus />
           </Button>
         </Col>

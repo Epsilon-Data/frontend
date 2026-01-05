@@ -5,7 +5,7 @@ describe('Create Archetype', () => {
     cy.visit('/');
   });
 
-  it('should navigate to a test project and create archetype', () => {
+  it('should navigate to a test project and be able to start defining the object, its categories, and columns in the dataset ', () => {
     cy.archetypeViewReadyOrMappedProjectCard();
 
     cy.archetypeFillName('Test Archetype Template CYPRESS');
@@ -16,7 +16,7 @@ describe('Create Archetype', () => {
 
     cy.contains('.react-flow__node', 'Category 1').click();
 
-    // Verify the Columns sidebar/panel appears
+    // verify the Columns sidebar/panel appears
     cy.contains('Columns').should('be.visible');
   });
 });

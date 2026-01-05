@@ -33,6 +33,11 @@ declare namespace Cypress {
     archetypeFillName(title: string, ...options: any): Chainable<JQuery<HTMLElement>>;
     archetypeCreateNode(...options: any): Chainable<JQuery<HTMLElement>>;
     archetypeMapNodeToColumn(...options: any): Chainable<JQuery<HTMLElement>>;
+    archetypeSetPermissionForRow(
+      rowText: string,
+      permissionIndex: 0 | 1,
+      ...options: any
+    ): Chainable<JQuery<HTMLElement>>;
   }
 }
 
@@ -110,4 +115,8 @@ Cypress.Commands.add('archetypeMapNodeToColumn', () => {
   cy.contains('.react-flow__node', 'Category 1').click();
 
   cy.get('button.mt-2.w-full.text-left.rounded-md.border.border-sky-300.hover\\:bg-sky-50').first().click();
+});
+
+Cypress.Commands.add('archetypeSetPermissionForRow', (rowText: string, permissionIndex: 0 | 1) => {
+  cy.contains('tr', rowText).find('.ant-radio-input').eq(permissionIndex).check();
 });

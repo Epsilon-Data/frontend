@@ -26,6 +26,12 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 //
 
+declare namespace Cypress {
+  interface Chainable<Subject> {
+    login(...options: any): Chainable<JQuery<HTMLElement>>;
+  }
+}
+
 /**
  * log into Epsilon
  */

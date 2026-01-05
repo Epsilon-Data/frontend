@@ -206,7 +206,8 @@
       "home": "My projects",
       "metadata": "Metadata",
       "dbMapping": "Database mapping",
-      "projectAccess": "Project access"
+      "projectAccess": "Project access",
+      "settings": "Settings"
     },
     "main": {
       "dbMapping": {
@@ -336,6 +337,18 @@
           },
           "detailsError": "Error fetching request details",
           "updateSuccess": "Request marked as {{status}}"
+        }
+      },
+      "settings": {
+        "title": "Settings",
+        "visualisations": {
+          "title": "Set visualisations for display",
+          "description": "Input tableau visualisation title and URL to display within the browse hub"
+        },
+        "sync": {
+          "title": "Sync updates in database",
+          "description": "Enter your database details and test the connection to sync database updates",
+          "button": "Sync database"
         }
       }
     },

@@ -10,6 +10,7 @@ import Login from './Login';
 import DatabaseMappingPage from '@app/pages/ProjectDetailsPages/DatabaseMappingPage';
 import BrowseDatasetPage from '@app/pages/BrowseDatasetPages/BrowseDatasetPage';
 import MetadataPage from '@app/pages/ProjectDetailsPages/MetadataPage';
+import SettingsPage from '@app/pages/ProjectDetailsPages/SettingsPage';
 import TrackRequestsPage from '@app/pages/BrowseDatasetPages/TrackRequestsPage';
 import ProjectAccessPage from '@app/pages/ProjectDetailsPages/ProjectAccessPage';
 import ErrorPage from '@app/pages/ErrorPages/ErrorPage';
@@ -21,6 +22,7 @@ const Dashboard = withLoading(DashboardPage);
 const DatabaseMapping = withLoading(DatabaseMappingPage);
 const Metadata = withLoading(MetadataPage);
 const Access = withLoading(ProjectAccessPage);
+const Settings = withLoading(SettingsPage);
 const BrowseDatasets = withLoading(BrowseDatasetPage);
 const TrackRequests = withLoading(TrackRequestsPage);
 
@@ -43,6 +45,7 @@ export const AppRouter: React.FC = () => {
           <Route path="db-mapping" element={<DatabaseMapping />} />
           <Route path="metadata" element={<Metadata />} />
           <Route path="access" element={<Access />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
         <Route path="/auth" element={<AuthLayoutFallback />}>
           <Route path="login" element={<LoginFallback />} />

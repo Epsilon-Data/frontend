@@ -3,6 +3,7 @@ import { PiCirclesThreeBold } from 'react-icons/pi';
 import { TiPointOfInterest } from 'react-icons/ti';
 import { RiLogoutCircleLine } from 'react-icons/ri';
 import { AiOutlineDatabase } from 'react-icons/ai';
+import { LuUsers } from 'react-icons/lu';
 
 export interface SidebarNavigationItem {
   title: string;
@@ -74,6 +75,12 @@ const projectNavigation: SidebarNavigationItem[] = [
     ],
   },
   {
+    title: 'project.sidebar.team',
+    key: 'team',
+    url: '/project/team',
+    icon: <LuUsers size={17} />,
+  },
+  {
     title: 'common.logout',
     key: 'logout',
     url: '/logout',
@@ -83,11 +90,6 @@ const projectNavigation: SidebarNavigationItem[] = [
   //   title: 'project.sidebar.projectAccess',
   //   key: 'project-access',
   //   url: '/project/access',
-  // },
-  // {
-  //   title: 'project.sidebar.team',
-  //   key: 'team',
-  //   url: '/project/team',
   // },
   // {
   //   title: 'project.sidebar.settings',

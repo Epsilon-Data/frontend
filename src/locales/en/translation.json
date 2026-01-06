@@ -10,7 +10,8 @@
     "manage": "Manage",
     "delete": "Delete",
     "publish": "Publish",
-    "withdraw": "Withdraw"
+    "withdraw": "Withdraw",
+    "remove": "Remove"
   },
   "notifications": {
     "basic": "Basic notification",
@@ -193,7 +194,8 @@
     "breadcrumb": {
       "home": "My projects",
       "metadata": "Metadata",
-      "dbMapping": "Database mapping"
+      "dbMapping": "Database mapping",
+      "team": "Your team"
     },
     "main": {
       "dbMapping": {
@@ -261,7 +263,18 @@
             "nullable": "Nullable"
           }
         }
+      },
+      "team": {
+        "title": "Your team",
+        "invite": "Invite people",
+        "number": "• {{number}} members",
+        "table": {
+          "memberName": "Team member name",
+          "email": "Email ID",
+          "role": "Team role"
+        }
       }
+      
     },
     "createTemplate": {
       "form": {

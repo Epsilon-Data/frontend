@@ -32,6 +32,7 @@ export interface ConnectionInfo {
 }
 
 export interface Member {
+  id?: string;
   email?: string;
   role?: string;
   name?: string;

@@ -12,6 +12,7 @@ import Login from './Login';
 import DatabaseMappingPage from '@app/pages/ProjectDetailsPages/DatabaseMappingPage';
 import BrowseDatasetPage from '@app/pages/BrowseDatasetPages/BrowseDatasetPage';
 import MetadataPage from '@app/pages/ProjectDetailsPages/MetadataPage';
+import TeamPage from '@app/pages/ProjectDetailsPages/TeamPage';
 import TrackRequestsPage from '@app/pages/BrowseDatasetPages/TrackRequestsPage';
 
 export const DASHBOARD_PATH = '/';
@@ -19,6 +20,7 @@ export const DASHBOARD_PATH = '/';
 const Dashboard = withLoading(DashboardPage);
 const DatabaseMapping = withLoading(DatabaseMappingPage);
 const Metadata = withLoading(MetadataPage);
+const Team = withLoading(TeamPage);
 const BrowseDatasets = withLoading(BrowseDatasetPage);
 const TrackRequests = withLoading(TrackRequestsPage);
 
@@ -50,6 +52,7 @@ export const AppRouter: React.FC = () => {
         <Route path="project" element={protectedProjectLayout}>
           <Route path="db-mapping" element={<DatabaseMapping />} />
           <Route path="metadata" element={<Metadata />} />
+          <Route path="team" element={<Team />} />
         </Route>
         <Route path="/auth" element={<AuthLayoutFallback />}>
           <Route path="login" element={<LoginFallback />} />

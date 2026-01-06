@@ -7,6 +7,7 @@ describe('Create Archetype', () => {
 
   it('should navigate to a test project and be able to start defining the object, its categories, and columns in the dataset ', () => {
     cy.archetypeViewReadyOrMappedProjectCard();
+    cy.contains('button', 'New template').click();
 
     cy.archetypeFillName('Test Archetype Template CYPRESS');
     cy.contains('button', 'Next').click();

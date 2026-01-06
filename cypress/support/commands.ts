@@ -83,7 +83,6 @@ Cypress.Commands.add('archetypeViewReadyOrMappedProjectCard', () => {
   // view project and create new template
   cy.get('@testProjectCard').trigger('mouseover');
   cy.get('@testProjectCard').find('button').contains('View project').click();
-  cy.contains('button', 'New template').click();
 });
 
 /**

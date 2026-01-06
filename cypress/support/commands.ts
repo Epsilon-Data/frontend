@@ -33,11 +33,7 @@ declare namespace Cypress {
     archetypeFillName(title: string, ...options: any): Chainable<JQuery<HTMLElement>>;
     archetypeCreateNode(...options: any): Chainable<JQuery<HTMLElement>>;
     archetypeMapNodeToColumn(...options: any): Chainable<JQuery<HTMLElement>>;
-    archetypeSetPermissionForRow(
-      rowText: string,
-      permissionIndex: 0 | 1,
-      ...options: any
-    ): Chainable<JQuery<HTMLElement>>;
+    archetypeSetPermissionForRow(permissionIndex: 0 | 1, ...options: any): Chainable<JQuery<HTMLElement>>;
   }
 }
 
@@ -116,6 +112,7 @@ Cypress.Commands.add('archetypeMapNodeToColumn', () => {
   cy.get('button.mt-2.w-full.text-left.rounded-md.border.border-sky-300.hover\\:bg-sky-50').first().click();
 });
 
-Cypress.Commands.add('archetypeSetPermissionForRow', (rowText: string, permissionIndex: 0 | 1) => {
-  cy.contains('tr', rowText).find('.ant-radio-input').eq(permissionIndex).check();
+Cypress.Commands.add('archetypeSetPermissionForRow', (permissionIndex: 0 | 1) => {
+  // cy.contains('tr').eq(0).find('.ant-radio-input').eq(permissionIndex).check();
+  cy.get('[data-testid="permissions-step"]').find('tbody tr').first().find('.ant-radio').eq(permissionIndex).click();
 });

@@ -19,8 +19,8 @@ describe('Create Archetype', () => {
     cy.contains('button', 'Next').click();
 
     // test that setting both permissions works
-    cy.archetypeSetPermissionForRow('Category 1', 0);
-    cy.archetypeSetPermissionForRow('Category 1', 1);
+    cy.archetypeSetPermissionForRow(0);
+    cy.archetypeSetPermissionForRow(1);
     cy.contains('button', 'Save database mapping').click();
   });
 });

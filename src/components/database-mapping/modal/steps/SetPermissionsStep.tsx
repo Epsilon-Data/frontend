@@ -128,7 +128,7 @@ export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol
           {t('project.createTemplate.form.step4.instruction.subtitle')}
         </div>
       </div>
-      <div>
+      <div data-testid="permissions-step">
         <Table<PermissionTableRow>
           size="small"
           rowKey="key"

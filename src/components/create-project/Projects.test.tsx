@@ -65,6 +65,7 @@ const generateMockProjects = (count: number) => {
       customId: faker.helpers.replaceSymbols('PROJ-2024-###'),
       name: faker.company.name(),
       lastModified: faker.date.anytime(),
+      createdDate: faker.date.anytime(),
       university: faker.string.alpha(10),
       faculty: faker.string.alpha(20),
       lead: faker.person.fullName(),

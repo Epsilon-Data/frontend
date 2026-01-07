@@ -12,6 +12,8 @@ export interface ProjectSummaryInfo {
   customId: string;
   name: string;
   lastModified: Date;
+  createdDate: Date;
+  dbKeywords?: string[];
   university: string;
   faculty: string;
   lead: string;

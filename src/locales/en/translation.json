@@ -193,7 +193,8 @@
     "breadcrumb": {
       "home": "My projects",
       "metadata": "Metadata",
-      "dbMapping": "Database mapping"
+      "dbMapping": "Database mapping",
+      "projectAccess": "Project access"
     },
     "main": {
       "dbMapping": {
@@ -260,6 +261,36 @@
             "dataType": "Data Type",
             "nullable": "Nullable"
           }
+        }
+      },
+      "projectAccess": {
+        "title": "Project access",
+        "subtitle": "Review requests and manage access",
+        "tabs": {
+          "connection": "Connection requests",
+          "analysis": "Analysis requests"
+        },
+        "table": {
+          "requestorName": "Requestor name",
+          "emailId": "Email ID",
+          "orgName": "Organisation name",
+          "projectName": "Project name",
+          "status": "Status"
+        },
+        "drawer": {
+          "requestor": {
+            "title": "1. Requestor details",
+            "position": "Position/title",
+            "email": "Email address",
+            "orgName": "Organisation name"
+          },
+          "project": {
+            "title": "2. Project details",
+            "name": "Project name",
+            "duration": "Project duration",
+            "describe": "Project description"
+          },
+          "detailsError": "Error fetching request details"
         }
       }
     },
@@ -524,7 +555,7 @@
               "add": "Add comment",
               "inputPlaceholder": "Leave your comment here",
               "createdSuccess": "Comment added successfully",
-              "createdFailed": "Failed to add comment"
+              "createdError": "Failed to add comment"
             }
           }
         }

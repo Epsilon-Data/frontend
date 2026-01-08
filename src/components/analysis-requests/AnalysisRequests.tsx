@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { RequestSummaryInfo } from '@app/api/analysisRequests.api';
-import { STATUS_COLORS, STATUS_NAMES } from '@app/constants/analysisRequest';
+import { STATUS_COLORS, STATUS_NAMES } from '@app/constants/accessRequest';
 import { useNavigate } from 'react-router-dom';
 
 dayjs.extend(relativeTime);

@@ -195,11 +195,10 @@ export default createGlobalStyle`
   }
 
   .ant-modal {
-
     .ant-modal-container {
       padding: 0;
     }
-    
+      
     .ant-modal-mask {
       backdrop-filter: blur(6px);
       background-color: rgba(0, 0, 0, 0.3);

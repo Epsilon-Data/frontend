@@ -40,11 +40,14 @@ export function ReadOnlyPermissionsTable({ nodes, edges, permissions }: Props) {
   }, [q, rows]);
 
   const renderRadio = (col: 'high' | 'detail') => {
+    const snapshot = { ...checkedByCol[col] };
+
     const RadioRenderer = (_: unknown, row: PermissionTableRow) => {
-      const checked = row.kind === 'category' ? !!checkedByCol[col].parent[row.key] : !!checkedByCol[col].leaf[row.key];
+      const checked = row.kind === 'category' ? !!snapshot.parent[row.key] : !!snapshot.leaf[row.key];
+
       return <Radio checked={checked} />;
     };
-    RadioRenderer.displayName = `RadioRenderer(${col})`;
+
     return RadioRenderer;
   };
 

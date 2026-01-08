@@ -23,7 +23,7 @@ export interface ProjectSummaryInfo {
 export interface ConnectionInfo {
   requestId?: string;
   orgAdminEmail?: string;
-  tempDbDetails?: {
+  dbDetails?: {
     name: string;
     type: string;
     url?: string;
@@ -63,6 +63,21 @@ export interface Member {
   email?: string;
   role?: string;
   name?: string;
+}
+
+export interface RequestSummaryInfo {
+  requestId: string;
+  projectName: string;
+  status: string;
+  requestorName: string;
+  requestorEmail: string;
+  requestorOrgName: string;
+  createdDate: Date;
+}
+
+export interface RequestListInfo {
+  connection: RequestSummaryInfo[];
+  analysis: RequestSummaryInfo[];
 }
 
 export const createProject = async (data: ProjectInfo): Promise<void> => {
@@ -121,6 +136,14 @@ export const getProjectPublicDetails = async (projectId: string | undefined): Pr
 export const getProjectSummary = async (projectId: string | undefined): Promise<ProjectSummaryInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${PROJECT_API_URL}/${projectId}/summary`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  return response.data;
+};
+
+export const getProjectRequests = async (projectId: string | undefined): Promise<RequestListInfo> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`${PROJECT_API_URL}/${projectId}/requests`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;

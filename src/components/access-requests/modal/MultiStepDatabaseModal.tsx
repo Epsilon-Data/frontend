@@ -1,31 +1,32 @@
-import { UniversityDetailsStep } from './steps/UniversityDetailsStep';
 import { DatabaseConnectionStep } from './steps/DatabaseConnectionStep';
 import { ConfirmStep } from './steps/ConfirmStep';
 import { Button, Modal, message } from 'antd';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 
 import { useState } from 'react';
-import { createProject } from '@app/api/projects.api';
 import { useTranslation } from 'react-i18next';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
-import { useAppSelector } from '@app/hooks/reduxHooks';
-import { useProjectModalContext } from '@app/hooks/useProjectModalContext';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
-import { AboutProjectStep } from './steps/AboutProjectStep';
+import { approveRequest } from '@app/api/connectionRequests.api';
+import { useDatabaseModalContext } from '@app/hooks/useDatabaseModalContext';
 import { buildDatabaseUrl } from '@app/utils/databaseUrl';
 
-type MultiStepProjectModalProps = {
-  fetchProjects: () => Promise<void>;
+type MultiStepDatabaseModalProps = {
+  fetchRequests: () => Promise<void>;
+  requestId: string;
+  projectId: string;
 } & React.ComponentProps<typeof Modal>;
 
-export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiStepProjectModalProps) => {
+export const MultiStepDatabaseModal = ({
+  fetchRequests,
+  requestId,
+  projectId,
+  ...modalProps
+}: MultiStepDatabaseModalProps) => {
   const [isFormLoading, setFormLoading] = useState(false);
-  const { modalStep, setModalStep, setIsModalOpen, isModalOpen, handleDraft, forms } = useProjectModalContext();
-  const user = useAppSelector((state) => state.user.user);
+  const { modalStep, setModalStep, setIsModalOpen, isModalOpen, forms } = useDatabaseModalContext();
 
-  const [step1, step2, step3, step4] = forms;
-  const [dbKeywords, setDbKeywords] = useState<string[]>([]);
-  const [members, setMembers] = useState<{ email: string; role: string }[]>([]);
+  const [step1, step2] = forms;
   const { t } = useTranslation();
   const [showMessage, setShowMessage] = useState(false);
   const [isConnected, setConnected] = useState(false);
@@ -35,14 +36,12 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
     try {
       await forms[modalStep].validateFields();
 
-      if (modalStep === 2) {
-        if (!isConnected && step3.getFieldValue('hasCreds')) {
-          message.error(t('dashboard.createProject.form.error.invalidDbUrl'));
-          return;
-        }
+      if (modalStep === 0 && !isConnected) {
+        message.error(t('dashboard.createProject.form.error.invalidDbUrl'));
+        return;
       }
 
-      setModalStep((prev) => Math.min(prev + 1, 3));
+      setModalStep((prev) => Math.min(prev + 1, 1));
     } catch (err) {
       const error = err as ValidateErrorEntity;
       if (error.errorFields) {
@@ -56,31 +55,26 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
 
   const prevStep = () => setModalStep((prev) => Math.max(prev - 1, 0));
 
-  const stepTitles = [
-    t('dashboard.createProject.form.step1.title'),
-    t('dashboard.createProject.form.step2.title'),
-    t('dashboard.createProject.form.step3.title'),
-    t('dashboard.createProject.form.step4.title'),
-  ];
+  const stepTitles = [t('dashboard.createProject.form.step3.title'), t('dashboard.createProject.form.step4.title')];
 
-  const handleCreate = async () => {
+  const handleApproval = async () => {
     setFormLoading(true);
-
-    const [startDate, endDate] = step1.getFieldValue('duration') || [];
 
     const rawDbUrl = dbUrl?.trim() ?? '';
 
-    const type = step3.getFieldValue('dbType') || '';
-    const host = step3.getFieldValue('hostname') || '';
-    const port = step3.getFieldValue('port') || '';
-    const username = step3.getFieldValue('username') || '';
-    const password = step3.getFieldValue('password') || '';
-    const name = step3.getFieldValue('name') || '';
+    const type = step1.getFieldValue('dbType') || '';
+    const host = step1.getFieldValue('hostname') || '';
+    const port = step1.getFieldValue('port') || '';
+    const username = step1.getFieldValue('username') || '';
+    const password = step1.getFieldValue('password') || '';
+    const name = step1.getFieldValue('name') || '';
 
     let finalUrl = rawDbUrl;
     if (!finalUrl) {
       const built = buildDatabaseUrl({ type, host, port, username, password, name });
-      if (built) finalUrl = built;
+      if (built) {
+        finalUrl = built;
+      }
     }
 
     let parsedUrl: URL | null = null;
@@ -93,40 +87,26 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
     }
 
     const formData = {
-      ownerId: user?.sub ?? '',
-      name: step1.getFieldValue('name'),
-      lead: (user?.given_name ?? '') + ' ' + (user?.family_name ?? ''),
-      university: step2.getFieldValue('university'),
-      faculty: step2.getFieldValue('faculty'),
-      ethicsId: step2.getFieldValue('ethicsId'),
-      description: step1.getFieldValue('description'),
-      startDate: startDate?.toDate() || null,
-      endDate: endDate?.toDate() || null,
-      members: members,
-      participantsNum: step1.getFieldValue('participantsNum'),
-      dbKeywords: dbKeywords,
-      connection: {
-        orgAdminEmail: step3.getFieldValue('orgAdminEmail'),
-        dbDetails: {
-          name: name || parsedUrl?.pathname.replace(/^\//, '') || '',
-          type: type || (parsedUrl?.protocol.replace(':', '') ?? ''),
-          host: host || parsedUrl?.hostname || '',
-          port: port || parsedUrl?.port || '',
-          url: finalUrl || undefined,
-          username: username || parsedUrl?.username || '',
-          password: password || parsedUrl?.password || '',
-        },
+      isApproved: true,
+      dbDetails: {
+        name: name || parsedUrl?.pathname.replace(/^\//, '') || '',
+        type: type || (parsedUrl?.protocol.replace(':', '') ?? ''),
+        host: host || parsedUrl?.hostname || '',
+        port: port || parsedUrl?.port || '',
+        url: finalUrl || undefined,
+        username: username || parsedUrl?.username || '',
+        password: password || parsedUrl?.password || '',
       },
     };
 
     try {
-      await step4.validateFields();
-      console.log('Creating project with data:', formData);
-      await createProject(formData);
+      await step2.validateFields();
+      console.log('Approving request with data:', formData);
+      await approveRequest(formData, projectId, requestId);
       setIsModalOpen(false);
-      await fetchProjects();
+      await fetchRequests();
     } catch (error) {
-      console.error('Project creation failed:', error);
+      console.error('Request approval failed:', error);
     } finally {
       setFormLoading(false);
     }
@@ -136,20 +116,8 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
     switch (modalStep) {
       case 0:
         return (
-          <AboutProjectStep
-            form={step1}
-            members={members}
-            setMembers={setMembers}
-            dbKeywords={dbKeywords}
-            setDbKeywords={setDbKeywords}
-          />
-        );
-      case 1:
-        return <UniversityDetailsStep form={step2} />;
-      case 2:
-        return (
           <DatabaseConnectionStep
-            form={step3}
+            form={step1}
             showMessage={showMessage}
             setShowMessage={setShowMessage}
             isConnected={isConnected}
@@ -157,8 +125,8 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
             setDbUrl={setDbUrl}
           />
         );
-      case 3:
-        return <ConfirmStep form={step4} />;
+      case 1:
+        return <ConfirmStep form={step2} />;
       default:
         return null;
     }
@@ -186,7 +154,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
             )}
           </div>
           <div>
-            {modalStep < 3 ? (
+            {modalStep < 1 ? (
               <Button
                 key="next"
                 type="primary"
@@ -201,7 +169,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
               <Button
                 key="submit"
                 type="primary"
-                onClick={handleCreate}
+                onClick={handleApproval}
                 icon={<IoChevronForwardOutline />}
                 iconPlacement="end"
                 loading={isFormLoading}
@@ -215,7 +183,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       }
     >
       <div className="flex flex-col">
-        <ModalStepHeader modalStep={modalStep} handleDraft={handleDraft} stepTitles={stepTitles} />
+        <ModalStepHeader modalStep={modalStep} stepTitles={stepTitles} />
         {renderStep()}
       </div>
     </Modal>

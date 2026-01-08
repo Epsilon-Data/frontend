@@ -115,7 +115,7 @@ export const MultiStepBrowseModal = ({ ...modalProps }: MultiStepBrowseModalProp
               <Button
                 key="view-requests"
                 icon={<IoChevronBackOutline />}
-                className="flex items-center h-9 text-blueDark text-xs font-medium font-inter"
+                className="flex items-center h-9 text-blueDark text-xs font-medium font-inter mr-5"
               >
                 {t('browse.createRequest.nextSteps.viewRequests')}
               </Button>

@@ -1,6 +1,4 @@
 import { testConnection } from '@app/api/connectionRequests.api';
-import { ModalInput } from '@app/components/common/Modal/ModalInput/ModalInput';
-import { ModalRadioGroup } from '@app/components/common/Modal/ModalRadioGroup/ModalRadioGroup';
 import { ModalSelect } from '@app/components/common/Modal/ModalSelect/ModalSelect';
 import { NumberedFormItem } from '@app/components/common/Modal/NumberedFormItem/NumberedFormItem';
 import { TestConnectionGroup } from '@app/components/common/Modal/TestConnectionGroup/TestConnectionGroup';
@@ -30,19 +28,12 @@ export const DatabaseConnectionStep = ({
 }: DatabaseConnectionStepProps) => {
   const { t } = useTranslation();
   const [isTestLoading, setTestLoading] = useState(false);
-
-  const hasCreds = Form.useWatch('hasCreds', form);
   const isDbUrl = Form.useWatch('isDbUrl', form);
   const dbType = Form.useWatch('dbType', form);
 
   const dbTypeOptions = [
     { value: 'postgres', label: 'PostgreSQL' },
     { value: 'csv', label: 'CSV' },
-  ];
-
-  const hasCredsOptions: CheckboxGroupProps<boolean>['options'] = [
-    { label: t('common.yes'), value: true },
-    { label: t('common.no'), value: false },
   ];
 
   const configureOptions: CheckboxGroupProps<boolean>['options'] = [
@@ -61,21 +52,6 @@ export const DatabaseConnectionStep = ({
     } else {
       form.resetFields(['dbUrl']);
     }
-  };
-
-  const handleHasCredsChange = (e: RadioChangeEvent) => {
-    const value = e.target.value as boolean;
-
-    setShowMessage(false);
-    setConnected(false);
-
-    if (value) {
-      form.resetFields(['orgAdminEmail']);
-    } else {
-      form.resetFields(['dbUrl', 'username', 'password', 'hostname', 'port', 'name']);
-    }
-
-    form.setFieldsValue({ hasCreds: value });
   };
 
   const onTestConnection = async () => {
@@ -132,13 +108,6 @@ export const DatabaseConnectionStep = ({
     <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
       <Form form={form} className="h-full">
         <NumberedFormItem number={1}>
-          <ModalInput
-            name="dbName"
-            inputTitle={t('dashboard.createProject.form.step3.dbName.title')}
-            placeholder={t('dashboard.createProject.form.step3.dbName.placeholder')}
-          />
-        </NumberedFormItem>
-        <NumberedFormItem number={2}>
           <ModalSelect
             name="dbType"
             inputTitle={t('dashboard.createProject.form.step3.dbType.title')}
@@ -147,39 +116,18 @@ export const DatabaseConnectionStep = ({
         </NumberedFormItem>
         {dbType === 'postgres' && (
           <>
-            <NumberedFormItem number={3} showDivider={false}>
-              <ModalRadioGroup
-                name="hasCreds"
-                inputTitle={t('dashboard.createProject.form.step3.hasCreds.title')}
-                options={hasCredsOptions}
-                defaultValue={true}
-                onChange={handleHasCredsChange}
-              />
-            </NumberedFormItem>
-            {hasCreds ? (
-              <TestConnectionGroup
-                inputTitle={t('dashboard.createProject.form.step3.dbCred.dbUrl.title')}
-                inputDescription={t('dashboard.createProject.form.step3.dbCred.dbUrl.description')}
-                connected={isConnected}
-                loading={isTestLoading}
-                show={showMessage}
-                onClick={onTestConnection}
-                radioGroupOptions={configureOptions}
-                handleChange={handleIsDbUrlChange}
-                isDbUrl={isDbUrl}
-                number={4}
-              />
-            ) : (
-              <NumberedFormItem number={4} showDivider={false}>
-                <ModalInput
-                  name="orgAdminEmail"
-                  inputTitle={t('dashboard.createProject.form.step3.orgAdminEmail.title')}
-                  inputDescription={t('dashboard.createProject.form.step3.orgAdminEmail.description')}
-                  inputRules={[{ type: 'email', message: t('fieldMessages.input.email') }]}
-                  placeholder={t('dashboard.createProject.form.step3.orgAdminEmail.placeholder')}
-                />
-              </NumberedFormItem>
-            )}
+            <TestConnectionGroup
+              inputTitle={t('dashboard.createProject.form.step3.dbCred.dbUrl.title')}
+              inputDescription={t('dashboard.createProject.form.step3.dbCred.dbUrl.description')}
+              connected={isConnected}
+              loading={isTestLoading}
+              show={showMessage}
+              onClick={onTestConnection}
+              radioGroupOptions={configureOptions}
+              handleChange={handleIsDbUrlChange}
+              isDbUrl={isDbUrl}
+              number={2}
+            />
           </>
         )}
       </Form>

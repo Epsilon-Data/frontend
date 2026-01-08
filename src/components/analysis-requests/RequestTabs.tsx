@@ -9,7 +9,7 @@ import { IoPersonCircle } from 'react-icons/io5';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 
 type RequestTabsProps = {
-  request: AnalysisRequest | null;
+  request: AnalysisRequest;
 };
 
 export const RequestTabs = ({ request }: RequestTabsProps) => {
@@ -48,7 +48,7 @@ export const RequestTabs = ({ request }: RequestTabsProps) => {
     try {
       await createComment(optimistic, request?.requestId);
 
-      const fresh = await getComments(request?.requestId);
+      const fresh = await getComments({ isRequestor: true }, request?.requestId);
 
       fresh.sort(
         (a: { createdDate: Date }, b: { createdDate: Date }) =>

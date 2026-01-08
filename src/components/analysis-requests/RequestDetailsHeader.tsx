@@ -1,4 +1,4 @@
-import { STATUS_COLORS, STATUS_NAMES } from '@app/constants/analysisRequest';
+import { STATUS_COLORS, STATUS_NAMES } from '@app/constants/accessRequest';
 import { Skeleton, Tag } from 'antd';
 
 type RequestDetailsHeaderProps = {

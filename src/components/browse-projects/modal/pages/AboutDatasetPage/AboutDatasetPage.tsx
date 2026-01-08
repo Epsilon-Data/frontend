@@ -42,7 +42,7 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
 
       try {
         const result = await getRequestByProject(project.projectId);
-        setRequest(result);
+        if (result?.requestId) setRequest(result);
       } catch {
         message.error(t('browse.main.details.proceed.requestCheckError'));
       }

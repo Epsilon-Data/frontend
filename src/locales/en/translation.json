@@ -289,7 +289,8 @@
             "name": "Project name",
             "duration": "Project duration",
             "describe": "Project description"
-          }
+          },
+          "detailsError": "Error fetching request details"
         }
       }
     },
@@ -554,7 +555,7 @@
               "add": "Add comment",
               "inputPlaceholder": "Leave your comment here",
               "createdSuccess": "Comment added successfully",
-              "createdFailed": "Failed to add comment"
+              "createdError": "Failed to add comment"
             }
           }
         }

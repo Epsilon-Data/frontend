@@ -27,6 +27,7 @@ type RequestDetailsDrawerProps = {
 };
 export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: RequestDetailsDrawerProps) => {
   const [searchParams] = useSearchParams();
+  const [status, setStatus] = useState<string>(request?.status ?? 'PENDING');
   const projectId = searchParams.get('id') ?? '';
   const user = useAppSelector((state) => state.user.user);
   const { t } = useTranslation();
@@ -38,8 +39,9 @@ export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: 
   const [form] = Form.useForm();
 
   useEffect(() => {
+    if (request?.status) setStatus(request.status);
     setComments(request?.comments || []);
-  }, [request?.comments]);
+  }, [request?.comments, request?.status]);
 
   const sortedComments = useMemo(
     () => [...comments].sort((a, b) => new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()),
@@ -105,13 +107,21 @@ export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: 
   ];
 
   const handleStatusChange = async (value: string) => {
-    if (value === request?.status) return;
-    if (value === 'APPROVED') {
-      if (request?.type === 'ANALYSIS') {
-        await approveRequest({ projectId: projectId, requestId: request?.requestId, isApproved: true });
-      } else {
-        showModal();
+    if (!request) return;
+    if (value === status) return;
+    const prev = status;
+    setStatus(value);
+    try {
+      if (value === 'APPROVED') {
+        if (request.type === 'ANALYSIS') {
+          await approveRequest({ projectId, requestId: request.requestId, isApproved: true });
+        } else {
+          showModal();
+        }
       }
+    } catch {
+      setStatus(prev);
+      message.error(t('project.main.projectAccess.drawer.detailsError'));
     }
   };
 
@@ -131,7 +141,7 @@ export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: 
               <span>{request.requestor.name}</span>{' '}
               <Select
                 onChange={handleStatusChange}
-                value={request?.status}
+                value={status}
                 size="small"
                 style={{ width: 170, border: 'none' }}
                 suffixIcon={<IoIosArrowDown className="mt-1" color="black" />}

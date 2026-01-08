@@ -62,7 +62,7 @@ export const RequestDetails = ({ requestId }: RequestDetailsProps) => {
               <div>
                 {request?.project?.dbKeywords?.map((keyword: string, index: number) => (
                   <Tag
-                    className="w-max mb-2 text-xs font-normal font-inter rounded-2xl py-1 px-3 text-center bg-grey-3 text-black break-words"
+                    className="w-max mb-2 text-xs font-normal font-inter rounded-2xl py-1 px-3 mr-3 text-center bg-grey-3 text-black break-words"
                     key={index}
                     variant="filled"
                   >

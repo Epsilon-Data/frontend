@@ -101,7 +101,7 @@ export const getRequestDetails = async (
   requestId: string | undefined,
 ): Promise<AnalysisRequest> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/details/${requestId}`, {
+  const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/${requestId}/details`, {
     params: data,
     headers: { [csrfHeaderName]: `${csrf}` },
   });

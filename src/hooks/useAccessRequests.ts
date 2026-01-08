@@ -54,7 +54,7 @@ export const useAccessRequests = (projectId: string) => {
           request = await getConnectionRequestDetails(record.requestId);
           break;
         case 'ANALYSIS':
-          request = await getAnalysisRequestDetails(record.requestId);
+          request = await getAnalysisRequestDetails({ isRequestor: false }, record.requestId);
           break;
       }
 

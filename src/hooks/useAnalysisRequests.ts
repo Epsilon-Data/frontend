@@ -22,7 +22,7 @@ export const useAnalysisRequests = () => {
   const fetchRequest = useCallback(async (requestId: string) => {
     setManageLoading(true);
     try {
-      const selectedRequest = await getRequestDetails(requestId);
+      const selectedRequest = await getRequestDetails({ isRequestor: true }, requestId);
       setRequest(selectedRequest);
     } catch (error) {
       console.error('Failed to fetch analysis request details:', error);

@@ -96,9 +96,13 @@ export const getComments = async (
   return response.data;
 };
 
-export const getRequestDetails = async (requestId: string | undefined): Promise<AnalysisRequest> => {
+export const getRequestDetails = async (
+  data: { isRequestor: boolean },
+  requestId: string | undefined,
+): Promise<AnalysisRequest> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${ANALYSIS_REQUEST_API_URL}/details/${requestId}`, {
+    params: data,
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 

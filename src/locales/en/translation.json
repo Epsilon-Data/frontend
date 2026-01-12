@@ -201,6 +201,7 @@
         "title": "Database mapping",
         "newTemplate": "New template",
         "fallback": {
+          "sidebarTooltip": "Available after database is ready",
           "crawling": {
             "title": "This project is still crawling your database",
             "description": "You can start mapping once the crawl is complete."

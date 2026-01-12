@@ -3,13 +3,14 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { returnCurrentNav, SidebarNavigationItem } from '../sidebarNavigation';
 import { useTranslation } from 'react-i18next';
 import { useMounted } from '@app/hooks/useMounted';
-import { Menu } from 'antd';
+import { Menu, Tooltip } from 'antd';
 
 interface SiderContentProps {
   selectedNav: string;
+  projectStatus?: string;
 }
 
-const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
+const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav, projectStatus }) => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const { t } = useTranslation();
@@ -17,6 +18,7 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
   const isMounted = useMounted();
   const itemRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const indicatorRef = useRef<HTMLDivElement | null>(null);
+  const canUseDb = ['READY', 'MAPPED'].includes(projectStatus ?? '');
 
   const sidebarNavFlat = currentNav.reduce(
     (result: SidebarNavigationItem[], item) => result.concat(item.children?.length ? item.children : item),
@@ -90,6 +92,7 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
         disabledOverflow={true}
         items={currentNav.map((nav) => {
           const isSubMenu = nav.children?.length;
+          const isDisabled = !canUseDb && nav.dbReadyRequired;
           const navUrl = nav.url || '';
           return {
             key: nav.key,
@@ -103,17 +106,27 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
                 {t(nav.title)}
               </div>
             ) : (
-              <div
-                ref={(el: HTMLDivElement | null) => {
-                  itemRefs.current[nav.key] = el;
-                }}
-                data-key={searchParams.size !== 0 ? `${navUrl}?${searchParams.toString()}` : navUrl}
-                style={{ flex: 1 }}
+              <Tooltip
+                title={isDisabled ? t('project.main.dbMapping.fallback.sidebarTooltip') : ''}
+                placement="right"
+                color={'#AEAEAE'}
               >
-                <Link to={searchParams.size !== 0 ? `${navUrl}?${searchParams.toString()}` : navUrl}>
-                  {t(nav.title)}
-                </Link>
-              </div>
+                <div
+                  ref={(el: HTMLDivElement | null) => {
+                    itemRefs.current[nav.key] = el;
+                  }}
+                  data-key={searchParams.size !== 0 ? `${navUrl}?${searchParams.toString()}` : navUrl}
+                  style={{ flex: 1 }}
+                >
+                  {isDisabled ? (
+                    <span className="cursor-not-allowed opacity-60">{t(nav.title)}</span>
+                  ) : (
+                    <Link to={searchParams.size !== 0 ? `${navUrl}?${searchParams.toString()}` : navUrl}>
+                      {t(nav.title)}
+                    </Link>
+                  )}
+                </div>
+              </Tooltip>
             ),
 
             icon: nav.icon,
@@ -122,19 +135,30 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav }) => {
               nav.children &&
               nav.children.map((childNav) => {
                 const childUrl = childNav.url || '';
+                const childDisabled = !canUseDb && childNav.dbReadyRequired;
                 return {
                   key: childNav.key,
                   label: (
-                    <div
-                      ref={(el: HTMLDivElement | null) => {
-                        itemRefs.current[childNav.key] = el;
-                      }}
-                      data-key={searchParams.size !== 0 ? `${childUrl}?${searchParams.toString()}` : childUrl}
+                    <Tooltip
+                      title={childDisabled ? t('project.main.dbMapping.fallback.sidebarTooltip') : ''}
+                      placement="right"
+                      color={'#AEAEAE'}
                     >
-                      <Link to={searchParams.size !== 0 ? `${childUrl}?${searchParams.toString()}` : childUrl}>
-                        {t(childNav.title)}
-                      </Link>
-                    </div>
+                      <div
+                        ref={(el: HTMLDivElement | null) => {
+                          itemRefs.current[childNav.key] = el;
+                        }}
+                        data-key={searchParams.size !== 0 ? `${childUrl}?${searchParams.toString()}` : childUrl}
+                      >
+                        {childDisabled ? (
+                          <span className="cursor-not-allowed opacity-60">{t(childNav.title)}</span>
+                        ) : (
+                          <Link to={searchParams.size !== 0 ? `${childUrl}?${searchParams.toString()}` : childUrl}>
+                            {t(childNav.title)}
+                          </Link>
+                        )}
+                      </div>
+                    </Tooltip>
                   ),
                   title: t(childNav.title),
                 };

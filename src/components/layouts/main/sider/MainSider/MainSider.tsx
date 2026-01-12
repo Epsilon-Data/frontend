@@ -12,6 +12,7 @@ interface MainSiderProps {
 const MainSider: React.FC<MainSiderProps> = ({ selectedNav }) => {
   const projectContext = useProjectOptional();
   const projectName = projectContext?.project?.name;
+  const projectStatus = projectContext?.project?.status;
   const navigate = useNavigate();
 
   return (
@@ -31,7 +32,7 @@ const MainSider: React.FC<MainSiderProps> = ({ selectedNav }) => {
           </>
         )}
         <div className="overflow-y-hidden overflow-x-hidden pb-10">
-          <SiderMenu selectedNav={selectedNav} />
+          <SiderMenu selectedNav={selectedNav} projectStatus={projectStatus} />
         </div>
       </Layout.Sider>
     </>

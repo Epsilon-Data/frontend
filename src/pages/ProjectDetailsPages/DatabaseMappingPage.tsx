@@ -9,7 +9,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useProjectContext } from '@app/hooks/useProjectContext';
 import { Breadcrumb } from 'antd';
-import { NotReadyState } from '@app/components/database-mapping/NotReadyState';
+import { FallbackState } from '@app/components/database-mapping/FallbackState';
 
 const DatabaseMappingPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -18,7 +18,7 @@ const DatabaseMappingPage: React.FC = () => {
   const { archetypes, tableLoading, fetchArchetypes } = useArchetypes(projectId);
   const { t } = useTranslation();
   const { project } = useProjectContext();
-  const canMap = ['READY', 'MAPPED'].includes(project?.status ?? '');
+  const canMap = ['READY', 'MAPPED'].includes(project?.status ?? '') && archetypes.length > 0;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -61,7 +61,7 @@ const DatabaseMappingPage: React.FC = () => {
             {canMap ? (
               <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
             ) : (
-              <NotReadyState projectStatus={project?.status ?? ''} />
+              <FallbackState projectStatus={project?.status ?? ''} />
             )}
           </>
         ) : (

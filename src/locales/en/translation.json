@@ -200,7 +200,7 @@
       "dbMapping": {
         "title": "Database mapping",
         "newTemplate": "New template",
-        "notReady": {
+        "fallback": {
           "crawling": {
             "title": "This project is still crawling your database",
             "description": "You can start mapping once the crawl is complete."
@@ -212,6 +212,10 @@
           "error": {
             "title": "This project is not ready for mapping",
             "description": "There is an error crawling your database. Please try again."
+          },
+          "ready": {
+            "title": "Ready to map your database",
+            "description": "Click <bold>'+ New Template' button</bold> to set up your project for publishing."
           }
         },
         "table": {

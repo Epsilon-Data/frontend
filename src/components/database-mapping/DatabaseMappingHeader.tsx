@@ -11,12 +11,14 @@ import { BsFillQuestionCircleFill } from 'react-icons/bs';
 type DatabaseMappingHeaderProps = {
   archetype?: ArchetypeInfo | undefined;
   projectId: string;
+  projectStatus?: string;
 };
 
-export const DatabaseMappingHeader = ({ archetype, projectId }: DatabaseMappingHeaderProps) => {
+export const DatabaseMappingHeader = ({ archetype, projectId, projectStatus }: DatabaseMappingHeaderProps) => {
   const { t } = useTranslation();
   const { mode, showModal } = useArchetypeModalContext();
   const navigate = useNavigate();
+  const disableCreate = !['READY', 'MAPPED'].includes(projectStatus ?? '');
 
   const status = (archetype?.status as ArchetypeStatus | undefined) ?? 'DRAFT';
 
@@ -102,6 +104,7 @@ export const DatabaseMappingHeader = ({ archetype, projectId }: DatabaseMappingH
           type="primary"
           icon={<FaPlus />}
           onClick={showModal}
+          disabled={disableCreate}
         >
           {t('project.main.dbMapping.newTemplate')}
         </Button>

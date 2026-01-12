@@ -200,6 +200,20 @@
       "dbMapping": {
         "title": "Database mapping",
         "newTemplate": "New template",
+        "notReady": {
+          "crawling": {
+            "title": "This project is still crawling your database",
+            "description": "You can start mapping once the crawl is complete."
+          },
+          "pending": {
+            "title": "This project is still pending",
+            "description": "Your project is pending approval."
+          },
+          "error": {
+            "title": "This project is not ready for mapping",
+            "description": "There is an error crawling your database. Please try again."
+          }
+        },
         "table": {
           "name": "Template name",
           "status": "Status",

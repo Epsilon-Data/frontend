@@ -46,7 +46,7 @@ vi.mock('./ProjectList', () => ({
       <span data-testid="layout">{layout}</span>
       {projects.map((project) => (
         <button
-          key={project.customId}
+          key={project.projectId}
           data-testid={`project-${project.projectId}`}
           onClick={() => onProjectClick(project.projectId)}
         >
@@ -62,7 +62,6 @@ const generateMockProjects = (count: number) => {
   for (let i = 0; i < count; i++) {
     mockProjectList.push({
       projectId: faker.string.uuid(),
-      customId: faker.helpers.replaceSymbols('PROJ-2024-###'),
       name: faker.company.name(),
       lastModified: faker.date.anytime(),
       createdDate: faker.date.anytime(),

@@ -33,7 +33,7 @@ vi.mock('@app/components/ProjectList/ProjectList', () => ({
       <span data-testid="project-count">{projects?.length ?? 0}</span>
       {projects?.map((project) => (
         <button
-          key={project.customId}
+          key={project.projectId}
           data-testid={`project-${project.projectId}`}
           onClick={() => onProjectClick(project.projectId)}
         >
@@ -56,7 +56,6 @@ Object.defineProperty(window, 'matchMedia', {
 const generateMockProjects = (count: number): ProjectSummaryInfo[] =>
   Array.from({ length: count }).map(() => ({
     projectId: faker.string.uuid(),
-    customId: faker.helpers.replaceSymbols('PROJ-2024-###'),
     name: faker.company.name(),
     lastModified: faker.date.anytime(),
     createdDate: faker.date.anytime(),

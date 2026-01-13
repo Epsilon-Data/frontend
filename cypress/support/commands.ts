@@ -34,6 +34,7 @@ declare namespace Cypress {
     archetypeCreateNode(...options: any): Chainable<JQuery<HTMLElement>>;
     archetypeMapNodeToColumn(...options: any): Chainable<JQuery<HTMLElement>>;
     archetypeSetPermissionForRow(permissionIndex: 0 | 1, ...options: any): Chainable<JQuery<HTMLElement>>;
+    createProjectWithDBConnection(title: string, ...options: any): Chainable<JQuery<HTMLElement>>;
   }
 }
 

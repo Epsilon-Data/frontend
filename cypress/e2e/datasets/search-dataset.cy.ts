@@ -47,24 +47,38 @@ describe('Browse Projects - Search with extracted data', () => {
 
   it('should search using extracted title', () => {
     cy.visit('/browse');
-    cy.contains('label', 'Project title').click();
+
+    // checkk All fields filter
     cy.get('input[placeholder*="Search"]').type(projectTitle);
+    cy.get('input[placeholder*="Search"]').type('{enter}');
+    cy.contains('.ant-card', projectTitle).should('be.visible');
+
+    // check Project title filter
+    cy.contains('label', 'Project title').click();
     cy.get('input[placeholder*="Search"]').type('{enter}');
     cy.contains('.ant-card', projectTitle).should('be.visible');
   });
 
   it('should search using extracted keyword', () => {
     cy.visit('/browse');
-    cy.contains('label', 'Keywords').click();
+
     cy.get('input[placeholder*="Search"]').type(keywords[0]);
+    cy.get('input[placeholder*="Search"]').type('{enter}');
+    cy.contains('.ant-card', projectTitle).should('be.visible');
+
+    cy.contains('label', 'Keywords').click();
     cy.get('input[placeholder*="Search"]').type('{enter}');
     cy.contains('.ant-card', projectTitle).should('be.visible');
   });
 
   it('should search using extracted organization', () => {
     cy.visit('/browse');
-    cy.contains('label', 'Organisation(s)').click();
+
     cy.get('input[placeholder*="Search"]').type(organization);
+    cy.get('input[placeholder*="Search"]').type('{enter}');
+    cy.contains('.ant-card', projectTitle).should('be.visible');
+
+    cy.contains('label', 'Organisation(s)').click();
     cy.get('input[placeholder*="Search"]').type('{enter}');
     cy.contains('.ant-card', projectTitle).should('be.visible');
   });

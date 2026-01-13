@@ -10,6 +10,7 @@ export interface SidebarNavigationItem {
   url?: string;
   children?: SidebarNavigationItem[];
   icon?: React.ReactNode;
+  dbReadyRequired?: boolean;
 }
 
 const homeNavigation: SidebarNavigationItem[] = [
@@ -61,15 +62,11 @@ const projectNavigation: SidebarNavigationItem[] = [
         key: 'project/db-mapping',
         url: '/project/db-mapping',
       },
-      // {
-      //   title: 'project.sidebar.projectDb.managePermissions',
-      //   key: 'project/manage-permissions',
-      //   url: '/project/manage-permissions',
-      // },
       {
         title: 'project.sidebar.projectDb.metadata',
         key: 'project/metadata',
         url: '/project/metadata',
+        dbReadyRequired: true,
       },
     ],
   },
@@ -78,16 +75,19 @@ const projectNavigation: SidebarNavigationItem[] = [
     key: 'project-access',
     url: '/project/access',
     icon: <PiEyeBold size={17} />,
+    dbReadyRequired: true,
   },
   // {
   //   title: 'project.sidebar.team',
   //   key: 'team',
   //   url: '/project/team',
+  //   dbReadyRequired: true,
   // },
   // {
   //   title: 'project.sidebar.settings',
   //   key: 'settings',
   //   url: '/project/settings',
+  //   dbReadyRequired: true,
   // },
   {
     title: 'common.logout',

@@ -9,7 +9,6 @@ export interface Pagination {
 
 export interface ProjectSummaryInfo {
   projectId: string;
-  customId: string;
   name: string;
   lastModified: Date;
   createdDate: Date;
@@ -42,7 +41,6 @@ export interface Member {
 export interface ProjectInfo {
   projectId?: string;
   status?: 'PENDING' | 'CRAWLING' | 'READY' | 'ERROR' | 'MAPPED';
-  customId?: string;
   ownerId: string;
   name: string;
   lead: string;

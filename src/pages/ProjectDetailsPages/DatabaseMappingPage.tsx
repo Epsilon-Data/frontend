@@ -9,6 +9,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useProjectContext } from '@app/hooks/useProjectContext';
 import { Breadcrumb } from 'antd';
+import { FallbackState } from '@app/components/database-mapping/FallbackState';
 
 const DatabaseMappingPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -17,6 +18,7 @@ const DatabaseMappingPage: React.FC = () => {
   const { archetypes, tableLoading, fetchArchetypes } = useArchetypes(projectId);
   const { t } = useTranslation();
   const { project } = useProjectContext();
+  const canMap = ['READY', 'MAPPED'].includes(project?.status ?? '') && archetypes.length > 0;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -41,26 +43,50 @@ const DatabaseMappingPage: React.FC = () => {
   }
 
   return (
-    <div className="py-3 px-4 md:py-5 md:px-9">
-      <Breadcrumb separator=">" className="my-4" items={breadcrumbItems} />
-      {!archetypeId ? (
-        <>
-          <ArchetypeModalProvider mode="create">
-            <DatabaseMappingHeader projectId={projectId} />
-            <MultiStepArchetypeModal
-              fetchArchetypes={fetchArchetypes}
-              projectId={projectId}
-              mask
-              closable={false}
-              width={'60%'}
+    <>
+      <div className="py-3 px-4 md:py-5 md:px-9">
+        <Breadcrumb separator=">" className="my-4" items={breadcrumbItems} />
+        {!archetypeId ? (
+          <>
+            <ArchetypeModalProvider mode="create">
+              <DatabaseMappingHeader projectId={projectId} projectStatus={project?.status} />
+              <MultiStepArchetypeModal
+                fetchArchetypes={fetchArchetypes}
+                projectId={projectId}
+                mask
+                closable={false}
+                width={'60%'}
+              />
+            </ArchetypeModalProvider>
+            {canMap ? (
+              <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
+            ) : (
+              <FallbackState projectStatus={project?.status ?? ''} />
+            )}
+          </>
+        ) : (
+          <ArchetypeDetails projectId={projectId} archetypeId={archetypeId} />
+        )}
+      </div>
+      {!canMap && !archetypeId && (
+        <div className="pointer-events-none absolute bottom-0 left-0 w-full">
+          <svg viewBox="0 0 1440 250" preserveAspectRatio="none" className="w-full h-[340px] md:h-[400px]">
+            <path
+              d="
+              M0,150
+              C520,100 660,255 990,230
+              S1220,185 1440,155
+              L1440,260
+              L0,260
+              Z
+            "
+              fill="rgba(0,0,0,0.03)"
             />
-          </ArchetypeModalProvider>
-          <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
-        </>
-      ) : (
-        <ArchetypeDetails projectId={projectId} archetypeId={archetypeId} />
+          </svg>
+          <div className="w-full h-[160px]" style={{ backgroundColor: 'rgba(0,0,0,0.03)' }} />
+        </div>
       )}
-    </div>
+    </>
   );
 };
 

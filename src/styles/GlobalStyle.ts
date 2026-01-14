@@ -285,4 +285,33 @@ export default createGlobalStyle`
   .base-table .ant-table-tbody > tr:hover > td {
     background: #eaeaea !important;
   }
+
+  .dash-input .ant-input-affix-wrapper {
+    height: 36px;
+    align-items: center;
+  }
+
+  .dash-select .ant-select-selector {
+    height: 36px !important;
+    align-items: center;
+  }
+  .dash-select .ant-select-selection-item,
+  .dash-select .ant-select-selection-placeholder {
+    line-height: 34px;
+  }
+
+  .dash-segmented.ant-segmented {
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
+
+  .dash-segmented.ant-segmented .ant-segmented-group {
+    gap: 5px;
+  }
+
+  .dash-segmented .ant-segmented-item .ant-segmented-item-label {
+    display: flex;
+    align-items: center;
+  }
 `;

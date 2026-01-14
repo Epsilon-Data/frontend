@@ -8,9 +8,16 @@ import { Projects } from '@app/components/create-project/Projects';
 import { MultiStepProjectModal } from '@app/components/create-project/modal/MultiStepProjectModal';
 import { ProjectModalProvider } from '@app/providers/ProjectModalProvider';
 
+export type Layout = 'grid' | 'list';
+export type SortKey = 'date-created' | 'title' | 'last-modified';
+
 const DashboardPage: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
-  const [layout, setLayout] = useState<'grid' | 'list'>('grid');
+
+  const [layout, setLayout] = useState<Layout>('grid');
+  const [search, setSearch] = useState('');
+  const [sortKey, setSortKey] = useState<SortKey>('date-created');
+
   const { csrf, initialized } = useAppSelector((state) => state.auth);
   const { ownedProjects, analysisProjects, fetchProjects } = useUserProjects();
 
@@ -24,10 +31,24 @@ const DashboardPage: React.FC = () => {
   return (
     <div className="py-3 px-4 md:py-5 md:px-9">
       <ProjectModalProvider>
-        <DashboardHeader user={user} handleLayoutChange={setLayout} layout={layout} />
+        <DashboardHeader
+          user={user}
+          handleLayoutChange={setLayout}
+          layout={layout}
+          searchValue={search}
+          handleSearchChange={setSearch}
+          sortKey={sortKey}
+          handleSortChange={setSortKey}
+        />
         <MultiStepProjectModal fetchProjects={fetchProjects} mask closable={false} width={'60%'} />
       </ProjectModalProvider>
-      <Projects sharedProjects={analysisProjects} ownedProjects={ownedProjects} layout={layout} />
+      <Projects
+        sharedProjects={analysisProjects}
+        ownedProjects={ownedProjects}
+        layout={layout}
+        searchValue={search}
+        sortKey={sortKey}
+      />
     </div>
   );
 };

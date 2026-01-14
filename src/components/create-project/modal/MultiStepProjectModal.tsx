@@ -76,10 +76,11 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
     const username = step3.getFieldValue('username') || '';
     const password = step3.getFieldValue('password') || '';
     const name = step3.getFieldValue('name') || '';
+    const ssl = !!step3.getFieldValue('ssl');
 
     let finalUrl = rawDbUrl;
     if (!finalUrl) {
-      const built = buildDatabaseUrl({ type, host, port, username, password, name });
+      const built = buildDatabaseUrl({ type, host, port, username, password, name, ssl });
       if (built) finalUrl = built;
     }
 
@@ -115,6 +116,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
           url: finalUrl || undefined,
           username: username || parsedUrl?.username || '',
           password: password || parsedUrl?.password || '',
+          ssl,
         },
       },
     };

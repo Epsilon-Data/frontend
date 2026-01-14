@@ -1,6 +1,6 @@
 import React from 'react';
 import FormItem from 'antd/es/form/FormItem';
-import { Button, Col, Input, Row } from 'antd';
+import { Button, Col, Input, Row, Switch } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
 import { FaRegCircleCheck } from 'react-icons/fa6';
@@ -160,6 +160,12 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
                   className="border border-grey-3 bg-grey-4 [&::placeholder]:text-grey-2"
                   placeholder={t('dashboard.createProject.form.step3.dbCred.name.placeholder')}
                 />
+              </FormItem>
+            </div>
+            <div className="flex-1">
+              <p className="mb-1 text-xs">{t('dashboard.createProject.form.step3.dbCred.ssl.title')}</p>
+              <FormItem name="ssl" valuePropName="checked" initialValue={false}>
+                <Switch checkedChildren="true" unCheckedChildren="false" />
               </FormItem>
             </div>
             <Button className="test-conn-btn bg-black border-none text-white flex" loading={loading} onClick={onClick}>

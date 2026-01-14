@@ -18,7 +18,7 @@ const validFormData = {
 
 describe('Project Creation - Validation', () => {
   beforeEach(() => {
-    cy.login();
+    cy.login('owner');
     cy.viewport(1920, 1080);
     cy.visit('/');
     cy.contains('New project').click();

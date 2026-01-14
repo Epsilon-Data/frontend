@@ -26,9 +26,11 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 //
 
+type roles = 'owner' | 'researcher' | 'admin';
+
 declare namespace Cypress {
   interface Chainable<Subject> {
-    login(...options: any): Chainable<JQuery<HTMLElement>>;
+    login(role: roles, ...options: any): Chainable<JQuery<HTMLElement>>;
     archetypeViewReadyOrMappedProjectCard(...options: any): Chainable<JQuery<HTMLElement>>;
     archetypeFillName(title: string, ...options: any): Chainable<JQuery<HTMLElement>>;
     archetypeCreateNode(...options: any): Chainable<JQuery<HTMLElement>>;
@@ -41,7 +43,7 @@ declare namespace Cypress {
 /**
  * log into Epsilon
  */
-Cypress.Commands.add('login', () => {
+Cypress.Commands.add('login', (role: roles) => {
   cy.session('user-session', () => {
     cy.visit('/auth/login');
 
@@ -51,8 +53,8 @@ Cypress.Commands.add('login', () => {
       req.headers['origin'] = 'http://localhost:3000';
     }).as('loginRequest');
 
-    cy.get('#username').type(Cypress.env('username'));
-    cy.get('#password').type(Cypress.env('password'));
+    cy.get('#username').type(Cypress.env(`${role}_username`));
+    cy.get('#password').type(Cypress.env(`${role}_password`));
     cy.get('#kc-login').click();
 
     cy.intercept('POST', '/api/v1/token/login/end', (req) => {

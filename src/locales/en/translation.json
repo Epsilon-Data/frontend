@@ -50,6 +50,10 @@
       "sharedProjects": {
         "title": "Shared projects",
         "description": "Collaborate and manage projects shared with you"
+      },
+      "searchResults": {
+        "title": "Search results",
+        "count": "{{count}} projects found"
       }
     },
     "createProject": {

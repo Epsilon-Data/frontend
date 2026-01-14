@@ -40,7 +40,7 @@ export const ModalEmailTag: React.FC<{
 
   const onInputKeyDown: React.KeyboardEventHandler = (e) => {
     if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault();
+      if (e.key === 'Enter') e.preventDefault(); // e.preventDefault() on ',' will prevent the tokenSeparator
       e.stopPropagation();
 
       const s = normEmail(search);

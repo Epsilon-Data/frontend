@@ -4,7 +4,7 @@ describe('Browse Projects - Search with extracted data', () => {
   let keywords: string[] = [];
 
   before(() => {
-    cy.login();
+    cy.login('owner');
     cy.viewport(1920, 1080);
     cy.visit('/browse');
 
@@ -41,7 +41,7 @@ describe('Browse Projects - Search with extracted data', () => {
   });
 
   beforeEach(() => {
-    cy.login();
+    cy.login('owner');
     cy.viewport(1920, 1080);
   });
 

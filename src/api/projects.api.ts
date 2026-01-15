@@ -1,6 +1,8 @@
 import { PROJECT_API_URL } from '@app/constants/projects';
 import { getCsrfHeader, httpClient } from './http.api';
 
+export type ProjectStatus = 'PENDING' | 'CRAWLING' | 'READY' | 'ERROR' | 'MAPPED';
+
 export interface Pagination {
   current: number;
   pageSize: number;
@@ -40,7 +42,7 @@ export interface Member {
 
 export interface ProjectInfo {
   projectId?: string;
-  status?: 'PENDING' | 'CRAWLING' | 'READY' | 'ERROR' | 'MAPPED';
+  status?: ProjectStatus;
   ownerId: string;
   name: string;
   lead: string;

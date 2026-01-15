@@ -4,13 +4,15 @@ import { returnCurrentNav, SidebarNavigationItem } from '../sidebarNavigation';
 import { useTranslation } from 'react-i18next';
 import { useMounted } from '@app/hooks/useMounted';
 import { Menu, Tooltip } from 'antd';
+import { ProjectStatus } from '@app/api/projects.api';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 interface SiderContentProps {
   selectedNav: string;
-  projectStatus?: string;
+  projectDetails?: { status?: ProjectStatus; orgAdminEmail?: string };
 }
 
-const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav, projectStatus }) => {
+const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav, projectDetails }) => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const { t } = useTranslation();
@@ -18,7 +20,12 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav, projectStatus }) 
   const isMounted = useMounted();
   const itemRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const indicatorRef = useRef<HTMLDivElement | null>(null);
-  const canUseDb = ['READY', 'MAPPED'].includes(projectStatus ?? '');
+  const canUseDb = ['READY', 'MAPPED'].includes(projectDetails?.status ?? '');
+  const user = useAppSelector((state) => state.user.user);
+  const isOrgAdmin =
+    !!user?.email &&
+    !!projectDetails?.orgAdminEmail &&
+    user.email.toLowerCase() === projectDetails.orgAdminEmail.toLowerCase();
 
   const sidebarNavFlat = currentNav.reduce(
     (result: SidebarNavigationItem[], item) => result.concat(item.children?.length ? item.children : item),
@@ -92,7 +99,8 @@ const SiderMenu: React.FC<SiderContentProps> = ({ selectedNav, projectStatus }) 
         disabledOverflow={true}
         items={currentNav.map((nav) => {
           const isSubMenu = nav.children?.length;
-          const isDisabled = !canUseDb && nav.dbReadyRequired;
+          const isProjectAccess = nav.key === 'project-access';
+          const isDisabled = !canUseDb && nav.dbReadyRequired && !(isProjectAccess && isOrgAdmin);
           const navUrl = nav.url || '';
           return {
             key: nav.key,

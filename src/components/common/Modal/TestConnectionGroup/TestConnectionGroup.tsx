@@ -1,6 +1,6 @@
 import React from 'react';
 import FormItem from 'antd/es/form/FormItem';
-import { Button, Col, Input, Row } from 'antd';
+import { Button, Col, Input, Row, Switch } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
 import { FaRegCircleCheck } from 'react-icons/fa6';
@@ -61,7 +61,7 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
         {isDbUrl ? (
           <>
             <InputLabel inputTitle={inputTitle} inputDescription={inputDescription} />
-            <Row className="flex justify-between">
+            <Row className="flex">
               <Col span={18}>
                 <Row>
                   <div className="flex items-center w-full">
@@ -78,30 +78,7 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
                   </div>
                 </Row>
               </Col>
-              <Col span={5} className="flex">
-                <Button
-                  className="test-conn-btn bg-black border-none text-white flex"
-                  loading={loading}
-                  onClick={onClick}
-                >
-                  {t('dashboard.createProject.form.step3.dbCred.testConnection.label')}
-                  <IoChevronForwardOutline />
-                </Button>
-              </Col>
             </Row>
-            <div className="mt-1">
-              {connected ? (
-                <div className="text-sm text-success flex">
-                  {t('dashboard.createProject.form.step3.dbCred.testConnection.success')}
-                  <FaRegCircleCheck className="ml-2 mt-1" />
-                </div>
-              ) : show ? (
-                <div className="text-sm text-error flex">
-                  {t('dashboard.createProject.form.step3.dbCred.testConnection.failed')}
-                  <PiWarningBold className="ml-2 mt-1" />
-                </div>
-              ) : null}
-            </div>
           </>
         ) : (
           <>
@@ -162,25 +139,32 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
                 />
               </FormItem>
             </div>
-            <Button className="test-conn-btn bg-black border-none text-white flex" loading={loading} onClick={onClick}>
-              {t('dashboard.createProject.form.step3.dbCred.testConnection.label')}
-              <IoChevronForwardOutline />
-            </Button>
-            <div className="mt-1">
-              {connected ? (
-                <div className="text-sm text-success flex">
-                  {t('dashboard.createProject.form.step3.dbCred.testConnection.success')}
-                  <FaRegCircleCheck className="ml-2 mt-1" />
-                </div>
-              ) : show ? (
-                <div className="text-sm text-error flex">
-                  {t('dashboard.createProject.form.step3.dbCred.testConnection.failed')}
-                  <PiWarningBold className="ml-2 mt-1" />
-                </div>
-              ) : null}
-            </div>
           </>
         )}
+        <div className="flex-1">
+          <p className="mb-1 text-xs">{t('dashboard.createProject.form.step3.dbCred.ssl.title')}</p>
+          <FormItem name="ssl" valuePropName="checked" initialValue={false}>
+            <Switch checkedChildren="Yes" unCheckedChildren="No" />
+          </FormItem>
+        </div>
+        <Button className="test-conn-btn bg-black border-none text-white flex" loading={loading} onClick={onClick}>
+          {t('dashboard.createProject.form.step3.dbCred.testConnection.label')}
+          <IoChevronForwardOutline />
+        </Button>
+
+        <div className="mt-1">
+          {connected ? (
+            <div className="text-sm text-success flex">
+              {t('dashboard.createProject.form.step3.dbCred.testConnection.success')}
+              <FaRegCircleCheck className="ml-2 mt-1" />
+            </div>
+          ) : show ? (
+            <div className="text-sm text-error flex">
+              {t('dashboard.createProject.form.step3.dbCred.testConnection.failed')}
+              <PiWarningBold className="ml-2 mt-1" />
+            </div>
+          ) : null}
+        </div>
       </NumberedFormItem>
     </div>
   );

@@ -68,10 +68,11 @@ export const MultiStepDatabaseModal = ({
     const username = step1.getFieldValue('username') || '';
     const password = step1.getFieldValue('password') || '';
     const name = step1.getFieldValue('name') || '';
+    const ssl = step1.getFieldValue('ssl') || false;
 
     let finalUrl = rawDbUrl;
     if (!finalUrl) {
-      const built = buildDatabaseUrl({ type, host, port, username, password, name });
+      const built = buildDatabaseUrl({ type, host, port, username, password, name, ssl });
       if (built) {
         finalUrl = built;
       }
@@ -96,6 +97,7 @@ export const MultiStepDatabaseModal = ({
         url: finalUrl || undefined,
         username: username || parsedUrl?.username || '',
         password: password || parsedUrl?.password || '',
+        ssl,
       },
     };
 

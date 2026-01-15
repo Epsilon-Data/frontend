@@ -25,9 +25,12 @@ export interface ConnectionInfo {
   dbDetails?: {
     name: string;
     type: string;
+    host?: string;
+    port?: string;
     url?: string;
     username?: string;
     password?: string;
+    ssl?: boolean;
   };
   additionalInfo?: string;
 }

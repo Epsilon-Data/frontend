@@ -150,6 +150,7 @@
             "hostname": { "title": "Hostname", "placeholder": "Enter database hostname" },
             "port": { "title": "Port", "placeholder": "Enter database port" },
             "name": { "title": "Database Name", "placeholder": "Enter database name" },
+            "ssl": { "title": "Enable SSL" },
             "dbUrl": {
               "title": "Provide database connection URL",
               "inputLabel": "URL link: ",

@@ -36,6 +36,7 @@ export interface ConnectionDecision {
     port?: string;
     username?: string;
     password?: string;
+    ssl?: boolean;
   };
 }
 
@@ -46,7 +47,7 @@ export type DatabaseConnectionDetails = {
   readonly username: string;
   readonly password: string;
   readonly name: string;
-  readonly ssl?: boolean;
+  readonly ssl: boolean;
 };
 
 export const getRequestDetails = async (requestId: string | undefined): Promise<ConnectionRequest> => {

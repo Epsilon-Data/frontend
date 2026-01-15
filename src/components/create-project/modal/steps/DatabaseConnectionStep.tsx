@@ -35,10 +35,7 @@ export const DatabaseConnectionStep = ({
   const isDbUrl = Form.useWatch('isDbUrl', form);
   const dbType = Form.useWatch('dbType', form);
 
-  const dbTypeOptions = [
-    { value: 'postgres', label: 'PostgreSQL' },
-    { value: 'csv', label: 'CSV' },
-  ];
+  const dbTypeOptions = [{ value: 'postgres', label: 'PostgreSQL' }];
 
   const hasCredsOptions: CheckboxGroupProps<boolean>['options'] = [
     { label: t('common.yes'), value: true },

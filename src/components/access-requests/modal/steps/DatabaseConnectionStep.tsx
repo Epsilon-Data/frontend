@@ -41,11 +41,16 @@ export const DatabaseConnectionStep = ({
     { label: t('dashboard.createProject.form.step3.dbCred.configuration.manual'), value: false },
   ];
 
+  const invalidateConnection = () => {
+    setShowMessage(false);
+    setConnected(false);
+    setDbUrl('');
+  };
+
   const handleIsDbUrlChange = (e: RadioChangeEvent) => {
     const value = e.target.value as boolean;
 
-    setShowMessage(false);
-    setConnected(false);
+    invalidateConnection();
 
     if (value) {
       form.resetFields(['username', 'password', 'hostname', 'port', 'name']);
@@ -57,36 +62,50 @@ export const DatabaseConnectionStep = ({
   const onTestConnection = async () => {
     setTestLoading(true);
 
+    let username = '';
+    let password = '';
+    let hostname = '';
+    let port = '';
+    let name = '';
+    let ssl = false;
     let dbUrl = '';
 
-    if (isDbUrl) {
-      dbUrl = form.getFieldValue('dbUrl');
-    } else {
-      const { username, password, hostname, port, name } = form.getFieldsValue([
-        'username',
-        'password',
-        'hostname',
-        'port',
-        'name',
-      ]);
-
-      const safeUser = encodeURIComponent(username || '');
-      const safePass = encodeURIComponent(password || '');
-      const auth = username ? `${safeUser}${password ? `:${safePass}` : ''}@` : '';
-      const portPart = port ? `:${port}` : '';
-      dbUrl = `pg://${auth}${hostname}${portPart}/${name}`;
-    }
-
     try {
-      const parsedUrl = new URL(dbUrl);
+      if (isDbUrl) {
+        dbUrl = form.getFieldValue('dbUrl');
+        const parsedUrl = new URL(dbUrl);
+
+        username = parsedUrl.username;
+        password = parsedUrl.password;
+        hostname = parsedUrl.hostname;
+        port = parsedUrl.port;
+        name = parsedUrl.pathname.replace(/^\//, '');
+      } else {
+        ({ username, password, hostname, port, name } = form.getFieldsValue([
+          'username',
+          'password',
+          'hostname',
+          'port',
+          'name',
+        ]));
+
+        const safeUser = encodeURIComponent(username || '');
+        const safePass = encodeURIComponent(password || '');
+        const auth = username ? `${safeUser}${password ? `:${safePass}` : ''}@` : '';
+        const portPart = port ? `:${port}` : '';
+        dbUrl = `${dbType}://${auth}${hostname}${portPart}/${name}`;
+      }
+
+      ssl = form.getFieldValue('ssl');
+
       const connectionData = {
         type: form.getFieldValue('dbType'),
-        port: parsedUrl.port,
-        host: parsedUrl.hostname,
-        username: parsedUrl.username,
-        password: parsedUrl.password,
-        name: parsedUrl.pathname.replace(/^\//, ''),
-        ssl: false,
+        port: port,
+        host: hostname,
+        username: username,
+        password: password,
+        name: name.replace(/^\//, ''),
+        ssl: ssl,
       };
 
       try {
@@ -104,9 +123,18 @@ export const DatabaseConnectionStep = ({
     setTestLoading(false);
   };
 
+  const onValuesChange = (changed: Record<string, unknown>) => {
+    const keys = Object.keys(changed);
+    const shouldInvalidate = keys.some((k) =>
+      ['isDbUrl', 'dbUrl', 'username', 'password', 'hostname', 'port', 'name', 'ssl', 'dbType'].includes(k),
+    );
+
+    if (shouldInvalidate) invalidateConnection();
+  };
+
   return (
     <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
-      <Form form={form} className="h-full">
+      <Form form={form} className="h-full" onValuesChange={onValuesChange}>
         <NumberedFormItem number={1}>
           <ModalSelect
             name="dbType"

@@ -76,7 +76,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
     const username = step3.getFieldValue('username') || '';
     const password = step3.getFieldValue('password') || '';
     const name = step3.getFieldValue('name') || '';
-    const ssl = !!step3.getFieldValue('ssl');
+    const ssl = step3.getFieldValue('ssl') || false;
 
     let finalUrl = rawDbUrl;
     if (!finalUrl) {
@@ -120,6 +120,8 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
         },
       },
     };
+
+    console.log(formData);
 
     try {
       await step4.validateFields();

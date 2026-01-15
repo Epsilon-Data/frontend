@@ -90,7 +90,7 @@ export const ModalEmailTag: React.FC<{
       <Form.Item name={name} className={className}>
         <Select<string[]>
           {...selectProps}
-          placeholder={placeholder}
+          placeholder={search ? '' : placeholder}
           mode="tags"
           open={false}
           notFoundContent={null}

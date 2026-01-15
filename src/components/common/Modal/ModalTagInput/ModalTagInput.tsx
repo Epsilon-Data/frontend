@@ -73,6 +73,7 @@ export const ModalTagInput: React.FC<{
           onInputKeyDown={onInputKeyDown}
           suffixIcon={null}
           tagRender={tagRender}
+          placeholder={search ? '' : selectProps?.placeholder}
           className="select-field w-full [&_.ant-select-selection-placeholder]:text-grey-2"
         />
       </FormItem>

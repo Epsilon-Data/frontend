@@ -116,7 +116,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
           url: finalUrl || undefined,
           username: username || parsedUrl?.username || '',
           password: password || parsedUrl?.password || '',
-          ssl,
+          ssl: ssl || parsedUrl?.searchParams.get('sslmode')?.toLowerCase() !== 'disable' || false,
         },
       },
     };

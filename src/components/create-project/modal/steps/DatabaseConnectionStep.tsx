@@ -4,6 +4,7 @@ import { ModalRadioGroup } from '@app/components/common/Modal/ModalRadioGroup/Mo
 import { ModalSelect } from '@app/components/common/Modal/ModalSelect/ModalSelect';
 import { NumberedFormItem } from '@app/components/common/Modal/NumberedFormItem/NumberedFormItem';
 import { TestConnectionGroup } from '@app/components/common/Modal/TestConnectionGroup/TestConnectionGroup';
+import { buildDatabaseUrl } from '@app/utils/databaseUrl';
 
 import { Form, RadioChangeEvent } from 'antd';
 import { CheckboxGroupProps } from 'antd/es/checkbox';
@@ -59,7 +60,7 @@ export const DatabaseConnectionStep = ({
     invalidateConnection();
 
     if (value) {
-      form.resetFields(['username', 'password', 'hostname', 'port', 'name']);
+      form.resetFields(['username', 'password', 'hostname', 'port', 'name', 'ssl']);
     } else {
       form.resetFields(['dbUrl']);
     }
@@ -101,15 +102,22 @@ export const DatabaseConnectionStep = ({
     let dbUrl = '';
 
     try {
+      const type = form.getFieldValue('dbType');
       if (isDbUrl) {
         dbUrl = form.getFieldValue('dbUrl');
         const parsedUrl = new URL(dbUrl);
+        const sslmode = parsedUrl.searchParams.get('sslmode');
+
+        if (!sslmode) {
+          throw new Error('Missing sslmode');
+        }
 
         username = parsedUrl.username;
         password = parsedUrl.password;
         hostname = parsedUrl.hostname;
         port = parsedUrl.port;
         name = parsedUrl.pathname.replace(/^\//, '');
+        ssl = sslmode.toLowerCase() !== 'disable';
       } else {
         ({ username, password, hostname, port, name } = form.getFieldsValue([
           'username',
@@ -119,17 +127,12 @@ export const DatabaseConnectionStep = ({
           'name',
         ]));
 
-        const safeUser = encodeURIComponent(username || '');
-        const safePass = encodeURIComponent(password || '');
-        const auth = username ? `${safeUser}${password ? `:${safePass}` : ''}@` : '';
-        const portPart = port ? `:${port}` : '';
-        dbUrl = `${dbType}://${auth}${hostname}${portPart}/${name}`;
+        ssl = !!form.getFieldValue('ssl');
+        dbUrl = buildDatabaseUrl({ type, host: hostname, port, username, password, name, ssl }) || '';
       }
 
-      ssl = form.getFieldValue('ssl');
-
       const connectionData = {
-        type: form.getFieldValue('dbType'),
+        type: type,
         port: port,
         host: hostname,
         username: username,
@@ -142,12 +145,10 @@ export const DatabaseConnectionStep = ({
         await testConnection(connectionData);
         setConnected(true);
         setDbUrl(dbUrl);
-      } catch (error) {
-        console.error('Connection test failed:', error);
+      } catch {
         setConnected(false);
       }
-    } catch (error) {
-      console.error('Error in onTestConnection:', error);
+    } catch {
       setConnected(false);
     }
 

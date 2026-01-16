@@ -139,14 +139,14 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
                 />
               </FormItem>
             </div>
+            <div className="flex-1">
+              <p className="mb-1 text-xs">{t('dashboard.createProject.form.step3.dbCred.ssl.title')}</p>
+              <FormItem name="ssl" valuePropName="checked" initialValue={false}>
+                <Switch checkedChildren="Yes" unCheckedChildren="No" />
+              </FormItem>
+            </div>
           </>
         )}
-        <div className="flex-1">
-          <p className="mb-1 text-xs">{t('dashboard.createProject.form.step3.dbCred.ssl.title')}</p>
-          <FormItem name="ssl" valuePropName="checked" initialValue={false}>
-            <Switch checkedChildren="Yes" unCheckedChildren="No" />
-          </FormItem>
-        </div>
         <Button className="test-conn-btn bg-black border-none text-white flex" loading={loading} onClick={onClick}>
           {t('dashboard.createProject.form.step3.dbCred.testConnection.label')}
           <IoChevronForwardOutline />

@@ -6,6 +6,7 @@ import { STATUS_COLORS, STATUS_NAMES } from '@app/constants/accessRequest';
 import { IoIosArrowForward } from 'react-icons/io';
 import { RequestSummaryInfo } from '@app/api/projects.api';
 import { AccessRequestType } from '@app/hooks/useAccessRequests';
+import { ColumnType } from 'antd/es/table';
 
 dayjs.extend(relativeTime);
 
@@ -19,6 +20,15 @@ type AccessRequestsProps = {
 
 export const AccessRequests = ({ loading, accessRequests, setOpenDrawer, fetchRequest, mode }: AccessRequestsProps) => {
   const { t } = useTranslation();
+
+  const projectNameColumn: ColumnType<RequestSummaryInfo> = {
+    title: t('project.main.projectAccess.table.projectName'),
+    dataIndex: 'projectName',
+    key: 'projectName',
+    sorter: (a, b) => (a.projectName ?? '').localeCompare(b.projectName ?? ''),
+    sortDirections: ['ascend', 'descend'],
+    render: (text: string) => <span className="font-light">{text}</span>,
+  };
 
   const columns: TableProps<RequestSummaryInfo>['columns'] = [
     {
@@ -48,14 +58,7 @@ export const AccessRequests = ({ loading, accessRequests, setOpenDrawer, fetchRe
       sortDirections: ['ascend', 'descend'],
       render: (text: string) => <span className="font-light">{text}</span>,
     },
-    {
-      title: t('project.main.projectAccess.table.projectName'),
-      dataIndex: 'projectName',
-      key: 'projectName',
-      sorter: (a: { projectName: string }, b: { projectName: string }) => a.projectName.localeCompare(b.projectName),
-      sortDirections: ['ascend', 'descend'],
-      render: (text: string) => <span className="font-light">{text}</span>,
-    },
+    ...(mode === 'ANALYSIS' ? [projectNameColumn] : []),
     {
       title: t('project.main.projectAccess.table.status'),
       dataIndex: 'status',

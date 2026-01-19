@@ -4,6 +4,8 @@ import { Button, Col, Drawer, Form, message, Select, Tag } from 'antd';
 import { IoIosArrowDown } from 'react-icons/io';
 import { DetailsRow } from '../browse-projects/modal/pages/AboutDatasetPage/components/DetailsRow';
 import { useTranslation } from 'react-i18next';
+import { Spin } from 'antd';
+
 import {
   approveRequest,
   createComment,
@@ -127,7 +129,6 @@ export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: 
 
   return (
     <Drawer
-      loading={drawerLoading}
       className="bg-white"
       size={640}
       placement="right"
@@ -136,9 +137,11 @@ export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: 
       open={open}
       title={
         <div className="flex items-start gap-2">
-          {request && (
+          {drawerLoading || !request ? (
+            <span className="text-grey-2">Loading…</span>
+          ) : (
             <>
-              <span>{request.requestor.name}</span>{' '}
+              <span>{request.requestor.name}</span>
               <Select
                 onChange={handleStatusChange}
                 value={status}
@@ -152,105 +155,118 @@ export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: 
         </div>
       }
     >
-      <div className="text-black font-medium text-base mb-5">
-        {t('project.main.projectAccess.drawer.requestor.title')}
-      </div>
-      <DetailsRow
-        title={t('project.main.projectAccess.drawer.requestor.position')}
-        content={request?.requestor.position || ''}
-        titleWidth={7}
-        contentWidth={15}
-      />
-      <DetailsRow
-        title={t('project.main.projectAccess.drawer.requestor.email')}
-        content={request?.requestor.email || ''}
-        titleWidth={7}
-        contentWidth={15}
-      />
-      <DetailsRow
-        title={t('project.main.projectAccess.drawer.requestor.orgName')}
-        content={request?.requestor.orgName || ''}
-        titleWidth={7}
-        contentWidth={15}
-      />
-
-      <hr className="-mx-6 my-8 border-grey-2" />
-
-      <div className="text-black font-medium text-base mb-5">
-        {t('project.main.projectAccess.drawer.project.title')}
-      </div>
-      <DetailsRow
-        title={t('project.main.projectAccess.drawer.project.name')}
-        content={request?.project?.name || ''}
-        titleWidth={7}
-        contentWidth={15}
-      />
-      <DetailsRow
-        title={t('project.main.projectAccess.drawer.project.duration')}
-        content={
-          request?.project?.startDate && request?.project?.endDate
-            ? `${new Date(request?.project?.startDate).getDate()} ${new Date(
-                request?.project?.startDate,
-              ).toLocaleString('en-GB', {
-                month: 'long',
-              })}, ${new Date(request?.project?.startDate).getFullYear()} - ${new Date(
-                request?.project?.endDate,
-              ).getDate()} ${new Date(request?.project?.endDate).toLocaleString('en-GB', {
-                month: 'long',
-              })}, ${new Date(request?.project?.endDate).getFullYear()}`
-            : t('browse.main.details.projectDetails.info.notAvailable')
-        }
-        titleWidth={7}
-        contentWidth={15}
-      />
-      <DetailsRow
-        title={t('project.main.projectAccess.drawer.project.describe')}
-        content={request?.project?.description ?? '-'}
-        titleWidth={7}
-        contentWidth={15}
-      />
-      <hr className="-mx-6 my-8 border-grey-2" />
-
-      <div className="flex items-center mt-4 mb-8">
-        <span className="text-lg font-medium font-inter text-black">
-          {t('browse.trackRequests.table.manage.tabs.comments.title')}
-        </span>
-        <span className="text-sm ml-3 font-normal font-inter text-grey-2">{`(${comments.length})`}</span>
-      </div>
-      {sortedComments.map((comment) => {
-        let authorName = comment.authorName;
-        if (comment.authorId === user?.sub) authorName = 'You';
-
-        const key = comment.commentId ?? Date.now().toString(36);
-        return (
-          <div key={key} className="flex flex-col border-b border-grey-3 mb-8">
-            <div className="flex justify-between">
-              <div className="flex items-start">
-                <IoPersonCircle size={20} className="text-grey-2 mr-2" />
-                <span className="text-sm text-grey-2 font-light">{authorName}</span>
-              </div>
-              <span className="text-sm text-grey-2 font-light">
-                {dayjs(comment.createdDate).format('D MMM YYYY [at] h.mma')}
-              </span>
-            </div>
-            <div className="my-4">
-              <span className="text-sm text-grey-1 font-light">{comment.content}</span>
-            </div>
-          </div>
-        );
-      })}
-      {showComment ? (
-        <Col span={12}>
-          <CommentSection setShowComment={setShowComment} form={form} onSubmit={handleSubmit} submitting={submitting} />
-        </Col>
+      {drawerLoading || !request ? (
+        <div className="min-h-[55vh] flex items-center justify-center">
+          <Spin size="large" />
+        </div>
       ) : (
-        <Button
-          className="flex items-center h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
-          type="primary"
-          onClick={() => setShowComment(true)}
-        >
-          {t('browse.trackRequests.table.manage.tabs.comments.add')}
-        </Button>
+        <>
+          <div className="text-black font-medium text-base mb-5">
+            {t('project.main.projectAccess.drawer.requestor.title')}
+          </div>
+          <DetailsRow
+            title={t('project.main.projectAccess.drawer.requestor.position')}
+            content={request?.requestor.position || ''}
+            titleWidth={7}
+            contentWidth={15}
+          />
+          <DetailsRow
+            title={t('project.main.projectAccess.drawer.requestor.email')}
+            content={request?.requestor.email || ''}
+            titleWidth={7}
+            contentWidth={15}
+          />
+          <DetailsRow
+            title={t('project.main.projectAccess.drawer.requestor.orgName')}
+            content={request?.requestor.orgName || ''}
+            titleWidth={7}
+            contentWidth={15}
+          />
+
+          <hr className="-mx-6 my-8 border-grey-2" />
+
+          <div className="text-black font-medium text-base mb-5">
+            {t('project.main.projectAccess.drawer.project.title')}
+          </div>
+          <DetailsRow
+            title={t('project.main.projectAccess.drawer.project.name')}
+            content={request?.project?.name || ''}
+            titleWidth={7}
+            contentWidth={15}
+          />
+          <DetailsRow
+            title={t('project.main.projectAccess.drawer.project.duration')}
+            content={
+              request?.project?.startDate && request?.project?.endDate
+                ? `${new Date(request?.project?.startDate).getDate()} ${new Date(
+                    request?.project?.startDate,
+                  ).toLocaleString('en-GB', {
+                    month: 'long',
+                  })}, ${new Date(request?.project?.startDate).getFullYear()} - ${new Date(
+                    request?.project?.endDate,
+                  ).getDate()} ${new Date(request?.project?.endDate).toLocaleString('en-GB', {
+                    month: 'long',
+                  })}, ${new Date(request?.project?.endDate).getFullYear()}`
+                : t('browse.main.details.projectDetails.info.notAvailable')
+            }
+            titleWidth={7}
+            contentWidth={15}
+          />
+          <DetailsRow
+            title={t('project.main.projectAccess.drawer.project.describe')}
+            content={request?.project?.description ?? '-'}
+            titleWidth={7}
+            contentWidth={15}
+          />
+          <hr className="-mx-6 my-8 border-grey-2" />
+
+          <div className="flex items-center mt-4 mb-8">
+            <span className="text-lg font-medium font-inter text-black">
+              {t('browse.trackRequests.table.manage.tabs.comments.title')}
+            </span>
+            <span className="text-sm ml-3 font-normal font-inter text-grey-2">{`(${comments.length})`}</span>
+          </div>
+          {sortedComments.map((comment) => {
+            let authorName = comment.authorName;
+            if (comment.authorId === user?.sub) authorName = 'You';
+
+            const key = comment.commentId ?? Date.now().toString(36);
+            return (
+              <div key={key} className="flex flex-col border-b border-grey-3 mb-8">
+                <div className="flex justify-between">
+                  <div className="flex items-start">
+                    <IoPersonCircle size={20} className="text-grey-2 mr-2" />
+                    <span className="text-sm text-grey-2 font-light">{authorName}</span>
+                  </div>
+                  <span className="text-sm text-grey-2 font-light">
+                    {dayjs(comment.createdDate).format('D MMM YYYY [at] h.mma')}
+                  </span>
+                </div>
+                <div className="my-4">
+                  <span className="text-sm text-grey-1 font-light">{comment.content}</span>
+                </div>
+              </div>
+            );
+          })}
+          {showComment ? (
+            <Col span={12}>
+              <CommentSection
+                setShowComment={setShowComment}
+                form={form}
+                onSubmit={handleSubmit}
+                submitting={submitting}
+              />
+            </Col>
+          ) : (
+            <Button
+              className="flex items-center h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
+              type="primary"
+              onClick={() => setShowComment(true)}
+            >
+              {t('browse.trackRequests.table.manage.tabs.comments.add')}
+            </Button>
+          )}
+        </>
       )}
     </Drawer>
   );

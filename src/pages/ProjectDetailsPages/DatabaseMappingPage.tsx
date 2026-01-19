@@ -73,7 +73,11 @@ const DatabaseMappingPage: React.FC = () => {
             {canMap ? (
               <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
             ) : (
-              <FallbackState projectStatus={project?.status ?? ''} />
+              <FallbackState
+                projectStatus={project?.status ?? ''}
+                projectId={projectId}
+                projectOwner={project?.ownerId ?? ''}
+              />
             )}
           </>
         ) : (

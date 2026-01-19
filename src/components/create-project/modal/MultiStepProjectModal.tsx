@@ -20,7 +20,7 @@ type MultiStepProjectModalProps = {
 
 export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiStepProjectModalProps) => {
   const [isFormLoading, setFormLoading] = useState(false);
-  const { modalStep, setModalStep, setIsModalOpen, isModalOpen, handleDraft, forms } = useProjectModalContext();
+  const { modalStep, setModalStep, setIsModalOpen, isModalOpen, forms } = useProjectModalContext();
   const user = useAppSelector((state) => state.user.user);
 
   const [step1, step2, step3, step4] = forms;
@@ -219,7 +219,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       }
     >
       <div className="flex flex-col">
-        <ModalStepHeader modalStep={modalStep} handleDraft={handleDraft} stepTitles={stepTitles} />
+        <ModalStepHeader modalStep={modalStep} stepTitles={stepTitles} />
         {renderStep()}
       </div>
     </Modal>

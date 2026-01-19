@@ -8,7 +8,7 @@ import { ArchetypeDetails } from '@app/components/database-mapping/ArchetypeDeta
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useProjectContext } from '@app/hooks/useProjectContext';
-import { Breadcrumb } from 'antd';
+import { Breadcrumb, Spin } from 'antd';
 import { FallbackState } from '@app/components/database-mapping/FallbackState';
 
 const DatabaseMappingPage: React.FC = () => {
@@ -17,14 +17,26 @@ const DatabaseMappingPage: React.FC = () => {
   const archetypeId = searchParams.get('archetypeId');
   const { archetypes, tableLoading, fetchArchetypes } = useArchetypes(projectId);
   const { t } = useTranslation();
-  const { project } = useProjectContext();
-  const canMap = ['READY', 'MAPPED'].includes(project?.status ?? '') && archetypes.length > 0;
+  const { project, projectLoading } = useProjectContext();
+  const projectMatches = !!projectId && !!project && String(project.projectId) === projectId;
+  const pageLoading = projectLoading || !projectMatches || tableLoading;
 
   useEffect(() => {
+    if (!projectId) return;
     const controller = new AbortController();
-    fetchArchetypes();
+    fetchArchetypes(controller.signal);
     return () => controller.abort();
-  }, [fetchArchetypes]);
+  }, [fetchArchetypes, projectId]);
+
+  if (pageLoading) {
+    return (
+      <div className="py-3 px-4 md:py-5 md:px-9 min-h-[60vh] flex items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  const canMap = ['READY', 'MAPPED'].includes(project?.status ?? '') && archetypes.length > 0;
 
   const breadcrumbItems = [
     { title: <Link to="/">{t('project.breadcrumb.home')}</Link> },

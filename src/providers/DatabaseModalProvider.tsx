@@ -1,8 +1,12 @@
 import { DatabaseModalContext } from '@app/context/DatabaseModal';
 import { Form } from 'antd';
-import { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
-export const DatabaseModalProvider = ({ children }: { children: React.ReactElement[] }) => {
+type Props = {
+  children: React.ReactNode; // accepts single or multiple children
+};
+
+export const DatabaseModalProvider = ({ children }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState(0);
   const [step1] = Form.useForm();
@@ -11,7 +15,7 @@ export const DatabaseModalProvider = ({ children }: { children: React.ReactEleme
   const showModal = useCallback(() => {
     setIsModalOpen(true);
     setModalStep(0);
-  }, [setIsModalOpen, setModalStep]);
+  }, []);
 
   const forms = useMemo(() => [step1, step2], [step1, step2]);
 
@@ -24,8 +28,8 @@ export const DatabaseModalProvider = ({ children }: { children: React.ReactEleme
       setIsModalOpen,
       setModalStep,
     }),
-    [modalStep, forms, showModal, isModalOpen, setIsModalOpen, setModalStep],
+    [modalStep, forms, showModal, isModalOpen],
   );
 
-  return <DatabaseModalContext.Provider value={contextValue}>{...children}</DatabaseModalContext.Provider>;
+  return <DatabaseModalContext.Provider value={contextValue}>{children}</DatabaseModalContext.Provider>;
 };

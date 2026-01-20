@@ -6,18 +6,22 @@ import { AiFillDelete } from 'react-icons/ai';
 import { BsFillQuestionCircleFill } from 'react-icons/bs';
 import { FaCheck } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
+import { MultiStepDatabaseModal } from '../access-requests/modal/MultiStepDatabaseModal';
+import { useDatabaseModalContext } from '@app/hooks/useDatabaseModalContext';
 
 type FallbackStateProps = {
   projectStatus: string;
   projectId: string;
   projectOwner: string;
+  requestId: string;
 };
 
-export const FallbackState = ({ projectStatus, projectId, projectOwner }: FallbackStateProps) => {
+export const FallbackState = ({ projectStatus, projectId, projectOwner, requestId }: FallbackStateProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.user.user);
   const isOwner = user?.sub === projectOwner;
+  const { showModal } = useDatabaseModalContext();
 
   const confirmDeletion = async () => {
     try {
@@ -60,20 +64,14 @@ export const FallbackState = ({ projectStatus, projectId, projectOwner }: Fallba
             <Button
               className="flex items-center px-8 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
               type="primary"
+              onClick={showModal}
             >
               {t('project.main.dbMapping.fallback.actions.edit')}
             </Button>
+            <MultiStepDatabaseModal requestId={requestId} projectId={projectId} mask closable={false} width={'60%'} />
           </div>
         )}
       </div>
-      {/* <MultiStepDatabaseModal
-        fetchRequests={fetchRequests}
-        requestId={request?.requestId ?? ''}
-        projectId={projectId}
-        mask
-        closable={false}
-        width={'60%'}
-      /> */}
     </div>
   );
 };

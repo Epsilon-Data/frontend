@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useProjectContext } from '@app/hooks/useProjectContext';
 import { Breadcrumb, Spin } from 'antd';
 import { FallbackState } from '@app/components/database-mapping/FallbackState';
+import { DatabaseModalProvider } from '@app/providers/DatabaseModalProvider';
 
 const DatabaseMappingPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -73,11 +74,14 @@ const DatabaseMappingPage: React.FC = () => {
             {canMap ? (
               <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
             ) : (
-              <FallbackState
-                projectStatus={project?.status ?? ''}
-                projectId={projectId}
-                projectOwner={project?.ownerId ?? ''}
-              />
+              <DatabaseModalProvider>
+                <FallbackState
+                  requestId={project?.connection.requestId ?? ''}
+                  projectStatus={project?.status ?? ''}
+                  projectId={projectId}
+                  projectOwner={project?.ownerId ?? ''}
+                />
+              </DatabaseModalProvider>
             )}
           </>
         ) : (

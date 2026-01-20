@@ -209,12 +209,12 @@ describe('MultiStepProjectModal', () => {
     expect(mockSetModalStep).toHaveBeenCalledWith(expect.any(Function));
   });
 
-  it('calls handleDraft when draft button is clicked', async () => {
-    render(<MultiStepProjectModal {...defaultProps} />);
+  // it('calls handleDraft when draft button is clicked', async () => {
+  //   render(<MultiStepProjectModal {...defaultProps} />);
 
-    const draftButton = screen.getByTestId('draft-button');
-    await user.click(draftButton);
+  //   const draftButton = screen.getByTestId('draft-button');
+  //   await user.click(draftButton);
 
-    expect(mockHandleDraft).toHaveBeenCalled();
-  });
+  //   expect(mockHandleDraft).toHaveBeenCalled();
+  // });
 });

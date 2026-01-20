@@ -32,10 +32,7 @@ export const DatabaseConnectionStep = ({
   const isDbUrl = Form.useWatch('isDbUrl', form);
   const dbType = Form.useWatch('dbType', form);
 
-  const dbTypeOptions = [
-    { value: 'postgres', label: 'PostgreSQL' },
-    { value: 'csv', label: 'CSV' },
-  ];
+  const dbTypeOptions = [{ value: 'postgres', label: 'PostgreSQL' }];
 
   const configureOptions: CheckboxGroupProps<boolean>['options'] = [
     { label: t('dashboard.createProject.form.step3.dbCred.configuration.dbUrl'), value: true },

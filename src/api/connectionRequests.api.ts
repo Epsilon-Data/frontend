@@ -26,7 +26,8 @@ export interface ConnectionRequest {
   };
 }
 
-export interface ConnectionCredentials {
+export interface ConnectionDecision {
+  isApproved: boolean;
   dbDetails: {
     url?: string;
     name: string;
@@ -37,10 +38,6 @@ export interface ConnectionCredentials {
     password?: string;
     ssl?: boolean;
   };
-}
-
-export interface ConnectionDecision extends ConnectionCredentials {
-  isApproved: boolean;
 }
 
 export type DatabaseConnectionDetails = {
@@ -69,13 +66,6 @@ export const approveRequest = async (
 ): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   await httpClient.patch(`${CONNECTION_REQUEST_API_URL}/${projectId}/${requestId}`, data, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-};
-
-export const updateCredentials = async (data: ConnectionCredentials, projectId: string | undefined): Promise<void> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.patch(`${CONNECTION_REQUEST_API_URL}/${projectId}/credentials`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 };

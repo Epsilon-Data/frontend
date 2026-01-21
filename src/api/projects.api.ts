@@ -160,3 +160,10 @@ export const deleteProject = async (projectId: string | undefined): Promise<Proj
 
   return response.data;
 };
+
+export const updateCredentials = async (data: ConnectionInfo, projectId: string | undefined): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  await httpClient.patch(`${PROJECT_API_URL}/${projectId}/credentials`, data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+};

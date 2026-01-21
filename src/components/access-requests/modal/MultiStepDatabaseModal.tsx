@@ -7,7 +7,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
-import { approveRequest, updateCredentials } from '@app/api/connectionRequests.api';
+import { approveRequest } from '@app/api/connectionRequests.api';
+import { updateCredentials } from '@app/api/projects.api';
 import { useDatabaseModalContext } from '@app/hooks/useDatabaseModalContext';
 import { buildDatabaseUrl } from '@app/utils/databaseUrl';
 

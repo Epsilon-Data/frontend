@@ -60,14 +60,19 @@ export const FallbackState = ({ projectStatus, projectId, projectOwner }: Fallba
                 {t('project.main.dbMapping.fallback.actions.delete.title')}
               </Button>
             </Popconfirm>
-            <Button
-              className="flex items-center px-8 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
-              type="primary"
-              onClick={showModal}
-            >
-              {t('project.main.dbMapping.fallback.actions.edit')}
-            </Button>
-            <MultiStepDatabaseModal projectId={projectId} mask closable={false} width={'60%'} />
+            {projectStatus === 'ERROR' && (
+              <>
+                <Button
+                  className="flex items-center px-8 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
+                  type="primary"
+                  onClick={showModal}
+                >
+                  {t('project.main.dbMapping.fallback.actions.edit')}
+                </Button>
+
+                <MultiStepDatabaseModal projectId={projectId} mask closable={false} width="60%" />
+              </>
+            )}
           </div>
         )}
       </div>

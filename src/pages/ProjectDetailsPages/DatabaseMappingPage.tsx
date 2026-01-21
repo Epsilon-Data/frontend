@@ -65,7 +65,7 @@ const DatabaseMappingPage: React.FC = () => {
                 width={'60%'}
               />
             </ArchetypeModalProvider>
-            <LoaderWrapper isLoading={pageLoading} fallback={<FallbackState projectStatus={project?.status ?? ''} />}>
+            <LoaderWrapper isLoading={pageLoading}>
               {canMap ? (
                 <Archetypes
                   loading={tableLoading}

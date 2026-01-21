@@ -8,8 +8,9 @@ import { ArchetypeDetails } from '@app/components/database-mapping/ArchetypeDeta
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useProjectContext } from '@app/hooks/useProjectContext';
-import { Breadcrumb, Spin } from 'antd';
+import { Breadcrumb } from 'antd';
 import { FallbackState } from '@app/components/database-mapping/FallbackState';
+import { LoaderWrapper } from '@app/components/common/LoaderWrapper';
 
 const DatabaseMappingPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -27,14 +28,6 @@ const DatabaseMappingPage: React.FC = () => {
     fetchArchetypes(controller.signal);
     return () => controller.abort();
   }, [fetchArchetypes, projectId]);
-
-  if (pageLoading) {
-    return (
-      <div className="py-3 px-4 md:py-5 md:px-9 min-h-[60vh] flex items-center justify-center">
-        <Spin size="large" />
-      </div>
-    );
-  }
 
   const canMap = ['READY', 'MAPPED'].includes(project?.status ?? '') && archetypes.length > 0;
 
@@ -70,11 +63,13 @@ const DatabaseMappingPage: React.FC = () => {
                 width={'60%'}
               />
             </ArchetypeModalProvider>
-            {canMap ? (
-              <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
-            ) : (
-              <FallbackState projectStatus={project?.status ?? ''} />
-            )}
+            <LoaderWrapper isLoading={pageLoading} fallback={<FallbackState projectStatus={project?.status ?? ''} />}>
+              {canMap ? (
+                <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
+              ) : (
+                <FallbackState projectStatus={project?.status ?? ''} />
+              )}
+            </LoaderWrapper>
           </>
         ) : (
           <ArchetypeDetails projectId={projectId} archetypeId={archetypeId} />

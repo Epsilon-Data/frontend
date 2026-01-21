@@ -17,6 +17,7 @@ const DashboardPage: React.FC = () => {
   const [layout, setLayout] = useState<Layout>('grid');
   const [search, setSearch] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('date-created');
+  const [loading, setLoading] = useState(true);
 
   const { csrf, initialized } = useAppSelector((state) => state.auth);
   const { ownedProjects, analysisProjects, fetchProjects } = useUserProjects();
@@ -24,7 +25,7 @@ const DashboardPage: React.FC = () => {
   useEffect(() => {
     if (!(initialized && csrf)) return;
     const controller = new AbortController();
-    fetchProjects(controller.signal);
+    fetchProjects(controller.signal).finally(() => setLoading(false));
     return () => controller.abort();
   }, [csrf, fetchProjects, initialized]);
 
@@ -48,6 +49,7 @@ const DashboardPage: React.FC = () => {
         layout={layout}
         searchValue={search}
         sortKey={sortKey}
+        loading={loading}
       />
     </div>
   );

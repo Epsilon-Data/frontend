@@ -10,7 +10,8 @@
     "manage": "Manage",
     "delete": "Delete",
     "publish": "Publish",
-    "withdraw": "Withdraw"
+    "withdraw": "Withdraw",
+    "loading": "Loading"
   },
   "notifications": {
     "basic": "Basic notification",
@@ -45,11 +46,13 @@
       "newProject": "New project",
       "personalProjects": {
         "title": "My projects",
-        "description": "View and manage all your personal projects in one place"
+        "description": "View and manage all your personal projects in one place",
+        "empty": "No personal projects"
       },
       "sharedProjects": {
         "title": "Shared projects",
-        "description": "Collaborate and manage projects shared with you"
+        "description": "Collaborate and manage projects shared with you",
+        "empty": "No shared projects"
       },
       "searchResults": {
         "title": "Search results",
@@ -412,6 +415,7 @@
     "main": {
       "title": "Explore Available Datasets",
       "description": "Browse, request, and analyse datasets securely — no downloads required.",
+      "noProjects": "No projects available",
       "search": {
         "fields": {
           "title": "Search in: ",
@@ -425,6 +429,7 @@
       "searchResults": {
         "title": "Search results from browser hub",
         "count": "{{count}} projects found"
+      
       },
       "details": {
         "proceed": {

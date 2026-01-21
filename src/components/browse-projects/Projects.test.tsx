@@ -73,7 +73,7 @@ describe('Browse Hub - Projects Component', () => {
   });
 
   it('renders ProjectList with mode="all" and provided layout', () => {
-    render(<Projects projects={projects} layout="grid" />);
+    render(<Projects projects={projects} layout="grid" loading={false} />);
 
     expect(screen.getByTestId('project-list')).toBeInTheDocument();
     expect(screen.getByTestId('mode')).toHaveTextContent('all');
@@ -82,7 +82,7 @@ describe('Browse Hub - Projects Component', () => {
   });
 
   it('wraps ProjectList with the expected CSS class', () => {
-    render(<Projects projects={projects} layout="list" />);
+    render(<Projects projects={projects} layout="list" loading={false} />);
 
     const wrapper = screen.getByTestId('project-list').parentElement;
     expect(wrapper).toHaveClass('my-2');
@@ -90,7 +90,7 @@ describe('Browse Hub - Projects Component', () => {
 
   it('invokes showModal with the clicked projectId', async () => {
     const user = userEvent.setup();
-    render(<Projects projects={projects} layout="grid" />);
+    render(<Projects projects={projects} layout="grid" loading={false} />);
 
     const target = projects[1];
     await user.click(screen.getByTestId(`project-${target.projectId}`));

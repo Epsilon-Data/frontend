@@ -12,9 +12,10 @@ type ArchetypesProps = {
   loading: boolean;
   archetypes: Archetype[];
   projectId: string;
+  archetypeReadyById?: Record<string, boolean>;
 };
 
-export const Archetypes = ({ loading, archetypes, projectId }: ArchetypesProps) => {
+export const Archetypes = ({ loading, archetypes, projectId, archetypeReadyById }: ArchetypesProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -90,11 +91,20 @@ export const Archetypes = ({ loading, archetypes, projectId }: ArchetypesProps) 
       key: 'manage',
       align: 'right' as const,
       width: 1,
-      render: (_: unknown, row: Archetype) => (
-        <Button ghost type="primary" disabled={!row.id} onClick={() => handleArchetypeClick(row.id)}>
-          {!row.id ? t('common.loading') : t('common.manage')}
-        </Button>
-      ),
+      render: (_: unknown, row: Archetype) => {
+        const isReady = !!row.id && (archetypeReadyById?.[row.id] ?? false);
+        return (
+          <Button
+            ghost
+            type="primary"
+            loading={!isReady}
+            disabled={!isReady}
+            onClick={() => handleArchetypeClick(row.id)}
+          >
+            {!isReady ? t('common.loading') : t('common.manage')}
+          </Button>
+        );
+      },
     },
   ];
 

@@ -16,7 +16,7 @@ const DatabaseMappingPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get('id') ?? '';
   const archetypeId = searchParams.get('archetypeId');
-  const { archetypes, tableLoading, fetchArchetypes, addArchetype } = useArchetypes(projectId);
+  const { archetypes, tableLoading, fetchArchetypes, addArchetype, archetypeReadyById } = useArchetypes(projectId);
   const { t } = useTranslation();
   const { project, projectLoading } = useProjectContext();
   const projectMatches = !!projectId && !!project && String(project.projectId) === projectId;
@@ -66,7 +66,12 @@ const DatabaseMappingPage: React.FC = () => {
             </ArchetypeModalProvider>
             <LoaderWrapper isLoading={pageLoading} fallback={<FallbackState projectStatus={project?.status ?? ''} />}>
               {canMap ? (
-                <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
+                <Archetypes
+                  loading={tableLoading}
+                  archetypes={archetypes}
+                  projectId={projectId}
+                  archetypeReadyById={archetypeReadyById}
+                />
               ) : (
                 <FallbackState projectStatus={project?.status ?? ''} />
               )}

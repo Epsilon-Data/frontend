@@ -1,5 +1,5 @@
 import { Archetype, ArchetypeInfo, getArchetypeDetails, getArchetypes } from '@app/api/archetypes.api';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 
 const isAbortError = (err: unknown) => err instanceof DOMException && err.name === 'AbortError';
 
@@ -13,13 +13,78 @@ export const useArchetypes = (projectId: string) => {
   const [archetypes, setArchetypes] = useState<Archetype[]>([]);
   const [tableLoading, setTableLoading] = useState<boolean>(false);
   const [manageLoading, setManageLoading] = useState<boolean>(false);
+  const [archetypeReadyById, setArchetypeReadyById] = useState<Record<string, boolean>>({});
+  const readyByIdRef = useRef<Record<string, boolean>>({});
+  const inFlightRef = useRef<Set<string>>(new Set());
+  const timersRef = useRef<Map<string, number>>(new Map());
+
+  useEffect(() => {
+    readyByIdRef.current = archetypeReadyById;
+  }, [archetypeReadyById]);
+
+  const ensureArchetypeReady = useCallback(
+    (archetypeId: string, signal?: AbortSignal) => {
+      if (!archetypeId) return Promise.resolve();
+
+      if (readyByIdRef.current[archetypeId]) return Promise.resolve();
+      if (inFlightRef.current.has(archetypeId)) return Promise.resolve();
+
+      inFlightRef.current.add(archetypeId);
+      setArchetypeReadyById((prev) => ({ ...prev, [archetypeId]: false }));
+
+      const cleanup = () => {
+        inFlightRef.current.delete(archetypeId);
+        const timerId = timersRef.current.get(archetypeId);
+        if (timerId != null) {
+          window.clearInterval(timerId);
+          timersRef.current.delete(archetypeId);
+        }
+      };
+
+      return new Promise<void>((resolve, reject) => {
+        const onAbort = () => {
+          cleanup();
+          reject(new DOMException('Aborted', 'AbortError'));
+        };
+
+        if (signal) {
+          if (signal.aborted) return onAbort();
+          signal.addEventListener('abort', onAbort, { once: true });
+        }
+
+        const tick = async () => {
+          try {
+            if (signal?.aborted) return;
+
+            const info = await getArchetypeDetails(projectId, archetypeId);
+            const ready = (info?.nodes?.length ?? 0) > 0;
+
+            if (ready) {
+              cleanup();
+              setArchetypeReadyById((prev) => ({ ...prev, [archetypeId]: true }));
+              resolve();
+            }
+          } catch (e) {
+            if ((e as Error)?.name === 'AbortError') return;
+            console.error('ensureArchetypeReady tick failed:', e);
+          }
+        };
+
+        void tick();
+        const intervalId = window.setInterval(() => void tick(), 1000);
+        timersRef.current.set(archetypeId, intervalId);
+      }).finally(() => {
+        if (signal) signal.removeEventListener('abort', () => {});
+      });
+    },
+    [projectId],
+  );
 
   const getOptimisticArchetypes = useCallback(() => {
     try {
       const stored = sessionStorage.getItem(OPTIMISTIC_KEY(projectId));
       const items = stored ? JSON.parse(stored) : [];
 
-      // Filter out items older than timeout
       const now = Date.now();
       return items.filter((item: OptimisticArchetype) => now - item._createdAt < OPTIMISTIC_TIMEOUT);
     } catch {
@@ -57,6 +122,10 @@ export const useArchetypes = (projectId: string) => {
 
         const merged = [...userArchetypes, ...stillPending];
         setArchetypes(merged);
+
+        merged.forEach((a) => {
+          if (a.id) void ensureArchetypeReady(a.id, signal);
+        });
       } catch (error) {
         if (signal?.aborted || isAbortError(error)) return;
         console.error('Failed to fetch archetypes for project:', error);
@@ -64,7 +133,7 @@ export const useArchetypes = (projectId: string) => {
         if (!signal?.aborted) setTableLoading(false);
       }
     },
-    [projectId, getOptimisticArchetypes, setOptimisticArchetypes],
+    [projectId, getOptimisticArchetypes, setOptimisticArchetypes, ensureArchetypeReady],
   );
 
   const addArchetype = useCallback(
@@ -81,6 +150,7 @@ export const useArchetypes = (projectId: string) => {
     async (archetypeId: string, signal?: AbortSignal) => {
       setManageLoading(true);
       try {
+        await ensureArchetypeReady(archetypeId, signal);
         const selectedArchetype = await getArchetypeDetails(projectId, archetypeId);
         setArchetype(selectedArchetype);
       } catch (error) {
@@ -90,8 +160,17 @@ export const useArchetypes = (projectId: string) => {
         if (!signal?.aborted) setManageLoading(false);
       }
     },
-    [projectId],
+    [ensureArchetypeReady, projectId],
   );
 
-  return { archetypes, archetype, tableLoading, manageLoading, fetchArchetypes, fetchArchetype, addArchetype };
+  return {
+    archetypes,
+    archetype,
+    tableLoading,
+    manageLoading,
+    fetchArchetypes,
+    fetchArchetype,
+    addArchetype,
+    archetypeReadyById,
+  };
 };

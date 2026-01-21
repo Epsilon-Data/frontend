@@ -10,7 +10,8 @@
     "manage": "Manage",
     "delete": "Delete",
     "publish": "Publish",
-    "withdraw": "Withdraw"
+    "withdraw": "Withdraw",
+    "loading": "Loading"
   },
   "notifications": {
     "basic": "Basic notification",

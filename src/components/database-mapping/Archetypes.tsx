@@ -92,7 +92,7 @@ export const Archetypes = ({ loading, archetypes, projectId }: ArchetypesProps) 
       width: 1,
       render: (_: unknown, row: Archetype) => (
         <Button ghost type="primary" disabled={!row.id} onClick={() => handleArchetypeClick(row.id)}>
-          {t('common.manage')}
+          {!row.id ? t('common.loading') : t('common.manage')}
         </Button>
       ),
     },

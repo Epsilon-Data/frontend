@@ -1,7 +1,6 @@
 import { ProjectInfo } from '@app/api/projects.api';
 import { Button, Col, Row, Tag, message } from 'antd';
 import { IoChevronForwardOutline } from 'react-icons/io5';
-import { ImageWithPreview } from './components/ImageWithPreview';
 import { useTranslation } from 'react-i18next';
 import { Edge, Node, useEdgesState, useNodesState } from '@xyflow/react';
 import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlow/ArchetypeFlow';
@@ -117,13 +116,13 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
         </Col>
       </Row>
       <Row className="mt-8 mx-24 border-t border-t-grey-3 pt-8 flex flex-col mb-12">
-        <div className="text-xs font-medium font-inter text-blueDark mb-4">
+        {/* <div className="text-xs font-medium font-inter text-blueDark mb-4">
           {t('browse.main.details.dbPreview.title')}
         </div>
         <div className="flex gap-6 mb-8">
           <ImageWithPreview src="https://images.unsplash.com/photo-1569521588854-9b461abc92ac?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
           <ImageWithPreview src="https://images.unsplash.com/photo-1553949345-eb786bb3f7ba?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-        </div>
+        </div> */}
         <div className="text-xs font-medium font-inter text-blueDark mb-4">
           {t('browse.main.details.dbPreview.title')}
         </div>

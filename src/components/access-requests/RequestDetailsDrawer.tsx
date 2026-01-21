@@ -4,7 +4,7 @@ import { Button, Col, Drawer, Form, message, Select, Tag } from 'antd';
 import { IoIosArrowDown } from 'react-icons/io';
 import { DetailsRow } from '../browse-projects/modal/pages/AboutDatasetPage/components/DetailsRow';
 import { useTranslation } from 'react-i18next';
-import { Spin } from 'antd';
+import { LoaderWrapper } from '@app/components/common/LoaderWrapper';
 
 import {
   approveRequest,
@@ -155,11 +155,17 @@ export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: 
         </div>
       }
     >
-      {drawerLoading || !request ? (
-        <div className="min-h-[55vh] flex items-center justify-center">
-          <Spin size="large" />
-        </div>
-      ) : (
+      <LoaderWrapper
+        isLoading={drawerLoading || !request}
+        minHeight="55vh"
+        fallback={
+          <>
+            <div className="text-black font-medium text-base mb-5">
+              {t('project.main.projectAccess.drawer.requestor.title')}
+            </div>
+          </>
+        }
+      >
         <>
           <div className="text-black font-medium text-base mb-5">
             {t('project.main.projectAccess.drawer.requestor.title')}
@@ -267,7 +273,7 @@ export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: 
             </Button>
           )}
         </>
-      )}
+      </LoaderWrapper>
     </Drawer>
   );
 };

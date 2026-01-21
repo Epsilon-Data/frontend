@@ -8,15 +8,16 @@ import { ArchetypeDetails } from '@app/components/database-mapping/ArchetypeDeta
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useProjectContext } from '@app/hooks/useProjectContext';
-import { Breadcrumb, Spin } from 'antd';
+import { Breadcrumb } from 'antd';
 import { FallbackState } from '@app/components/database-mapping/FallbackState';
 import { DatabaseModalProvider } from '@app/providers/DatabaseModalProvider';
+import { LoaderWrapper } from '@app/components/common/LoaderWrapper';
 
 const DatabaseMappingPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get('id') ?? '';
   const archetypeId = searchParams.get('archetypeId');
-  const { archetypes, tableLoading, fetchArchetypes } = useArchetypes(projectId);
+  const { archetypes, tableLoading, fetchArchetypes, addArchetype, archetypeReadyById } = useArchetypes(projectId);
   const { t } = useTranslation();
   const { project, projectLoading } = useProjectContext();
   const projectMatches = !!projectId && !!project && String(project.projectId) === projectId;
@@ -28,14 +29,6 @@ const DatabaseMappingPage: React.FC = () => {
     fetchArchetypes(controller.signal);
     return () => controller.abort();
   }, [fetchArchetypes, projectId]);
-
-  if (pageLoading) {
-    return (
-      <div className="py-3 px-4 md:py-5 md:px-9 min-h-[60vh] flex items-center justify-center">
-        <Spin size="large" />
-      </div>
-    );
-  }
 
   const canMap = ['READY', 'MAPPED'].includes(project?.status ?? '') && archetypes.length > 0;
 
@@ -66,22 +59,30 @@ const DatabaseMappingPage: React.FC = () => {
               <MultiStepArchetypeModal
                 fetchArchetypes={fetchArchetypes}
                 projectId={projectId}
+                addArchetype={addArchetype}
                 mask
                 closable={false}
                 width={'60%'}
               />
             </ArchetypeModalProvider>
-            {canMap ? (
-              <Archetypes loading={tableLoading} archetypes={archetypes} projectId={projectId} />
-            ) : (
-              <DatabaseModalProvider>
-                <FallbackState
-                  projectStatus={project?.status ?? ''}
+            <LoaderWrapper isLoading={pageLoading} fallback={<FallbackState projectStatus={project?.status ?? ''} />}>
+              {canMap ? (
+                <Archetypes
+                  loading={tableLoading}
+                  archetypes={archetypes}
                   projectId={projectId}
-                  projectOwner={project?.ownerId ?? ''}
+                  archetypeReadyById={archetypeReadyById}
                 />
-              </DatabaseModalProvider>
-            )}
+              ) : (
+                <DatabaseModalProvider>
+                  <FallbackState
+                    projectStatus={project?.status ?? ''}
+                    projectId={projectId}
+                    projectOwner={project?.ownerId ?? ''}
+                  />
+                </DatabaseModalProvider>
+              )}
+            </LoaderWrapper>
           </>
         ) : (
           <ArchetypeDetails projectId={projectId} archetypeId={archetypeId} />

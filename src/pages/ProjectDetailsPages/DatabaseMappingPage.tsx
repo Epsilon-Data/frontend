@@ -76,7 +76,6 @@ const DatabaseMappingPage: React.FC = () => {
             ) : (
               <DatabaseModalProvider>
                 <FallbackState
-                  requestId={project?.connection.requestId ?? ''}
                   projectStatus={project?.status ?? ''}
                   projectId={projectId}
                   projectOwner={project?.ownerId ?? ''}

@@ -13,10 +13,9 @@ type FallbackStateProps = {
   projectStatus: string;
   projectId: string;
   projectOwner: string;
-  requestId: string;
 };
 
-export const FallbackState = ({ projectStatus, projectId, projectOwner, requestId }: FallbackStateProps) => {
+export const FallbackState = ({ projectStatus, projectId, projectOwner }: FallbackStateProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.user.user);
@@ -68,7 +67,7 @@ export const FallbackState = ({ projectStatus, projectId, projectOwner, requestI
             >
               {t('project.main.dbMapping.fallback.actions.edit')}
             </Button>
-            <MultiStepDatabaseModal requestId={requestId} projectId={projectId} mask closable={false} width={'60%'} />
+            <MultiStepDatabaseModal projectId={projectId} mask closable={false} width={'60%'} />
           </div>
         )}
       </div>

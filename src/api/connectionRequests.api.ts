@@ -73,13 +73,9 @@ export const approveRequest = async (
   });
 };
 
-export const updateCredentials = async (
-  data: ConnectionCredentials,
-  projectId: string | undefined,
-  requestId: string | undefined,
-): Promise<void> => {
+export const updateCredentials = async (data: ConnectionCredentials, projectId: string | undefined): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.patch(`${CONNECTION_REQUEST_API_URL}/${projectId}/${requestId}/credentials`, data, {
+  await httpClient.patch(`${CONNECTION_REQUEST_API_URL}/${projectId}/credentials`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 };

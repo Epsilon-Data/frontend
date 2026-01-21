@@ -13,7 +13,7 @@ import { buildDatabaseUrl } from '@app/utils/databaseUrl';
 
 type MultiStepDatabaseModalProps = {
   fetchRequests?: () => Promise<void>;
-  requestId: string;
+  requestId?: string;
   projectId: string;
 } & React.ComponentProps<typeof Modal>;
 
@@ -103,12 +103,13 @@ export const MultiStepDatabaseModal = ({
 
     try {
       await step2.validateFields();
-      console.log('Approving request with data:', formData);
-      if (fetchRequests) {
+      if (requestId && fetchRequests) {
+        console.log('Approving request with data:', formData);
         await approveRequest(formData, projectId, requestId);
         await fetchRequests();
       } else {
-        await updateCredentials(formData, projectId, requestId);
+        console.log('Updating credentials with data:', formData);
+        await updateCredentials(formData, projectId);
       }
       setIsModalOpen(false);
     } catch (error) {

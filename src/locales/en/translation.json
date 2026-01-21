@@ -225,6 +225,18 @@
           "ready": {
             "title": "Ready to map your database",
             "description": "Click <bold>'+ New Template' button</bold> to set up your project for publishing."
+          },
+          "actions": {
+            "delete": {
+              "title": "Delete project",
+              "confirm": {
+                "title": "Delete project",
+                "description": "Are you sure you want to delete this project?"
+              },
+              "success": "Project deleted successfully",
+              "failed": "Failed to delete project"
+            },
+            "edit":"Edit connection details"
           }
         },
         "table": {

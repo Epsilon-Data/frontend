@@ -151,3 +151,19 @@ export const getProjectRequests = async (projectId: string | undefined): Promise
   });
   return response.data;
 };
+
+export const deleteProject = async (projectId: string | undefined): Promise<ProjectInfo> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.delete(`${PROJECT_API_URL}/${projectId}`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+
+  return response.data;
+};
+
+export const updateCredentials = async (data: ConnectionInfo, projectId: string | undefined): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  await httpClient.patch(`${PROJECT_API_URL}/${projectId}/credentials`, data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+};

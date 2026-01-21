@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useProjectContext } from '@app/hooks/useProjectContext';
 import { Breadcrumb } from 'antd';
 import { FallbackState } from '@app/components/database-mapping/FallbackState';
+import { DatabaseModalProvider } from '@app/providers/DatabaseModalProvider';
 import { LoaderWrapper } from '@app/components/common/LoaderWrapper';
 
 const DatabaseMappingPage: React.FC = () => {
@@ -64,7 +65,7 @@ const DatabaseMappingPage: React.FC = () => {
                 width={'60%'}
               />
             </ArchetypeModalProvider>
-            <LoaderWrapper isLoading={pageLoading} fallback={<FallbackState projectStatus={project?.status ?? ''} />}>
+            <LoaderWrapper isLoading={pageLoading}>
               {canMap ? (
                 <Archetypes
                   loading={tableLoading}
@@ -73,7 +74,13 @@ const DatabaseMappingPage: React.FC = () => {
                   archetypeReadyById={archetypeReadyById}
                 />
               ) : (
-                <FallbackState projectStatus={project?.status ?? ''} />
+                <DatabaseModalProvider>
+                  <FallbackState
+                    projectStatus={project?.status ?? ''}
+                    projectId={projectId}
+                    projectOwner={project?.ownerId ?? ''}
+                  />
+                </DatabaseModalProvider>
               )}
             </LoaderWrapper>
           </>

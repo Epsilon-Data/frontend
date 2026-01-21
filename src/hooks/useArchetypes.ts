@@ -25,6 +25,10 @@ export const useArchetypes = (projectId: string) => {
     [projectId],
   );
 
+  const addArchetype = useCallback((newArchetype: Archetype) => {
+    setArchetypes((prev) => [newArchetype, ...prev]);
+  }, []);
+
   const fetchArchetype = useCallback(
     async (archetypeId: string, signal?: AbortSignal) => {
       setManageLoading(true);
@@ -41,5 +45,5 @@ export const useArchetypes = (projectId: string) => {
     [projectId],
   );
 
-  return { archetypes, archetype, tableLoading, manageLoading, fetchArchetypes, fetchArchetype };
+  return { archetypes, archetype, tableLoading, manageLoading, fetchArchetypes, fetchArchetype, addArchetype };
 };

@@ -16,7 +16,7 @@ const DatabaseMappingPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get('id') ?? '';
   const archetypeId = searchParams.get('archetypeId');
-  const { archetypes, tableLoading, fetchArchetypes } = useArchetypes(projectId);
+  const { archetypes, tableLoading, fetchArchetypes, addArchetype } = useArchetypes(projectId);
   const { t } = useTranslation();
   const { project, projectLoading } = useProjectContext();
   const projectMatches = !!projectId && !!project && String(project.projectId) === projectId;
@@ -58,6 +58,7 @@ const DatabaseMappingPage: React.FC = () => {
               <MultiStepArchetypeModal
                 fetchArchetypes={fetchArchetypes}
                 projectId={projectId}
+                addArchetype={addArchetype}
                 mask
                 closable={false}
                 width={'60%'}

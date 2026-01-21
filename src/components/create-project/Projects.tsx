@@ -3,6 +3,8 @@ import { ProjectList } from '@app/components/ProjectList/ProjectList';
 import { Layout, SortKey } from '@app/pages/DashboardPages/DashboardPage';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { LoaderWrapper } from '@app/components/common/LoaderWrapper';
+import { Empty } from 'antd';
 
 type ProjectsProps = {
   ownedProjects: ProjectSummaryInfo[];
@@ -10,6 +12,7 @@ type ProjectsProps = {
   layout: Layout;
   searchValue: string;
   sortKey: string;
+  loading: boolean;
 };
 
 const normalize = (s: string) => s.trim().toLowerCase();
@@ -39,7 +42,7 @@ const sortProjects = (arr: ProjectSummaryInfo[], sortKey: SortKey) => {
   }
 };
 
-export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, sortKey }: ProjectsProps) => {
+export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, sortKey, loading }: ProjectsProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const q = normalize(searchValue);
@@ -76,14 +79,26 @@ export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, s
         <div className="text-xs font-regular font-inter text-grey-1">
           {t('dashboard.main.personalProjects.description')}
         </div>
-        <ProjectList projects={sortedOwned} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
+        <LoaderWrapper isLoading={loading} minHeight="300px">
+          {sortedOwned.length > 0 ? (
+            <ProjectList projects={sortedOwned} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
+          ) : (
+            <Empty description={t('dashboard.main.personalProjects.empty')} />
+          )}
+        </LoaderWrapper>
       </div>
       <div className="my-20">
         <div className="text-md font-medium font-inter text-black">{t('dashboard.main.sharedProjects.title')}</div>
         <div className="text-xs font-regular font-inter text-grey-1">
           {t('dashboard.main.sharedProjects.description')}
         </div>
-        <ProjectList projects={sortedShared} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
+        <LoaderWrapper isLoading={loading} minHeight="300px">
+          {sortedShared.length > 0 ? (
+            <ProjectList projects={sortedShared} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
+          ) : (
+            <Empty description={t('dashboard.main.sharedProjects.empty')} />
+          )}
+        </LoaderWrapper>
       </div>
     </>
   );

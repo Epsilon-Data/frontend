@@ -45,11 +45,13 @@
       "newProject": "New project",
       "personalProjects": {
         "title": "My projects",
-        "description": "View and manage all your personal projects in one place"
+        "description": "View and manage all your personal projects in one place",
+        "empty": "No personal projects"
       },
       "sharedProjects": {
         "title": "Shared projects",
-        "description": "Collaborate and manage projects shared with you"
+        "description": "Collaborate and manage projects shared with you",
+        "empty": "No shared projects"
       },
       "searchResults": {
         "title": "Search results",

@@ -95,6 +95,7 @@ describe('Projects Component', () => {
           layout="grid"
           searchValue=""
           sortKey="date-created"
+          loading={false}
         />
       </TestWrapper>,
     );
@@ -112,6 +113,7 @@ describe('Projects Component', () => {
           layout="grid"
           searchValue=""
           sortKey="date-created"
+          loading={false}
         />
       </TestWrapper>,
     );
@@ -129,6 +131,7 @@ describe('Projects Component', () => {
           layout="grid"
           searchValue=""
           sortKey="date-created"
+          loading={false}
         />
       </TestWrapper>,
     );
@@ -146,6 +149,7 @@ describe('Projects Component', () => {
           layout="grid"
           searchValue=""
           sortKey="date-created"
+          loading={false}
         />
       </TestWrapper>,
     );
@@ -203,7 +207,14 @@ describe('Projects Component', () => {
 
     render(
       <TestWrapper>
-        <Projects ownedProjects={owned} sharedProjects={shared} layout="grid" searchValue="project" sortKey="title" />
+        <Projects
+          ownedProjects={owned}
+          sharedProjects={shared}
+          layout="grid"
+          searchValue="project"
+          sortKey="title"
+          loading={false}
+        />
       </TestWrapper>,
     );
 
@@ -227,6 +238,7 @@ describe('Projects Component', () => {
           layout="grid"
           searchValue="definitely-no-match"
           sortKey="title"
+          loading={false}
         />
       </TestWrapper>,
     );
@@ -288,7 +300,14 @@ describe('Projects Component', () => {
 
     render(
       <TestWrapper>
-        <Projects ownedProjects={owned} sharedProjects={shared} layout="grid" searchValue="" sortKey="date-created" />
+        <Projects
+          ownedProjects={owned}
+          sharedProjects={shared}
+          layout="grid"
+          searchValue=""
+          sortKey="date-created"
+          loading={false}
+        />
       </TestWrapper>,
     );
 

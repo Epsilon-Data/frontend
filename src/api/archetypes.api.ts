@@ -28,6 +28,8 @@ export interface ArchetypeInfo {
   permissions?: Permission[];
   status: ArchetypeStatus;
   lastModified?: Date;
+  dbName?: string;
+  dbType?: string;
 }
 
 export const getArchetypes = async (projectId: string | undefined): Promise<Archetype[]> => {

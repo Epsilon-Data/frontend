@@ -68,7 +68,9 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
   };
 
   const renderButtonMode = () => {
-    if (project.ownerId === user?.sub) return buttonConfig.OWNER;
+    const isOwner = project.ownerId === user?.sub;
+    const isMember = project.members?.find((member) => member.email === user?.email);
+    if (isOwner || isMember) return buttonConfig.OWNER;
     if (request !== null) return buttonConfig.APPLIED;
     return buttonConfig.DEFAULT;
   };

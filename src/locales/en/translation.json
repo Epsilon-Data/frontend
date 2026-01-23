@@ -625,5 +625,10 @@
       "duplicate": "This keyword has already been added",
       "invalidEmail": "Invalid team member's email"
     }
+  },
+  "error": {
+    "goToDashboard": "Go to Dashboard",
+    "actionNotCompleted": "We couldn’t complete that action.",
+    "somethingWentWrong": "Something went wrong."
   }
 }

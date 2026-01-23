@@ -1,6 +1,7 @@
 import { useSearchParams, Navigate, useLocation } from 'react-router-dom';
 import { ProjectProvider } from '@app/providers/ProjectProvider';
 import MainLayout from '../layouts/main/MainLayout/MainLayout';
+import RequireAuth from './RequireAuth';
 
 export default function ProjectLayout() {
   const [params] = useSearchParams();
@@ -12,8 +13,10 @@ export default function ProjectLayout() {
   }
 
   return (
-    <ProjectProvider initialProjectId={projectId}>
-      <MainLayout />
-    </ProjectProvider>
+    <RequireAuth>
+      <ProjectProvider initialProjectId={projectId}>
+        <MainLayout />
+      </ProjectProvider>
+    </RequireAuth>
   );
 }

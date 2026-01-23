@@ -4,8 +4,13 @@ import MainSider from '../sider/MainSider/MainSider';
 import { Logo } from '@app/components/common/Logo/Logo';
 import { findKeyByUrl } from '../sider/sidebarNavigation';
 import { Layout } from 'antd';
+import { ApiErrorRedirector } from '@app/components/error-redirector/ApiErrorRedirector';
 
-const MainLayout: React.FC = () => {
+type MainLayoutProps = {
+  hideSider?: boolean;
+};
+
+const MainLayout: React.FC<MainLayoutProps> = ({ hideSider = false }) => {
   const location = useLocation();
   const selectedKey = findKeyByUrl(location.pathname);
 
@@ -18,10 +23,11 @@ const MainLayout: React.FC = () => {
         </Link>
       </Layout>
       <Layout className="overflow-hidden">
-        <MainSider selectedNav={selectedKey} />
+        {!hideSider && <MainSider selectedNav={selectedKey} />}
         <Layout className="flex-1 overflow-y-auto">
           <Layout.Content id="main-content" className="overflow-auto flex flex-col justify-between">
             <div>
+              <ApiErrorRedirector />
               <Outlet />
             </div>
           </Layout.Content>

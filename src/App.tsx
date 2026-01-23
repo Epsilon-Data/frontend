@@ -12,6 +12,7 @@ import { useThemeWatcher } from './hooks/useThemeWatcher';
 import '@xyflow/react/dist/style.css';
 import 'antd/dist/reset.css';
 import './styles/tailwind.css';
+import { ErrorProvider } from './providers/ErrorProvider';
 
 const App: React.FC = () => {
   const { language } = useLanguage();
@@ -24,11 +25,13 @@ const App: React.FC = () => {
     <>
       <meta name="theme-color" />
       <GlobalStyle />
-      <HelmetProvider>
-        <ConfigProvider locale={language === 'en' ? enUS : deDe} theme={undefined}>
-          <AppRouter />
-        </ConfigProvider>
-      </HelmetProvider>
+      <ErrorProvider>
+        <HelmetProvider>
+          <ConfigProvider locale={language === 'en' ? enUS : deDe} theme={undefined}>
+            <AppRouter />
+          </ConfigProvider>
+        </HelmetProvider>
+      </ErrorProvider>
     </>
   );
 };

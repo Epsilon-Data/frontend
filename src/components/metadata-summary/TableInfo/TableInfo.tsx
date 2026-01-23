@@ -33,7 +33,6 @@ export const TableInfo = ({ selectItems, allTableInfo }: TableInfoProps) => {
         );
       },
       sorter: (a, b) => (a.primary === b.primary ? 0 : a.primary ? -1 : 1),
-      defaultSortOrder: 'ascend',
       sortDirections: ['ascend', 'descend', 'ascend'],
     },
     {

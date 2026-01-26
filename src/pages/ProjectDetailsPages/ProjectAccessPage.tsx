@@ -16,7 +16,8 @@ const ProjectAccessPage: React.FC = () => {
   const { t } = useTranslation();
   const { project } = useProjectContext();
   const [openDrawer, setOpenDrawer] = React.useState(false);
-  const { requests, request, drawerLoading, tableLoading, fetchRequests, fetchRequest } = useAccessRequests(projectId);
+  const { requests, request, drawerLoading, tableLoading, fetchRequests, fetchRequest, optimisticUpdateStatus } =
+    useAccessRequests(projectId);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -49,6 +50,7 @@ const ProjectAccessPage: React.FC = () => {
           setOpen={setOpenDrawer}
           request={request}
           drawerLoading={drawerLoading}
+          onStatusChange={(requestId, status, type) => optimisticUpdateStatus(requestId, status, type)}
         />
         <MultiStepDatabaseModal
           fetchRequests={fetchRequests}

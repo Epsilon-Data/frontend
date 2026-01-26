@@ -128,14 +128,6 @@ export const getRequestByProject = async (projectId: string | undefined): Promis
   return response.data;
 };
 
-export const reviseRequest = async (data: { requestId: string | undefined; revisionInfo: string }): Promise<string> => {
-  const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.put(`${ANALYSIS_REQUEST_API_URL}/${data.requestId}/revision`, data, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
-  return response.data;
-};
-
 export const createRequest = async (data: AnalysisRequest): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   await httpClient.post(ANALYSIS_REQUEST_API_URL, data, {
@@ -143,15 +135,15 @@ export const createRequest = async (data: AnalysisRequest): Promise<void> => {
   });
 };
 
-export const approveRequest = async (data: {
+export const updateRequestStatus = async (data: {
   projectId: string | undefined;
   requestId: string | undefined;
-  isApproved: boolean;
+  status: AnalysisRequestStatus;
 }): Promise<void> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   await httpClient.patch(
     `${ANALYSIS_REQUEST_API_URL}/${data.projectId}/${data.requestId}`,
-    { isApproved: data.isApproved },
+    { status: data.status },
     {
       headers: { [csrfHeaderName]: `${csrf}` },
     },

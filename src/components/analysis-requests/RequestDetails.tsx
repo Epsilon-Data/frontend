@@ -34,50 +34,52 @@ export const RequestDetails = ({ requestId }: RequestDetailsProps) => {
     <Spin spinning={manageLoading}>
       <RequestDetailsHeader name={request?.project?.name ?? ''} status={request?.request?.status ?? ''} />
       <Row>
-        <Row gutter={[32, 32]}>
-          <Col span={12}>
-            <Row>
-              <div
-                ref={descriptionRef}
-                className={clsx(
-                  'relative overflow-hidden break-normal mt-10 font-normal',
-                  isExpanded ? 'line-clamp-none' : 'line-clamp-6',
-                )}
-              >
-                {request?.project?.description}
-              </div>
-              {showToggle && (
-                <Button
-                  type="link"
-                  className="text-xs font-medium font-inter mt-2 p-0 inline-flex items-center gap-2"
-                  onClick={() => setIsExpanded((prev) => !prev)}
+        <Col span={24}>
+          <Row gutter={[100, 32]}>
+            <Col span={12}>
+              <Row>
+                <div
+                  ref={descriptionRef}
+                  className={clsx(
+                    'relative overflow-hidden break-normal mt-10 font-normal',
+                    isExpanded ? 'line-clamp-none' : 'line-clamp-6',
+                  )}
                 >
-                  {isExpanded ? t('browse.main.details.about.showLess') : t('browse.main.details.about.showMore')}
-                  {isExpanded ? <FaChevronUp size={10} /> : <FaChevronDown size={10} />}
-                </Button>
-              )}
-            </Row>
-            <Row className="mt-10 flex flex-col">
-              <div className="text-sm font-medium font-inter mb-4">{t('browse.main.details.keywords')}</div>
-              <div>
-                {request?.project?.dbKeywords?.map((keyword: string, index: number) => (
-                  <Tag
-                    className="w-max mb-2 text-xs font-normal font-inter rounded-2xl py-1 px-3 mr-3 text-center bg-grey-3 text-black break-words"
-                    key={index}
-                    variant="filled"
+                  {request?.project?.description}
+                </div>
+                {showToggle && (
+                  <Button
+                    type="link"
+                    className="text-xs font-medium font-inter mt-2 p-0 inline-flex items-center gap-2"
+                    onClick={() => setIsExpanded((prev) => !prev)}
                   >
-                    {keyword}
-                  </Tag>
-                ))}
+                    {isExpanded ? t('browse.main.details.about.showLess') : t('browse.main.details.about.showMore')}
+                    {isExpanded ? <FaChevronUp size={10} /> : <FaChevronDown size={10} />}
+                  </Button>
+                )}
+              </Row>
+              <Row className="mt-10 flex flex-col">
+                <div className="text-sm font-medium font-inter mb-4">{t('browse.main.details.keywords')}</div>
+                <div>
+                  {request?.project?.dbKeywords?.map((keyword: string, index: number) => (
+                    <Tag
+                      className="w-max mb-2 text-xs font-normal font-inter rounded-2xl py-1 px-3 mr-3 text-center bg-grey-3 text-black break-words"
+                      key={index}
+                      variant="filled"
+                    >
+                      {keyword}
+                    </Tag>
+                  ))}
+                </div>
+              </Row>
+            </Col>
+            <Col span={12}>
+              <div className="h-[20rem] flex items-center justify-center bg-coverBg text-5xl font-bold text-coverText overflow-hidden mt-10 rounded-xl">
+                <div className="leading-4 p-8 text-center">{request?.project?.name?.charAt(0).toUpperCase()}</div>
               </div>
-            </Row>
-          </Col>
-          <Col span={12}>
-            <div className="h-[20rem] flex items-center justify-center bg-coverBg text-5xl font-bold text-coverText overflow-hidden mt-10 ">
-              <div className="leading-4 p-8 text-center">{request?.project?.name?.charAt(0).toUpperCase()}</div>
-            </div>
-          </Col>
-        </Row>
+            </Col>
+          </Row>
+        </Col>
         <Row className="mt-24 w-full">
           <Col span={24}>{request && <RequestTabs request={request} />}</Col>
         </Row>

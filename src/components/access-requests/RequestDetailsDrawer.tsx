@@ -1,5 +1,5 @@
 import { STATUS_COLORS, STATUS_NAMES } from '@app/constants/accessRequest';
-import { AccessRequest } from '@app/hooks/useAccessRequests';
+import { AccessRequest, AccessRequestType } from '@app/hooks/useAccessRequests';
 import { Button, Col, Drawer, Form, message, Select, Tag } from 'antd';
 import { IoIosArrowDown } from 'react-icons/io';
 import { DetailsRow } from '../browse-projects/modal/pages/AboutDatasetPage/components/DetailsRow';
@@ -7,10 +7,11 @@ import { useTranslation } from 'react-i18next';
 import { LoaderWrapper } from '@app/components/common/LoaderWrapper';
 
 import {
-  approveRequest,
+  AnalysisRequestStatus,
   createComment,
   getComments as getAnalysisRequestComments,
   RequestComment,
+  updateRequestStatus,
 } from '@app/api/analysisRequests.api';
 import { getComments as getConnectionRequestComments } from '@app/api/connectionRequests.api';
 import { useEffect, useMemo, useState } from 'react';
@@ -26,8 +27,15 @@ type RequestDetailsDrawerProps = {
   setOpen: (open: boolean) => void;
   request: AccessRequest | null;
   drawerLoading: boolean;
+  onStatusChange: (requestId: string, status: string, type: AccessRequestType) => void;
 };
-export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: RequestDetailsDrawerProps) => {
+export const RequestDetailsDrawer = ({
+  open,
+  setOpen,
+  request,
+  drawerLoading,
+  onStatusChange,
+}: RequestDetailsDrawerProps) => {
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState<string>(request?.status ?? 'PENDING');
   const projectId = searchParams.get('id') ?? '';
@@ -113,13 +121,12 @@ export const RequestDetailsDrawer = ({ open, setOpen, request, drawerLoading }: 
     if (value === status) return;
     const prev = status;
     setStatus(value);
+    onStatusChange(request.requestId, value, request.type);
     try {
-      if (value === 'APPROVED') {
-        if (request.type === 'ANALYSIS') {
-          await approveRequest({ projectId, requestId: request.requestId, isApproved: true });
-        } else {
-          showModal();
-        }
+      if (value === 'APPROVED' && request.type === 'CONNECTION') {
+        showModal();
+      } else {
+        await updateRequestStatus({ projectId, requestId: request.requestId, status: value as AnalysisRequestStatus });
       }
     } catch {
       setStatus(prev);

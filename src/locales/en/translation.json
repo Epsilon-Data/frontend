@@ -87,7 +87,9 @@
             "title": "Add team members to this project",
             "description": "Type individual emails to invite team members and assign their roles",
             "emailAddress": "Email address",
-            "role": "Role"
+            "role": "Role",
+            "addMember": "Add member",
+            "helperText": "* Email invitations will be sent after project setup is complete"
           },
           "dbKeywords": {
             "placeholder": "Enter keywords",

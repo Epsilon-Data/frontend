@@ -74,8 +74,9 @@ export const ModalFormList: React.FC<{
             data-testid="add-member"
             className="mt-4 ml-1 bg-black border-none text-white !hover:bg-black"
             onClick={handleAdd}
+            icon={<FaPlus />}
           >
-            <FaPlus />
+            {t('dashboard.createProject.form.step1.members.addMember')}
           </Button>
         </Col>
       </Row>
@@ -91,6 +92,9 @@ export const ModalFormList: React.FC<{
           </div>
         </div>
       ))}
+      <div className="font-light font-inter text-grey-1 text-sm italic mt-8">
+        {t('dashboard.createProject.form.step1.members.helperText')}
+      </div>
     </div>
   );
 };

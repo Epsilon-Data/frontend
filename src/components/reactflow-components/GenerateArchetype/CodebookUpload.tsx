@@ -1,21 +1,32 @@
 import { Button, Input, message, Upload, UploadFile } from 'antd';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Node, Edge } from '@xyflow/react';
 import { useDropzone } from 'react-dropzone';
 import { CloseOutlined, FileOutlined, InboxOutlined, UploadOutlined } from '@ant-design/icons';
+import { useQuery } from '@tanstack/react-query';
+import { uploadArchetypeCodebook } from '@app/api/archetypes.api';
+import { getUploadJobStatus } from '@app/api/job.api';
 
 type CodebookUploadProps = {
   onBack: () => void;
-  onUploadSuccess: (nodes: Node[], edges: Edge[]) => void;
+  projectId: string;
+  onGraphGenerated?: (nodes: Node[], edges: Edge[]) => void;
   setShowCodebookUpload: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const CodebookUpload: React.FC<CodebookUploadProps> = ({ onBack, onUploadSuccess, setShowCodebookUpload }) => {
+export const CodebookUpload: React.FC<CodebookUploadProps> = ({
+  onBack,
+  projectId,
+  onGraphGenerated,
+  setShowCodebookUpload,
+}) => {
   const { t } = useTranslation();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [additionalContext, setAdditionalContext] = useState('');
   const [dragActive, setDragActive] = useState(false);
+  const [jobId, setJobId] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
@@ -44,18 +55,85 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({ onBack, onUpload
     setShowCodebookUpload(true);
   };
 
-  const handleCodebookSubmit = () => {
+  // Poll job status using React Query
+  const { data: jobStatus, isError } = useQuery({
+    queryKey: ['codebookJobStatus', jobId],
+    queryFn: () => getUploadJobStatus(jobId!),
+    enabled: !!jobId && isProcessing,
+    refetchInterval: 3000, // Poll every 3 seconds
+    retry: 3,
+  });
+
+  // Handle job status updates
+  useEffect(() => {
+    if (jobStatus) {
+      console.log('Job status update:', jobStatus);
+
+      if (jobStatus.status === 'completed' && jobStatus.result) {
+        setIsProcessing(false);
+        console.log('Job completed! Result:', jobStatus.result);
+        message.success('Archetype structure generated from codebook!');
+
+        // Update the graph
+        if (onGraphGenerated) {
+          console.log('setting the nodes in the graph into the ones from the llm');
+          onGraphGenerated(jobStatus.result.nodes, jobStatus.result.edges);
+        }
+
+        // Reset state
+        setJobId(null);
+        setSelectedFile(null);
+        setAdditionalContext('');
+        setShowCodebookUpload(false);
+      } else if (jobStatus.status === 'failed') {
+        setIsProcessing(false);
+        console.error('Job failed:', jobStatus.error);
+        message.error(jobStatus.error || 'Failed to process codebook.');
+        setJobId(null);
+      } else if (jobStatus.status === 'processing') {
+        console.log('Job still processing...');
+      }
+    }
+  }, [jobStatus, onGraphGenerated, setShowCodebookUpload]);
+
+  // Handle polling errors
+  useEffect(() => {
+    if (isError) {
+      setIsProcessing(false);
+      console.error('Failed to check job status');
+      message.error('Failed to check processing status');
+      setJobId(null);
+    }
+  }, [isError]);
+
+  const handleCodebookSubmit = async () => {
     console.log('Codebook file:', selectedFile);
     console.log('Additional context:', additionalContext);
 
-    setSelectedFile(null);
-    setAdditionalContext('');
-    setShowCodebookUpload(false);
+    try {
+      setIsProcessing(true);
+
+      // Upload file and get jobId
+      const { jobId: newJobId } = await uploadArchetypeCodebook(projectId, selectedFile, (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1));
+        console.log('Upload progress:', percentCompleted, '%');
+      });
+
+      console.log('Upload successful! Job ID:', newJobId);
+      setJobId(newJobId);
+      // React Query will start polling automatically when jobId is set
+    } catch (error) {
+      console.error('Upload failed:', error);
+      message.error('Failed to upload codebook. Please try again.');
+      setIsProcessing(false);
+    }
   };
 
   const handleCancelCodebook = () => {
     setSelectedFile(null);
     setAdditionalContext('');
+    setJobId(null);
+    setIsProcessing(false);
     setShowCodebookUpload(false);
   };
 
@@ -148,11 +226,14 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({ onBack, onUpload
         <Button
           type="primary"
           onClick={handleCodebookSubmit}
-          disabled={!selectedFile}
+          disabled={!selectedFile || isProcessing}
+          loading={isProcessing}
           icon={<UploadOutlined />}
           className="flex items-center h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
         >
-          {t('project.createTemplate.form.step2.generateFromCodebook.submit')}
+          {isProcessing
+            ? t('project.createTemplate.form.step2.generateFromCodebook.processing')
+            : t('project.createTemplate.form.step2.generateFromCodebook.submit')}
         </Button>
       </div>
     </div>

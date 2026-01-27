@@ -1,7 +1,7 @@
 import { Button, message, Modal } from 'antd';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
@@ -278,6 +278,14 @@ export const MultiStepArchetypeModal = ({
     }
   };
 
+  const handleGraphGenerated = useCallback(
+    (newNodes: Node[], newEdges: Edge[]) => {
+      setNodes(newNodes);
+      setEdges(newEdges);
+    },
+    [setNodes, setEdges],
+  );
+
   const renderStep = () => {
     switch (modalStep) {
       case 0:
@@ -295,6 +303,8 @@ export const MultiStepArchetypeModal = ({
             setColumns={setColumns}
             name={step1.getFieldValue('name')}
             onNodesDeleted={clearPermissionsFor}
+            projectId={projectId}
+            onGraphGenerated={handleGraphGenerated}
           />
         );
       case 2:

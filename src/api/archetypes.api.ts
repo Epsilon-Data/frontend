@@ -1,6 +1,7 @@
 import { ARCHETYPE_API_URL } from '@app/constants/archetype';
 import { httpClient, getCsrfHeader } from './http.api';
 import { Node, Edge } from '@xyflow/react';
+import { AxiosProgressEvent } from 'axios';
 
 export type ArchetypeStatus = 'DRAFT' | 'PUBLISHED' | 'ACTIVE';
 export type PermissionType = 'HIGH_LEVEL' | 'DETAILED' | 'NONE';
@@ -94,4 +95,28 @@ export const updateArchetypeDetails = async (
   await httpClient.patch(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}`, attributes, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
+};
+
+export const uploadArchetypeCodebook = async (
+  projectId: string,
+  file: File | null,
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
+): Promise<{ jobId: string }> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const formData = new FormData();
+  if (file) {
+    formData.append('file', file);
+  }
+
+  const response = await httpClient.post(`${ARCHETYPE_API_URL}/${projectId}/upload-codebook`, formData, {
+    headers: {
+      [csrfHeaderName]: `${csrf}`,
+      'Content-Type': 'multipart/form-data',
+    },
+    onUploadProgress,
+  });
+
+  console.log('Upload response:', response.data);
+
+  return response.data;
 };

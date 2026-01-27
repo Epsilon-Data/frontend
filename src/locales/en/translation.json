@@ -388,7 +388,8 @@
               "placeholder": "Provide any additional context about your codebook to help improve the generation accuracy."
             },
             "cancel": "Cancel",
-            "submit": "Generate Archetype"
+            "submit": "Generate Archetype",
+            "processing": "Generating archetype structure..."
           },
           "error": {
             "deleteRoot": "The root node cannot be deleted"

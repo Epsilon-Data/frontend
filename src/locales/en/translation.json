@@ -317,6 +317,7 @@
           "status": "Status"
         },
         "drawer": {
+          "updateStatus": "Update status",
           "requestor": {
             "title": "1. Requestor details",
             "position": "Position/title",
@@ -329,7 +330,8 @@
             "duration": "Project duration",
             "describe": "Project description"
           },
-          "detailsError": "Error fetching request details"
+          "detailsError": "Error fetching request details",
+          "updateSuccess": "Request marked as {{status}}"
         }
       }
     },

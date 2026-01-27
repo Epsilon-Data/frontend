@@ -38,6 +38,7 @@ export const RequestDetailsDrawer = ({
 }: RequestDetailsDrawerProps) => {
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState<string>(request?.status ?? 'PENDING');
+  const [savingStatus, setSavingStatus] = useState(false);
   const projectId = searchParams.get('id') ?? '';
   const user = useAppSelector((state) => state.user.user);
   const { t } = useTranslation();
@@ -116,21 +117,30 @@ export const RequestDetailsDrawer = ({
     { value: 'REVISION', label: renderTag('REVISION') },
   ];
 
-  const handleStatusChange = async (value: string) => {
+  const handleSaveStatus = async () => {
     if (!request) return;
-    if (value === status) return;
-    const prev = status;
-    setStatus(value);
-    onStatusChange(request.requestId, value, request.type);
+    if (status === request.status) return;
+
+    setSavingStatus(true);
+
     try {
-      if (value === 'APPROVED' && request.type === 'CONNECTION') {
+      if (status === 'APPROVED' && request.type === 'CONNECTION') {
         showModal();
       } else {
-        await updateRequestStatus({ projectId, requestId: request.requestId, status: value as AnalysisRequestStatus });
+        await updateRequestStatus({
+          projectId,
+          requestId: request.requestId,
+          status: status as AnalysisRequestStatus,
+        });
+
+        message.success(t('project.main.projectAccess.drawer.updateSuccess', { status: STATUS_NAMES[status] }));
+        onStatusChange(request.requestId, status, request.type);
       }
     } catch {
-      setStatus(prev);
+      setStatus(request.status);
       message.error(t('project.main.projectAccess.drawer.detailsError'));
+    } finally {
+      setSavingStatus(false);
     }
   };
 
@@ -143,20 +153,31 @@ export const RequestDetailsDrawer = ({
       onClose={() => setOpen(false)}
       open={open}
       title={
-        <div className="flex items-start gap-2">
+        <div className="flex items-center gap-2">
           {drawerLoading || !request ? (
             <span className="text-grey-2">Loading…</span>
           ) : (
             <>
               <span>{request.requestor.name}</span>
               <Select
-                onChange={handleStatusChange}
+                onChange={(v) => setStatus(v)}
                 value={status}
                 size="small"
                 style={{ width: 170, border: 'none' }}
                 suffixIcon={<IoIosArrowDown className="mt-1" color="black" />}
                 options={selectOptions}
               />
+              <Button
+                type="primary"
+                loading={savingStatus}
+                disabled={savingStatus || status === request?.status}
+                onClick={handleSaveStatus}
+                color="default"
+                variant="solid"
+                className="font-medium text-xs font-inter"
+              >
+                {t('project.main.projectAccess.drawer.updateStatus')}
+              </Button>
             </>
           )}
         </div>

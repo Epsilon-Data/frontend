@@ -14,11 +14,9 @@ export type AboutProjectStepProps = {
   form: FormInstance<unknown>;
   dbKeywords: string[];
   setDbKeywords: (keywords: string[]) => void;
-  members: { email: string; role: string }[];
-  setMembers: React.Dispatch<React.SetStateAction<{ email: string; role: string }[]>>;
 };
 
-export const AboutProjectStep = ({ form, dbKeywords, setDbKeywords, members, setMembers }: AboutProjectStepProps) => {
+export const AboutProjectStep = ({ form, dbKeywords, setDbKeywords }: AboutProjectStepProps) => {
   const { t } = useTranslation();
 
   return (
@@ -60,8 +58,6 @@ export const AboutProjectStep = ({ form, dbKeywords, setDbKeywords, members, set
             name="members"
             inputTitle={t('dashboard.createProject.form.step1.members.title')}
             inputDescription={t('dashboard.createProject.form.step1.members.description')}
-            members={members}
-            setMembers={setMembers}
             form={form}
             inputProps={{ placeholder: t('dashboard.createProject.form.step1.members.placeholder') }}
           />

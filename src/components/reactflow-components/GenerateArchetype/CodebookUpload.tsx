@@ -1,17 +1,18 @@
 import { Button, Input, message, Upload, UploadFile } from 'antd';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Node, Edge } from '@xyflow/react';
 import { useDropzone } from 'react-dropzone';
 import { CloseOutlined, FileOutlined, InboxOutlined, UploadOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { uploadArchetypeCodebook } from '@app/api/archetypes.api';
-import { getUploadJobStatus } from '@app/api/job.api';
+import { getUploadJobStatus, GraphEdgePayload, GraphNodePayload } from '@app/api/job.api';
+import { transformEdges, transformNodes } from '@app/utils/reactflow/helpers';
 
 type CodebookUploadProps = {
   onBack: () => void;
   projectId: string;
-  onGraphGenerated?: (nodes: Node[], edges: Edge[]) => void;
+  onGraphGenerated: (nodes: Node[], edges: Edge[]) => void;
   setShowCodebookUpload: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -67,18 +68,17 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
   // Handle job status updates
   useEffect(() => {
     if (jobStatus) {
-      console.log('Job status update:', jobStatus);
-
       if (jobStatus.status === 'completed' && jobStatus.result) {
         setIsProcessing(false);
-        console.log('Job completed! Result:', jobStatus.result);
         message.success('Archetype structure generated from codebook!');
+        const nodes = jobStatus.result.nodes;
+        const edges = jobStatus.result.edges;
+
+        const transformedNodes = transformNodes(nodes, edges);
+        const transformedEdges = transformEdges(nodes, edges);
 
         // Update the graph
-        if (onGraphGenerated) {
-          console.log('setting the nodes in the graph into the ones from the llm');
-          onGraphGenerated(jobStatus.result.nodes, jobStatus.result.edges);
-        }
+        onGraphGenerated(transformedNodes, transformedEdges);
 
         // Reset state
         setJobId(null);

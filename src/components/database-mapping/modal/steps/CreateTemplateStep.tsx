@@ -19,7 +19,7 @@ export type CreateTemplateStepProps = {
   name: string;
   onNodesDeleted?: (ids: Set<string>) => void;
   projectId: string;
-  onGraphGenerated?: (nodes: Node[], edges: Edge[]) => void;
+  onGraphGenerated: (nodes: Node[], edges: Edge[]) => void;
 };
 export const CreateTemplateStep = ({
   nodes,
@@ -43,11 +43,6 @@ export const CreateTemplateStep = ({
     () => edges.filter((e) => !columnIds.has(e.source) && !columnIds.has(e.target)),
     [edges, columnIds],
   );
-
-  console.log('Nodes:', nodes);
-  console.log('Edges:', edges);
-  console.log('Visible Nodes:', visibleNodes);
-  console.log('Visible edges:', visibleEdges);
 
   const isCategory = (n?: Node) => n?.type === 'category' || n?.type === 'root';
   const isColumn = (n?: Node) => n?.type === 'column';

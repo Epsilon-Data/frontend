@@ -182,7 +182,9 @@
         "error": {
           "invalidEmail": "Invalid team member's email",
           "invalidDbUrl": "Invalid database URL",
-          "allChecked": "All steps must be confirmed before starting a new project."
+          "allChecked": "All steps must be confirmed before starting a new project.",
+          "emailRequired": "Email is required",
+          "duplicateEmail": "Team member email already added"
         }
       }
     }

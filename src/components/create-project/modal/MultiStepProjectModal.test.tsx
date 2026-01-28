@@ -78,15 +78,9 @@ vi.mock('@app/api/projects.api', () => ({
 
 // Mock step components
 vi.mock('./steps/AboutProjectStep', () => ({
-  AboutProjectStep: ({ members, setMembers, dbKeywords, setDbKeywords }: AboutProjectStepProps) => (
+  AboutProjectStep: ({ dbKeywords, setDbKeywords }: AboutProjectStepProps) => (
     <div data-testid="about-project-step">
       About Project Step
-      <button
-        data-testid="add-member"
-        onClick={() => setMembers([...members, { email: 'test@example.com', role: 'researcher' }])}
-      >
-        Add Member
-      </button>
       <button data-testid="add-keyword" onClick={() => setDbKeywords([...dbKeywords, 'test-keyword'])}>
         Add Keyword
       </button>

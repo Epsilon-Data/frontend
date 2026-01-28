@@ -25,7 +25,6 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
 
   const [step1, step2, step3, step4] = forms;
   const [dbKeywords, setDbKeywords] = useState<string[]>([]);
-  const [members, setMembers] = useState<{ email: string; role: string }[]>([]);
   const { t } = useTranslation();
   const [showMessage, setShowMessage] = useState(false);
   const [isConnected, setConnected] = useState(false);
@@ -103,7 +102,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
       description: step1.getFieldValue('description'),
       startDate: startDate?.toDate() || null,
       endDate: endDate?.toDate() || null,
-      members: members,
+      members: (step1.getFieldValue('members') || []).filter((m: { email: string }) => m?.email),
       participantsNum: step1.getFieldValue('participantsNum'),
       dbKeywords: dbKeywords,
       connection: {
@@ -139,15 +138,7 @@ export const MultiStepProjectModal = ({ fetchProjects, ...modalProps }: MultiSte
   const renderStep = () => {
     switch (modalStep) {
       case 0:
-        return (
-          <AboutProjectStep
-            form={step1}
-            members={members}
-            setMembers={setMembers}
-            dbKeywords={dbKeywords}
-            setDbKeywords={setDbKeywords}
-          />
-        );
+        return <AboutProjectStep form={step1} dbKeywords={dbKeywords} setDbKeywords={setDbKeywords} />;
       case 1:
         return <UniversityDetailsStep form={step2} />;
       case 2:

@@ -50,5 +50,8 @@ And then use the [webpack-bundle-analyzer](https://www.npmjs.com/package/webpack
 pnpm run clean-install # cleans cache, reinstalls and checks versions of packages
 pnpm fix # runs lint and prettier
 pnpm test # runs all unit tests for packages and services
-
 ```
+
+## Deployment
+
+See notes at https://github.com/Epsilon-Data#-deployment

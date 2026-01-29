@@ -348,7 +348,9 @@
         "update": {
           "title": "Update database details",
           "description": "Update or edit your database details and test the connection",
-          "button": "Sync database"
+          "button": "Sync database",
+          "success": "Database connection updated successfully",
+          "failed": "Failed to update database connection"
         },
         "delete": {
           "title": "Delete project",

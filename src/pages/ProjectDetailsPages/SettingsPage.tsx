@@ -1,6 +1,7 @@
 import { testConnection } from '@app/api/connectionRequests.api';
 import { deleteProject, updateCredentials } from '@app/api/projects.api';
 import { InputLabel } from '@app/components/common/Modal/InputLabel/InputLabel';
+import { ModalSelect } from '@app/components/common/Modal/ModalSelect/ModalSelect';
 import { useProjectContext } from '@app/hooks/useProjectContext';
 import { buildDatabaseUrl } from '@app/utils/databaseUrl';
 import { Breadcrumb, Button, Col, Form, Input, message, Popconfirm, Radio, RadioChangeEvent, Row } from 'antd';
@@ -27,7 +28,6 @@ const SettingsPage: React.FC = () => {
   const [showMessage, setShowMessage] = useState(false);
   const [isConnected, setConnected] = useState(false);
   const [dbUrl, setDbUrl] = useState('');
-  const hideVisualisations = true;
   const [isSyncLoading, setSyncLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -41,6 +41,8 @@ const SettingsPage: React.FC = () => {
       message: t('fieldMessages.input.whitespace'),
     },
   ];
+
+  const dbTypeOptions = [{ value: 'postgres', label: 'PostgreSQL' }];
 
   const handleIsDbUrlChange = (e: RadioChangeEvent) => {
     const value = e.target.value as boolean;
@@ -178,6 +180,7 @@ const SettingsPage: React.FC = () => {
       };
       console.log('Updating credentials with data:', formData);
       await updateCredentials(formData, projectId);
+      message.success(t('project.main.settings.update.success'));
     } catch (err) {
       const error = err as ValidateErrorEntity;
       if (error.errorFields) {
@@ -185,6 +188,8 @@ const SettingsPage: React.FC = () => {
           behavior: 'smooth',
           block: 'center',
         });
+      } else {
+        message.error(t('project.main.settings.update.failed'));
       }
     } finally {
       setSyncLoading(false);
@@ -205,17 +210,15 @@ const SettingsPage: React.FC = () => {
         </div>
       </div>
 
-      {!hideVisualisations && (
-        <InputLabel
-          inputTitle={t('project.main.settings.visualisations.title')}
-          inputDescription={t('project.main.settings.visualisations.description')}
-        />
-      )}
-
       <Form form={form} layout="vertical" initialValues={{ isDbUrl: true }}>
         <InputLabel
           inputTitle={t('project.main.settings.update.title')}
           inputDescription={t('project.main.settings.update.description')}
+        />
+        <ModalSelect
+          name="dbType"
+          inputTitle={t('dashboard.createProject.form.step3.dbType.title')}
+          options={dbTypeOptions}
         />
         <FormItem name="isDbUrl">
           <Radio.Group

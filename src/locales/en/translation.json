@@ -345,10 +345,14 @@
           "title": "Set visualisations for display",
           "description": "Input tableau visualisation title and URL to display within the browse hub"
         },
-        "sync": {
-          "title": "Sync updates in database",
-          "description": "Enter your database details and test the connection to sync database updates",
+        "update": {
+          "title": "Update database details",
+          "description": "Update or edit your database details and test the connection",
           "button": "Sync database"
+        },
+        "delete": {
+          "title": "Delete project",
+          "description": "Are you sure you want to delete this project?"
         }
       }
     },

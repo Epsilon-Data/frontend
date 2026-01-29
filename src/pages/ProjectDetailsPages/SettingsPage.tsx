@@ -1,17 +1,20 @@
 import { testConnection } from '@app/api/connectionRequests.api';
-import { syncDatasource } from '@app/api/database.api';
+import { deleteProject, updateCredentials } from '@app/api/projects.api';
 import { InputLabel } from '@app/components/common/Modal/InputLabel/InputLabel';
 import { useProjectContext } from '@app/hooks/useProjectContext';
-import { Breadcrumb, Button, Col, Form, Input, message, Radio, RadioChangeEvent, Row } from 'antd';
+import { buildDatabaseUrl } from '@app/utils/databaseUrl';
+import { Breadcrumb, Button, Col, Form, Input, message, Popconfirm, Radio, RadioChangeEvent, Row } from 'antd';
 import { CheckboxGroupProps } from 'antd/es/checkbox';
 import FormItem from 'antd/es/form/FormItem';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AiFillDelete } from 'react-icons/ai';
+import { BsFillQuestionCircleFill } from 'react-icons/bs';
 import { FaRegCircleCheck } from 'react-icons/fa6';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 import { PiWarningBold } from 'react-icons/pi';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 const SettingsPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -26,6 +29,7 @@ const SettingsPage: React.FC = () => {
   const [dbUrl, setDbUrl] = useState('');
   const hideVisualisations = true;
   const [isSyncLoading, setSyncLoading] = useState(false);
+  const navigate = useNavigate();
 
   const inputRules = [
     {
@@ -101,6 +105,16 @@ const SettingsPage: React.FC = () => {
     setTestLoading(false);
   };
 
+  const confirmDeletion = async () => {
+    try {
+      await deleteProject(projectId);
+      message.success(t('project.main.dbMapping.fallback.actions.delete.success'));
+    } catch {
+      message.error(t('project.main.dbMapping.fallback.actions.delete.failed'));
+    }
+    navigate('/');
+  };
+
   const configureOptions: CheckboxGroupProps<boolean>['options'] = [
     { label: t('dashboard.createProject.form.step3.dbCred.configuration.dbUrl'), value: true },
     { label: t('dashboard.createProject.form.step3.dbCred.configuration.manual'), value: false },
@@ -121,8 +135,49 @@ const SettingsPage: React.FC = () => {
         message.error(t('dashboard.createProject.form.error.invalidDbUrl'));
         return;
       }
-      console.log('Syncing datasource: ', dbUrl);
-      await syncDatasource(projectId);
+
+      const rawDbUrl = dbUrl?.trim() ?? '';
+
+      const type = form.getFieldValue('dbType') || '';
+      const host = form.getFieldValue('hostname') || '';
+      const port = form.getFieldValue('port') || '';
+      const username = form.getFieldValue('username') || '';
+      const password = form.getFieldValue('password') || '';
+      const name = form.getFieldValue('name') || '';
+      const ssl = form.getFieldValue('ssl') || false;
+
+      let finalUrl = rawDbUrl;
+      if (!finalUrl) {
+        const built = buildDatabaseUrl({ type, host, port, username, password, name, ssl });
+        if (built) {
+          finalUrl = built;
+        }
+      }
+
+      let parsedUrl: URL | null = null;
+      if (finalUrl) {
+        try {
+          parsedUrl = new URL(finalUrl);
+        } catch {
+          console.warn('Invalid DB URL generated/provided, skipping parsing.');
+        }
+      }
+
+      const formData = {
+        isApproved: true,
+        dbDetails: {
+          name: name || parsedUrl?.pathname.replace(/^\//, '') || '',
+          type: type || (parsedUrl?.protocol.replace(':', '') ?? ''),
+          host: host || parsedUrl?.hostname || '',
+          port: port || parsedUrl?.port || '',
+          url: finalUrl || undefined,
+          username: username || parsedUrl?.username || '',
+          password: password || parsedUrl?.password || '',
+          ssl: ssl || parsedUrl?.searchParams.get('sslmode')?.toLowerCase() !== 'disable' || false,
+        },
+      };
+      console.log('Updating credentials with data:', formData);
+      await updateCredentials(formData, projectId);
     } catch (err) {
       const error = err as ValidateErrorEntity;
       if (error.errorFields) {
@@ -159,8 +214,8 @@ const SettingsPage: React.FC = () => {
 
       <Form form={form} layout="vertical" initialValues={{ isDbUrl: true }}>
         <InputLabel
-          inputTitle={t('project.main.settings.sync.title')}
-          inputDescription={t('project.main.settings.sync.description')}
+          inputTitle={t('project.main.settings.update.title')}
+          inputDescription={t('project.main.settings.update.description')}
         />
         <FormItem name="isDbUrl">
           <Radio.Group
@@ -308,8 +363,28 @@ const SettingsPage: React.FC = () => {
         onClick={handleSync}
         loading={isSyncLoading}
       >
-        {t('project.main.settings.sync.button')}
+        {t('project.main.settings.update.button')}
       </Button>
+
+      <div className="border-2 border-red-300 border-solid rounded-xl mt-8 p-8">
+        <InputLabel
+          inputTitle={t('project.main.settings.delete.title')}
+          inputDescription={t('project.main.settings.delete.description')}
+        />
+        <Popconfirm
+          placement="bottom"
+          title={t('project.main.dbMapping.fallback.actions.delete.confirm.title')}
+          description={t('project.main.dbMapping.fallback.actions.delete.confirm.description')}
+          okText="Yes"
+          cancelText="No"
+          onConfirm={confirmDeletion}
+          icon={<BsFillQuestionCircleFill color="#ff4d4f" size={16} className="mr-2 mt-0.5" />}
+        >
+          <Button type="primary" danger icon={<AiFillDelete />} className="font-medium font-inter h-9 text-xs">
+            {t('project.main.dbMapping.fallback.actions.delete.title')}
+          </Button>
+        </Popconfirm>
+      </div>
     </div>
   );
 };

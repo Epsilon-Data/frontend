@@ -52,10 +52,6 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
     onDragLeave: () => setDragActive(false),
   });
 
-  const handleGenerateFromCodebook = () => {
-    setShowCodebookUpload(true);
-  };
-
   // Poll job status using React Query
   const { data: jobStatus, isError } = useQuery({
     queryKey: ['codebookJobStatus', jobId],
@@ -85,12 +81,12 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
         setSelectedFile(null);
         setAdditionalContext('');
         setShowCodebookUpload(false);
-      } else if (jobStatus.status === 'failed') {
+      } else if (jobStatus.status === 'error') {
         setIsProcessing(false);
         console.error('Job failed:', jobStatus.error);
         message.error(jobStatus.error || 'Failed to process codebook.');
         setJobId(null);
-      } else if (jobStatus.status === 'processing') {
+      } else if (jobStatus.status === 'pending') {
         console.log('Job still processing...');
       }
     }

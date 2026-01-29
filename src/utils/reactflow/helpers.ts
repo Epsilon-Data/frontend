@@ -431,9 +431,6 @@ export const transformNodes = (nodes: GraphNodePayload[], edges: GraphEdgePayloa
       const parentEdge = edgesWithOrphans.find((edge) => edge.target === node.id);
       const parentNode = nodes.find((n) => n.id === parentEdge?.source);
 
-      console.log('parent edge:', parentEdge);
-      console.log('parent node:', parentNode);
-
       if (parentNode) {
         // Get parent position from the cache
         const parentPos = positions.get(parentNode.id);
@@ -473,25 +470,11 @@ export const transformNodes = (nodes: GraphNodePayload[], edges: GraphEdgePayloa
 
     return {
       id: node.id,
-      type: node.depth === 0 ? 'input' : 'default',
+      type: node.depth === 0 ? 'root' : 'category',
       position: { x, y },
       data: {
         label: node.label,
-        depth: node.depth,
-      },
-      style: {
-        background: node.colour,
-        color: '#000000',
-        border: '2px solid #fff',
-        borderRadius: '8px',
-        padding: '8px 12px',
-        fontSize: '12px',
-        fontWeight: '600',
-        boxShadow: '0 3px 8px rgba(0, 0, 0, 0.15)',
-        minWidth: '100px',
-        maxWidth: '140px',
-        textAlign: 'center',
-        wordBreak: 'break-word',
+        level: node.depth,
       },
     };
   });
@@ -531,11 +514,6 @@ export const transformEdges = (nodes: GraphNodePayload[], edges: GraphEdgePayloa
       source: edge.source,
       target: edge.target,
       type: 'floating',
-      style: {
-        stroke: isSynthetic ? '#94a3b8' : '#64748b',
-        strokeWidth: isSynthetic ? 1.5 : 2,
-        strokeDasharray: isSynthetic ? '5,5' : undefined,
-      },
       animated: false,
       deletable: true,
       selectable: true,

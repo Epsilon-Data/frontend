@@ -17,7 +17,7 @@ export type GraphEdgePayload = {
 export const getUploadJobStatus = async (
   jobId: string,
 ): Promise<{
-  status: 'pending' | 'processing' | 'completed' | 'failed';
+  status: 'pending' | 'completed' | 'error';
   result?: { nodes: GraphNodePayload[]; edges: GraphEdgePayload[] };
   error?: string;
 }> => {

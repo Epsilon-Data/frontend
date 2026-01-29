@@ -89,6 +89,7 @@ const projectNavigation: SidebarNavigationItem[] = [
     key: 'settings',
     url: '/project/settings',
     dbReadyRequired: true,
+    icon: <LuSettings size={17} />,
   },
   {
     title: 'common.logout',

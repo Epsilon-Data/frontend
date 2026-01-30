@@ -7,7 +7,7 @@ import { CloseOutlined, FileOutlined, InboxOutlined, UploadOutlined } from '@ant
 import { useQuery } from '@tanstack/react-query';
 import { uploadArchetypeCodebook } from '@app/api/archetypes.api';
 import { getUploadJobStatus, GraphEdgePayload, GraphNodePayload } from '@app/api/job.api';
-import { transformEdges, transformNodes } from '@app/utils/reactflow/helpers';
+import { autoGenerateColumnsForLeafs, transformEdges, transformNodes } from '@app/utils/reactflow/helpers';
 
 type CodebookUploadProps = {
   onBack: () => void;
@@ -73,8 +73,10 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
         const transformedNodes = transformNodes(nodes, edges);
         const transformedEdges = transformEdges(nodes, edges);
 
+        const { newNodes, newEdges } = autoGenerateColumnsForLeafs(transformedNodes, transformedEdges);
+
         // Update the graph
-        onGraphGenerated(transformedNodes, transformedEdges);
+        onGraphGenerated(newNodes, newEdges);
 
         // Reset state
         setJobId(null);

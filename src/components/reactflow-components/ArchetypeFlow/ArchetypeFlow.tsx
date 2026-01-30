@@ -105,7 +105,7 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
       elementsSelectable={!isReadonly}
     >
       {name && <ArchetypeSidebar name={name} mode={mode} />}
-      <GenerateArchetypeLabel onGenerateFromCodebook={onGenerateFromCodebook} />
+      {!isReadonly && <GenerateArchetypeLabel onGenerateFromCodebook={onGenerateFromCodebook} />}
       <ZoomControls />
       <Background variant={bgVariant} />
       <ReactflowBridge onUpdate={(a) => onAnchorChange?.(a)} />

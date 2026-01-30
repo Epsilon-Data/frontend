@@ -1,5 +1,6 @@
 import { Permission, PermissionType } from '@app/api/archetypes.api';
 import { GraphEdgePayload, GraphNodePayload } from '@app/api/job.api';
+import { NodeData } from '@app/constants/reactflow/types';
 import { Node, Edge } from '@xyflow/react';
 
 const COLUMN_Y_OFFSET = 150;
@@ -358,6 +359,7 @@ export function permissionsToCheckedByCol(permissions: Permission[], nodes: Node
 }
 
 // i didnt know where else to put this
+// ps: this code was not written by me, its from the SWE FYP project
 // -Vincent
 export const transformNodes = (nodes: GraphNodePayload[], edges: GraphEdgePayload[]): Node[] => {
   const PARENT_RADIUS = 350;
@@ -525,3 +527,84 @@ export const transformEdges = (nodes: GraphNodePayload[], edges: GraphEdgePayloa
     };
   });
 };
+
+export function autoGenerateColumnsForLeafs(nodes: Node[], edges: Edge[]): { newNodes: Node[]; newEdges: Edge[] } {
+  const COLUMN_RADIUS = 250;
+  const byId = new Map(nodes.map((n) => [n.id, n]));
+
+  // get incoming edges so we can calculate the angle from parent to grandparent
+  const incomingMap = new Map<string, string>();
+  edges.forEach((e) => {
+    incomingMap.set(e.target, e.source);
+  });
+
+  // outgoing edges to check for children (since column nodes are only for nodes without chlidren)
+  const outMap = new Map<string, Edge[]>();
+  edges.forEach((e) => {
+    const list = outMap.get(e.source) || [];
+    list.push(e);
+    outMap.set(e.source, list);
+  });
+
+  const newNodes = [...nodes];
+  const newEdges = [...edges];
+
+  nodes.forEach((node) => {
+    if (node.type !== 'category') return;
+
+    const outgoing = outMap.get(node.id) || [];
+    const hasChildCategory = outgoing.some((e) => byId.get(e.target)?.type === 'category');
+
+    if (!hasChildCategory) {
+      const label = node.data.label;
+      const id = node.id;
+      const columnId = `col-${label}-${node.id}`;
+
+      const hasColumnAlready = outgoing.some((e) => byId.get(e.target)?.type === 'column');
+      if (hasColumnAlready) return;
+
+      // calculate position based on the angle of parent to grandparent node (from column node perspective)
+      let x = node.position.x;
+      let y = node.position.y + 200; // fallback default
+
+      const parentId = incomingMap.get(node.id);
+      const parentNode = parentId ? byId.get(parentId) : undefined;
+
+      if (parentNode) {
+        const dx = node.position.x - parentNode.position.x;
+        const dy = node.position.y - parentNode.position.y;
+
+        // checks if parent and grandparent node are in the same position in case something messed up
+        if (dx !== 0 || dy !== 0) {
+          const angle = Math.atan2(dy, dx);
+          x = node.position.x + COLUMN_RADIUS * Math.cos(angle);
+          y = node.position.y + COLUMN_RADIUS * Math.sin(angle);
+        }
+      }
+
+      // create the column node
+      const columnNode: Node = {
+        id: columnId,
+        type: 'column',
+        position: { x, y },
+        data: {
+          label: id,
+          level: ((node.data as NodeData).level || 0) + 1,
+        },
+      };
+
+      // creates the connecting edge
+      const edge: Edge = {
+        id: `edge-${node.id}-${columnId}`,
+        source: node.id,
+        target: columnId,
+        type: 'smoothstep', // lowkey looks nicer than 'default'
+      };
+
+      newNodes.push(columnNode);
+      newEdges.push(edge);
+    }
+  });
+
+  return { newNodes, newEdges };
+}

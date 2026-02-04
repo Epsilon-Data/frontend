@@ -5,6 +5,8 @@ export interface UserDetails {
   email_verified: boolean;
   given_name: string;
   family_name: string;
+  institution: string;
+  job_title: string;
   preferred_username: string;
   auth_time: number;
   realm_access?: {

@@ -55,7 +55,7 @@ export const RequestAccessPage = ({ project, form, members, setMembers }: Reques
               />
               <DetailsRow
                 title={t('browse.createRequest.form.requestor.position')}
-                content={''}
+                content={user?.job_title || ''}
                 titleWidth={7}
                 contentWidth={15}
               />
@@ -67,7 +67,7 @@ export const RequestAccessPage = ({ project, form, members, setMembers }: Reques
               />
               <DetailsRow
                 title={t('browse.createRequest.form.requestor.orgName')}
-                content={''}
+                content={user?.institution || ''}
                 titleWidth={7}
                 contentWidth={15}
               />

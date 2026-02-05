@@ -38,6 +38,8 @@ const exampleUserDetails: UserDetails = {
   given_name: 'John',
   family_name: 'Doe',
   preferred_username: 'jdoe',
+  institution: 'Example University',
+  job_title: 'Software Engineer',
   auth_time: 1728837300, // e.g., Unix timestamp in seconds
   realm_access: {
     roles: ['user', 'offline_access'],

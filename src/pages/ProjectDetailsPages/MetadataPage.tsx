@@ -3,7 +3,7 @@ import { MetadataTabs } from '@app/components/metadata-summary/MetadataTabs';
 import { DATE_FORMAT } from '@app/constants/database';
 import { useMetadata } from '@app/hooks/useMetadata';
 import { useProjectContext } from '@app/hooks/useProjectContext';
-import { Breadcrumb, Spin } from 'antd';
+import { Breadcrumb, Spin, Tag } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +15,11 @@ const MetadataPage: React.FC = () => {
   const { t } = useTranslation();
   const { info, diagramCode, selectItems, tableInfo, loading, fetchMetadata } = useMetadata(projectId);
   const { project } = useProjectContext();
+
+  const DB_STATUS = {
+    CONNECTED: { text: 'Connected', color: 'green' },
+    OUTDATED: { text: 'Outdated', color: 'orange' },
+  } as const;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -32,6 +37,52 @@ const MetadataPage: React.FC = () => {
     <div className="py-3 px-4 md:py-5 md:px-9">
       <Breadcrumb separator=">" className="my-4" items={breadcrumbItems} />
       <Spin spinning={loading}>
+        <div className="flex items-start w-full mt-8 pb-4 mb-4 border-b border-grey-3">
+          <div className="text-xl font-medium font-sans">{t('project.main.details.title')}</div>
+        </div>
+        <div className="grid grid-cols-1 gap-4">
+          <DetailsRow title={t('project.main.details.name')} titleWidth={6} content={project?.name || '-'} />
+          <DetailsRow
+            title={t('project.main.details.duration')}
+            titleWidth={6}
+            content={
+              project?.startDate && project?.endDate
+                ? `${dayjs(project.startDate).format(DATE_FORMAT)} - ${dayjs(project.endDate).format(DATE_FORMAT)}`
+                : '-'
+            }
+          />
+          <DetailsRow
+            title={t('project.main.details.description')}
+            titleWidth={6}
+            content={project?.description || '-'}
+          />
+          <DetailsRow
+            title={t('project.main.details.participantsNum')}
+            titleWidth={6}
+            content={project?.participantsNum?.toString() || '-'}
+          />
+          <DetailsRow
+            title={t('project.main.details.keywords')}
+            titleWidth={6}
+            content={project?.dbKeywords?.length ? project.dbKeywords.join(', ') : '-'}
+          />
+          <DetailsRow
+            title={t('project.main.details.university')}
+            titleWidth={6}
+            content={project?.university || '-'}
+          />
+          <DetailsRow title={t('project.main.details.faculty')} titleWidth={6} content={project?.faculty || '-'} />
+          <DetailsRow title={t('project.main.details.ethics')} titleWidth={6} content={project?.ethicsId || '-'} />
+          <DetailsRow
+            title={t('project.main.details.databaseStatus')}
+            titleWidth={6}
+            content={
+              <Tag variant="solid" color={DB_STATUS.CONNECTED.color}>
+                {DB_STATUS.CONNECTED.text}
+              </Tag>
+            }
+          />
+        </div>
         <div className="flex items-start w-full mt-8 pb-4 mb-4 border-b border-grey-3">
           <div className="text-xl font-medium font-sans">{t('project.main.metadata.title')}</div>
         </div>

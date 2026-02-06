@@ -284,6 +284,18 @@
           }
         }
       },
+      "details": {
+        "title": "Project details",
+        "name": "Project name",
+        "duration": "Project duration",
+        "description": "Project description",
+        "participantsNum": "Number of participants",
+        "keywords": "Project keywords",
+        "university": "University name",
+        "faculty": "Faculty name",
+        "ethics": "Project ethics ID",
+        "databaseStatus": "Database status"
+      },
       "metadata": {
         "title": "Metadata summary",
         "created": "Date Created",

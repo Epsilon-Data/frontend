@@ -42,7 +42,7 @@ export const SVGWrapper = styled.div<{ scale: number; offsetX: number; offsetY: 
 export const ToolbarWrapper = styled.div`
   position: absolute;
   top: 12px;
-  right: 12px;
+  left: 12px;
   z-index: 10;
   display: flex;
   flex-direction: column;

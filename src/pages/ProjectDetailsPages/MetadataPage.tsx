@@ -25,7 +25,7 @@ const MetadataPage: React.FC = () => {
   const breadcrumbItems = [
     { title: <Link to="/">{t('project.breadcrumb.home')}</Link> },
     { title: project?.name || '' },
-    { title: <Link to={`/project/metadata?id=${projectId}`}>{t('project.breadcrumb.metadata')}</Link> },
+    { title: <Link to={`/project/details?id=${projectId}`}>{t('project.breadcrumb.projectDetails')}</Link> },
   ];
 
   return (

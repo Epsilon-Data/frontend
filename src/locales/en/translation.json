@@ -196,7 +196,7 @@
         "title": "Project database",
         "dbMapping": "Database mapping",
         "managePermissions": "Manage permissions",
-        "metadata": "Metadata"
+        "projectDetails": "Project details"
       },
       "projectAccess": "Project access",
       "team": "Your team",
@@ -204,7 +204,7 @@
     },
     "breadcrumb": {
       "home": "My projects",
-      "metadata": "Metadata",
+      "projectDetails": "Project details",
       "dbMapping": "Database mapping",
       "projectAccess": "Project access",
       "settings": "Settings"

@@ -64,9 +64,9 @@ const projectNavigation: SidebarNavigationItem[] = [
         url: '/project/db-mapping',
       },
       {
-        title: 'project.sidebar.projectDb.metadata',
-        key: 'project/metadata',
-        url: '/project/metadata',
+        title: 'project.sidebar.projectDb.projectDetails',
+        key: 'project/details',
+        url: '/project/details',
         dbReadyRequired: true,
       },
     ],

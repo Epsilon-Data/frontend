@@ -63,14 +63,21 @@ const { getLoginUrl, handlePageLoad, getUserInfo, getUserClaims, refreshToken, l
 );
 
 httpClient.interceptors.response.use(undefined, (error: AxiosError) => {
+  // Allow callers to suppress the global error redirect by setting
+  // `suppressErrorRedirect: true` on the request config.
+  const suppress =
+    (error.config as AxiosRequestConfig & { suppressErrorRedirect?: boolean })?.suppressErrorRedirect === true;
+
   const responseData = error.response?.data as ApiErrorData | undefined;
   const message = responseData?.message || error.message || 'Unknown error';
 
-  errorBus.emit({
-    message,
-    status: error.response?.status,
-    data: responseData,
-  });
+  if (!suppress) {
+    errorBus.emit({
+      message,
+      status: error.response?.status,
+      data: responseData,
+    });
+  }
 
   throw new ApiError<ApiErrorData>(message, responseData);
 });

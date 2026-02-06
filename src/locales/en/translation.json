@@ -11,7 +11,8 @@
     "delete": "Delete",
     "publish": "Publish",
     "withdraw": "Withdraw",
-    "loading": "Loading"
+    "loading": "Loading",
+    "save": "Save"
   },
   "notifications": {
     "basic": "Basic notification",
@@ -133,6 +134,9 @@
           "title": "Database",
           "dbName": { "title": "What is the name of your database?", "placeholder": "Enter your database name" },
           "dbType": { "title": "What is the nature of your database?", "placeholder": "Select database type" },
+          "updateDatabase": {
+            "title": "Would you like to update your database connection details?"
+          },
           "hasCreds": {
             "title": "Do you have database credentials?"
           },
@@ -185,7 +189,9 @@
           "allChecked": "All steps must be confirmed before starting a new project.",
           "emailRequired": "Email is required",
           "duplicateEmail": "Team member email already added"
-        }
+        },
+        "success": "Project created successfully",
+        "failed": "Failed to create project"
       }
     }
   },
@@ -353,6 +359,11 @@
       },
       "settings": {
         "title": "Settings",
+        "editProject": {
+          "title": "Edit project details",
+          "description": "Update and edit your project details",
+          "button": "Update project"
+        },
         "visualisations": {
           "title": "Set visualisations for display",
           "description": "Input tableau visualisation title and URL to display within the browse hub"

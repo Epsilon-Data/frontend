@@ -167,3 +167,10 @@ export const updateCredentials = async (data: ConnectionInfo, projectId: string 
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 };
+
+export const updateProject = async (data: Partial<ProjectInfo>, projectId: string | undefined): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  await httpClient.put(`${PROJECT_API_URL}/${projectId}`, data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+};

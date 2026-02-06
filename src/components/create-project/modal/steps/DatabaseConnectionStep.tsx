@@ -19,6 +19,7 @@ export type DatabaseConnectionStepProps = {
   isConnected: boolean;
   setConnected: React.Dispatch<React.SetStateAction<boolean>>;
   setDbUrl: React.Dispatch<React.SetStateAction<string>>;
+  isEditing?: boolean;
 };
 
 export const DatabaseConnectionStep = ({
@@ -28,6 +29,7 @@ export const DatabaseConnectionStep = ({
   isConnected,
   setConnected,
   setDbUrl,
+  isEditing = false,
 }: DatabaseConnectionStepProps) => {
   const { t } = useTranslation();
   const [isTestLoading, setTestLoading] = useState(false);
@@ -35,6 +37,7 @@ export const DatabaseConnectionStep = ({
   const hasCreds = Form.useWatch('hasCreds', form);
   const isDbUrl = Form.useWatch('isDbUrl', form);
   const dbType = Form.useWatch('dbType', form);
+  const updateDatabase = Form.useWatch('updateDatabase', form);
 
   const dbTypeOptions = [{ value: 'postgres', label: 'PostgreSQL' }];
 
@@ -160,13 +163,6 @@ export const DatabaseConnectionStep = ({
     <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
       <Form form={form} className="h-full" onValuesChange={onValuesChange}>
         <NumberedFormItem number={1}>
-          <ModalInput
-            name="dbName"
-            inputTitle={t('dashboard.createProject.form.step3.dbName.title')}
-            placeholder={t('dashboard.createProject.form.step3.dbName.placeholder')}
-          />
-        </NumberedFormItem>
-        <NumberedFormItem number={2}>
           <ModalSelect
             name="dbType"
             inputTitle={t('dashboard.createProject.form.step3.dbType.title')}
@@ -175,16 +171,28 @@ export const DatabaseConnectionStep = ({
         </NumberedFormItem>
         {dbType === 'postgres' && (
           <>
-            <NumberedFormItem number={3} showDivider={false}>
-              <ModalRadioGroup
-                name="hasCreds"
-                inputTitle={t('dashboard.createProject.form.step3.hasCreds.title')}
-                options={hasCredsOptions}
-                defaultValue={true}
-                onChange={handleHasCredsChange}
-              />
-            </NumberedFormItem>
-            {hasCreds ? (
+            {isEditing && (
+              <NumberedFormItem number={2} showDivider={false}>
+                <ModalRadioGroup
+                  name="updateDatabase"
+                  inputTitle={t('dashboard.createProject.form.step3.updateDatabase.title')}
+                  options={hasCredsOptions}
+                  defaultValue={false}
+                />
+              </NumberedFormItem>
+            )}
+            {!isEditing && (
+              <NumberedFormItem number={2} showDivider={false}>
+                <ModalRadioGroup
+                  name="hasCreds"
+                  inputTitle={t('dashboard.createProject.form.step3.hasCreds.title')}
+                  options={hasCredsOptions}
+                  defaultValue={true}
+                  onChange={handleHasCredsChange}
+                />
+              </NumberedFormItem>
+            )}
+            {(isEditing ? updateDatabase : hasCreds) && (
               <TestConnectionGroup
                 inputTitle={t('dashboard.createProject.form.step3.dbCred.dbUrl.title')}
                 inputDescription={t('dashboard.createProject.form.step3.dbCred.dbUrl.description')}
@@ -195,10 +203,11 @@ export const DatabaseConnectionStep = ({
                 radioGroupOptions={configureOptions}
                 handleChange={handleIsDbUrlChange}
                 isDbUrl={isDbUrl}
-                number={4}
+                number={isEditing ? 3 : 4}
               />
-            ) : (
-              <NumberedFormItem number={4} showDivider={false}>
+            )}
+            {!isEditing && !hasCreds && (
+              <NumberedFormItem number={3} showDivider={false}>
                 <ModalInput
                   name="orgAdminEmail"
                   inputTitle={t('dashboard.createProject.form.step3.orgAdminEmail.title')}

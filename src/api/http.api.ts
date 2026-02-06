@@ -63,8 +63,6 @@ const { getLoginUrl, handlePageLoad, getUserInfo, getUserClaims, refreshToken, l
 );
 
 httpClient.interceptors.response.use(undefined, (error: AxiosError) => {
-  // Allow callers to suppress the global error redirect by setting
-  // `suppressErrorRedirect: true` on the request config.
   const suppress =
     (error.config as AxiosRequestConfig & { suppressErrorRedirect?: boolean })?.suppressErrorRedirect === true;
 

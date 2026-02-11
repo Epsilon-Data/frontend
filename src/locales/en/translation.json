@@ -11,7 +11,8 @@
     "delete": "Delete",
     "publish": "Publish",
     "withdraw": "Withdraw",
-    "loading": "Loading"
+    "loading": "Loading",
+    "save": "Save"
   },
   "notifications": {
     "basic": "Basic notification",
@@ -96,6 +97,10 @@
             "title": "Which keywords best describe your project?",
             "description": "Use 2-5 word phrases that help other reseachers understand the focus and content of your project and its database"
           },
+          "isPublic": {
+            "title": "Is this a public dataset?",
+            "description": "If enabled, users can request access to analyse the dataset without needing approval."
+          },
           "keywordGuidance": {
             "tip1": "Don’t include your or participant’s personal details",
             "tip2": "Use descriptive words, like “population demographics” or “health data” to convey the main themes of your dataset",
@@ -133,6 +138,9 @@
           "title": "Database",
           "dbName": { "title": "What is the name of your database?", "placeholder": "Enter your database name" },
           "dbType": { "title": "What is the nature of your database?", "placeholder": "Select database type" },
+          "updateDatabase": {
+            "title": "Would you like to update your database connection details?"
+          },
           "hasCreds": {
             "title": "Do you have database credentials?"
           },
@@ -185,7 +193,9 @@
           "allChecked": "All steps must be confirmed before starting a new project.",
           "emailRequired": "Email is required",
           "duplicateEmail": "Team member email already added"
-        }
+        },
+        "success": "Project created successfully",
+        "failed": "Failed to create project"
       }
     }
   },
@@ -196,7 +206,7 @@
         "title": "Project database",
         "dbMapping": "Database mapping",
         "managePermissions": "Manage permissions",
-        "metadata": "Metadata"
+        "projectDetails": "Project details"
       },
       "projectAccess": "Project access",
       "team": "Your team",
@@ -204,7 +214,7 @@
     },
     "breadcrumb": {
       "home": "My projects",
-      "metadata": "Metadata",
+      "projectDetails": "Project details",
       "dbMapping": "Database mapping",
       "projectAccess": "Project access",
       "settings": "Settings"
@@ -284,6 +294,18 @@
           }
         }
       },
+      "details": {
+        "title": "Project details",
+        "name": "Project name",
+        "duration": "Project duration",
+        "description": "Project description",
+        "participantsNum": "Number of participants",
+        "keywords": "Project keywords",
+        "university": "University name",
+        "faculty": "Faculty name",
+        "ethics": "Project ethics ID",
+        "databaseStatus": "Database status"
+      },
       "metadata": {
         "title": "Metadata summary",
         "created": "Date Created",
@@ -341,6 +363,11 @@
       },
       "settings": {
         "title": "Settings",
+        "editProject": {
+          "title": "Edit project details",
+          "description": "Update and edit your project details",
+          "button": "Update project"
+        },
         "visualisations": {
           "title": "Set visualisations for display",
           "description": "Input tableau visualisation title and URL to display within the browse hub"
@@ -470,6 +497,7 @@
       },
       "details": {
         "proceed": {
+          "join": "Join",
           "requestAccess": "Request access",
           "manageProject": "Manage project",
           "manageRequest": "Manage request access",

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import FormItem from 'antd/es/form/FormItem';
 import { Form, Select, SelectProps, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +21,15 @@ export const ModalTagInput: React.FC<{
   const [search, setSearch] = useState('');
   const form = Form.useFormInstance();
   const normalizedSet = useMemo(() => new Set(value.map(norm)), [value]);
+
+  // keep form field in sync with controlled value so tags render correctly
+  useEffect(() => {
+    try {
+      form.setFieldsValue({ [name]: value });
+    } catch (e) {
+      // ignore if form not ready
+    }
+  }, [value, name, form]);
 
   const onInputKeyDown: React.KeyboardEventHandler = (e) => {
     if (e.key === 'Enter' || e.key === ',') {

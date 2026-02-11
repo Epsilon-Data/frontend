@@ -43,7 +43,7 @@ export const AppRouter: React.FC = () => {
         </Route>
         <Route path="project" element={<ProjectLayout />}>
           <Route path="db-mapping" element={<DatabaseMapping />} />
-          <Route path="metadata" element={<Metadata />} />
+          <Route path="details" element={<Metadata />} />
           <Route path="access" element={<Access />} />
           <Route path="settings" element={<Settings />} />
         </Route>

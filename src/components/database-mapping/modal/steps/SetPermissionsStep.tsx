@@ -7,7 +7,7 @@ import { PermissionTableRow } from '@app/utils/reactflow/helpers';
 import { usePermissionTable, CheckedByCol } from '@app/hooks/usePermissionTable';
 import { RxQuestionMarkCircled } from 'react-icons/rx';
 import { getColors } from '@app/constants/reactflow/reactflowOptions';
-import { ToggleRadio } from '@app/components/common/Modal/ToggleRadio/ToggleRadio';
+import { ToggleCheckbox } from '@app/components/common/Modal/ToggleCheckbox/ToggleCheckbox';
 
 export type SetPermissionsStepProps = {
   nodes: Node[];
@@ -46,7 +46,7 @@ export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol
       const onChange = (next: boolean) =>
         row.kind === 'category' ? onParentToggle(col, row, next) : onLeafToggle(col, row, next);
 
-      return <ToggleRadio checked={checked} disabled={false} onChange={onChange} />;
+      return <ToggleCheckbox checked={checked} disabled={false} onChange={onChange} />;
     };
     RadioRenderer.displayName = `RadioRenderer(${col})`;
     return RadioRenderer;
@@ -70,19 +70,19 @@ export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol
         </span>
       ),
     },
-    {
-      title: (
-        <div className="flex flex-row font-light items-center">
-          <span>{t('project.createTemplate.form.step4.table.header.analysis.high.title')}</span>
-          <Tooltip title={t('project.createTemplate.form.step4.table.header.analysis.high.tooltip')} placement="bottom">
-            <RxQuestionMarkCircled size={18} className="ml-2" />
-          </Tooltip>
-        </div>
-      ),
-      key: 'high',
-      align: 'center' as const,
-      render: renderRadio('high'),
-    },
+    // {
+    //   title: (
+    //     <div className="flex flex-row font-light items-center">
+    //       <span>{t('project.createTemplate.form.step4.table.header.analysis.high.title')}</span>
+    //       <Tooltip title={t('project.createTemplate.form.step4.table.header.analysis.high.tooltip')} placement="bottom">
+    //         <RxQuestionMarkCircled size={18} className="ml-2" />
+    //       </Tooltip>
+    //     </div>
+    //   ),
+    //   key: 'high',
+    //   align: 'center' as const,
+    //   render: renderRadio('high'),
+    // },
     {
       title: (
         <div className="flex flex-row font-light items-center">
@@ -96,7 +96,7 @@ export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol
         </div>
       ),
       key: 'detail',
-      align: 'center' as const,
+      align: 'left' as const,
       render: renderRadio('detail'),
     },
     {

@@ -2,56 +2,91 @@ import { styled } from 'styled-components';
 import { FiMaximize } from 'react-icons/fi';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
 
-export const ERDContainer = styled.div`
+export const ERDWrapper = styled.div`
   position: relative;
   width: 100%;
+  height: 500px;
   background: #fff;
   border-radius: 0.5rem;
+  border: 1px solid #f0f0f0;
+  overflow: hidden;
+`;
+
+export const ERDContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+  user-select: none;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
 
   svg {
-    max-width: 100%;
-    height: auto;
     display: block;
   }
 `;
 
+export const SVGWrapper = styled.div<{ scale: number; offsetX: number; offsetY: number; isDragging: boolean }>`
+  transform: translate(${(props) => props.offsetX}px, ${(props) => props.offsetY}px) scale(${(props) => props.scale});
+  transform-origin: center center;
+  transition: ${(props) => (props.isDragging ? 'none' : 'transform 0.2s ease')};
+  display: inline-block;
+`;
+
 export const ToolbarWrapper = styled.div`
-  height: 100%;
   position: absolute;
-  top: 0;
-  right: 0;
-  padding: 15px;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-`;
-export const ToolbarTop = styled.div`
-  flex: 0 0 auto;
-  border-radius: 2px;
-  background: #f2f2f2;
-`;
-
-const ToolCss = `
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
   padding: 4px;
-  height: 30px;
-  width: 30px;
-  display: block;
-  background: var(--lightgrey);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 `;
 
-export const ZoomInTool = styled(AiOutlinePlus)`
-  ${ToolCss}
-  color: gray;
-  border-top-left-radius: 0.3rem;
-  border-top-right-radius: 0.3rem;
+export const ToolbarButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: #fff;
+  color: #666;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  font-size: 16px;
+
+  &:hover {
+    background: #f5f5f5;
+    color: #333;
+  }
+
+  &:active {
+    background: #efefef;
+  }
 `;
-export const ZoomOutTool = styled(AiOutlineMinus)`
-  ${ToolCss}
-  color: gray;
+
+export const ZoomInIcon = styled(AiOutlinePlus)`
+  font-size: 16px;
 `;
-export const MaximizeTool = styled(FiMaximize)`
-  ${ToolCss}
-  color: gray;
-  border-bottom-left-radius: 0.3rem;
-  border-bottom-right-radius: 0.3rem;
+
+export const ZoomOutIcon = styled(AiOutlineMinus)`
+  font-size: 16px;
+`;
+
+export const ResetIcon = styled(FiMaximize)`
+  font-size: 16px;
 `;

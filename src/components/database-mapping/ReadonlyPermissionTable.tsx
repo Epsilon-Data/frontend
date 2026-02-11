@@ -1,5 +1,5 @@
 // components/ReadOnlyPermissionsTable.tsx
-import { Input, Radio, Space, Table, Tooltip } from 'antd';
+import { Checkbox, Input, Space, Table, Tooltip } from 'antd';
 import { useMemo, useState } from 'react';
 import { IoSearch } from 'react-icons/io5';
 import type { Node, Edge } from '@xyflow/react';
@@ -45,7 +45,7 @@ export function ReadOnlyPermissionsTable({ nodes, edges, permissions }: Props) {
     const RadioRenderer = (_: unknown, row: PermissionTableRow) => {
       const checked = row.kind === 'category' ? !!snapshot.parent[row.key] : !!snapshot.leaf[row.key];
 
-      return <Radio checked={checked} />;
+      return <Checkbox checked={checked} />;
     };
 
     return RadioRenderer;
@@ -69,19 +69,19 @@ export function ReadOnlyPermissionsTable({ nodes, edges, permissions }: Props) {
         </span>
       ),
     },
-    {
-      title: (
-        <div className="flex flex-row font-light items-center">
-          <span>{t('project.createTemplate.form.step4.table.header.analysis.high.title')}</span>
-          <Tooltip title={t('project.createTemplate.form.step4.table.header.analysis.high.tooltip')} placement="bottom">
-            <RxQuestionMarkCircled size={18} className="ml-2" />
-          </Tooltip>
-        </div>
-      ),
-      key: 'high',
-      align: 'center' as const,
-      render: renderRadio('high'),
-    },
+    // {
+    //   title: (
+    //     <div className="flex flex-row font-light items-center">
+    //       <span>{t('project.createTemplate.form.step4.table.header.analysis.high.title')}</span>
+    //       <Tooltip title={t('project.createTemplate.form.step4.table.header.analysis.high.tooltip')} placement="bottom">
+    //         <RxQuestionMarkCircled size={18} className="ml-2" />
+    //       </Tooltip>
+    //     </div>
+    //   ),
+    //   key: 'high',
+    //   align: 'center' as const,
+    //   render: renderRadio('high'),
+    // },
     {
       title: (
         <div className="flex flex-row font-light items-center">
@@ -95,7 +95,7 @@ export function ReadOnlyPermissionsTable({ nodes, edges, permissions }: Props) {
         </div>
       ),
       key: 'detail',
-      align: 'center' as const,
+      align: 'left' as const,
       render: renderRadio('detail'),
     },
     {

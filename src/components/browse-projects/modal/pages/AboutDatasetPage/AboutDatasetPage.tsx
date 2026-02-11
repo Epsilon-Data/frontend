@@ -17,7 +17,7 @@ type AboutDatasetPageProps = {
   setModalStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
-type ButtonMode = 'OWNER' | 'APPLIED' | 'DEFAULT';
+type ButtonMode = 'OWNER' | 'APPLIED' | 'DEFAULT' | 'JOIN';
 
 export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutDatasetPageProps) => {
   const navigate = useNavigate();
@@ -65,14 +65,22 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
       label: t('browse.main.details.proceed.requestAccess'),
       onClick: () => setModalStep((prev) => prev + 1),
     },
+    JOIN: {
+      label: t('browse.main.details.proceed.join'),
+      onClick: () => setModalStep((prev) => prev + 1),
+    },
   };
 
   const renderButtonMode = () => {
     const isOwner = project.ownerId === user?.sub;
     const isMember = project.members?.find((member) => member.email === user?.email);
     if (isOwner || isMember) return buttonConfig.OWNER;
-    if (request !== null) return buttonConfig.APPLIED;
-    return buttonConfig.DEFAULT;
+    if (project.isPublic) {
+      return buttonConfig.JOIN;
+    } else {
+      if (request !== null) return buttonConfig.APPLIED;
+      return buttonConfig.DEFAULT;
+    }
   };
 
   return (

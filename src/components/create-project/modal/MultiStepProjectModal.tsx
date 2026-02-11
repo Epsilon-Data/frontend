@@ -37,7 +37,7 @@ export const MultiStepProjectModal = ({ fetchProjects, editingProject, ...modalP
   // Pre-fill form if editing
   useEffect(() => {
     if (editingProject && isModalOpen) {
-      const { startDate, endDate, members, connection } = editingProject;
+      const { startDate, endDate, members, connection, isPublic } = editingProject;
 
       step1.setFieldsValue({
         name: editingProject.name,
@@ -45,6 +45,7 @@ export const MultiStepProjectModal = ({ fetchProjects, editingProject, ...modalP
         participantsNum: editingProject.participantsNum,
         members: members || [],
         duration: startDate && endDate ? [dayjs(startDate), dayjs(endDate)] : undefined,
+        isPublic: isPublic ?? false,
       });
 
       step2.setFieldsValue({
@@ -168,6 +169,7 @@ export const MultiStepProjectModal = ({ fetchProjects, editingProject, ...modalP
           members: (step1.getFieldValue('members') || []).filter((m: { email: string }) => m?.email),
           participantsNum: step1.getFieldValue('participantsNum'),
           dbKeywords: dbKeywords,
+          isPublic: step1.getFieldValue('isPublic') ?? false,
           connection: {
             orgAdminEmail: step3.getFieldValue('orgAdminEmail'),
             dbDetails: {
@@ -224,6 +226,9 @@ export const MultiStepProjectModal = ({ fetchProjects, editingProject, ...modalP
         if (facultyVal !== editingProject.faculty) payload.faculty = facultyVal;
         const ethicsVal = step2.getFieldValue('ethicsId');
         if (ethicsVal !== editingProject.ethicsId) payload.ethicsId = ethicsVal;
+
+        const isPublicVal = step1.getFieldValue('isPublic');
+        if (isPublicVal !== editingProject.isPublic) payload.isPublic = isPublicVal;
 
         // Only include database details if user chose to update database
         const shouldUpdateDatabase = step3.getFieldValue('updateDatabase');

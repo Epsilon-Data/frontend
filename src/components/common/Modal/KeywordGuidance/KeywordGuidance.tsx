@@ -21,7 +21,7 @@ const KeywordGuidance = () => {
   };
 
   return (
-    <div className="pb-40">
+    <div className="pb-16">
       <Paragraph className="flex items-start font-light text-gray">
         <span className="font-bold text-blueDark text-lg mr-2 leading-none">•</span>
         <span>{t('dashboard.createProject.form.step1.keywordGuidance.tip1')}</span>

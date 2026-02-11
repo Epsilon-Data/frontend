@@ -19,6 +19,7 @@ export interface ProjectSummaryInfo {
   faculty: string;
   lead: string;
   status: string;
+  isPublic?: boolean;
 }
 
 export interface ConnectionInfo {
@@ -60,6 +61,7 @@ export interface ProjectInfo {
   lastModified?: Date;
   dbKeywords?: string[];
   connection: ConnectionInfo;
+  isPublic?: boolean;
 }
 
 export interface Member {

@@ -6,7 +6,7 @@ import { ModalNumberInput } from '@app/components/common/Modal/ModalNumberInput/
 import { ModalTagInput } from '@app/components/common/Modal/ModalTagInput/ModalTagInput';
 import { ModalTextArea } from '@app/components/common/Modal/ModalTextArea/ModalTextArea';
 import { NumberedFormItem } from '@app/components/common/Modal/NumberedFormItem/NumberedFormItem';
-import { Form, FormInstance } from 'antd';
+import { Form, FormInstance, Switch } from 'antd';
 
 import { useTranslation } from 'react-i18next';
 
@@ -76,6 +76,21 @@ export const AboutProjectStep = ({ form, dbKeywords, setDbKeywords, hideMembers 
           />
         </NumberedFormItem>
         <KeywordGuidance />
+        <NumberedFormItem number={hideMembers ? 6 : 7} showDivider={false}>
+          <div className="flex items-center justify-between pb-20">
+            <div className="flex flex-col">
+              <div className="text-sm font-medium font-inter text-black">
+                {t('dashboard.createProject.form.step1.isPublic.title')}
+              </div>
+              <div className="text-xs font-light font-inter text-black mt-1">
+                {t('dashboard.createProject.form.step1.isPublic.description')}
+              </div>
+            </div>
+            <Form.Item name="isPublic" valuePropName="checked" noStyle>
+              <Switch />
+            </Form.Item>
+          </div>
+        </NumberedFormItem>
       </Form>
     </div>
   );

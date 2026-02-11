@@ -97,6 +97,10 @@
             "title": "Which keywords best describe your project?",
             "description": "Use 2-5 word phrases that help other reseachers understand the focus and content of your project and its database"
           },
+          "isPublic": {
+            "title": "Is this a public dataset?",
+            "description": "If enabled, users can request access to analyse the dataset without needing approval."
+          },
           "keywordGuidance": {
             "tip1": "Don’t include your or participant’s personal details",
             "tip2": "Use descriptive words, like “population demographics” or “health data” to convey the main themes of your dataset",
@@ -493,6 +497,7 @@
       },
       "details": {
         "proceed": {
+          "join": "Join",
           "requestAccess": "Request access",
           "manageProject": "Manage project",
           "manageRequest": "Manage request access",

@@ -29,6 +29,7 @@ export const DatabaseConnectionStep = ({
 }: DatabaseConnectionStepProps) => {
   const { t } = useTranslation();
   const [isTestLoading, setTestLoading] = useState(false);
+  const [testError, setTestError] = useState<string | null>(null);
   const isDbUrl = Form.useWatch('isDbUrl', form);
   const dbType = Form.useWatch('dbType', form);
 
@@ -59,6 +60,7 @@ export const DatabaseConnectionStep = ({
 
   const onTestConnection = async () => {
     setTestLoading(true);
+    setTestError(null);
 
     let username = '';
     let password = '';
@@ -72,19 +74,34 @@ export const DatabaseConnectionStep = ({
       const type = form.getFieldValue('dbType');
       if (isDbUrl) {
         dbUrl = form.getFieldValue('dbUrl');
-        const parsedUrl = new URL(dbUrl);
-        const sslmode = parsedUrl.searchParams.get('sslmode');
+        try {
+          const parsedUrl = new URL(dbUrl);
+          const sslmode = parsedUrl.searchParams.get('sslmode');
 
-        if (!sslmode) {
-          throw new Error('Missing sslmode');
+          const missing: string[] = [];
+          if (!sslmode) missing.push('sslmode');
+          if (!parsedUrl.hostname) missing.push('host');
+          if (!parsedUrl.port) missing.push('port');
+          if (!parsedUrl.pathname || parsedUrl.pathname === '/') missing.push('database name');
+          if (!parsedUrl.username) missing.push('username');
+          if (!parsedUrl.password) missing.push('password');
+
+          if (missing.length) {
+            setTestError(`Missing in URL: ${missing.join(', ')}`);
+            throw new Error('validation');
+          }
+
+          username = parsedUrl.username;
+          password = parsedUrl.password;
+          hostname = parsedUrl.hostname;
+          port = parsedUrl.port;
+          name = parsedUrl.pathname.replace(/^\//, '');
+          ssl = sslmode!.toLowerCase() !== 'disable';
+        } catch (e: any) {
+          if (e.message === 'validation') throw e;
+          setTestError('Invalid database URL');
+          throw e;
         }
-
-        username = parsedUrl.username;
-        password = parsedUrl.password;
-        hostname = parsedUrl.hostname;
-        port = parsedUrl.port;
-        name = parsedUrl.pathname.replace(/^\//, '');
-        ssl = sslmode.toLowerCase() !== 'disable';
       } else {
         ({ username, password, hostname, port, name } = form.getFieldsValue([
           'username',
@@ -112,8 +129,10 @@ export const DatabaseConnectionStep = ({
         await testConnection(connectionData);
         setConnected(true);
         setDbUrl(dbUrl);
-      } catch {
+      } catch (err: any) {
         setConnected(false);
+        const message = err?.options?.message || err?.data?.message || err?.message || err?.response?.data?.message || 'Connection test failed';
+        setTestError(message);
       }
     } catch {
       setConnected(false);
@@ -155,6 +174,7 @@ export const DatabaseConnectionStep = ({
               handleChange={handleIsDbUrlChange}
               isDbUrl={isDbUrl}
               number={2}
+              errorMessage={testError}
             />
           </>
         )}

@@ -22,6 +22,7 @@ type TestConnectionGroupProps = {
   handleChange: (e: RadioChangeEvent) => void;
   isDbUrl: boolean;
   number: number;
+  errorMessage?: string | null;
 };
 
 export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
@@ -35,6 +36,7 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
   handleChange,
   isDbUrl,
   number,
+  errorMessage,
 }) => {
   const { t } = useTranslation();
   const inputRules = [
@@ -159,9 +161,11 @@ export const TestConnectionGroup: React.FC<TestConnectionGroupProps> = ({
               <FaRegCircleCheck className="ml-2 mt-1" />
             </div>
           ) : show ? (
-            <div className="text-sm text-error flex">
-              {t('dashboard.createProject.form.step3.dbCred.testConnection.failed')}
-              <PiWarningBold className="ml-2 mt-1" />
+            <div className="text-sm text-error flex flex-col">
+              <div className="flex items-center">
+                <span>{errorMessage || t('dashboard.createProject.form.step3.dbCred.testConnection.failed')}</span>
+                <PiWarningBold className="ml-2 mt-1" />
+              </div>
             </div>
           ) : null}
         </div>

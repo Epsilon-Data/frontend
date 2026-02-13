@@ -12,18 +12,8 @@ import { useThemeWatcher } from './hooks/useThemeWatcher';
 import '@xyflow/react/dist/style.css';
 import 'antd/dist/reset.css';
 import './styles/tailwind.css';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const App: React.FC = () => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: 1,
-        refetchOnWindowFocus: false,
-      },
-    },
-  });
-
   const { language } = useLanguage();
 
   usePWA();
@@ -36,9 +26,7 @@ const App: React.FC = () => {
       <GlobalStyle />
       <HelmetProvider>
         <ConfigProvider locale={language === 'en' ? enUS : deDe} theme={undefined}>
-          <QueryClientProvider client={queryClient}>
-            <AppRouter />
-          </QueryClientProvider>
+          <AppRouter />
         </ConfigProvider>
       </HelmetProvider>
     </>

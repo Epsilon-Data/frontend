@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { Node, Edge } from '@xyflow/react';
 import { useDropzone } from 'react-dropzone';
 import { CloseOutlined, FileOutlined, InboxOutlined, UploadOutlined } from '@ant-design/icons';
-import { useQuery } from '@tanstack/react-query';
 import { uploadArchetypeCodebook } from '@app/api/archetypes.api';
 import { getUploadJobStatus, GraphEdgePayload, GraphNodePayload } from '@app/api/job.api';
 import { autoGenerateColumnsForLeafs, transformEdges, transformNodes } from '@app/utils/reactflow/helpers';
+import { usePolling } from '@app/hooks/usePolling';
 
 type CodebookUploadProps = {
   onBack: () => void;
@@ -52,13 +52,9 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
     onDragLeave: () => setDragActive(false),
   });
 
-  // Poll job status using React Query
-  const { data: jobStatus, isError } = useQuery({
-    queryKey: ['codebookJobStatus', jobId],
-    queryFn: () => getUploadJobStatus(jobId!),
+  const { data: jobStatus, error: jobError } = usePolling(() => getUploadJobStatus(jobId!), {
+    interval: 3000,
     enabled: !!jobId && isProcessing,
-    refetchInterval: 3000, // Poll every 3 seconds
-    retry: 3,
   });
 
   // Handle job status updates
@@ -94,15 +90,15 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
     }
   }, [jobStatus, onGraphGenerated, setShowCodebookUpload]);
 
-  // Handle polling errors
+  // polling errors
   useEffect(() => {
-    if (isError) {
+    if (jobError) {
       setIsProcessing(false);
-      console.error('Failed to check job status');
-      message.error('Failed to check processing status');
+      console.error('Polling error:', jobError);
+      message.error('Communication error while checking job status.');
       setJobId(null);
     }
-  }, [isError]);
+  }, [jobError]);
 
   const handleCodebookSubmit = async () => {
     console.log('Codebook file:', selectedFile);

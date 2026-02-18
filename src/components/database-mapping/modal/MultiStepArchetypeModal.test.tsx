@@ -57,6 +57,14 @@ vi.mock('@app/utils/reactflow/helpers', () => ({
   }),
 }));
 
+vi.mock('@app/hooks/reduxHooks', () => ({
+  useAppSelector: vi.fn(() => ({
+    sub: 'user-123',
+    given_name: 'John',
+    family_name: 'Doe',
+  })),
+}));
+
 const mockSetModalStep = vi.fn();
 const mockSetIsModalOpen = vi.fn();
 const mockHandleDraft = vi.fn();

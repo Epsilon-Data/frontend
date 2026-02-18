@@ -6,7 +6,7 @@ import { ModalNumberInput } from '@app/components/common/Modal/ModalNumberInput/
 import { ModalTagInput } from '@app/components/common/Modal/ModalTagInput/ModalTagInput';
 import { ModalTextArea } from '@app/components/common/Modal/ModalTextArea/ModalTextArea';
 import { NumberedFormItem } from '@app/components/common/Modal/NumberedFormItem/NumberedFormItem';
-import { Form, FormInstance } from 'antd';
+import { Form, FormInstance, Switch } from 'antd';
 
 import { useTranslation } from 'react-i18next';
 
@@ -14,11 +14,10 @@ export type AboutProjectStepProps = {
   form: FormInstance<unknown>;
   dbKeywords: string[];
   setDbKeywords: (keywords: string[]) => void;
-  members: { email: string; role: string }[];
-  setMembers: React.Dispatch<React.SetStateAction<{ email: string; role: string }[]>>;
+  hideMembers?: boolean;
 };
 
-export const AboutProjectStep = ({ form, dbKeywords, setDbKeywords, members, setMembers }: AboutProjectStepProps) => {
+export const AboutProjectStep = ({ form, dbKeywords, setDbKeywords, hideMembers = false }: AboutProjectStepProps) => {
   const { t } = useTranslation();
 
   return (
@@ -55,18 +54,18 @@ export const AboutProjectStep = ({ form, dbKeywords, setDbKeywords, members, set
             inputDescription={t('dashboard.createProject.form.step1.participantsNum.description')}
           />
         </NumberedFormItem>
-        <NumberedFormItem number={5}>
-          <ModalFormList
-            name="members"
-            inputTitle={t('dashboard.createProject.form.step1.members.title')}
-            inputDescription={t('dashboard.createProject.form.step1.members.description')}
-            members={members}
-            setMembers={setMembers}
-            form={form}
-            inputProps={{ placeholder: t('dashboard.createProject.form.step1.members.placeholder') }}
-          />
-        </NumberedFormItem>
-        <NumberedFormItem number={6} showDivider={false}>
+        {!hideMembers && (
+          <NumberedFormItem number={5}>
+            <ModalFormList
+              name="members"
+              inputTitle={t('dashboard.createProject.form.step1.members.title')}
+              inputDescription={t('dashboard.createProject.form.step1.members.description')}
+              form={form}
+              inputProps={{ placeholder: t('dashboard.createProject.form.step1.members.placeholder') }}
+            />
+          </NumberedFormItem>
+        )}
+        <NumberedFormItem number={hideMembers ? 5 : 6} showDivider={false}>
           <ModalTagInput
             selectProps={{ placeholder: t('dashboard.createProject.form.step1.dbKeywords.placeholder') }}
             name="dbKeywords"
@@ -77,6 +76,21 @@ export const AboutProjectStep = ({ form, dbKeywords, setDbKeywords, members, set
           />
         </NumberedFormItem>
         <KeywordGuidance />
+        <NumberedFormItem number={hideMembers ? 6 : 7} showDivider={false}>
+          <div className="flex items-center justify-between pb-20">
+            <div className="flex flex-col">
+              <div className="text-sm font-medium font-inter text-black">
+                {t('dashboard.createProject.form.step1.isPublic.title')}
+              </div>
+              <div className="text-xs font-light font-inter text-black mt-1">
+                {t('dashboard.createProject.form.step1.isPublic.description')}
+              </div>
+            </div>
+            <Form.Item name="isPublic" valuePropName="checked" noStyle>
+              <Switch />
+            </Form.Item>
+          </div>
+        </NumberedFormItem>
       </Form>
     </div>
   );

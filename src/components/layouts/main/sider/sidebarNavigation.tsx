@@ -3,6 +3,7 @@ import { PiCirclesThreeBold, PiEyeBold } from 'react-icons/pi';
 import { TiPointOfInterest } from 'react-icons/ti';
 import { RiLogoutCircleLine } from 'react-icons/ri';
 import { AiOutlineDatabase } from 'react-icons/ai';
+import { LuSettings } from 'react-icons/lu';
 
 export interface SidebarNavigationItem {
   title: string;
@@ -63,9 +64,9 @@ const projectNavigation: SidebarNavigationItem[] = [
         url: '/project/db-mapping',
       },
       {
-        title: 'project.sidebar.projectDb.metadata',
-        key: 'project/metadata',
-        url: '/project/metadata',
+        title: 'project.sidebar.projectDb.projectDetails',
+        key: 'project/details',
+        url: '/project/details',
         dbReadyRequired: true,
       },
     ],
@@ -83,12 +84,13 @@ const projectNavigation: SidebarNavigationItem[] = [
   //   url: '/project/team',
   //   dbReadyRequired: true,
   // },
-  // {
-  //   title: 'project.sidebar.settings',
-  //   key: 'settings',
-  //   url: '/project/settings',
-  //   dbReadyRequired: true,
-  // },
+  {
+    title: 'project.sidebar.settings',
+    key: 'settings',
+    url: '/project/settings',
+    dbReadyRequired: true,
+    icon: <LuSettings size={17} />,
+  },
   {
     title: 'common.logout',
     key: 'logout',

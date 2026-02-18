@@ -8,12 +8,13 @@ import { useTranslation } from 'react-i18next';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import { approveRequest } from '@app/api/connectionRequests.api';
+import { updateCredentials } from '@app/api/projects.api';
 import { useDatabaseModalContext } from '@app/hooks/useDatabaseModalContext';
 import { buildDatabaseUrl } from '@app/utils/databaseUrl';
 
 type MultiStepDatabaseModalProps = {
-  fetchRequests: () => Promise<void>;
-  requestId: string;
+  fetchRequests?: () => Promise<void>;
+  requestId?: string;
   projectId: string;
 } & React.ComponentProps<typeof Modal>;
 
@@ -103,10 +104,15 @@ export const MultiStepDatabaseModal = ({
 
     try {
       await step2.validateFields();
-      console.log('Approving request with data:', formData);
-      await approveRequest(formData, projectId, requestId);
+      if (requestId && fetchRequests) {
+        console.log('Approving request with data:', formData);
+        await approveRequest(formData, projectId, requestId);
+        await fetchRequests();
+      } else {
+        console.log('Updating credentials with data:', formData);
+        await updateCredentials(formData, projectId);
+      }
       setIsModalOpen(false);
-      await fetchRequests();
     } catch (error) {
       console.error('Request approval failed:', error);
     } finally {

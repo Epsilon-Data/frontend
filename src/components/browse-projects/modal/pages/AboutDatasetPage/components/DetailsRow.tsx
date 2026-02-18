@@ -2,7 +2,7 @@ import { Col, Row } from 'antd';
 
 type DetailsRowProps = {
   title: string;
-  content: string;
+  content: React.ReactNode;
   titleWidth?: number;
   contentWidth?: number;
 };

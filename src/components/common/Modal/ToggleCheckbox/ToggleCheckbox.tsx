@@ -1,6 +1,6 @@
-import { Radio } from 'antd';
+import { Checkbox } from 'antd';
 
-export function ToggleRadio({
+export function ToggleCheckbox({
   checked,
   disabled,
   onChange,
@@ -15,5 +15,5 @@ export function ToggleRadio({
     onChange(!checked);
   };
 
-  return <Radio checked={checked} disabled={disabled} onClick={handleClick} />;
+  return <Checkbox checked={checked} disabled={disabled} onClick={handleClick} />;
 }

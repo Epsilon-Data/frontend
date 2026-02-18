@@ -20,12 +20,12 @@ const BrowseDatasetPage: React.FC = () => {
 
   const [searchValue, setSearchValue] = useState('');
   const [selectedField, setSelectedField] = useState<SearchField>('all');
-
   const [sortKey, setSortKey] = useState<SortKey>('date-created');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
-    fetchProjects();
+    fetchProjects().finally(() => setLoading(false));
     return () => controller.abort();
   }, [fetchProjects]);
 
@@ -83,7 +83,7 @@ const BrowseDatasetPage: React.FC = () => {
       <div className="py-0 px-4 flex flex-col">
         <SearchResultsHeader count={filteredAndSortedProjects.length} sortKey={sortKey} onSortChange={setSortKey} />
         <BrowseModalProvider>
-          <Projects projects={filteredAndSortedProjects} layout={'grid'} />
+          <Projects projects={filteredAndSortedProjects} layout={'grid'} loading={loading} />
           <MultiStepBrowseModal mask closable={false} width={'60%'} />
         </BrowseModalProvider>
       </div>

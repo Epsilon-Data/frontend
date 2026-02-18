@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
 import { Edge, Node, useEdgesState, useNodesState } from '@xyflow/react';
-import { ArchetypeInfo, createArchetype, updateArchetype } from '@app/api/archetypes.api';
+import { Archetype, ArchetypeInfo, createArchetype, updateArchetype } from '@app/api/archetypes.api';
 import { ArchetypeNameStep } from './steps/ArchetypeNameStep';
 import { CreateTemplateStep } from './steps/CreateTemplateStep';
 import { ColumnMappingStep } from './steps/ColumnMappingStep';
@@ -18,11 +18,13 @@ import {
   permissionsToCheckedByCol,
 } from '@app/utils/reactflow/helpers';
 import { CheckedByCol, usePermissionTable } from '@app/hooks/usePermissionTable';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 type MultiStepArchetypeModalProps = {
   archetype?: ArchetypeInfo | undefined;
   fetchArchetypes: () => Promise<void>;
   projectId: string;
+  addArchetype?: (archetype: Archetype) => void;
 } & React.ComponentProps<typeof Modal>;
 
 const initialNodes: Node[] = [
@@ -39,6 +41,7 @@ export const MultiStepArchetypeModal = ({
   archetype,
   fetchArchetypes,
   projectId,
+  addArchetype,
   ...modalProps
 }: MultiStepArchetypeModalProps) => {
   const [isFormLoading, setFormLoading] = useState(false);
@@ -64,6 +67,7 @@ export const MultiStepArchetypeModal = ({
   });
   const { childrenById, topKeys } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
   const { t } = useTranslation();
+  const user = useAppSelector((state) => state.user.user);
 
   const isEditing = useMemo(() => Object.keys(archetype || {}).length != 0, [archetype]);
 
@@ -259,6 +263,17 @@ export const MultiStepArchetypeModal = ({
       if (!isEditing) {
         console.log('Creating archetype with data:', formData);
         await createArchetype(formData);
+        // Optimistic update: add the new archetype to the list immediately
+        if (addArchetype) {
+          addArchetype({
+            id: '',
+            lastModified: new Date(),
+            created: new Date(),
+            createdBy: user?.sub,
+            name: formData.name,
+            status: 'ACTIVE',
+          } as Archetype);
+        }
       } else {
         const archetypeId = archetype?.archetypeId;
         if (!archetypeId) {

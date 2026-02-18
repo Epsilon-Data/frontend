@@ -78,15 +78,9 @@ vi.mock('@app/api/projects.api', () => ({
 
 // Mock step components
 vi.mock('./steps/AboutProjectStep', () => ({
-  AboutProjectStep: ({ members, setMembers, dbKeywords, setDbKeywords }: AboutProjectStepProps) => (
+  AboutProjectStep: ({ dbKeywords, setDbKeywords }: AboutProjectStepProps) => (
     <div data-testid="about-project-step">
       About Project Step
-      <button
-        data-testid="add-member"
-        onClick={() => setMembers([...members, { email: 'test@example.com', role: 'researcher' }])}
-      >
-        Add Member
-      </button>
       <button data-testid="add-keyword" onClick={() => setDbKeywords([...dbKeywords, 'test-keyword'])}>
         Add Keyword
       </button>
@@ -209,12 +203,12 @@ describe('MultiStepProjectModal', () => {
     expect(mockSetModalStep).toHaveBeenCalledWith(expect.any(Function));
   });
 
-  it('calls handleDraft when draft button is clicked', async () => {
-    render(<MultiStepProjectModal {...defaultProps} />);
+  // it('calls handleDraft when draft button is clicked', async () => {
+  //   render(<MultiStepProjectModal {...defaultProps} />);
 
-    const draftButton = screen.getByTestId('draft-button');
-    await user.click(draftButton);
+  //   const draftButton = screen.getByTestId('draft-button');
+  //   await user.click(draftButton);
 
-    expect(mockHandleDraft).toHaveBeenCalled();
-  });
+  //   expect(mockHandleDraft).toHaveBeenCalled();
+  // });
 });

@@ -1,5 +1,6 @@
 import { CONNECTION_REQUEST_API_URL } from '@app/constants/accessRequest';
 import { httpClient, getCsrfHeader } from './http.api';
+import { AxiosRequestConfig } from 'axios';
 import { Member, RequestComment } from './analysisRequests.api';
 
 export type ConnectionRequestStatus = 'PENDING' | 'REJECTED' | 'REVISION' | 'APPROVED';
@@ -72,9 +73,14 @@ export const approveRequest = async (
 
 export const testConnection = async (data: DatabaseConnectionDetails): Promise<unknown> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(`${CONNECTION_REQUEST_API_URL}/test`, data, {
+  const config: AxiosRequestConfig & { suppressErrorRedirect?: boolean } = {
     headers: { [csrfHeaderName]: `${csrf}` },
-  });
+    // prevent the global ApiErrorRedirector from navigating away; callers
+    // (the UI) will handle showing errors inline
+    suppressErrorRedirect: true,
+  };
+
+  const response = await httpClient.post(`${CONNECTION_REQUEST_API_URL}/test`, data, config);
   return response.data;
 };
 

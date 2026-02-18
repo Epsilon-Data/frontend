@@ -19,6 +19,7 @@ export interface ProjectSummaryInfo {
   faculty: string;
   lead: string;
   status: string;
+  isPublic?: boolean;
 }
 
 export interface ConnectionInfo {
@@ -60,6 +61,7 @@ export interface ProjectInfo {
   lastModified?: Date;
   dbKeywords?: string[];
   connection: ConnectionInfo;
+  isPublic?: boolean;
 }
 
 export interface Member {
@@ -150,4 +152,27 @@ export const getProjectRequests = async (projectId: string | undefined): Promise
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;
+};
+
+export const deleteProject = async (projectId: string | undefined): Promise<ProjectInfo> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.delete(`${PROJECT_API_URL}/${projectId}`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+
+  return response.data;
+};
+
+export const updateCredentials = async (data: ConnectionInfo, projectId: string | undefined): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  await httpClient.patch(`${PROJECT_API_URL}/${projectId}/credentials`, data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+};
+
+export const updateProject = async (data: Partial<ProjectInfo>, projectId: string | undefined): Promise<void> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  await httpClient.put(`${PROJECT_API_URL}/${projectId}`, data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
 };

@@ -33,6 +33,18 @@ export const useAccessRequests = (projectId: string) => {
   const [requests, setRequests] = useState<RequestListInfo>({ connection: [], analysis: [] });
   const [tableLoading, setTableLoading] = useState<boolean>(false);
   const [drawerLoading, setDrawerLoading] = useState<boolean>(false);
+
+  const optimisticUpdateStatus = useCallback((requestId: string, status: string, type: AccessRequestType) => {
+    setRequests((prev) => {
+      const key = type === 'CONNECTION' ? 'connection' : 'analysis';
+      return {
+        ...prev,
+        [key]: prev[key].map((r) => (r.requestId === requestId ? { ...r, status } : r)),
+      };
+    });
+
+    setRequest((prev) => (prev && prev.requestId === requestId ? { ...prev, status } : prev));
+  }, []);
   const fetchRequests = useCallback(async () => {
     setTableLoading(true);
     try {
@@ -84,5 +96,5 @@ export const useAccessRequests = (projectId: string) => {
     }
   }, []);
 
-  return { requests, request, drawerLoading, tableLoading, fetchRequests, fetchRequest };
+  return { requests, request, drawerLoading, tableLoading, fetchRequests, fetchRequest, optimisticUpdateStatus };
 };

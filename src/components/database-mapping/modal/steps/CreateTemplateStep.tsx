@@ -3,7 +3,9 @@ import { ArchetypeFlow } from '@app/components/reactflow-components/ArchetypeFlo
 import { handleCascadeNodeChanges } from '@app/utils/reactflow/cascade';
 import { pruneDirectColumnChildren } from '@app/utils/reactflow/prune';
 import { Node, Edge, NodeChange, EdgeChange } from '@xyflow/react';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { CodebookUpload } from '@app/components/reactflow-components/GenerateArchetype/CodebookUpload';
 
 export type CreateTemplateStepProps = {
   nodes: Node[];
@@ -16,6 +18,8 @@ export type CreateTemplateStepProps = {
   setColumns: React.Dispatch<React.SetStateAction<ColumnInfo[]>>;
   name: string;
   onNodesDeleted?: (ids: Set<string>) => void;
+  projectId: string;
+  onGraphGenerated: (nodes: Node[], edges: Edge[]) => void;
 };
 export const CreateTemplateStep = ({
   nodes,
@@ -28,6 +32,8 @@ export const CreateTemplateStep = ({
   columns,
   setColumns,
   onNodesDeleted,
+  projectId,
+  onGraphGenerated,
 }: CreateTemplateStepProps) => {
   const columnIds = useMemo(() => new Set(nodes.filter((n) => n.type === 'column').map((n) => n.id)), [nodes]);
 
@@ -124,22 +130,35 @@ export const CreateTemplateStep = ({
     [nodes, edges, setNodes, setEdges, onColumnRemoved],
   );
 
+  // local state because its only used in step 2 rather than shared across steps
+  const [showCodebookUpload, setShowCodebookUpload] = useState(false);
+
   return (
     <div className="h-[33rem] overflow-y-auto flex flex-col justify-center bg-grey-4">
       <div className="flex flex-col bg-white">
-        <div className="h-[33rem] w-full">
-          <ArchetypeFlow
-            nodes={visibleNodes}
-            edges={visibleEdges}
-            onNodesChange={handleNodesChangeEditable}
-            onEdgesChange={onEdgesChange}
-            setNodes={setNodes}
-            setEdges={setEdges}
-            mode="editable"
-            name={name}
-            onLeafNodeBecameParent={handleLeafNodeBecameParent}
+        {!showCodebookUpload ? (
+          <div className="h-[33rem] w-full">
+            <ArchetypeFlow
+              nodes={visibleNodes}
+              edges={visibleEdges}
+              onNodesChange={handleNodesChangeEditable}
+              onEdgesChange={onEdgesChange}
+              setNodes={setNodes}
+              setEdges={setEdges}
+              mode="editable"
+              name={name}
+              onLeafNodeBecameParent={handleLeafNodeBecameParent}
+              onGenerateFromCodebook={() => setShowCodebookUpload(true)}
+            />
+          </div>
+        ) : (
+          <CodebookUpload
+            onBack={() => setShowCodebookUpload(false)}
+            projectId={projectId}
+            onGraphGenerated={onGraphGenerated}
+            setShowCodebookUpload={setShowCodebookUpload}
           />
-        </div>
+        )}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { ArchetypeFlowProvider } from '@app/providers/ArchetypeFlowProvider';
 import React, { Dispatch, SetStateAction } from 'react';
 import { Background, Edge, EdgeChange, Node, NodeChange, ReactFlow } from '@xyflow/react';
 import { Anchor, ReactflowBridge } from '../ColumnToolbar/ReactflowBridge/ReactflowBridge';
+import GenerateArchetypeLabel from '../GenerateArchetype/GenerateArchetypeLabel';
 
 export interface ArchetypeProps {
   mode: FlowMode;
@@ -18,6 +19,7 @@ export interface ArchetypeProps {
   setEdges: Dispatch<SetStateAction<Edge[]>>;
   onAnchorChange?: (a: Anchor) => void;
   onLeafNodeBecameParent?: (nodeId: string) => void;
+  onGenerateFromCodebook?: () => void;
 }
 
 export const ArchetypeFlow: React.FC<ArchetypeProps> = ({
@@ -57,6 +59,7 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
   setEdges,
   onAnchorChange,
   onLeafNodeBecameParent,
+  onGenerateFromCodebook,
   ...rest
 }) => {
   const {
@@ -102,6 +105,7 @@ const InnerFlow: React.FC<ArchetypeProps> = ({
       elementsSelectable={!isReadonly}
     >
       {name && <ArchetypeSidebar name={name} mode={mode} />}
+      {!isReadonly && <GenerateArchetypeLabel onGenerateFromCodebook={onGenerateFromCodebook} />}
       <ZoomControls />
       <Background variant={bgVariant} />
       <ReactflowBridge onUpdate={(a) => onAnchorChange?.(a)} />

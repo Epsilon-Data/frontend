@@ -1,4 +1,6 @@
 import { Permission, PermissionType } from '@app/api/archetypes.api';
+import { GraphEdgePayload, GraphNodePayload } from '@app/api/job.api';
+import { NodeData } from '@app/constants/reactflow/types';
 import { Node, Edge } from '@xyflow/react';
 
 const COLUMN_Y_OFFSET = 150;
@@ -354,4 +356,255 @@ export function permissionsToCheckedByCol(permissions: Permission[], nodes: Node
   }
 
   return { checkedByCol };
+}
+
+// i didnt know where else to put this
+// ps: this code was not written by me, its from the SWE FYP project
+// -Vincent
+export const transformNodes = (nodes: GraphNodePayload[], edges: GraphEdgePayload[]): Node[] => {
+  const PARENT_RADIUS = 350;
+  const CHILD_RADIUS = 250;
+  const ARC_SPAN = Math.PI / 3; // 60 degree arc
+
+  // Group nodes by depth
+  const nodesByDepth = nodes.reduce(
+    (acc, node) => {
+      if (!acc[node.depth]) acc[node.depth] = [];
+      acc[node.depth].push(node);
+      return acc;
+    },
+    {} as Record<number, GraphNodePayload[]>,
+  );
+
+  // Edge format: parent→child (source is parent, target is child)
+  // Detect orphan nodes and assign them to Uncategorised
+  const edgesWithOrphans = [...edges];
+  const uncategorisedNode = nodes.find(
+    (node) => node.label.toLowerCase().includes('uncategorised') || node.label.toLowerCase().includes('uncategorized'),
+  );
+
+  console.log('edges with orphans:', edgesWithOrphans);
+
+  if (uncategorisedNode) {
+    // Find nodes at depth 1+ that don't have a parent edge
+    nodes.forEach((node) => {
+      if (node.depth > 0) {
+        const hasParent = edges.some((edge) => edge.target === node.id);
+        if (!hasParent) {
+          // Add synthetic edge from Uncategorised parent to this orphan child
+          edgesWithOrphans.push({
+            source: uncategorisedNode.id,
+            target: node.id,
+          });
+        }
+      }
+    });
+  }
+
+  // Store calculated positions for lookup
+  const positions = new Map<string, { x: number; y: number; angle: number }>();
+
+  // Sort nodes by depth to ensure parents are processed before children
+  const sortedNodes = [...nodes].sort((a, b) => a.depth - b.depth);
+
+  return sortedNodes.map((node) => {
+    let x = 0,
+      y = 0;
+
+    if (node.depth === 0) {
+      // Root node at center
+      x = 0;
+      y = 0;
+      positions.set(node.id, { x, y, angle: 0 });
+    } else if (node.depth === 1) {
+      // First level: arrange in a circle around the center
+      const nodesAtDepth = nodesByDepth[1];
+      const indexAtDepth = nodesAtDepth.indexOf(node);
+      const totalNodesAtDepth = nodesAtDepth.length;
+
+      const angleStep = (2 * Math.PI) / totalNodesAtDepth;
+      const angle = indexAtDepth * angleStep;
+
+      x = PARENT_RADIUS * Math.cos(angle);
+      y = PARENT_RADIUS * Math.sin(angle);
+      positions.set(node.id, { x, y, angle });
+    } else {
+      // Deeper levels: group children around their parent
+      const parentEdge = edgesWithOrphans.find((edge) => edge.target === node.id);
+      const parentNode = nodes.find((n) => n.id === parentEdge?.source);
+
+      if (parentNode) {
+        // Get parent position from the cache
+        const parentPos = positions.get(parentNode.id);
+
+        if (parentPos) {
+          const parentX = parentPos.x;
+          const parentY = parentPos.y;
+          const parentAngle = parentPos.angle;
+
+          // Get siblings (other children of the same parent)
+          const siblings = edgesWithOrphans.filter((edge) => edge.source === parentNode.id).map((edge) => edge.target);
+
+          const siblingIndex = siblings.indexOf(node.id);
+          const totalSiblings = siblings.length;
+
+          if (totalSiblings === 1) {
+            // Only child - place directly outward from parent
+            x = parentX + CHILD_RADIUS * Math.cos(parentAngle);
+            y = parentY + CHILD_RADIUS * Math.sin(parentAngle);
+          } else {
+            // Multiple children - arrange in arc around parent
+            const startAngle = parentAngle - ARC_SPAN / 2;
+            const angleStep = ARC_SPAN / (totalSiblings - 1);
+            const childAngle = startAngle + siblingIndex * angleStep;
+
+            x = parentX + CHILD_RADIUS * Math.cos(childAngle);
+            y = parentY + CHILD_RADIUS * Math.sin(childAngle);
+          }
+
+          positions.set(node.id, { x, y, angle: parentAngle });
+        }
+      } else {
+        console.log('node depth:', node.depth);
+        console.log('');
+      }
+    }
+
+    return {
+      id: node.id,
+      type: node.depth === 0 ? 'root' : 'category',
+      position: { x, y },
+      data: {
+        label: node.label,
+        level: node.depth,
+      },
+    };
+  });
+};
+
+export const transformEdges = (nodes: GraphNodePayload[], edges: GraphEdgePayload[]): Edge[] => {
+  // Edge format: parent→child (source is parent, target is child)
+  // Find uncategorised node for orphan detection
+  const uncategorisedNode = nodes.find(
+    (node) => node.label.toLowerCase().includes('uncategorised') || node.label.toLowerCase().includes('uncategorized'),
+  );
+
+  // Build edge list with orphan detection
+  const edgesWithOrphans = [...edges];
+  const syntheticEdgeIds = new Set<string>();
+
+  if (uncategorisedNode) {
+    nodes.forEach((node) => {
+      if (node.depth > 0) {
+        const hasParent = edges.some((edge) => edge.target === node.id);
+        if (!hasParent) {
+          const syntheticEdge = {
+            source: uncategorisedNode.id,
+            target: node.id,
+          };
+          edgesWithOrphans.push(syntheticEdge);
+          syntheticEdgeIds.add(`${syntheticEdge.source}-${syntheticEdge.target}`);
+        }
+      }
+    });
+  }
+
+  return edgesWithOrphans.map((edge, index) => {
+    const isSynthetic = syntheticEdgeIds.has(`${edge.source}-${edge.target}`);
+    return {
+      id: `edge-${edge.source}-${edge.target}-${index}`,
+      source: edge.source,
+      target: edge.target,
+      type: 'floating',
+      animated: false,
+      deletable: true,
+      selectable: true,
+      focusable: true,
+      data: {
+        isOriginal: !isSynthetic,
+        isSynthetic,
+      },
+    };
+  });
+};
+
+export function autoGenerateColumnsForLeafs(nodes: Node[], edges: Edge[]): { newNodes: Node[]; newEdges: Edge[] } {
+  const COLUMN_RADIUS = 250;
+  const byId = new Map(nodes.map((n) => [n.id, n]));
+
+  // get incoming edges so we can calculate the angle from parent to grandparent
+  const incomingMap = new Map<string, string>();
+  edges.forEach((e) => {
+    incomingMap.set(e.target, e.source);
+  });
+
+  // outgoing edges to check for children (since column nodes are only for nodes without chlidren)
+  const outMap = new Map<string, Edge[]>();
+  edges.forEach((e) => {
+    const list = outMap.get(e.source) || [];
+    list.push(e);
+    outMap.set(e.source, list);
+  });
+
+  const newNodes = [...nodes];
+  const newEdges = [...edges];
+
+  nodes.forEach((node) => {
+    if (node.type !== 'category') return;
+
+    const outgoing = outMap.get(node.id) || [];
+    const hasChildCategory = outgoing.some((e) => byId.get(e.target)?.type === 'category');
+
+    if (!hasChildCategory) {
+      const label = node.data.label;
+      const id = node.id;
+      const columnId = `col-${label}-${node.id}`;
+
+      const hasColumnAlready = outgoing.some((e) => byId.get(e.target)?.type === 'column');
+      if (hasColumnAlready) return;
+
+      // calculate position based on the angle of parent to grandparent node (from column node perspective)
+      let x = node.position.x;
+      let y = node.position.y + 200; // fallback default
+
+      const parentId = incomingMap.get(node.id);
+      const parentNode = parentId ? byId.get(parentId) : undefined;
+
+      if (parentNode) {
+        const dx = node.position.x - parentNode.position.x;
+        const dy = node.position.y - parentNode.position.y;
+
+        // checks if parent and grandparent node are in the same position in case something messed up
+        if (dx !== 0 || dy !== 0) {
+          const angle = Math.atan2(dy, dx);
+          x = node.position.x + COLUMN_RADIUS * Math.cos(angle);
+          y = node.position.y + COLUMN_RADIUS * Math.sin(angle);
+        }
+      }
+
+      // create the column node
+      const columnNode: Node = {
+        id: columnId,
+        type: 'column',
+        position: { x, y },
+        data: {
+          label: id,
+          level: ((node.data as NodeData).level || 0) + 1,
+        },
+      };
+
+      // creates the connecting edge
+      const edge: Edge = {
+        id: `edge-${node.id}-${columnId}`,
+        source: node.id,
+        target: columnId,
+        type: 'smoothstep', // lowkey looks nicer than 'default'
+      };
+
+      newNodes.push(columnNode);
+      newEdges.push(edge);
+    }
+  });
+
+  return { newNodes, newEdges };
 }

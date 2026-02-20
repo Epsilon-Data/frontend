@@ -110,11 +110,19 @@
               "hide": "Hide examples",
               "good": {
                 "title": "Good examples:",
-                "list": ["Population Demographics", "Health Records", "Education Statistics"]
+                "list": [
+                  "Population Demographics",
+                  "Health Records",
+                  "Education Statistics"
+                ]
               },
               "bad": {
                 "title": "Bad examples:",
-                "list": ["Data Info", "Various kinds of important data about different things", "Stats Sheet"]
+                "list": [
+                  "Data Info",
+                  "Various kinds of important data about different things",
+                  "Stats Sheet"
+                ]
               }
             }
           }
@@ -158,12 +166,29 @@
             "title": "Database credentials",
             "description": "Enter database connection details manually — including username, password, host, port, and database name.",
             "placeholder": "Enter database URL",
-            "username": { "title": "Username", "placeholder": "Enter database username" },
-            "password": { "title": "Password", "placeholder": "Enter database password" },
-            "hostname": { "title": "Hostname", "placeholder": "Enter database hostname" },
-            "port": { "title": "Port", "placeholder": "Enter database port" },
-            "name": { "title": "Database Name", "placeholder": "Enter database name" },
-            "ssl": { "title": "Enable SSL" },
+            "username": {
+              "title": "Username",
+              "placeholder": "Enter database username"
+            },
+            "password": {
+              "title": "Password",
+              "placeholder": "Enter database password"
+            },
+            "hostname": {
+              "title": "Hostname",
+              "placeholder": "Enter database hostname"
+            },
+            "port": {
+              "title": "Port",
+              "placeholder": "Enter database port"
+            },
+            "name": {
+              "title": "Database Name",
+              "placeholder": "Enter database name"
+            },
+            "ssl": {
+              "title": "Enable SSL"
+            },
             "dbUrl": {
               "title": "Provide database connection URL",
               "inputLabel": "URL link: ",
@@ -404,8 +429,28 @@
                 "Create a hierarchical structure to represent your database schema.",
                 "Starting with the root node, you can create a new node when you drop the connection line on the pane."
               ],
-              "warning": { "title": "Note:", "content": "The main entity cannot be deleted." }
+              "warning": {
+                "title": "Note:",
+                "content": "The main entity cannot be deleted."
+              }
             }
+          },
+          "generateFromCodebook": {
+            "label": "Generate Archetype From Codebook",
+            "title": "Generate Archetype from Codebook",
+            "description": "Upload your codebook PDF and we'll automatically generate the archetype structure for you. You can provide additional context to help improve the generation accuracy.",
+            "upload": {
+              "label": "Upload Codebook (PDF)",
+              "instructions": "Drag & drop a PDF file, or click to browse",
+              "fileSize": "Maximum file size: 10MB"
+            },
+            "additionalContext": {
+              "title": "Additional Context (optional)",
+              "placeholder": "Provide any additional context about your codebook to help improve the generation accuracy."
+            },
+            "cancel": "Cancel",
+            "submit": "Generate Archetype",
+            "processing": "Generating archetype structure..."
           },
           "error": {
             "deleteRoot": "The root node cannot be deleted"
@@ -416,8 +461,13 @@
           "sidebar": {
             "instructions": {
               "title": "Instructions:",
-              "content": ["Click on the leaf node to map it to a column in your database."],
-              "warning": { "title": "Note:", "content": "You can only map a leaf node to a single column." }
+              "content": [
+                "Click on the leaf node to map it to a column in your database."
+              ],
+              "warning": {
+                "title": "Note:",
+                "content": "You can only map a leaf node to a single column."
+              }
             }
           },
           "toolbar": {

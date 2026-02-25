@@ -8,8 +8,8 @@ type ArchetypeNameStepProps = {
 export const ArchetypeNameStep = ({ form }: ArchetypeNameStepProps) => {
   const { t } = useTranslation();
   return (
-    <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
-      <Form form={form}>
+    <div className="h-full py-12 px-20 overflow-y-auto flex flex-col items-center justify-center">
+      <Form form={form} className="w-full max-w-lg">
         <ModalInput
           name="name"
           inputTitle={t('project.createTemplate.form.step1.name.title')}

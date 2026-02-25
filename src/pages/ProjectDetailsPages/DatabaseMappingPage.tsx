@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import { DatabaseMappingHeader } from '@app/components/database-mapping/DatabaseMappingHeader';
 import { useArchetypes } from '@app/hooks/useArchetypes';
-import { ArchetypeModalProvider } from '@app/providers/ArchetypeModalProvider';
-import { MultiStepArchetypeModal } from '@app/components/database-mapping/modal/MultiStepArchetypeModal';
 import { Archetypes } from '@app/components/database-mapping/Archetypes';
 import { ArchetypeDetails } from '@app/components/database-mapping/ArchetypeDetails';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -17,7 +15,7 @@ const DatabaseMappingPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get('id') ?? '';
   const archetypeId = searchParams.get('archetypeId');
-  const { archetypes, tableLoading, fetchArchetypes, addArchetype, archetypeReadyById } = useArchetypes(projectId);
+  const { archetypes, tableLoading, fetchArchetypes, archetypeReadyById } = useArchetypes(projectId);
   const { t } = useTranslation();
   const { project, projectLoading } = useProjectContext();
   const projectMatches = !!projectId && !!project && String(project.projectId) === projectId;
@@ -54,17 +52,7 @@ const DatabaseMappingPage: React.FC = () => {
         <Breadcrumb separator=">" className="my-4" items={breadcrumbItems} />
         {!archetypeId ? (
           <>
-            <ArchetypeModalProvider mode="create">
-              <DatabaseMappingHeader projectId={projectId} projectStatus={project?.status} />
-              <MultiStepArchetypeModal
-                fetchArchetypes={fetchArchetypes}
-                projectId={projectId}
-                addArchetype={addArchetype}
-                mask
-                closable={false}
-                width={'60%'}
-              />
-            </ArchetypeModalProvider>
+            <DatabaseMappingHeader projectId={projectId} projectStatus={project?.status} mode="create" />
             <LoaderWrapper isLoading={pageLoading}>
               {canMap ? (
                 <Archetypes

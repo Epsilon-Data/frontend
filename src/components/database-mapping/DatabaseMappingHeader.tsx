@@ -1,6 +1,6 @@
 import { ArchetypeInfo, ArchetypeStatus, deleteArchetype, updateArchetypeDetails } from '@app/api/archetypes.api';
 import { STATUS_COLORS, toTitleCase } from '@app/constants/archetype';
-import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
+import { ModalMode } from '@app/context/ArchetypeModal';
 import { Button, Tag, Popconfirm, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { AiFillDelete } from 'react-icons/ai';
@@ -12,11 +12,11 @@ type DatabaseMappingHeaderProps = {
   archetype?: ArchetypeInfo | undefined;
   projectId: string;
   projectStatus?: string;
+  mode: ModalMode;
 };
 
-export const DatabaseMappingHeader = ({ archetype, projectId, projectStatus }: DatabaseMappingHeaderProps) => {
+export const DatabaseMappingHeader = ({ archetype, projectId, projectStatus, mode }: DatabaseMappingHeaderProps) => {
   const { t } = useTranslation();
-  const { mode, showModal } = useArchetypeModalContext();
   const navigate = useNavigate();
   const disableCreate = !['READY', 'MAPPED'].includes(projectStatus ?? '');
 
@@ -47,6 +47,14 @@ export const DatabaseMappingHeader = ({ archetype, projectId, projectStatus }: D
     navigate(`/project/db-mapping?id=${projectId}`);
   };
 
+  const openWizard = () => {
+    if (mode === 'create') {
+      navigate(`/project/archetype/wizard?id=${projectId}`);
+    } else {
+      navigate(`/project/archetype/wizard?id=${projectId}&archetypeId=${archetype?.archetypeId}`);
+    }
+  };
+
   const DeleteButton = (
     <Popconfirm
       placement="bottom"
@@ -67,7 +75,7 @@ export const DatabaseMappingHeader = ({ archetype, projectId, projectStatus }: D
     <Button
       className="flex items-center px-8 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
       type="primary"
-      onClick={showModal}
+      onClick={openWizard}
     >
       {status === 'DRAFT'
         ? t('project.main.dbMapping.table.manage.continueEdit')
@@ -103,7 +111,7 @@ export const DatabaseMappingHeader = ({ archetype, projectId, projectStatus }: D
           className="flex items-center w-80 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
           type="primary"
           icon={<FaPlus />}
-          onClick={showModal}
+          onClick={openWizard}
           disabled={disableCreate}
         >
           {t('project.main.dbMapping.newTemplate')}

@@ -1,5 +1,5 @@
 import { ArchetypeInfo, createArchetype, updateArchetype } from '@app/api/archetypes.api';
-import { ColumnInfo, getDbColumns } from '@app/api/database.api';
+import { ColumnInfo, DatabaseTableInfo, getDbColumns, getDbTableInfo } from '@app/api/database.api';
 import { ArchetypeModalContext, ModalMode } from '@app/context/ArchetypeModal';
 import { Form } from 'antd';
 import { useCallback, useMemo, useState } from 'react';
@@ -14,6 +14,8 @@ export const ArchetypeModalProvider = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState(0);
   const [columns, setColumns] = useState<ColumnInfo[]>([]);
+  const [tables, setTables] = useState<DatabaseTableInfo[]>([]);
+  const [tablesLoading, setTablesLoading] = useState(false);
   const [step1] = Form.useForm();
 
   const fetchColumns = useCallback(async (projectId: string) => {
@@ -22,6 +24,18 @@ export const ArchetypeModalProvider = ({
       setColumns(dbColumns);
     } catch (error) {
       console.error('Failed to fetch columns for project:', error);
+    }
+  }, []);
+
+  const fetchTables = useCallback(async (projectId: string) => {
+    setTablesLoading(true);
+    try {
+      const dbTables = await getDbTableInfo(projectId);
+      setTables(dbTables);
+    } catch (error) {
+      console.error('Failed to fetch tables for project:', error);
+    } finally {
+      setTablesLoading(false);
     }
   }, []);
 
@@ -59,6 +73,9 @@ export const ArchetypeModalProvider = ({
       columns,
       setColumns,
       fetchColumns,
+      tables,
+      tablesLoading,
+      fetchTables,
     }),
     [
       mode,
@@ -72,6 +89,9 @@ export const ArchetypeModalProvider = ({
       columns,
       setColumns,
       fetchColumns,
+      tables,
+      tablesLoading,
+      fetchTables,
     ],
   );
 

@@ -13,6 +13,7 @@ import MetadataPage from '@app/pages/ProjectDetailsPages/MetadataPage';
 import SettingsPage from '@app/pages/ProjectDetailsPages/SettingsPage';
 import TrackRequestsPage from '@app/pages/BrowseDatasetPages/TrackRequestsPage';
 import ProjectAccessPage from '@app/pages/ProjectDetailsPages/ProjectAccessPage';
+import ArchetypeWizardPage from '@app/pages/ProjectDetailsPages/ArchetypeWizardPage';
 import ErrorPage from '@app/pages/ErrorPages/ErrorPage';
 import ProtectedLayout from './ProtectedLayout';
 
@@ -23,6 +24,7 @@ const DatabaseMapping = withLoading(DatabaseMappingPage);
 const Metadata = withLoading(MetadataPage);
 const Access = withLoading(ProjectAccessPage);
 const Settings = withLoading(SettingsPage);
+const ArchetypeWizard = withLoading(ArchetypeWizardPage);
 const BrowseDatasets = withLoading(BrowseDatasetPage);
 const TrackRequests = withLoading(TrackRequestsPage);
 
@@ -43,6 +45,7 @@ export const AppRouter: React.FC = () => {
         </Route>
         <Route path="project" element={<ProjectLayout />}>
           <Route path="db-mapping" element={<DatabaseMapping />} />
+          <Route path="archetype/wizard" element={<ArchetypeWizard />} />
           <Route path="details" element={<Metadata />} />
           <Route path="access" element={<Access />} />
           <Route path="settings" element={<Settings />} />

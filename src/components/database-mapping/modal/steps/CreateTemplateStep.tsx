@@ -134,10 +134,10 @@ export const CreateTemplateStep = ({
   const [showCodebookUpload, setShowCodebookUpload] = useState(false);
 
   return (
-    <div className="h-[33rem] overflow-y-auto flex flex-col justify-center bg-grey-4">
-      <div className="flex flex-col bg-white">
+    <div className="h-full overflow-y-auto flex flex-col justify-center bg-grey-4">
+      <div className="flex flex-col flex-1 bg-white">
         {!showCodebookUpload ? (
-          <div className="h-[33rem] w-full">
+          <div className="h-full w-full">
             <ArchetypeFlow
               nodes={visibleNodes}
               edges={visibleEdges}

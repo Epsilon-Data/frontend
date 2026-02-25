@@ -119,7 +119,7 @@ export const SetPermissionsStep = ({ nodes, edges, checkedByCol, setCheckedByCol
   ];
 
   return (
-    <div className="h-[33rem] p-10 overflow-y-auto flex flex-col justify-start">
+    <div className="min-h-[33rem] flex-1 p-10 overflow-y-auto flex flex-col justify-start">
       <div className="mb-8">
         <div className="font-medium font-sans text-grey-1 text-lg">
           {t('project.createTemplate.form.step4.instruction.title')}

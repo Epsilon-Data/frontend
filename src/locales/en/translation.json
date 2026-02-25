@@ -517,6 +517,16 @@
           "success": "Saved archetype as draft successfully",
           "failed": "Failed to save archetype as draft"
         }
+      },
+      "wizard": {
+        "exit": "Exit",
+        "exitConfirm": {
+          "title": "Leave archetype wizard?",
+          "description": "Unsaved changes will be lost. You can save a draft before leaving."
+        },
+        "saving": "Saving...",
+        "saved": "All changes saved",
+        "saveFailed": "Failed to save"
       }
     }
   },
@@ -729,9 +739,15 @@
       "invalidEmail": "Invalid team member's email"
     }
   },
+  "archetype": {
+    "databaseStructure": "Database Structure",
+    "searchTables": "Search tables...",
+    "noTablesFound": "No tables found",
+    "columns": "columns"
+  },
   "error": {
     "goToDashboard": "Go to Dashboard",
-    "actionNotCompleted": "We couldn’t complete that action.",
+    "actionNotCompleted": "We couldn't complete that action.",
     "somethingWentWrong": "Something went wrong."
   }
 }

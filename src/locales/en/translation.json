@@ -248,6 +248,8 @@
       "dbMapping": {
         "title": "Database mapping",
         "newTemplate": "New template",
+        "jobPending": "\"{{name}}\" is being processed. This may take a moment.",
+        "archetype": "Archetype",
         "fallback": {
           "sidebarTooltip": "Available after database is ready",
           "crawling": {
@@ -487,7 +489,16 @@
               "siblings": "Duplicate child labels: ",
               "parentConflict": "Child label(s) identical to parent label"
             },
-            "missingLeafs": "Please map all leaf nodes to their respective columns. Following are the leaf nodes that are not mapped:"
+            "missingLeafs": "Please map all leaf nodes to their respective columns. Following are the leaf nodes that are not mapped:",
+            "orphanedNodes": "The following nodes are disconnected from the root and must be connected:",
+            "emptyLabels": "{{count}} node(s) have empty labels. Please name all nodes.",
+            "columnIntegrity": {
+              "title": "The following columns have connection issues:",
+              "detail": "\"{{name}}\" has {{count}} parent connection(s) (expected exactly 1)"
+            },
+            "mixedChildren": "The following nodes have both sub-categories and column mappings. A node should contain either sub-categories or a column, not both:",
+            "emptyRoot": "The main entity has no children. Add at least one category under the root node.",
+            "duplicateEdges": "{{count}} duplicate connection(s) found between the same nodes. Remove duplicates."
           }
         },
         "step4": {
@@ -517,6 +528,16 @@
           "success": "Saved archetype as draft successfully",
           "failed": "Failed to save archetype as draft"
         }
+      },
+      "wizard": {
+        "exit": "Exit",
+        "exitConfirm": {
+          "title": "Leave archetype wizard?",
+          "description": "Unsaved changes will be lost. You can save a draft before leaving."
+        },
+        "saving": "Saving...",
+        "saved": "All changes saved",
+        "saveFailed": "Failed to save"
       }
     }
   },
@@ -729,9 +750,15 @@
       "invalidEmail": "Invalid team member's email"
     }
   },
+  "archetype": {
+    "databaseStructure": "Database Structure",
+    "searchTables": "Search tables...",
+    "noTablesFound": "No tables found",
+    "columns": "columns"
+  },
   "error": {
     "goToDashboard": "Go to Dashboard",
-    "actionNotCompleted": "We couldn’t complete that action.",
+    "actionNotCompleted": "We couldn't complete that action.",
     "somethingWentWrong": "Something went wrong."
   }
 }

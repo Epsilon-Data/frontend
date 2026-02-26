@@ -14,7 +14,7 @@ export type GraphEdgePayload = {
   target: string;
 };
 
-export const getUploadJobStatus = async (
+export const getJobStatus = async (
   jobId: string,
 ): Promise<{
   status: 'pending' | 'completed' | 'error';

@@ -51,7 +51,7 @@ export const ModalInput: React.FC<
           {...props}
           suffix={suffix}
           disabled={disabled}
-          className="border border-grey-3 bg-grey-4 [&::placeholder]:text-grey-2"
+          className="border border-grey-2 bg-grey-4 hover:border-blueDark [&::placeholder]:text-grey-2"
         />
       </FormItem>
     </div>

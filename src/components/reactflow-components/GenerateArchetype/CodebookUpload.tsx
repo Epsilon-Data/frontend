@@ -5,7 +5,7 @@ import { Node, Edge } from '@xyflow/react';
 import { useDropzone } from 'react-dropzone';
 import { CloseOutlined, FileOutlined, InboxOutlined, UploadOutlined } from '@ant-design/icons';
 import { uploadArchetypeCodebook } from '@app/api/archetypes.api';
-import { getUploadJobStatus, GraphEdgePayload, GraphNodePayload } from '@app/api/job.api';
+import { getJobStatus, GraphEdgePayload, GraphNodePayload } from '@app/api/job.api';
 import { autoGenerateColumnsForLeafs, transformEdges, transformNodes } from '@app/utils/reactflow/helpers';
 import { usePolling } from '@app/hooks/usePolling';
 
@@ -52,7 +52,7 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
     onDragLeave: () => setDragActive(false),
   });
 
-  const { data: jobStatus, error: jobError } = usePolling(() => getUploadJobStatus(jobId!), {
+  const { data: jobStatus, error: jobError } = usePolling(() => getJobStatus(jobId!), {
     interval: 3000,
     enabled: !!jobId && isProcessing,
   });

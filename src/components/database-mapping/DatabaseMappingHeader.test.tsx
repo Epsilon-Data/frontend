@@ -23,13 +23,6 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-vi.mock('@app/hooks/useArchetypeModalContext', () => ({
-  useArchetypeModalContext: () => ({
-    mode: 'edit',
-    showModal: vi.fn(),
-  }),
-}));
-
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (k: string) => {
@@ -65,7 +58,7 @@ const renderHeader = (opts: { status: 'DRAFT' | 'ACTIVE' | 'PUBLISHED'; projectI
     status: opts.status,
   } as unknown as ArchetypeInfo;
 
-  render(<DatabaseMappingHeader projectId={opts.projectId ?? 'P1'} archetype={archetype} />);
+  render(<DatabaseMappingHeader projectId={opts.projectId ?? 'P1'} archetype={archetype} mode="edit" />);
 
   return { archetype };
 };

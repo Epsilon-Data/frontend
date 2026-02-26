@@ -63,29 +63,32 @@ export const getPublishedArchetype = async (projectId: string | undefined): Prom
   return response.data;
 };
 
-export const createArchetype = async (data: ArchetypeInfo): Promise<void> => {
+export const createArchetype = async (data: ArchetypeInfo): Promise<{ jobId: string }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.post(`${ARCHETYPE_API_URL}/${data.projectId}`, data, {
+  const response = await httpClient.post(`${ARCHETYPE_API_URL}/${data.projectId}`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
+  return response.data;
 };
 
 export const updateArchetype = async (
   projectId: string | undefined,
   archetypeId: string,
   data: ArchetypeInfo,
-): Promise<void> => {
+): Promise<{ jobId: string }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.put(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}`, data, {
+  const response = await httpClient.put(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}`, data, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
+  return response.data;
 };
 
-export const deleteArchetype = async (projectId: string | undefined, archetypeId: string): Promise<void> => {
+export const deleteArchetype = async (projectId: string | undefined, archetypeId: string): Promise<{ jobId: string }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  await httpClient.delete(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}`, {
+  const response = await httpClient.delete(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
+  return response.data;
 };
 
 export const updateArchetypeDetails = async (

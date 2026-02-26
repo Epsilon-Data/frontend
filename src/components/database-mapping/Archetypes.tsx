@@ -4,10 +4,6 @@ import { Button, Table, TableProps, Tag } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import relativeTime from 'dayjs/plugin/relativeTime';
-
-dayjs.extend(relativeTime);
-
 type ArchetypesProps = {
   loading: boolean;
   archetypes: Archetype[];
@@ -20,24 +16,10 @@ export const Archetypes = ({ loading, archetypes, projectId, archetypeReadyById 
   const navigate = useNavigate();
 
   const renderDate = (value: string | Date) => {
-    const now = dayjs();
-    const modified = dayjs(value);
-
-    const daysDiff = now.diff(modified, 'day');
-    const monthsDiff = now.diff(modified, 'month');
-
-    if (daysDiff === 0) {
-      return <span className="font-light">{'today'}</span>;
-    }
-
-    if (monthsDiff >= 1) {
-      const remainingDays = now.diff(modified.add(monthsDiff, 'month'), 'day');
-      return `${monthsDiff} month${monthsDiff > 1 ? 's' : ''}${
-        remainingDays > 0 ? `, ${remainingDays} day${remainingDays > 1 ? 's' : ''}` : ''
-      } ago`;
-    }
-
-    return <span className="font-light">{`${daysDiff} day${daysDiff > 1 ? 's' : ''} ago`}</span>;
+    if (!value) return <span className="font-light">—</span>;
+    const date = dayjs(value);
+    if (!date.isValid()) return <span className="font-light">—</span>;
+    return <span className="font-light">{date.format('DD MMM YYYY, hh:mm A')}</span>;
   };
 
   const columns: TableProps<Archetype>['columns'] = [
@@ -79,10 +61,10 @@ export const Archetypes = ({ loading, archetypes, projectId, archetypeReadyById 
     },
     {
       title: t('project.main.dbMapping.table.createdDate'),
-      dataIndex: 'createdDate',
-      key: 'createdDate',
-      sorter: (a: { lastModified: Date }, b: { lastModified: Date }) =>
-        dayjs(a.lastModified).valueOf() - dayjs(b.lastModified).valueOf(),
+      dataIndex: 'created',
+      key: 'created',
+      sorter: (a: { created: Date }, b: { created: Date }) =>
+        dayjs(a.created).valueOf() - dayjs(b.created).valueOf(),
       sortDirections: ['ascend', 'descend'],
       render: (value: string | Date) => renderDate(value),
     },

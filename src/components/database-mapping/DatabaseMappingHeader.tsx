@@ -24,12 +24,15 @@ export const DatabaseMappingHeader = ({ archetype, projectId, projectStatus, mod
 
   const confirmDeletion = async () => {
     try {
-      await deleteArchetype(projectId, archetype?.archetypeId ?? '');
+      const { jobId } = await deleteArchetype(projectId, archetype?.archetypeId ?? '');
       message.success(t('project.main.dbMapping.table.manage.delete.success'));
+      navigate(`/project/db-mapping?id=${projectId}`, {
+        state: { jobId, archetypeName: archetype?.name },
+      });
     } catch {
       message.error(t('project.main.dbMapping.table.manage.delete.failed'));
+      navigate(`/project/db-mapping?id=${projectId}`);
     }
-    navigate(`/project/db-mapping?id=${projectId}`, { state: { refetch: true } });
   };
 
   const handlePublish = async () => {

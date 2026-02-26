@@ -18,6 +18,12 @@ import { WizardStepHeader } from '@app/components/database-mapping/wizard/Wizard
 import {
   findDuplicateChildLabels,
   findUnmappedLeafs,
+  findOrphanedNodes,
+  findEmptyLabels,
+  findColumnIntegrityIssues,
+  findMixedChildrenNodes,
+  findEmptyRoot,
+  findDuplicateEdges,
   permissionsFromChecked,
   permissionsToCheckedByCol,
 } from '@app/utils/reactflow/helpers';
@@ -61,6 +67,7 @@ const ArchetypeWizardContent = () => {
 
   const { childrenById, topKeys } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
   const archetypeRef = useRef<ArchetypeInfo | undefined>(undefined);
+  const draftIdRef = useRef<string | undefined>(archetypeId);
 
   // Fetch columns + tables on mount (via provider)
   useEffect(() => {
@@ -147,7 +154,7 @@ const ArchetypeWizardContent = () => {
       setSaveStatus('error');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEditing, archetypeId, projectId, nodes, edges, checkedByCol, childrenById, topKeys, form]);
+  }, [projectId, nodes, edges, checkedByCol, childrenById, topKeys, form]);
 
   const onSaveDraft = async () => {
     try {
@@ -161,6 +168,12 @@ const ArchetypeWizardContent = () => {
   const nextStep = async () => {
     let duplicateGroups: ReturnType<typeof findDuplicateChildLabels> = [];
     let missingLeafs: string[] = [];
+    let orphaned: string[] = [];
+    let emptyLabelIds: string[] = [];
+    let columnIssues: ReturnType<typeof findColumnIntegrityIssues> = [];
+    let mixed: string[] = [];
+    let isEmptyRoot = false;
+    let dupEdges: ReturnType<typeof findDuplicateEdges> = [];
 
     if (step === 0) {
       try {
@@ -172,23 +185,65 @@ const ArchetypeWizardContent = () => {
 
     if (step === 1 || step === 2) {
       duplicateGroups = findDuplicateChildLabels(nodes, edges);
+      orphaned = findOrphanedNodes(nodes, edges);
+      emptyLabelIds = findEmptyLabels(nodes);
+      mixed = findMixedChildrenNodes(nodes, edges);
+      isEmptyRoot = findEmptyRoot(nodes, edges);
+      dupEdges = findDuplicateEdges(edges);
     }
 
     if (step === 2) {
       missingLeafs = findUnmappedLeafs(nodes, edges);
+      columnIssues = findColumnIntegrityIssues(nodes, edges);
     }
 
-    if (duplicateGroups.length || missingLeafs.length) {
+    const hasIssues =
+      duplicateGroups.length > 0 ||
+      missingLeafs.length > 0 ||
+      orphaned.length > 0 ||
+      emptyLabelIds.length > 0 ||
+      columnIssues.length > 0 ||
+      mixed.length > 0 ||
+      isEmptyRoot ||
+      dupEdges.length > 0;
+
+    if (hasIssues) {
       Modal.warning({
         title: t('project.createTemplate.form.step3.validation.title'),
+        width: 520,
+        styles: { body: { padding: '16px 24px 24px' } },
         content: (
-          <div>
+          <div className="flex flex-col gap-4 mt-2">
+            {isEmptyRoot && (
+              <div className="text-sm">
+                {t('project.createTemplate.form.step3.validation.emptyRoot')}
+              </div>
+            )}
+            {emptyLabelIds.length > 0 && (
+              <div className="text-sm">
+                {t('project.createTemplate.form.step3.validation.emptyLabels', {
+                  count: emptyLabelIds.length,
+                })}
+              </div>
+            )}
+            {orphaned.length > 0 && (
+              <div>
+                <div className="text-sm font-medium mb-1">
+                  {t('project.createTemplate.form.step3.validation.orphanedNodes')}
+                </div>
+                <ul className="pl-5 text-sm list-disc">
+                  {orphaned.map((name) => (
+                    <li key={name}>{name}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
             {duplicateGroups.length > 0 && (
-              <>
-                <div className="mb-2 font-medium">
+              <div>
+                <div className="text-sm font-medium mb-1">
                   {t('project.createTemplate.form.step3.validation.duplicateLabels.title')}
                 </div>
-                <ul className="mb-3 pl-4">
+                <ul className="pl-5 text-sm list-disc">
                   {duplicateGroups.map((g) => (
                     <li key={g.parentId} className="mb-2">
                       <div>
@@ -199,7 +254,7 @@ const ArchetypeWizardContent = () => {
                         </strong>
                       </div>
                       {g.labels?.length > 0 && (
-                        <div className="pl-4">
+                        <div className="pl-4 mt-1">
                           <div className="text-blueDark">
                             {t('project.createTemplate.form.step3.validation.duplicateLabels.siblings')}
                           </div>
@@ -216,19 +271,55 @@ const ArchetypeWizardContent = () => {
                     </li>
                   ))}
                 </ul>
-              </>
+              </div>
             )}
-            {missingLeafs.length > 0 && (
-              <>
-                <div className="mb-2 font-medium">
-                  {t('project.createTemplate.form.step3.validation.missingLeafs')}
+            {mixed.length > 0 && (
+              <div>
+                <div className="text-sm font-medium mb-1">
+                  {t('project.createTemplate.form.step3.validation.mixedChildren')}
                 </div>
-                <ul style={{ paddingLeft: 18 }}>
-                  {missingLeafs.map((name) => (
-                    <li key={name}>&bull; {name}</li>
+                <ul className="pl-5 text-sm list-disc">
+                  {mixed.map((name) => (
+                    <li key={name}>{name}</li>
                   ))}
                 </ul>
-              </>
+              </div>
+            )}
+            {columnIssues.length > 0 && (
+              <div>
+                <div className="text-sm font-medium mb-1">
+                  {t('project.createTemplate.form.step3.validation.columnIntegrity.title')}
+                </div>
+                <ul className="pl-5 text-sm list-disc">
+                  {columnIssues.map((issue) => (
+                    <li key={issue.columnId}>
+                      {t('project.createTemplate.form.step3.validation.columnIntegrity.detail', {
+                        name: issue.columnLabel,
+                        count: issue.parentCount,
+                      })}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {missingLeafs.length > 0 && (
+              <div>
+                <div className="text-sm font-medium mb-1">
+                  {t('project.createTemplate.form.step3.validation.missingLeafs')}
+                </div>
+                <ul className="pl-5 text-sm list-disc">
+                  {missingLeafs.map((name) => (
+                    <li key={name}>{name}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {dupEdges.length > 0 && (
+              <div className="text-sm">
+                {t('project.createTemplate.form.step3.validation.duplicateEdges', {
+                  count: dupEdges.length,
+                })}
+              </div>
             )}
           </div>
         ),
@@ -236,14 +327,7 @@ const ArchetypeWizardContent = () => {
       return;
     }
 
-    const nextStepVal = Math.min(step + 1, 3);
-
-    // Auto-save draft on step transitions (step 1+)
-    if (step >= 1) {
-      autoSaveDraft();
-    }
-
-    setStep(nextStepVal);
+    setStep(Math.min(step + 1, 3));
   };
 
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 0));
@@ -252,15 +336,20 @@ const ArchetypeWizardContent = () => {
     setFormLoading(true);
     const formData = { ...buildFormData(), status: 'ACTIVE' as const };
     try {
+      let jobId: string | undefined;
       if (!isEditing) {
-        await createArchetype(formData as ArchetypeInfo);
+        const result = await createArchetype(formData as ArchetypeInfo);
+        jobId = result.jobId;
       } else {
         if (!archetypeId) return;
-        await updateArchetype(projectId, archetypeId, { ...formData, archetypeId } as ArchetypeInfo);
+        const result = await updateArchetype(projectId, archetypeId, { ...formData, archetypeId } as ArchetypeInfo);
+        jobId = result.jobId;
       }
-      navigate(`/project/db-mapping?id=${projectId}`);
+      navigate(`/project/db-mapping?id=${projectId}`, {
+        state: { jobId, archetypeName: formData.name },
+      });
     } catch (error) {
-      console.error('Archetype submission failed:', error);
+      console.error('Failed to submit archetype:', error);
     } finally {
       setFormLoading(false);
     }

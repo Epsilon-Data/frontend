@@ -125,6 +125,105 @@ export function findDuplicateChildLabels(nodes: Node[], edges: Edge[]) {
   return issues;
 }
 
+export function findOrphanedNodes(nodes: Node[], edges: Edge[]): string[] {
+  const root = nodes.find((n) => n.type === 'root');
+  if (!root) return [];
+
+  const outMap = new Map<string, string[]>();
+  for (const e of edges) {
+    const list = outMap.get(e.source);
+    if (list) list.push(e.target);
+    else outMap.set(e.source, [e.target]);
+  }
+
+  const visited = new Set<string>();
+  const queue = [root.id];
+  visited.add(root.id);
+
+  while (queue.length) {
+    const current = queue.shift()!;
+    for (const neighbor of outMap.get(current) ?? []) {
+      if (!visited.has(neighbor)) {
+        visited.add(neighbor);
+        queue.push(neighbor);
+      }
+    }
+  }
+
+  return nodes
+    .filter((n) => n.type !== 'root' && !visited.has(n.id))
+    .map((n) => (n.data as { label?: string })?.label ?? n.id);
+}
+
+export function findEmptyLabels(nodes: Node[]): string[] {
+  return nodes
+    .filter((n) => {
+      const label = (n.data as { label?: string })?.label;
+      return !label || !label.trim();
+    })
+    .map((n) => n.id);
+}
+
+export function findColumnIntegrityIssues(
+  nodes: Node[],
+  edges: Edge[],
+): { columnId: string; columnLabel: string; parentCount: number }[] {
+  const columnNodes = nodes.filter((n) => n.type === 'column');
+  const issues: { columnId: string; columnLabel: string; parentCount: number }[] = [];
+
+  for (const col of columnNodes) {
+    const parentCount = edges.filter((e) => e.target === col.id).length;
+    if (parentCount !== 1) {
+      const label = (col.data as { label?: string })?.label ?? col.id;
+      issues.push({ columnId: col.id, columnLabel: label, parentCount });
+    }
+  }
+
+  return issues;
+}
+
+export function findMixedChildrenNodes(nodes: Node[], edges: Edge[]): string[] {
+  const byId = new Map(nodes.map((n) => [n.id, n]));
+  const mixed: string[] = [];
+
+  for (const node of nodes) {
+    if (node.type !== 'category' && node.type !== 'root') continue;
+
+    const children = edges.filter((e) => e.source === node.id).map((e) => byId.get(e.target));
+    const hasCategoryChild = children.some((c) => c?.type === 'category');
+    const hasColumnChild = children.some((c) => c?.type === 'column');
+
+    if (hasCategoryChild && hasColumnChild) {
+      const label = (node.data as { label?: string })?.label ?? node.id;
+      mixed.push(label);
+    }
+  }
+
+  return mixed;
+}
+
+export function findEmptyRoot(nodes: Node[], edges: Edge[]): boolean {
+  const root = nodes.find((n) => n.type === 'root');
+  if (!root) return true;
+  return !edges.some((e) => e.source === root.id);
+}
+
+export function findDuplicateEdges(edges: Edge[]): { source: string; target: string; count: number }[] {
+  const counts = new Map<string, { source: string; target: string; count: number }>();
+
+  for (const e of edges) {
+    const key = `${e.source}->${e.target}`;
+    const existing = counts.get(key);
+    if (existing) {
+      existing.count++;
+    } else {
+      counts.set(key, { source: e.source, target: e.target, count: 1 });
+    }
+  }
+
+  return [...counts.values()].filter((entry) => entry.count > 1);
+}
+
 function buildAdjacency(edges: Edge[]) {
   const out = new Map<string, string[]>();
   const inMap = new Map<string, string[]>();

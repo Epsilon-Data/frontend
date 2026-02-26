@@ -1,18 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { DatabaseMappingHeader } from '@app/components/database-mapping/DatabaseMappingHeader';
 import { useArchetypes } from '@app/hooks/useArchetypes';
 import { Archetypes } from '@app/components/database-mapping/Archetypes';
 import { ArchetypeDetails } from '@app/components/database-mapping/ArchetypeDetails';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useProjectContext } from '@app/hooks/useProjectContext';
-import { Breadcrumb } from 'antd';
+import { Alert, Breadcrumb } from 'antd';
 import { FallbackState } from '@app/components/database-mapping/FallbackState';
 import { DatabaseModalProvider } from '@app/providers/DatabaseModalProvider';
 import { LoaderWrapper } from '@app/components/common/LoaderWrapper';
+import { usePolling } from '@app/hooks/usePolling';
+import { getJobStatus } from '@app/api/job.api';
+
+type LocationState = { jobId?: string; archetypeName?: string } | null;
 
 const DatabaseMappingPage: React.FC = () => {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const projectId = searchParams.get('id') ?? '';
   const archetypeId = searchParams.get('archetypeId');
   const { archetypes, tableLoading, fetchArchetypes, archetypeReadyById } = useArchetypes(projectId);
@@ -20,6 +25,39 @@ const DatabaseMappingPage: React.FC = () => {
   const { project, projectLoading } = useProjectContext();
   const projectMatches = !!projectId && !!project && String(project.projectId) === projectId;
   const pageLoading = projectLoading || !projectMatches || tableLoading;
+
+  const locationState = location.state as LocationState;
+  const [pendingJobId, setPendingJobId] = useState<string | undefined>(locationState?.jobId);
+  const [pendingName, setPendingName] = useState<string | undefined>(locationState?.archetypeName);
+
+  // Sync incoming location state (handles in-page navigation e.g. delete from detail view)
+  useEffect(() => {
+    if (locationState?.jobId) {
+      setPendingJobId(locationState.jobId);
+      setPendingName(locationState.archetypeName);
+      window.history.replaceState({}, '');
+    }
+  }, [locationState]);
+
+  const handleJobComplete = useCallback(() => {
+    setPendingJobId(undefined);
+    setPendingName(undefined);
+    fetchArchetypes();
+  }, [fetchArchetypes]);
+
+  usePolling(() => getJobStatus(pendingJobId!), {
+    interval: 3000,
+    enabled: !!pendingJobId,
+    onSuccess: (data) => {
+      if (data.status === 'completed' || data.status === 'error') {
+        handleJobComplete();
+      }
+    },
+    onError: () => {
+      setPendingJobId(undefined);
+      setPendingName(undefined);
+    },
+  });
 
   useEffect(() => {
     if (!projectId) return;
@@ -50,6 +88,17 @@ const DatabaseMappingPage: React.FC = () => {
     <>
       <div className="py-3 px-4 md:py-5 md:px-9">
         <Breadcrumb separator=">" className="my-4" items={breadcrumbItems} />
+        {pendingJobId && (
+          <Alert
+            type="info"
+            showIcon
+            banner
+            title={t('project.main.dbMapping.jobPending', {
+              name: pendingName || t('project.main.dbMapping.archetype'),
+            })}
+            className="mb-4"
+          />
+        )}
         {!archetypeId ? (
           <>
             <DatabaseMappingHeader projectId={projectId} projectStatus={project?.status} mode="create" />

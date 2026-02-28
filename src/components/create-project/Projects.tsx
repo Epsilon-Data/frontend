@@ -1,10 +1,11 @@
 import { ProjectSummaryInfo } from '@app/api/projects.api';
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
+import { EmptyState } from '@app/components/common/EmptyState';
 import { Layout, SortKey } from '@app/pages/DashboardPages/DashboardPage';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { LoaderWrapper } from '@app/components/common/LoaderWrapper';
-import { Empty } from 'antd';
+import { Button } from 'antd';
 
 type ProjectsProps = {
   ownedProjects: ProjectSummaryInfo[];
@@ -83,7 +84,11 @@ export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, s
           {sortedOwned.length > 0 ? (
             <ProjectList projects={sortedOwned} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
           ) : (
-            <Empty description={t('dashboard.main.personalProjects.empty')} />
+            <EmptyState description={t('onboarding.dashboard.ownedEmpty')}>
+              <Button className="mt-2" onClick={() => navigate('/browse')}>
+                {t('onboarding.dashboard.ownedBrowse')}
+              </Button>
+            </EmptyState>
           )}
         </LoaderWrapper>
       </div>
@@ -96,7 +101,7 @@ export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, s
           {sortedShared.length > 0 ? (
             <ProjectList projects={sortedShared} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
           ) : (
-            <Empty description={t('dashboard.main.sharedProjects.empty')} />
+            <EmptyState description={t('onboarding.dashboard.sharedEmpty')} />
           )}
         </LoaderWrapper>
       </div>

@@ -1,8 +1,8 @@
 import { ProjectSummaryInfo } from '@app/api/projects.api';
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
+import { EmptyState } from '@app/components/common/EmptyState';
 import { useBrowseModalContext } from '@app/hooks/useBrowseModalContext';
 import { LoaderWrapper } from '@app/components/common/LoaderWrapper';
-import { Empty } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 type ProjectsProps = {
@@ -21,7 +21,7 @@ export const Projects = ({ projects, layout, loading }: ProjectsProps) => {
         {projects.length > 0 ? (
           <ProjectList projects={projects} mode="all" layout={layout} onProjectClick={showModal} />
         ) : (
-          <Empty className="mt-10" description={t('browse.main.noProjects')} />
+          <EmptyState description={t('onboarding.browse.empty')} />
         )}
       </LoaderWrapper>
     </div>

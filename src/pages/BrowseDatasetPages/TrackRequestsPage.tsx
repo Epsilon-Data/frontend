@@ -1,6 +1,7 @@
 import { AnalysisRequestHeader } from '@app/components/analysis-requests/AnalysisRequestHeader';
 import { AnalysisRequests } from '@app/components/analysis-requests/AnalysisRequests';
 import { RequestDetails } from '@app/components/analysis-requests/RequestDetails';
+import { DismissibleBanner } from '@app/components/common/DismissibleBanner';
 import { useAnalysisRequests } from '@app/hooks/useAnalysisRequests';
 import { Breadcrumb } from 'antd';
 import React, { useEffect } from 'react';
@@ -41,6 +42,9 @@ const TrackRequestsPage: React.FC = () => {
         <>
           <div className="flex items-start w-full mt-8 pb-4 border-b border-grey-3">
             <div className="text-xl font-medium font-sans">{t('browse.trackRequests.title')}</div>
+          </div>
+          <div className="mt-4">
+            <DismissibleBanner id="track-requests" message={t('onboarding.trackRequests.banner')} />
           </div>
           <AnalysisRequestHeader />
           <AnalysisRequests loading={tableLoading} analysisRequests={requests} />

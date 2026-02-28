@@ -42,15 +42,15 @@ const DashboardPage: React.FC = () => {
           handleSortChange={setSortKey}
         />
         <MultiStepProjectModal fetchProjects={fetchProjects} mask closable={false} width={'60%'} />
+        <Projects
+          sharedProjects={analysisProjects}
+          ownedProjects={ownedProjects}
+          layout={layout}
+          searchValue={search}
+          sortKey={sortKey}
+          loading={loading}
+        />
       </ProjectModalProvider>
-      <Projects
-        sharedProjects={analysisProjects}
-        ownedProjects={ownedProjects}
-        layout={layout}
-        searchValue={search}
-        sortKey={sortKey}
-        loading={loading}
-      />
     </div>
   );
 };

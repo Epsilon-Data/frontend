@@ -75,12 +75,9 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
     const isOwner = project.ownerId === user?.sub;
     const isMember = project.members?.find((member) => member.email === user?.email);
     if (isOwner || isMember) return buttonConfig.OWNER;
-    if (project.isPublic) {
-      return buttonConfig.JOIN;
-    } else {
-      if (request !== null) return buttonConfig.APPLIED;
-      return buttonConfig.DEFAULT;
-    }
+    if (request !== null) return buttonConfig.APPLIED;
+    if (project.isPublic) return buttonConfig.JOIN;
+    return buttonConfig.DEFAULT;
   };
 
   return (

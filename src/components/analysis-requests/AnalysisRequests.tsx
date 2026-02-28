@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { RequestSummaryInfo } from '@app/api/analysisRequests.api';
+import { EmptyState } from '@app/components/common/EmptyState';
 import { STATUS_COLORS, STATUS_NAMES } from '@app/constants/accessRequest';
 import { useNavigate } from 'react-router-dom';
 
@@ -120,6 +121,19 @@ export const AnalysisRequests = ({ loading, analysisRequests }: AnalysisRequests
           },
         })}
         tableLayout="auto"
+        locale={{
+          emptyText: (
+            <EmptyState description={t('onboarding.trackRequests.empty')}>
+              <Button
+                type="primary"
+                className="mt-2 bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
+                onClick={() => navigate('/browse')}
+              >
+                {t('onboarding.trackRequests.emptyBrowse')}
+              </Button>
+            </EmptyState>
+          ),
+        }}
       />
     </div>
   );

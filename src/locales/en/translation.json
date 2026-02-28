@@ -724,6 +724,40 @@
             }
           }
         }
+      },
+      "startAnalysis": {
+        "button": "Start Analysis",
+        "title": "How to start your analysis",
+        "steps": {
+          "template": {
+            "title": "Use the research template",
+            "description": "Click \"Use this template\" on the Epsilon Research Template GitHub repo. Give it a name, description, and keep public access."
+          },
+          "clone": {
+            "title": "Clone the repository",
+            "description": "Copy the HTTPS clone URL from your new repository and run git clone <url> in your terminal."
+          },
+          "setup": {
+            "title": "Set up locally",
+            "description": "Follow the instructions in the repository's README to install dependencies and the Epsilon CLI."
+          },
+          "init": {
+            "title": "Initialize your project",
+            "description": "Run epsilon init to connect to your approved dataset, then use epsilon run to test your script locally."
+          },
+          "build": {
+            "title": "Build and push",
+            "description": "Run epsilon build to create the build folder, then commit and push everything (including the build folder) to GitHub."
+          },
+          "workspace": {
+            "title": "Create a workspace",
+            "description": "Go to the Epsilon Analysis Hub, log in, create a new workspace, and link your GitHub repository."
+          },
+          "submit": {
+            "title": "Submit a job",
+            "description": "Select your latest commit and submit a job request. Monitor progress from the job details page."
+          }
+        }
       }
     }
   },
@@ -755,6 +789,23 @@
     "searchTables": "Search tables...",
     "noTablesFound": "No tables found",
     "columns": "columns"
+  },
+  "onboarding": {
+    "dashboard": {
+      "ownedEmpty": "You don't have any projects yet. Create a new project to get started, or browse available datasets to request access.",
+      "ownedNewProject": "New Project",
+      "ownedBrowse": "Browse Datasets",
+      "sharedEmpty": "Once your access requests are approved, shared projects will appear here."
+    },
+    "browse": {
+      "banner": "Browse datasets below, click a project to view details, then request access to start your analysis.",
+      "empty": "No datasets available yet. Datasets will appear here once project owners publish them."
+    },
+    "trackRequests": {
+      "banner": "After requesting access to a dataset, track its status here. Once approved, you'll see a \"Start Analysis\" button with next steps.",
+      "empty": "You haven't submitted any requests yet. Browse available datasets and request access to get started.",
+      "emptyBrowse": "Browse Datasets"
+    }
   },
   "error": {
     "goToDashboard": "Go to Dashboard",

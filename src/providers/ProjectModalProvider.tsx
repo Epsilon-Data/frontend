@@ -3,7 +3,7 @@ import { Form } from 'antd';
 import dayjs from 'dayjs';
 import { useCallback, useMemo, useState } from 'react';
 
-export const ProjectModalProvider = ({ children }: { children: React.ReactElement[] }) => {
+export const ProjectModalProvider = ({ children }: { children: React.ReactNode }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState(0);
   const [step1] = Form.useForm();
@@ -39,5 +39,5 @@ export const ProjectModalProvider = ({ children }: { children: React.ReactElemen
     [modalStep, forms, showModal, handleDraft, isModalOpen, setIsModalOpen, setModalStep],
   );
 
-  return <ProjectModalContext.Provider value={contextValue}>{...children}</ProjectModalContext.Provider>;
+  return <ProjectModalContext.Provider value={contextValue}>{children}</ProjectModalContext.Provider>;
 };

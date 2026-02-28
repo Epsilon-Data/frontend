@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ExploreDatasetsSearch } from '@app/components/browse-projects/ExploreDatasetsSearch';
 import { SearchResultsHeader } from '@app/components/browse-projects/SearchResultsHeader';
+import { DismissibleBanner } from '@app/components/common/DismissibleBanner';
 import { BrowseModalProvider } from '@app/providers/BrowseModalProvider';
 import { MultiStepBrowseModal } from '@app/components/browse-projects/modal/MultiStepBrowseModal';
 import { useBrowseProjects } from '@app/hooks/useBrowseProjects';
 import { Projects } from '@app/components/browse-projects/Projects';
 import { ProjectSummaryInfo } from '@app/api/projects.api';
+import { useTranslation } from 'react-i18next';
 
 type SearchField = 'all' | 'name' | 'keywords' | 'organisation';
 type SortKey = 'date-created' | 'title' | 'last-modified';
@@ -16,6 +18,7 @@ const normalize = (v: unknown) =>
     .toLowerCase();
 
 const BrowseDatasetPage: React.FC = () => {
+  const { t } = useTranslation();
   const { projects, fetchProjects } = useBrowseProjects();
 
   const [searchValue, setSearchValue] = useState('');
@@ -80,6 +83,9 @@ const BrowseDatasetPage: React.FC = () => {
           setSelectedField(field);
         }}
       />
+      <div className="py-0 px-4">
+        <DismissibleBanner id="browse-hub" message={t('onboarding.browse.banner')} />
+      </div>
       <div className="py-0 px-4 flex flex-col">
         <SearchResultsHeader count={filteredAndSortedProjects.length} sortKey={sortKey} onSortChange={setSortKey} />
         <BrowseModalProvider>

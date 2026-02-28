@@ -1,4 +1,4 @@
-import { Button, Col, Form, message, Tabs, TabsProps } from 'antd';
+import { Button, Col, Form, message, Spin, Tabs, TabsProps } from 'antd';
 import { DetailsRow } from '@app/components/browse-projects/modal/pages/AboutDatasetPage/components/DetailsRow';
 import { useTranslation } from 'react-i18next';
 import { AnalysisRequest, createComment, getComments, RequestComment } from '@app/api/analysisRequests.api';
@@ -7,6 +7,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { CommentSection } from './CommentSection';
 import { IoPersonCircle } from 'react-icons/io5';
 import { useAppSelector } from '@app/hooks/reduxHooks';
+import { getPublishedArchetype, ArchetypeInfo } from '@app/api/archetypes.api';
+import { DisplayTabs } from '@app/components/database-mapping/DisplayTabs';
 
 type RequestTabsProps = {
   request: AnalysisRequest;
@@ -19,10 +21,23 @@ export const RequestTabs = ({ request }: RequestTabsProps) => {
   const [submitting, setSubmitting] = useState(false);
   const [form] = Form.useForm();
   const [comments, setComments] = useState<RequestComment[]>(request?.request?.comments ?? []);
+  const [archetype, setArchetype] = useState<ArchetypeInfo | null>(null);
+  const [archetypeLoading, setArchetypeLoading] = useState(false);
 
   useEffect(() => {
     setComments(request?.request?.comments || []);
   }, [request?.request?.comments]);
+
+  useEffect(() => {
+    const projectId = request?.project?.projectId;
+    if (request?.request?.status !== 'APPROVED' || !projectId) return;
+
+    setArchetypeLoading(true);
+    getPublishedArchetype(projectId)
+      .then(setArchetype)
+      .catch(() => setArchetype(null))
+      .finally(() => setArchetypeLoading(false));
+  }, [request?.project?.projectId, request?.request?.status]);
 
   const sortedComments = useMemo(
     () => [...comments].sort((a, b) => new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()),
@@ -223,6 +238,19 @@ export const RequestTabs = ({ request }: RequestTabsProps) => {
         </>
       ),
     },
+    ...(request?.request?.status === 'APPROVED' && archetype
+      ? [
+          {
+            key: 'mapping',
+            label: <span className="text-sm">{t('project.main.dbMapping.table.manage.tabs.mapping')}</span>,
+            children: archetypeLoading ? (
+              <Spin className="flex justify-center py-12" />
+            ) : (
+              <DisplayTabs archetype={archetype} />
+            ),
+          },
+        ]
+      : []),
     {
       key: 'comments',
       label: (

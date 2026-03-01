@@ -728,7 +728,33 @@
       "startAnalysis": {
         "button": "Start Analysis",
         "title": "How to start your analysis",
+        "tabs": {
+          "jupyter": "JupyterHub (Recommended)",
+          "local": "Local Setup"
+        },
         "steps": {
+          "jupyter": {
+            "open": {
+              "title": "Open Epsilon JupyterHub",
+              "description": "Log in with your Epsilon account. You'll get your own JupyterLab environment with the epsilon-sdk and research template pre-installed."
+            },
+            "notebook": {
+              "title": "Write your analysis",
+              "description": "Open the epsilon-research-template folder and create or edit notebooks. Use the epsilon-sdk to connect to your approved dataset."
+            },
+            "build": {
+              "title": "Build and push",
+              "description": "Open a terminal in JupyterLab, initialize your project with epsilon init, then run epsilon build. Commit and push to GitHub."
+            },
+            "workspace": {
+              "title": "Create a workspace",
+              "description": "Go to the Epsilon Analysis Hub, log in, create a new workspace, and link your GitHub repository."
+            },
+            "submit": {
+              "title": "Submit a job",
+              "description": "Select your latest commit and submit a job request. Monitor progress from the job details page."
+            }
+          },
           "template": {
             "title": "Use the research template",
             "description": "Click \"Use this template\" on the Epsilon Research Template GitHub repo. Give it a name, description, and keep public access."

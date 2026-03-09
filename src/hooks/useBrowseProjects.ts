@@ -1,15 +1,23 @@
-import { getAllProjects, ProjectSummaryInfo } from '@app/api/projects.api';
+import {
+  getAllProjects,
+  ProjectSummaryInfo,
+  BrowseProjectsQuery,
+} from '@app/api/projects.api';
 import { useCallback, useState } from 'react';
 
 export const useBrowseProjects = () => {
   const [projects, setProjects] = useState<ProjectSummaryInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const fetchProjects = useCallback(async () => {
+  const fetchProjects = useCallback(async (query?: BrowseProjectsQuery) => {
     setLoading(true);
     try {
-      const allProjects = await getAllProjects();
-      setProjects(allProjects);
+      const result = await getAllProjects(query);
+      setProjects(result.data);
+      setTotal(result.pagination.total);
+      setTotalPages(result.pagination.totalPages);
     } catch (error) {
       console.error('Failed to fetch projects:', error);
     } finally {
@@ -17,5 +25,5 @@ export const useBrowseProjects = () => {
     }
   }, []);
 
-  return { projects, loading, fetchProjects };
+  return { projects, loading, total, totalPages, fetchProjects };
 };

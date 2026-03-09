@@ -7,13 +7,15 @@ type SearchField = 'all' | 'name' | 'keywords' | 'organisation';
 
 type Props = {
   onSearch: (value: string, field: SearchField) => void;
+  initialValue?: string;
+  initialField?: SearchField;
 };
 
-export const ExploreDatasetsSearch = ({ onSearch }: Props) => {
+export const ExploreDatasetsSearch = ({ onSearch, initialValue = '', initialField = 'all' }: Props) => {
   const { t } = useTranslation();
 
-  const [searchValue, setSearchValue] = useState('');
-  const [selectedField, setSelectedField] = useState<SearchField>('all');
+  const [searchValue, setSearchValue] = useState(initialValue);
+  const [selectedField, setSelectedField] = useState<SearchField>(initialField);
 
   const SEARCH_FIELDS = [
     { value: 'all', label: t('browse.main.search.fields.all') },
@@ -45,7 +47,10 @@ export const ExploreDatasetsSearch = ({ onSearch }: Props) => {
         <div className="relative w-full">
           <Input
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={(e) => {
+              setSearchValue(e.target.value);
+              if (!e.target.value) onSearch('', selectedField);
+            }}
             onPressEnter={onSearchClick}
             placeholder={t('browse.main.search.placeholder')}
             allowClear

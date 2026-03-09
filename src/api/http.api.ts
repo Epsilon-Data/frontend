@@ -4,7 +4,7 @@ import { AxiosError, AxiosRequestConfig } from 'axios';
 
 import config from '@app/config/config';
 import { ApiError, ApiErrorData } from './ApiError';
-import { readCsrf } from '@app/services/localStorage.service';
+import { deleteCsrf, deleteUser, readCsrf } from '@app/services/localStorage.service';
 
 export type ApiErrorEvent = {
   message: string;
@@ -44,7 +44,7 @@ const clientOptions: AuthClientOptionsDto = {
   cookiePrefix: config.cookiePrefix,
   refreshExpiringTokens: true,
   refreshThresholdSeconds: 30,
-  reauthenticateOnUnauthorizedError: true,
+  reauthenticateOnUnauthorizedError: false,
 };
 
 const httpClientOptions: AxiosRequestConfig = {
@@ -63,6 +63,14 @@ const { getLoginUrl, handlePageLoad, getUserInfo, getUserClaims, refreshToken, l
 );
 
 httpClient.interceptors.response.use(undefined, (error: AxiosError) => {
+  // Session is invalid — clear auth state and redirect to login
+  if (error.response?.status === 401) {
+    deleteCsrf();
+    deleteUser();
+    window.location.href = '/auth/login';
+    return new Promise(() => {}); // halt further processing
+  }
+
   const suppress =
     (error.config as AxiosRequestConfig & { suppressErrorRedirect?: boolean })?.suppressErrorRedirect === true;
 

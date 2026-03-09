@@ -7,9 +7,10 @@ type GridViewProps = {
   projects: ProjectSummaryInfo[];
   mode: 'dashboard' | 'all';
   onProjectClick: (projectId: string) => void;
+  onRetryCrawl?: (projectId: string) => void;
 };
 
-export const GridView: React.FC<GridViewProps> = ({ projects, mode, onProjectClick }) => {
+export const GridView: React.FC<GridViewProps> = ({ projects, mode, onProjectClick, onRetryCrawl }) => {
   return (
     <Row gutter={[24, 24]} className="mt-8">
       {projects.map((project) => {
@@ -44,14 +45,26 @@ export const GridView: React.FC<GridViewProps> = ({ projects, mode, onProjectCli
                     <Col>
                       <div className="text-xs font-normal font-inter">{project.name}</div>
                     </Col>
-                    <Col>
-                      <Tag className="text-xs font-normal font-inter py-1" variant="filled" color="#000">
+                    <Col className="flex items-center gap-2">
+                      <Tag className="text-xs font-normal font-inter py-1" variant="filled" color={project.status === 'ERROR' ? 'red' : '#000'}>
                         {project.status
                           .toLowerCase()
                           .split(' ')
                           .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
                           .join(' ')}
                       </Tag>
+                      {project.status === 'ERROR' && onRetryCrawl && (
+                        <Button
+                          size="small"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onRetryCrawl(project.projectId);
+                          }}
+                          className="text-xs font-inter"
+                        >
+                          Retry
+                        </Button>
+                      )}
                     </Col>
                   </Row>
 

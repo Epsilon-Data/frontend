@@ -278,7 +278,12 @@
               "success": "Project deleted successfully",
               "failed": "Failed to delete project"
             },
-            "edit":"Edit connection details"
+            "edit": "Edit connection details",
+            "retry": {
+              "title": "Retry crawl",
+              "success": "Crawl retried successfully",
+              "failed": "Failed to retry crawl"
+            }
           }
         },
         "table": {

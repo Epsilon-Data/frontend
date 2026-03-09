@@ -8,10 +8,11 @@ export const ProjectList: React.FC<{
   mode: 'dashboard' | 'all';
   layout: 'list' | 'grid';
   onProjectClick: (projectId: string) => void;
-}> = ({ projects, mode, layout, onProjectClick }) => {
+  onRetryCrawl?: (projectId: string) => void;
+}> = ({ projects, mode, layout, onProjectClick, onRetryCrawl }) => {
   if (layout === 'list') {
-    return <ListView projects={projects} mode={mode} onProjectClick={onProjectClick} />;
+    return <ListView projects={projects} mode={mode} onProjectClick={onProjectClick} onRetryCrawl={onRetryCrawl} />;
   }
 
-  return <GridView projects={projects} mode={mode} onProjectClick={onProjectClick} />;
+  return <GridView projects={projects} mode={mode} onProjectClick={onProjectClick} onRetryCrawl={onRetryCrawl} />;
 };

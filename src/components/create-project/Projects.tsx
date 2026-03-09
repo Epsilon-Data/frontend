@@ -1,4 +1,4 @@
-import { ProjectSummaryInfo } from '@app/api/projects.api';
+import { ProjectSummaryInfo, retryCrawl } from '@app/api/projects.api';
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
 import { EmptyState } from '@app/components/common/EmptyState';
 import { Layout, SortKey } from '@app/pages/DashboardPages/DashboardPage';
@@ -14,6 +14,7 @@ type ProjectsProps = {
   searchValue: string;
   sortKey: string;
   loading: boolean;
+  onRefresh?: () => void;
 };
 
 const normalize = (s: string) => s.trim().toLowerCase();
@@ -43,13 +44,22 @@ const sortProjects = (arr: ProjectSummaryInfo[], sortKey: SortKey) => {
   }
 };
 
-export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, sortKey, loading }: ProjectsProps) => {
+export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, sortKey, loading, onRefresh }: ProjectsProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const q = normalize(searchValue);
 
   const handleProjectClick = (projectId: string) => {
     navigate(`/project/db-mapping?id=${projectId}`);
+  };
+
+  const handleRetryCrawl = async (projectId: string) => {
+    try {
+      await retryCrawl(projectId);
+      onRefresh?.();
+    } catch (error) {
+      console.error('Failed to retry crawl:', error);
+    }
   };
 
   const sortedOwned = sortProjects(ownedProjects, sortKey as SortKey);
@@ -68,7 +78,7 @@ export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, s
           {t('dashboard.main.searchResults.count', { count: searchResults.length })}
         </div>
 
-        <ProjectList projects={searchResults} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
+        <ProjectList onRetryCrawl={handleRetryCrawl} projects={searchResults} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
       </div>
     );
   }
@@ -82,7 +92,7 @@ export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, s
         </div>
         <LoaderWrapper isLoading={loading} minHeight="300px">
           {sortedOwned.length > 0 ? (
-            <ProjectList projects={sortedOwned} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
+            <ProjectList onRetryCrawl={handleRetryCrawl} projects={sortedOwned} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
           ) : (
             <EmptyState description={t('onboarding.dashboard.ownedEmpty')}>
               <Button className="mt-2" onClick={() => navigate('/browse')}>
@@ -99,7 +109,7 @@ export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, s
         </div>
         <LoaderWrapper isLoading={loading} minHeight="300px">
           {sortedShared.length > 0 ? (
-            <ProjectList projects={sortedShared} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
+            <ProjectList onRetryCrawl={handleRetryCrawl} projects={sortedShared} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
           ) : (
             <EmptyState description={t('onboarding.dashboard.sharedEmpty')} />
           )}

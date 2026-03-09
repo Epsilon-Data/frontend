@@ -5,6 +5,7 @@ import { WithChildrenProps } from '@app/types/generalTypes';
 import { getClaims, handleAuth } from '@app/store/slices/authSlice';
 import { notificationController } from '@app/controllers/notificationController';
 import { ApiErrorData } from '@app/api/ApiError';
+import { deletePreviousUrl, persistPreviousUrl } from '@app/services/localStorage.service';
 
 const AUTH_PARAM_KEYS = new Set(['code', 'state', 'session_state', 'error', 'iss', 'client_state']);
 
@@ -16,7 +17,6 @@ function stripAuthParams(urlString: string): string {
   return `${url.pathname}${qs ? `?${qs}` : ''}${url.hash}`;
 }
 
-// TODO: need to handle redirection to previousURL as it always goes to '/'
 const RequireAuth = ({ children }: WithChildrenProps): ReactElement | null => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -71,6 +71,7 @@ const RequireAuth = ({ children }: WithChildrenProps): ReactElement | null => {
           window.history.replaceState({}, document.title, cleanedCurrent);
 
           const target = stripAuthParams(res.previousUrl || '/');
+          deletePreviousUrl();
           navigate(target, { replace: true });
           return;
         }
@@ -91,7 +92,15 @@ const RequireAuth = ({ children }: WithChildrenProps): ReactElement | null => {
   }, [csrf, hasAuthParams, query, dispatch, navigate, location.search]);
 
   // render - if authenticated context (csrf exists), render children, if in auth callback URL return null, otherwise go to login
-  return csrf ? <>{children}</> : hasAuthParams ? null : <Navigate to="/auth/login" replace />;
+  if (!csrf && !hasAuthParams) {
+    // Save the current URL so we can redirect back after login
+    const currentUrl = `${location.pathname}${location.search}${location.hash}`;
+    if (currentUrl !== '/auth/login') {
+      persistPreviousUrl(currentUrl);
+    }
+    return <Navigate to="/auth/login" replace />;
+  }
+  return csrf ? <>{children}</> : null;
 };
 
 export default RequireAuth;

@@ -82,3 +82,13 @@ export const readCsrf = (): string => {
 };
 
 export const deleteCsrf = (): void => localStorage.removeItem('csrf');
+
+export const persistPreviousUrl = (url: string): void => {
+  sessionStorage.setItem('previousUrl', url);
+};
+
+export const readPreviousUrl = (): string | null => {
+  return sessionStorage.getItem('previousUrl');
+};
+
+export const deletePreviousUrl = (): void => sessionStorage.removeItem('previousUrl');

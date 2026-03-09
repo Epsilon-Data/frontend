@@ -13,7 +13,7 @@ import {
   signOut,
 } from '@app/api/auth.api';
 import { setUser } from '@app/store/slices/userSlice';
-import { deleteCsrf, deleteUser, persistCsrf, readCsrf } from '@app/services/localStorage.service';
+import { deleteCsrf, deleteUser, persistCsrf, readCsrf, readPreviousUrl } from '@app/services/localStorage.service';
 import { getUserClaims } from '@app/api/http.api';
 import { UserDetails } from '@app/domain/UserDetails';
 
@@ -27,11 +27,13 @@ const initialState: AuthSlice = {
   initialized: false,
 };
 
-export const doLogin = createAsyncThunk('auth/doLogin', async () =>
-  login(window.location.origin).then((res) => {
-    return res;
-  }),
-);
+export const doLogin = createAsyncThunk('auth/doLogin', async () => {
+  const previousUrl = readPreviousUrl();
+  const returnUrl = previousUrl
+    ? `${window.location.origin}${previousUrl}`
+    : window.location.href;
+  return login(returnUrl);
+});
 
 export const handleAuth = createAsyncThunk('auth/handleAuth', async (query: URLSearchParams) =>
   doPageLoad(query).then((res) => {

@@ -47,6 +47,7 @@ const DashboardPage: React.FC = () => {
           searchValue={search}
           sortKey={sortKey}
           loading={loading}
+          onRefresh={() => fetchProjects()}
         />
       </ProjectModalProvider>
     </div>

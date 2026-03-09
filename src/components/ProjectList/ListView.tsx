@@ -7,9 +7,10 @@ type ListViewProps = {
   projects: ProjectSummaryInfo[];
   mode: 'dashboard' | 'all';
   onProjectClick: (projectId: string) => void;
+  onRetryCrawl?: (projectId: string) => void;
 };
 
-export const ListView: React.FC<ListViewProps> = ({ projects, mode, onProjectClick }) => {
+export const ListView: React.FC<ListViewProps> = ({ projects, mode, onProjectClick, onRetryCrawl }) => {
   return (
     <div className="mt-8 flex flex-col gap-4">
       {projects.map((project) => {
@@ -28,13 +29,27 @@ export const ListView: React.FC<ListViewProps> = ({ projects, mode, onProjectCli
                     <div className="text-sm font-normal font-inter truncate">{project.name}</div>
 
                     {mode === 'dashboard' && (
-                      <Tag className="text-xs font-normal font-inter py-1" variant="filled" color="#000">
-                        {project.status
-                          .toLowerCase()
-                          .split(' ')
-                          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                          .join(' ')}
-                      </Tag>
+                      <>
+                        <Tag className="text-xs font-normal font-inter py-1" variant="filled" color={project.status === 'ERROR' ? 'red' : '#000'}>
+                          {project.status
+                            .toLowerCase()
+                            .split(' ')
+                            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                            .join(' ')}
+                        </Tag>
+                        {project.status === 'ERROR' && onRetryCrawl && (
+                          <Button
+                            size="small"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onRetryCrawl(project.projectId);
+                            }}
+                            className="text-xs font-inter"
+                          >
+                            Retry
+                          </Button>
+                        )}
+                      </>
                     )}
                   </div>
 

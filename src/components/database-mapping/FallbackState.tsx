@@ -1,10 +1,12 @@
-import { deleteProject } from '@app/api/projects.api';
+import { deleteProject, retryCrawl } from '@app/api/projects.api';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { Button, message, Popconfirm } from 'antd';
+import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { AiFillDelete } from 'react-icons/ai';
 import { BsFillQuestionCircleFill } from 'react-icons/bs';
 import { FaCheck } from 'react-icons/fa6';
+import { IoReload } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import { MultiStepDatabaseModal } from '../access-requests/modal/MultiStepDatabaseModal';
 import { useDatabaseModalContext } from '@app/hooks/useDatabaseModalContext';
@@ -21,6 +23,20 @@ export const FallbackState = ({ projectStatus, projectId, projectOwner }: Fallba
   const user = useAppSelector((state) => state.user.user);
   const isOwner = user?.sub === projectOwner;
   const { showModal } = useDatabaseModalContext();
+  const [retrying, setRetrying] = useState(false);
+
+  const handleRetry = async () => {
+    setRetrying(true);
+    try {
+      await retryCrawl(projectId);
+      message.success(t('project.main.dbMapping.fallback.actions.retry.success'));
+      window.location.reload();
+    } catch {
+      message.error(t('project.main.dbMapping.fallback.actions.retry.failed'));
+    } finally {
+      setRetrying(false);
+    }
+  };
 
   const confirmDeletion = async () => {
     try {
@@ -62,6 +78,14 @@ export const FallbackState = ({ projectStatus, projectId, projectOwner }: Fallba
             </Popconfirm>
             {projectStatus === 'ERROR' && (
               <>
+                <Button
+                  className="flex items-center px-8 h-9 text-xs font-medium font-inter"
+                  icon={<IoReload />}
+                  loading={retrying}
+                  onClick={handleRetry}
+                >
+                  {t('project.main.dbMapping.fallback.actions.retry.title')}
+                </Button>
                 <Button
                   className="flex items-center px-8 h-9 text-xs font-medium font-inter bg-gradient-to-br from-primaryGradientFrom to-primaryGradientTo text-white hover:text-white"
                   type="primary"

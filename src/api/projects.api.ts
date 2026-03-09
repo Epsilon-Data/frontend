@@ -197,3 +197,11 @@ export const updateProject = async (data: Partial<ProjectInfo>, projectId: strin
     headers: { [csrfHeaderName]: `${csrf}` },
   });
 };
+
+export const retryCrawl = async (projectId: string): Promise<{ jobId: string }> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.post(`${PROJECT_API_URL}/${projectId}/retry-crawl`, {}, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  return response.data;
+};

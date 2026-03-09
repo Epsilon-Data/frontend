@@ -19,15 +19,13 @@ const DashboardPage: React.FC = () => {
   const [sortKey, setSortKey] = useState<SortKey>('date-created');
   const [loading, setLoading] = useState(true);
 
-  const { csrf, initialized } = useAppSelector((state) => state.auth);
   const { ownedProjects, analysisProjects, fetchProjects } = useUserProjects();
 
   useEffect(() => {
-    if (!(initialized && csrf)) return;
     const controller = new AbortController();
     fetchProjects(controller.signal).finally(() => setLoading(false));
     return () => controller.abort();
-  }, [csrf, fetchProjects, initialized]);
+  }, [fetchProjects]);
 
   return (
     <div className="py-3 px-4 md:py-5 md:px-9">

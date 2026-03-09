@@ -6,6 +6,7 @@ import { getClaims, handleAuth } from '@app/store/slices/authSlice';
 import { notificationController } from '@app/controllers/notificationController';
 import { ApiErrorData } from '@app/api/ApiError';
 import { deletePreviousUrl, persistPreviousUrl } from '@app/services/localStorage.service';
+import { Spin } from 'antd';
 
 const AUTH_PARAM_KEYS = new Set(['code', 'state', 'session_state', 'error', 'iss', 'client_state']);
 
@@ -21,7 +22,7 @@ const RequireAuth = ({ children }: WithChildrenProps): ReactElement | null => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const csrf = useAppSelector((state) => state.auth.csrf);
+  const { csrf, initialized } = useAppSelector((state) => state.auth);
 
   const query = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const hasAuthParams = useMemo(() => Array.from(query.keys()).some((k) => AUTH_PARAM_KEYS.has(k)), [query]);
@@ -91,7 +92,7 @@ const RequireAuth = ({ children }: WithChildrenProps): ReactElement | null => {
     })();
   }, [csrf, hasAuthParams, query, dispatch, navigate, location.search]);
 
-  // render - if authenticated context (csrf exists), render children, if in auth callback URL return null, otherwise go to login
+  // render - if authenticated context (csrf exists), wait for claims before rendering children
   if (!csrf && !hasAuthParams) {
     // Save the current URL so we can redirect back after login
     const currentUrl = `${location.pathname}${location.search}${location.hash}`;
@@ -100,6 +101,16 @@ const RequireAuth = ({ children }: WithChildrenProps): ReactElement | null => {
     }
     return <Navigate to="/auth/login" replace />;
   }
+
+  // Wait for claims to resolve before rendering children to prevent race conditions
+  if (csrf && !initialized) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
   return csrf ? <>{children}</> : null;
 };
 

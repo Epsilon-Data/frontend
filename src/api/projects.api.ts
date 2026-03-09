@@ -9,6 +9,24 @@ export interface Pagination {
   total?: number;
 }
 
+export interface BrowseProjectsQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  field?: 'all' | 'name' | 'keywords' | 'organisation';
+  sort?: 'date-created' | 'title' | 'last-modified';
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
 export interface ProjectSummaryInfo {
   projectId: string;
   name: string;
@@ -111,10 +129,13 @@ export const getUserSharedProjects = async (signal?: AbortSignal): Promise<Proje
   return response.data;
 };
 
-export const getAllProjects = async (): Promise<ProjectSummaryInfo[]> => {
+export const getAllProjects = async (
+  query?: BrowseProjectsQuery,
+): Promise<PaginatedResponse<ProjectSummaryInfo>> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${PROJECT_API_URL}/all`, {
     headers: { [csrfHeaderName]: `${csrf}` },
+    params: query,
   });
 
   return response.data;

@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { ExploreDatasetsSearch } from '@app/components/browse-projects/ExploreDatasetsSearch';
 import { SearchResultsHeader } from '@app/components/browse-projects/SearchResultsHeader';
 import { DismissibleBanner } from '@app/components/common/DismissibleBanner';
@@ -6,92 +7,101 @@ import { BrowseModalProvider } from '@app/providers/BrowseModalProvider';
 import { MultiStepBrowseModal } from '@app/components/browse-projects/modal/MultiStepBrowseModal';
 import { useBrowseProjects } from '@app/hooks/useBrowseProjects';
 import { Projects } from '@app/components/browse-projects/Projects';
-import { ProjectSummaryInfo } from '@app/api/projects.api';
 import { useTranslation } from 'react-i18next';
+import { Pagination } from 'antd';
 
 type SearchField = 'all' | 'name' | 'keywords' | 'organisation';
 type SortKey = 'date-created' | 'title' | 'last-modified';
 
-const normalize = (v: unknown) =>
-  String(v ?? '')
-    .trim()
-    .toLowerCase();
+const VALID_FIELDS: SearchField[] = ['all', 'name', 'keywords', 'organisation'];
+const VALID_SORTS: SortKey[] = ['date-created', 'title', 'last-modified'];
+const PAGE_SIZE = 12;
 
 const BrowseDatasetPage: React.FC = () => {
   const { t } = useTranslation();
-  const { projects, fetchProjects } = useBrowseProjects();
+  const { projects, loading, total, fetchProjects } = useBrowseProjects();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [searchValue, setSearchValue] = useState('');
-  const [selectedField, setSelectedField] = useState<SearchField>('all');
-  const [sortKey, setSortKey] = useState<SortKey>('date-created');
-  const [loading, setLoading] = useState(true);
+  const queryFromUrl = searchParams.get('q') ?? '';
+  const fieldFromUrl = searchParams.get('field') as SearchField | null;
+  const sortFromUrl = searchParams.get('sort') as SortKey | null;
+  const pageFromUrl = Number(searchParams.get('page')) || 1;
+
+  const searchValue = queryFromUrl;
+  const selectedField: SearchField = fieldFromUrl && VALID_FIELDS.includes(fieldFromUrl) ? fieldFromUrl : 'all';
+  const sortKey: SortKey = sortFromUrl && VALID_SORTS.includes(sortFromUrl) ? sortFromUrl : 'date-created';
+  const currentPage = pageFromUrl;
+
+  const updateParams = useCallback(
+    (updates: Record<string, string | undefined>) => {
+      const current = Object.fromEntries(searchParams.entries());
+      const merged = { ...current, ...updates };
+      const next: Record<string, string> = {};
+      for (const [k, v] of Object.entries(merged)) {
+        if (v) next[k] = v;
+      }
+      if (next.field === 'all') delete next.field;
+      if (next.sort === 'date-created') delete next.sort;
+      if (next.page === '1') delete next.page;
+      setSearchParams(next, { replace: true });
+    },
+    [searchParams, setSearchParams],
+  );
+
+  const handleSearch = (value: string, field: SearchField) => {
+    const params: Record<string, string | undefined> = {
+      q: value.trim() || undefined,
+      field: field !== 'all' ? field : undefined,
+      page: undefined, // reset to page 1
+    };
+    updateParams(params);
+  };
+
+  const handleSortChange = (sort: SortKey) => {
+    updateParams({ sort: sort !== 'date-created' ? sort : undefined, page: undefined });
+  };
+
+  const handlePageChange = (page: number) => {
+    updateParams({ page: page > 1 ? String(page) : undefined });
+  };
 
   useEffect(() => {
-    const controller = new AbortController();
-    fetchProjects().finally(() => setLoading(false));
-    return () => controller.abort();
-  }, [fetchProjects]);
-
-  const filteredAndSortedProjects = useMemo(() => {
-    const q = normalize(searchValue);
-
-    const matches = (p: ProjectSummaryInfo) => {
-      if (!q) return true;
-
-      const name = normalize(p.name);
-      const keywords = Array.isArray(p.dbKeywords) ? p.dbKeywords.map(normalize).join(' ') : normalize(p.dbKeywords);
-      const organisation = normalize(`${p.university ?? ''} - ${p.faculty ?? ''}`);
-
-      switch (selectedField) {
-        case 'name':
-          return name.includes(q);
-        case 'keywords':
-          return keywords.includes(q);
-        case 'organisation':
-          return organisation.includes(q);
-        case 'all':
-        default:
-          return `${name} ${keywords} ${organisation}`.includes(q);
-      }
-    };
-
-    const parseTime = (d: unknown) => {
-      const t = new Date(String(d ?? '')).getTime();
-      return Number.isFinite(t) ? t : 0;
-    };
-
-    const sorted = [...projects].filter(matches).sort((a, b) => {
-      if (sortKey === 'title') {
-        return normalize(a.name).localeCompare(normalize(b.name));
-      }
-
-      if (sortKey === 'last-modified') {
-        return parseTime(b.lastModified) - parseTime(a.lastModified);
-      }
-
-      return parseTime(b.createdDate) - parseTime(a.createdDate);
+    fetchProjects({
+      search: searchValue || undefined,
+      field: selectedField,
+      sort: sortKey,
+      page: currentPage,
+      limit: PAGE_SIZE,
     });
-
-    return sorted;
-  }, [projects, searchValue, selectedField, sortKey]);
+  }, [fetchProjects, searchValue, selectedField, sortKey, currentPage]);
 
   return (
     <>
       <ExploreDatasetsSearch
-        onSearch={(value, field) => {
-          setSearchValue(value);
-          setSelectedField(field);
-        }}
+        onSearch={handleSearch}
+        initialValue={searchValue}
+        initialField={selectedField}
       />
       <div className="py-0 px-4">
         <DismissibleBanner id="browse-hub" message={t('onboarding.browse.banner')} />
       </div>
       <div className="py-0 px-4 flex flex-col">
-        <SearchResultsHeader count={filteredAndSortedProjects.length} sortKey={sortKey} onSortChange={setSortKey} />
+        <SearchResultsHeader count={total} sortKey={sortKey} onSortChange={handleSortChange} />
         <BrowseModalProvider>
-          <Projects projects={filteredAndSortedProjects} layout={'grid'} loading={loading} />
+          <Projects projects={projects} layout={'grid'} loading={loading} />
           <MultiStepBrowseModal mask closable={false} width={'60%'} />
         </BrowseModalProvider>
+        {total > PAGE_SIZE && (
+          <div className="flex justify-center py-6">
+            <Pagination
+              current={currentPage}
+              pageSize={PAGE_SIZE}
+              total={total}
+              onChange={handlePageChange}
+              showSizeChanger={false}
+            />
+          </div>
+        )}
       </div>
     </>
   );

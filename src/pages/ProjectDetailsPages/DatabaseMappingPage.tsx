@@ -116,6 +116,7 @@ const DatabaseMappingPage: React.FC = () => {
                     projectStatus={project?.status ?? ''}
                     projectId={projectId}
                     projectOwner={project?.ownerId ?? ''}
+                    connectionType={project?.connectionType}
                   />
                 </DatabaseModalProvider>
               )}

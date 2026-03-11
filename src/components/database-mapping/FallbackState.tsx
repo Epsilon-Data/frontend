@@ -10,20 +10,42 @@ import { IoReload } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import { MultiStepDatabaseModal } from '../access-requests/modal/MultiStepDatabaseModal';
 import { useDatabaseModalContext } from '@app/hooks/useDatabaseModalContext';
+import { ProxySetupInline } from '../proxy/ProxySetupInline';
 
 type FallbackStateProps = {
   projectStatus: string;
   projectId: string;
   projectOwner: string;
+  connectionType?: string;
 };
 
-export const FallbackState = ({ projectStatus, projectId, projectOwner }: FallbackStateProps) => {
+export const FallbackState = ({ projectStatus, projectId, projectOwner, connectionType }: FallbackStateProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.user.user);
   const isOwner = user?.sub === projectOwner;
   const { showModal } = useDatabaseModalContext();
   const [retrying, setRetrying] = useState(false);
+
+  if (connectionType === 'PROXY' && !['READY', 'MAPPED'].includes(projectStatus)) {
+    if (isOwner) {
+      return (
+        <div className="mt-6 bg-grey-4 min-h-[500px] flex items-center justify-center">
+          <ProxySetupInline projectId={projectId} projectStatus={projectStatus} />
+        </div>
+      );
+    }
+    return (
+      <div className="relative mt-6 overflow-hidden bg-grey-4 min-h-[500px]">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+          <div className="text-2xl font-semibold text-grey-9">Proxy connection pending</div>
+          <div className="mt-2 text-sm text-grey-7 font-light">
+            The project owner is setting up the proxy connection. Check back later.
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleRetry = async () => {
     setRetrying(true);

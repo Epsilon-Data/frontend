@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useAppSelector } from '@app/hooks/reduxHooks';
 
@@ -18,14 +18,30 @@ const DashboardPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('date-created');
   const [loading, setLoading] = useState(true);
+  const [ownedPage, setOwnedPage] = useState(1);
+  const [sharedPage, setSharedPage] = useState(1);
 
-  const { ownedProjects, analysisProjects, fetchProjects } = useUserProjects();
+  const { ownedProjects, ownedPagination, analysisProjects, sharedPagination, fetchProjects } = useUserProjects();
+
+  const doFetch = useCallback(
+    (signal?: AbortSignal) => {
+      const base = { sort: sortKey, search: search || undefined } as const;
+      return fetchProjects({ ...base, page: ownedPage }, { ...base, page: sharedPage }, signal);
+    },
+    [fetchProjects, sortKey, search, ownedPage, sharedPage],
+  );
 
   useEffect(() => {
     const controller = new AbortController();
-    fetchProjects(controller.signal).finally(() => setLoading(false));
+    doFetch(controller.signal).finally(() => setLoading(false));
     return () => controller.abort();
-  }, [fetchProjects]);
+  }, [doFetch]);
+
+  // Reset pages when search or sort changes
+  useEffect(() => {
+    setOwnedPage(1);
+    setSharedPage(1);
+  }, [search, sortKey]);
 
   return (
     <div className="py-3 px-4 md:py-5 md:px-9">
@@ -39,15 +55,18 @@ const DashboardPage: React.FC = () => {
           sortKey={sortKey}
           handleSortChange={setSortKey}
         />
-        <MultiStepProjectModal fetchProjects={fetchProjects} mask closable={false} width={'60%'} />
+        <MultiStepProjectModal fetchProjects={() => doFetch()} mask closable={false} width={'60%'} />
         <Projects
           sharedProjects={analysisProjects}
           ownedProjects={ownedProjects}
+          ownedPagination={ownedPagination}
+          sharedPagination={sharedPagination}
           layout={layout}
           searchValue={search}
-          sortKey={sortKey}
           loading={loading}
-          onRefresh={() => fetchProjects()}
+          onRefresh={() => doFetch()}
+          onOwnedPageChange={setOwnedPage}
+          onSharedPageChange={setSharedPage}
         />
       </ProjectModalProvider>
     </div>

@@ -144,6 +144,19 @@
         },
         "step3": {
           "title": "Database",
+          "connectionType": {
+            "title": "How should the platform access your data?",
+            "description": "Choose how Epsilon connects to your database for analysis.",
+            "cloudConnect": "Cloud Connect",
+            "cloudConnectDesc": "Platform connects to your database directly using credentials you provide.",
+            "proxy": "Epsilon Proxy",
+            "proxyDesc": "Install a lightweight agent next to your database. Data never leaves your network unencrypted."
+          },
+          "proxy": {
+            "title": "Epsilon Proxy Setup",
+            "description": "After creating this project, install the epsilon-proxy agent on the machine that has access to your database.",
+            "note": "You will receive an install token after project creation. Your database credentials stay on your machine — they are never sent to the platform."
+          },
           "dbName": { "title": "What is the name of your database?", "placeholder": "Enter your database name" },
           "dbType": { "title": "What is the nature of your database?", "placeholder": "Select database type" },
           "updateDatabase": {

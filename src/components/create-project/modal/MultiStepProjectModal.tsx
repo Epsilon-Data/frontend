@@ -5,7 +5,7 @@ import { Button, Modal, message } from 'antd';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 
 import { useState, useEffect } from 'react';
-import { createProject, updateProject, ProjectInfo } from '@app/api/projects.api';
+import { createProject, updateProject, ProjectInfo, ConnectionType } from '@app/api/projects.api';
 import { useTranslation } from 'react-i18next';
 import { ModalStepHeader } from '@app/components/common/Modal/ModalHeaders/ModalHeaders';
 import { useAppSelector } from '@app/hooks/reduxHooks';
@@ -33,6 +33,7 @@ export const MultiStepProjectModal = ({ fetchProjects, editingProject, ...modalP
   const [showMessage, setShowMessage] = useState(false);
   const [isConnected, setConnected] = useState(false);
   const [dbUrl, setDbUrl] = useState('');
+  const [connectionType, setConnectionType] = useState<ConnectionType>('CLOUD_CONNECT');
 
   // Pre-fill form if editing
   useEffect(() => {
@@ -92,12 +93,15 @@ export const MultiStepProjectModal = ({ fetchProjects, editingProject, ...modalP
       await forms[modalStep].validateFields();
 
       if (modalStep === 2) {
-        const shouldUpdateDb = editingProject ? step3.getFieldValue('updateDatabase') : true;
-        const hasCredsValue = !editingProject ? step3.getFieldValue('hasCreds') : true;
+        // Skip connection validation for PROXY mode — no DB credentials needed
+        if (connectionType !== 'PROXY') {
+          const shouldUpdateDb = editingProject ? step3.getFieldValue('updateDatabase') : true;
+          const hasCredsValue = !editingProject ? step3.getFieldValue('hasCreds') : true;
 
-        if (shouldUpdateDb && !isConnected && hasCredsValue) {
-          message.error(t('dashboard.createProject.form.error.invalidDbUrl'));
-          return;
+          if (shouldUpdateDb && !isConnected && hasCredsValue) {
+            message.error(t('dashboard.createProject.form.error.invalidDbUrl'));
+            return;
+          }
         }
       }
 
@@ -156,6 +160,8 @@ export const MultiStepProjectModal = ({ fetchProjects, editingProject, ...modalP
 
     try {
       if (!editingProject) {
+        const isProxy = connectionType === 'PROXY';
+
         const formData = {
           ownerId: user?.sub ?? '',
           name: step1.getFieldValue('name'),
@@ -170,19 +176,25 @@ export const MultiStepProjectModal = ({ fetchProjects, editingProject, ...modalP
           participantsNum: step1.getFieldValue('participantsNum'),
           dbKeywords: dbKeywords,
           isPublic: step1.getFieldValue('isPublic') ?? false,
-          connection: {
-            orgAdminEmail: step3.getFieldValue('orgAdminEmail'),
-            dbDetails: {
-              name: name || parsedUrl?.pathname.replace(/^\//, '') || '',
-              type: type || (parsedUrl?.protocol.replace(':', '') ?? ''),
-              host: host || parsedUrl?.hostname || '',
-              port: port || parsedUrl?.port || '',
-              url: finalUrl || undefined,
-              username: username || parsedUrl?.username || '',
-              password: password || parsedUrl?.password || '',
-              ssl: ssl || parsedUrl?.searchParams.get('sslmode')?.toLowerCase() !== 'disable' || false,
-            },
-          },
+          connectionType,
+          connection: isProxy
+            ? {
+                orgAdminEmail: undefined,
+                dbDetails: { name: '', type: 'postgres' },
+              }
+            : {
+                orgAdminEmail: step3.getFieldValue('orgAdminEmail'),
+                dbDetails: {
+                  name: name || parsedUrl?.pathname.replace(/^\//, '') || '',
+                  type: type || (parsedUrl?.protocol.replace(':', '') ?? ''),
+                  host: host || parsedUrl?.hostname || '',
+                  port: port || parsedUrl?.port || '',
+                  url: finalUrl || undefined,
+                  username: username || parsedUrl?.username || '',
+                  password: password || parsedUrl?.password || '',
+                  ssl: ssl || parsedUrl?.searchParams.get('sslmode')?.toLowerCase() !== 'disable' || false,
+                },
+              },
         };
 
         await step4.validateFields();
@@ -313,6 +325,8 @@ export const MultiStepProjectModal = ({ fetchProjects, editingProject, ...modalP
             setConnected={setConnected}
             setDbUrl={setDbUrl}
             isEditing={!!editingProject}
+            connectionType={connectionType}
+            onConnectionTypeChange={setConnectionType}
           />
         );
       case 3:

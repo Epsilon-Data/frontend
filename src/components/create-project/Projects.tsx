@@ -1,53 +1,41 @@
 import { ProjectSummaryInfo, retryCrawl } from '@app/api/projects.api';
 import { ProjectList } from '@app/components/ProjectList/ProjectList';
 import { EmptyState } from '@app/components/common/EmptyState';
-import { Layout, SortKey } from '@app/pages/DashboardPages/DashboardPage';
+import { Layout } from '@app/pages/DashboardPages/DashboardPage';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { LoaderWrapper } from '@app/components/common/LoaderWrapper';
-import { Button } from 'antd';
+import { Button, Pagination } from 'antd';
+
+type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
 
 type ProjectsProps = {
   ownedProjects: ProjectSummaryInfo[];
   sharedProjects: ProjectSummaryInfo[];
+  ownedPagination: PaginationInfo;
+  sharedPagination: PaginationInfo;
   layout: Layout;
   searchValue: string;
-  sortKey: string;
   loading: boolean;
   onRefresh?: () => void;
+  onOwnedPageChange: (page: number) => void;
+  onSharedPageChange: (page: number) => void;
 };
 
-const normalize = (s: string) => s.trim().toLowerCase();
-
-const matchesSearch = (p: ProjectSummaryInfo, q: string) => {
-  if (!q) return true;
-  const searchFields = [p.name].filter(Boolean).join(' ').toLowerCase();
-
-  return searchFields.includes(q);
-};
-
-const toMs = (d: Date | string) => new Date(d).getTime();
-
-const sortProjects = (arr: ProjectSummaryInfo[], sortKey: SortKey) => {
-  const copy = [...arr];
-
-  switch (sortKey) {
-    case 'title':
-      return copy.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
-
-    case 'last-modified':
-      return copy.sort((a, b) => toMs(b.lastModified) - toMs(a.lastModified));
-
-    case 'date-created':
-    default:
-      return copy.sort((a, b) => toMs(b.createdDate) - toMs(a.createdDate));
-  }
-};
-
-export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, sortKey, loading, onRefresh }: ProjectsProps) => {
+export const Projects = ({
+  ownedProjects,
+  sharedProjects,
+  ownedPagination,
+  sharedPagination,
+  layout,
+  searchValue,
+  loading,
+  onRefresh,
+  onOwnedPageChange,
+  onSharedPageChange,
+}: ProjectsProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const q = normalize(searchValue);
 
   const handleProjectClick = (projectId: string) => {
     navigate(`/project/db-mapping?id=${projectId}`);
@@ -62,23 +50,32 @@ export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, s
     }
   };
 
-  const sortedOwned = sortProjects(ownedProjects, sortKey as SortKey);
-  const sortedShared = sortProjects(sharedProjects, sortKey as SortKey);
+  const isSearching = searchValue.trim().length > 0;
 
-  const rawSearchResults = q.length > 0 ? [...ownedProjects, ...sharedProjects].filter((p) => matchesSearch(p, q)) : [];
-  const searchResults = q.length > 0 ? sortProjects(rawSearchResults, sortKey as SortKey) : [];
+  // When searching, both owned and shared are filtered server-side — show combined results
+  if (isSearching) {
+    const allResults = [...ownedProjects, ...sharedProjects];
+    const totalResults = ownedPagination.total + sharedPagination.total;
 
-  const showSearchSection = q.length > 0 && searchResults.length > 0;
-
-  if (showSearchSection) {
     return (
       <div className="my-12">
         <div className="text-md font-medium font-inter text-black">{t('dashboard.main.searchResults.title')}</div>
         <div className="text-xs font-regular font-inter text-grey-1">
-          {t('dashboard.main.searchResults.count', { count: searchResults.length })}
+          {t('dashboard.main.searchResults.count', { count: totalResults })}
         </div>
-
-        <ProjectList onRetryCrawl={handleRetryCrawl} projects={searchResults} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
+        <LoaderWrapper isLoading={loading} minHeight="300px">
+          {allResults.length > 0 ? (
+            <ProjectList
+              onRetryCrawl={handleRetryCrawl}
+              projects={allResults}
+              mode="dashboard"
+              layout={layout}
+              onProjectClick={handleProjectClick}
+            />
+          ) : (
+            <EmptyState description={t('dashboard.main.searchResults.empty', 'No projects found')} />
+          )}
+        </LoaderWrapper>
       </div>
     );
   }
@@ -91,8 +88,27 @@ export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, s
           {t('dashboard.main.personalProjects.description')}
         </div>
         <LoaderWrapper isLoading={loading} minHeight="300px">
-          {sortedOwned.length > 0 ? (
-            <ProjectList onRetryCrawl={handleRetryCrawl} projects={sortedOwned} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
+          {ownedProjects.length > 0 ? (
+            <>
+              <ProjectList
+                onRetryCrawl={handleRetryCrawl}
+                projects={ownedProjects}
+                mode="dashboard"
+                layout={layout}
+                onProjectClick={handleProjectClick}
+              />
+              {ownedPagination.totalPages > 1 && (
+                <div className="flex justify-center mt-8">
+                  <Pagination
+                    current={ownedPagination.page}
+                    pageSize={ownedPagination.limit}
+                    total={ownedPagination.total}
+                    onChange={onOwnedPageChange}
+                    showSizeChanger={false}
+                  />
+                </div>
+              )}
+            </>
           ) : (
             <EmptyState description={t('onboarding.dashboard.ownedEmpty')}>
               <Button className="mt-2" onClick={() => navigate('/browse')}>
@@ -108,8 +124,27 @@ export const Projects = ({ ownedProjects, sharedProjects, layout, searchValue, s
           {t('dashboard.main.sharedProjects.description')}
         </div>
         <LoaderWrapper isLoading={loading} minHeight="300px">
-          {sortedShared.length > 0 ? (
-            <ProjectList onRetryCrawl={handleRetryCrawl} projects={sortedShared} mode="dashboard" layout={layout} onProjectClick={handleProjectClick} />
+          {sharedProjects.length > 0 ? (
+            <>
+              <ProjectList
+                onRetryCrawl={handleRetryCrawl}
+                projects={sharedProjects}
+                mode="dashboard"
+                layout={layout}
+                onProjectClick={handleProjectClick}
+              />
+              {sharedPagination.totalPages > 1 && (
+                <div className="flex justify-center mt-8">
+                  <Pagination
+                    current={sharedPagination.page}
+                    pageSize={sharedPagination.limit}
+                    total={sharedPagination.total}
+                    onChange={onSharedPageChange}
+                    showSizeChanger={false}
+                  />
+                </div>
+              )}
+            </>
           ) : (
             <EmptyState description={t('onboarding.dashboard.sharedEmpty')} />
           )}

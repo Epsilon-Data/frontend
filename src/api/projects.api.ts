@@ -2,6 +2,7 @@ import { PROJECT_API_URL } from '@app/constants/projects';
 import { getCsrfHeader, httpClient } from './http.api';
 
 export type ProjectStatus = 'PENDING' | 'CRAWLING' | 'READY' | 'ERROR' | 'MAPPED';
+export type ConnectionType = 'CLOUD_CONNECT' | 'DIRECT_DB' | 'PROXY';
 
 export interface Pagination {
   current: number;
@@ -9,12 +10,15 @@ export interface Pagination {
   total?: number;
 }
 
-export interface BrowseProjectsQuery {
+export interface ProjectsQuery {
   page?: number;
   limit?: number;
   search?: string;
-  field?: 'all' | 'name' | 'keywords' | 'organisation';
   sort?: 'date-created' | 'title' | 'last-modified';
+}
+
+export interface BrowseProjectsQuery extends ProjectsQuery {
+  field?: 'all' | 'name' | 'keywords' | 'organisation';
 }
 
 export interface PaginatedResponse<T> {
@@ -79,6 +83,7 @@ export interface ProjectInfo {
   lastModified?: Date;
   dbKeywords?: string[];
   connection: ConnectionInfo;
+  connectionType?: ConnectionType;
   isPublic?: boolean;
 }
 
@@ -110,20 +115,27 @@ export const createProject = async (data: ProjectInfo): Promise<void> => {
   });
 };
 
-export const getUserOwnedProjects = async (signal?: AbortSignal): Promise<ProjectSummaryInfo[]> => {
+export const getUserOwnedProjects = async (
+  query?: ProjectsQuery,
+  signal?: AbortSignal,
+): Promise<PaginatedResponse<ProjectSummaryInfo>> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${PROJECT_API_URL}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
+    params: query,
     signal,
   });
   return response.data;
 };
 
-// get shared projects
-export const getUserSharedProjects = async (signal?: AbortSignal): Promise<ProjectSummaryInfo[]> => {
+export const getUserSharedProjects = async (
+  query?: ProjectsQuery,
+  signal?: AbortSignal,
+): Promise<PaginatedResponse<ProjectSummaryInfo>> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${PROJECT_API_URL}/shared`, {
     headers: { [csrfHeaderName]: `${csrf}` },
+    params: query,
     signal,
   });
   return response.data;

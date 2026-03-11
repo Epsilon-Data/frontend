@@ -77,6 +77,9 @@ const generateMockProjects = (count: number) => {
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => <BrowserRouter>{children}</BrowserRouter>;
 
+const defaultPagination = { page: 1, limit: 12, total: 0, totalPages: 0 };
+const noop = () => {};
+
 describe('Projects Component', () => {
   const mockOwnedProjects = generateMockProjects(2);
   const mockSharedProjects = generateMockProjects(2);
@@ -92,10 +95,13 @@ describe('Projects Component', () => {
         <Projects
           ownedProjects={mockOwnedProjects}
           sharedProjects={mockSharedProjects}
+          ownedPagination={{ ...defaultPagination, total: 2, totalPages: 1 }}
+          sharedPagination={{ ...defaultPagination, total: 2, totalPages: 1 }}
           layout="grid"
           searchValue=""
-          sortKey="date-created"
           loading={false}
+          onOwnedPageChange={noop}
+          onSharedPageChange={noop}
         />
       </TestWrapper>,
     );
@@ -110,10 +116,13 @@ describe('Projects Component', () => {
         <Projects
           ownedProjects={mockOwnedProjects}
           sharedProjects={mockSharedProjects}
+          ownedPagination={{ ...defaultPagination, total: 2, totalPages: 1 }}
+          sharedPagination={{ ...defaultPagination, total: 2, totalPages: 1 }}
           layout="grid"
           searchValue=""
-          sortKey="date-created"
           loading={false}
+          onOwnedPageChange={noop}
+          onSharedPageChange={noop}
         />
       </TestWrapper>,
     );
@@ -128,10 +137,13 @@ describe('Projects Component', () => {
         <Projects
           ownedProjects={mockOwnedProjects}
           sharedProjects={mockSharedProjects}
+          ownedPagination={{ ...defaultPagination, total: 2, totalPages: 1 }}
+          sharedPagination={{ ...defaultPagination, total: 2, totalPages: 1 }}
           layout="grid"
           searchValue=""
-          sortKey="date-created"
           loading={false}
+          onOwnedPageChange={noop}
+          onSharedPageChange={noop}
         />
       </TestWrapper>,
     );
@@ -146,10 +158,13 @@ describe('Projects Component', () => {
         <Projects
           ownedProjects={mockOwnedProjects}
           sharedProjects={mockSharedProjects}
+          ownedPagination={{ ...defaultPagination, total: 2, totalPages: 1 }}
+          sharedPagination={{ ...defaultPagination, total: 2, totalPages: 1 }}
           layout="grid"
           searchValue=""
-          sortKey="date-created"
           loading={false}
+          onOwnedPageChange={noop}
+          onSharedPageChange={noop}
         />
       </TestWrapper>,
     );
@@ -178,7 +193,7 @@ describe('Projects Component', () => {
     );
   });
 
-  it('shows search results section when search matches projects (across owned and shared)', () => {
+  it('shows search results section when searching', () => {
     const owned = [
       {
         projectId: '1',
@@ -210,10 +225,13 @@ describe('Projects Component', () => {
         <Projects
           ownedProjects={owned}
           sharedProjects={shared}
+          ownedPagination={{ page: 1, limit: 12, total: 1, totalPages: 1 }}
+          sharedPagination={{ page: 1, limit: 12, total: 1, totalPages: 1 }}
           layout="grid"
           searchValue="project"
-          sortKey="title"
           loading={false}
+          onOwnedPageChange={noop}
+          onSharedPageChange={noop}
         />
       </TestWrapper>,
     );
@@ -225,44 +243,32 @@ describe('Projects Component', () => {
     expect(screen.queryByText('dashboard.main.personalProjects.title')).not.toBeInTheDocument();
     expect(screen.queryByText('dashboard.main.sharedProjects.title')).not.toBeInTheDocument();
 
-    // ProjectList should receive the filtered list (1 item)
+    // ProjectList should receive both items
     expect(screen.getByTestId('project-count')).toHaveTextContent('2');
   });
 
-  it('when search has no results, shows original two sections', () => {
+  it('when search has no results, shows empty state', () => {
     render(
       <TestWrapper>
         <Projects
-          ownedProjects={mockOwnedProjects}
-          sharedProjects={mockSharedProjects}
+          ownedProjects={[]}
+          sharedProjects={[]}
+          ownedPagination={{ page: 1, limit: 12, total: 0, totalPages: 0 }}
+          sharedPagination={{ page: 1, limit: 12, total: 0, totalPages: 0 }}
           layout="grid"
           searchValue="definitely-no-match"
-          sortKey="title"
           loading={false}
+          onOwnedPageChange={noop}
+          onSharedPageChange={noop}
         />
       </TestWrapper>,
     );
 
-    // Should fall back to original sections
-    expect(screen.getByText('dashboard.main.personalProjects.title')).toBeInTheDocument();
-    expect(screen.getByText('dashboard.main.sharedProjects.title')).toBeInTheDocument();
-
-    // Search header does not show
-    expect(screen.queryByText('Search results')).not.toBeInTheDocument();
+    expect(screen.getByText('dashboard.main.searchResults.title')).toBeInTheDocument();
   });
 
-  it('sorts owned and shared sections independently by created date', () => {
+  it('renders projects in order provided by server', () => {
     const owned: ProjectSummaryInfo[] = [
-      {
-        projectId: 'o1',
-        name: 'Owned Old',
-        createdDate: new Date('2024-01-01'),
-        lastModified: new Date('2024-01-01'),
-        university: 'U',
-        faculty: 'F',
-        lead: 'L',
-        status: 'Active',
-      },
       {
         projectId: 'o2',
         name: 'Owned New',
@@ -273,24 +279,34 @@ describe('Projects Component', () => {
         lead: 'L',
         status: 'Active',
       },
+      {
+        projectId: 'o1',
+        name: 'Owned Old',
+        createdDate: new Date('2024-01-01'),
+        lastModified: new Date('2024-01-01'),
+        university: 'U',
+        faculty: 'F',
+        lead: 'L',
+        status: 'Active',
+      },
     ];
 
     const shared: ProjectSummaryInfo[] = [
       {
-        projectId: 's1',
-        name: 'Shared Old',
-        createdDate: new Date('2024-01-10'),
-        lastModified: new Date('2024-01-10'),
+        projectId: 's2',
+        name: 'Shared New',
+        createdDate: new Date('2024-02-10'),
+        lastModified: new Date('2024-02-10'),
         university: 'U',
         faculty: 'F',
         lead: 'L',
         status: 'Active',
       },
       {
-        projectId: 's2',
-        name: 'Shared New',
-        createdDate: new Date('2024-02-10'),
-        lastModified: new Date('2024-02-10'),
+        projectId: 's1',
+        name: 'Shared Old',
+        createdDate: new Date('2024-01-10'),
+        lastModified: new Date('2024-01-10'),
         university: 'U',
         faculty: 'F',
         lead: 'L',
@@ -303,10 +319,13 @@ describe('Projects Component', () => {
         <Projects
           ownedProjects={owned}
           sharedProjects={shared}
+          ownedPagination={{ page: 1, limit: 12, total: 2, totalPages: 1 }}
+          sharedPagination={{ page: 1, limit: 12, total: 2, totalPages: 1 }}
           layout="grid"
           searchValue=""
-          sortKey="date-created"
           loading={false}
+          onOwnedPageChange={noop}
+          onSharedPageChange={noop}
         />
       </TestWrapper>,
     );

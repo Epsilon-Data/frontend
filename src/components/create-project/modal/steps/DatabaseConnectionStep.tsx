@@ -230,7 +230,7 @@ export const DatabaseConnectionStep = ({
             </Paragraph>
             <div className="bg-gray-900 text-green-400 rounded-md p-3 font-mono text-xs leading-relaxed">
               <div># 1. Install epsilon-proxy</div>
-              <div className="text-white">curl -fsSL https://get.epsilon-data.org/install.sh | sh</div>
+              <div className="text-white">curl -fsSL https://raw.githubusercontent.com/Epsilon-Data/epsilon-proxy/main/scripts/install.sh | sh</div>
               <div className="mt-2"># 2. Register (token will be generated after project creation)</div>
               <div className="text-white">epsilon-proxy register --token &lt;TOKEN&gt;</div>
               <div className="mt-2"># 3. Start the proxy</div>

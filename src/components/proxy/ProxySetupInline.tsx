@@ -14,9 +14,6 @@ type Props = {
   projectStatus: string;
 };
 
-const API_URL = window.location.origin.includes('localhost')
-  ? 'http://localhost:3334/api/v1/hub'
-  : `${window.location.origin}/api/v1/hub`;
 
 export const ProxySetupInline = ({ projectId, projectStatus }: Props) => {
   const [token, setToken] = useState<GenerateTokenResponse | null>(null);
@@ -60,8 +57,8 @@ export const ProxySetupInline = ({ projectId, projectStatus }: Props) => {
   };
 
   const setupCommand = token
-    ? `curl -fsSL https://get.epsilon-data.org/install.sh | sh && \\
-epsilon-proxy register --token ${token.installToken} --api-url ${API_URL} && \\
+    ? `curl -fsSL https://raw.githubusercontent.com/Epsilon-Data/epsilon-proxy/main/scripts/install.sh | sh && \\
+epsilon-proxy register --token ${token.installToken} && \\
 epsilon-proxy start`
     : '';
 

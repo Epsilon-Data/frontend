@@ -6,10 +6,12 @@ import { NumberedFormItem } from '@app/components/common/Modal/NumberedFormItem/
 import { TestConnectionGroup } from '@app/components/common/Modal/TestConnectionGroup/TestConnectionGroup';
 import { buildDatabaseUrl } from '@app/utils/databaseUrl';
 
-import { Form, RadioChangeEvent } from 'antd';
+import { Form, Radio, RadioChangeEvent, Typography } from 'antd';
 import { CheckboxGroupProps } from 'antd/es/checkbox';
 import { FormInstance } from 'antd/lib';
 import React, { useState } from 'react';
+
+const { Text, Paragraph } = Typography;
 import { useTranslation } from 'react-i18next';
 
 export type DatabaseConnectionStepProps = {
@@ -20,6 +22,8 @@ export type DatabaseConnectionStepProps = {
   setConnected: React.Dispatch<React.SetStateAction<boolean>>;
   setDbUrl: React.Dispatch<React.SetStateAction<string>>;
   isEditing?: boolean;
+  connectionType?: string;
+  onConnectionTypeChange?: (type: any) => void;
 };
 
 export const DatabaseConnectionStep = ({
@@ -30,6 +34,8 @@ export const DatabaseConnectionStep = ({
   setConnected,
   setDbUrl,
   isEditing = false,
+  connectionType = 'CLOUD_CONNECT',
+  onConnectionTypeChange,
 }: DatabaseConnectionStepProps) => {
   const { t } = useTranslation();
   const [isTestLoading, setTestLoading] = useState(false);
@@ -183,61 +189,118 @@ export const DatabaseConnectionStep = ({
   return (
     <div className="h-[33rem] py-12 px-20 overflow-y-auto flex flex-col justify-center">
       <Form form={form} className="h-full" onValuesChange={onValuesChange}>
-        <NumberedFormItem number={1}>
-          <ModalSelect
-            name="dbType"
-            inputTitle={t('dashboard.createProject.form.step3.dbType.title')}
-            options={dbTypeOptions}
-          />
-        </NumberedFormItem>
-        {dbType === 'postgres' && (
+        {!isEditing && (
+          <NumberedFormItem number={1}>
+            <div className="flex flex-col gap-2">
+              <Text strong>{t('dashboard.createProject.form.step3.connectionType.title')}</Text>
+              <Text type="secondary" className="text-xs">
+                {t('dashboard.createProject.form.step3.connectionType.description')}
+              </Text>
+              <Radio.Group
+                value={connectionType}
+                onChange={(e) => onConnectionTypeChange?.(e.target.value)}
+                className="flex flex-col gap-3 mt-2"
+              >
+                <Radio value="CLOUD_CONNECT" className="flex items-start">
+                  <div>
+                    <Text strong className="text-sm">{t('dashboard.createProject.form.step3.connectionType.cloudConnect')}</Text>
+                    <Paragraph type="secondary" className="text-xs mb-0">
+                      {t('dashboard.createProject.form.step3.connectionType.cloudConnectDesc')}
+                    </Paragraph>
+                  </div>
+                </Radio>
+                <Radio value="PROXY" className="flex items-start">
+                  <div>
+                    <Text strong className="text-sm">{t('dashboard.createProject.form.step3.connectionType.proxy')}</Text>
+                    <Paragraph type="secondary" className="text-xs mb-0">
+                      {t('dashboard.createProject.form.step3.connectionType.proxyDesc')}
+                    </Paragraph>
+                  </div>
+                </Radio>
+              </Radio.Group>
+            </div>
+          </NumberedFormItem>
+        )}
+
+        {connectionType === 'PROXY' && !isEditing && (
+          <div className="bg-gray-50 rounded-lg p-4 mt-4">
+            <Text strong className="text-sm">{t('dashboard.createProject.form.step3.proxy.title')}</Text>
+            <Paragraph type="secondary" className="text-xs mt-1 mb-3">
+              {t('dashboard.createProject.form.step3.proxy.description')}
+            </Paragraph>
+            <div className="bg-gray-900 text-green-400 rounded-md p-3 font-mono text-xs leading-relaxed">
+              <div># 1. Install epsilon-proxy</div>
+              <div className="text-white">curl -fsSL https://get.epsilon-data.org/install.sh | sh</div>
+              <div className="mt-2"># 2. Register (token will be generated after project creation)</div>
+              <div className="text-white">epsilon-proxy register --token &lt;TOKEN&gt;</div>
+              <div className="mt-2"># 3. Start the proxy</div>
+              <div className="text-white">epsilon-proxy start</div>
+            </div>
+            <Paragraph type="secondary" className="text-xs mt-3 mb-0">
+              {t('dashboard.createProject.form.step3.proxy.note')}
+            </Paragraph>
+          </div>
+        )}
+
+        {connectionType !== 'PROXY' && (
           <>
-            {isEditing && (
-              <NumberedFormItem number={2} showDivider={false}>
-                <ModalRadioGroup
-                  name="updateDatabase"
-                  inputTitle={t('dashboard.createProject.form.step3.updateDatabase.title')}
-                  options={hasCredsOptions}
-                  defaultValue={false}
-                />
-              </NumberedFormItem>
-            )}
-            {!isEditing && (
-              <NumberedFormItem number={2} showDivider={false}>
-                <ModalRadioGroup
-                  name="hasCreds"
-                  inputTitle={t('dashboard.createProject.form.step3.hasCreds.title')}
-                  options={hasCredsOptions}
-                  defaultValue={true}
-                  onChange={handleHasCredsChange}
-                />
-              </NumberedFormItem>
-            )}
-            {(isEditing ? updateDatabase : hasCreds) && (
-              <TestConnectionGroup
-                inputTitle={t('dashboard.createProject.form.step3.dbCred.dbUrl.title')}
-                inputDescription={t('dashboard.createProject.form.step3.dbCred.dbUrl.description')}
-                connected={isConnected}
-                loading={isTestLoading}
-                show={showMessage}
-                onClick={onTestConnection}
-                radioGroupOptions={configureOptions}
-                handleChange={handleIsDbUrlChange}
-                isDbUrl={isDbUrl}
-                number={isEditing ? 3 : 4}
-                errorMessage={testError}
+            <NumberedFormItem number={isEditing ? 1 : 2}>
+              <ModalSelect
+                name="dbType"
+                inputTitle={t('dashboard.createProject.form.step3.dbType.title')}
+                options={dbTypeOptions}
               />
-            )}
-            {!isEditing && !hasCreds && (
-              <NumberedFormItem number={3} showDivider={false}>
-                <ModalInput
-                  name="orgAdminEmail"
-                  inputTitle={t('dashboard.createProject.form.step3.orgAdminEmail.title')}
-                  inputDescription={t('dashboard.createProject.form.step3.orgAdminEmail.description')}
-                  inputRules={[{ type: 'email', message: t('fieldMessages.input.email') }]}
-                  placeholder={t('dashboard.createProject.form.step3.orgAdminEmail.placeholder')}
-                />
-              </NumberedFormItem>
+            </NumberedFormItem>
+            {dbType === 'postgres' && (
+              <>
+                {isEditing && (
+                  <NumberedFormItem number={2} showDivider={false}>
+                    <ModalRadioGroup
+                      name="updateDatabase"
+                      inputTitle={t('dashboard.createProject.form.step3.updateDatabase.title')}
+                      options={hasCredsOptions}
+                      defaultValue={false}
+                    />
+                  </NumberedFormItem>
+                )}
+                {!isEditing && (
+                  <NumberedFormItem number={3} showDivider={false}>
+                    <ModalRadioGroup
+                      name="hasCreds"
+                      inputTitle={t('dashboard.createProject.form.step3.hasCreds.title')}
+                      options={hasCredsOptions}
+                      defaultValue={true}
+                      onChange={handleHasCredsChange}
+                    />
+                  </NumberedFormItem>
+                )}
+                {(isEditing ? updateDatabase : hasCreds) && (
+                  <TestConnectionGroup
+                    inputTitle={t('dashboard.createProject.form.step3.dbCred.dbUrl.title')}
+                    inputDescription={t('dashboard.createProject.form.step3.dbCred.dbUrl.description')}
+                    connected={isConnected}
+                    loading={isTestLoading}
+                    show={showMessage}
+                    onClick={onTestConnection}
+                    radioGroupOptions={configureOptions}
+                    handleChange={handleIsDbUrlChange}
+                    isDbUrl={isDbUrl}
+                    number={isEditing ? 3 : 5}
+                    errorMessage={testError}
+                  />
+                )}
+                {!isEditing && !hasCreds && (
+                  <NumberedFormItem number={4} showDivider={false}>
+                    <ModalInput
+                      name="orgAdminEmail"
+                      inputTitle={t('dashboard.createProject.form.step3.orgAdminEmail.title')}
+                      inputDescription={t('dashboard.createProject.form.step3.orgAdminEmail.description')}
+                      inputRules={[{ type: 'email', message: t('fieldMessages.input.email') }]}
+                      placeholder={t('dashboard.createProject.form.step3.orgAdminEmail.placeholder')}
+                    />
+                  </NumberedFormItem>
+                )}
+              </>
             )}
           </>
         )}

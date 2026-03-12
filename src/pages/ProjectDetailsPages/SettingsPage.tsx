@@ -10,6 +10,7 @@ import { AiFillDelete } from 'react-icons/ai';
 import { BsFillQuestionCircleFill } from 'react-icons/bs';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { MultiStepProjectModal } from '@app/components/create-project/modal/MultiStepProjectModal';
+import { ProxyTokenManager } from '@app/components/proxy/ProxyTokenManager';
 
 const SettingsPageContent: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -66,6 +67,12 @@ const SettingsPageContent: React.FC = () => {
       >
         {t('project.main.settings.editProject.button')}
       </Button>
+
+      {project?.connectionType === 'PROXY' && (
+        <div className="border border-gray-200 rounded-xl mt-8 p-8">
+          <ProxyTokenManager projectId={projectId} />
+        </div>
+      )}
 
       <div className="border-2 border-red-300 border-solid rounded-xl mt-8 p-8">
         <InputLabel

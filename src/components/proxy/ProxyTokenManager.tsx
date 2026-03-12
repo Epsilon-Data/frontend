@@ -208,7 +208,7 @@ export const ProxyTokenManager = ({ projectId }: Props) => {
         <Text strong className="text-sm">Quick start</Text>
         <div className="bg-gray-900 text-green-400 rounded-md p-3 font-mono text-xs leading-relaxed mt-2">
           <div># 1. Install epsilon-proxy</div>
-          <div className="text-white">curl -fsSL https://get.epsilon-data.org/install.sh | sh</div>
+          <div className="text-white">curl -fsSL https://raw.githubusercontent.com/Epsilon-Data/epsilon-proxy/main/scripts/install.sh | sh</div>
           <div className="mt-2"># 2. Register with your token</div>
           <div className="text-white">epsilon-proxy register --token {'<TOKEN>'}</div>
           <div className="mt-2"># 3. Start the proxy</div>

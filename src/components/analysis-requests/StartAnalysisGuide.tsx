@@ -117,14 +117,14 @@ export const StartAnalysisGuide = ({ open, onClose }: StartAnalysisGuideProps) =
 
   const items = [
     {
-      key: 'jupyter',
-      label: t(`${T_PREFIX}.tabs.jupyter`),
-      children: <StepList steps={jupyterSteps} />,
-    },
-    {
       key: 'local',
       label: t(`${T_PREFIX}.tabs.local`),
       children: <StepList steps={localSteps} />,
+    },
+    {
+      key: 'jupyter',
+      label: t(`${T_PREFIX}.tabs.jupyter`),
+      children: <StepList steps={jupyterSteps} />,
     },
   ];
 
@@ -140,7 +140,7 @@ export const StartAnalysisGuide = ({ open, onClose }: StartAnalysisGuideProps) =
         body: { maxHeight: '70vh', overflowY: 'auto', padding: 0 },
       }}
     >
-      <Tabs defaultActiveKey="jupyter" items={items} className="px-8" />
+      <Tabs defaultActiveKey="local" items={items} className="px-8" />
     </Modal>
   );
 };

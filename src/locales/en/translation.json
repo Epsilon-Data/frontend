@@ -747,7 +747,7 @@
         "button": "Start Analysis",
         "title": "How to start your analysis",
         "tabs": {
-          "jupyter": "JupyterHub (Recommended)",
+          "jupyter": "JupyterHub",
           "local": "Local Setup"
         },
         "steps": {

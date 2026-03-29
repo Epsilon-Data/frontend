@@ -21,24 +21,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'pnpm'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@epsilon-data'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
 
       # Add more checks as needed:
       # - name: Type check
-      #   run: npx tsc --noEmit
+      #   run: pnpm run tsc --noEmit
       # - name: Test
-      #   run: npm run test
+      #   run: pnpm run test

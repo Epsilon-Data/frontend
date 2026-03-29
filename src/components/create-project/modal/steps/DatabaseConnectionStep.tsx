@@ -175,7 +175,12 @@ export const DatabaseConnectionStep = ({
         setConnected(false);
 
         // Try to extract a helpful message from the API error
-        const message = err?.options?.message || err?.data?.message || err?.message || err?.response?.data?.message || 'Connection test failed';
+        const message =
+          err?.options?.message ||
+          err?.data?.message ||
+          err?.message ||
+          err?.response?.data?.message ||
+          'Connection test failed';
         setTestError(message);
       }
     } catch {
@@ -203,7 +208,9 @@ export const DatabaseConnectionStep = ({
               >
                 <Radio value="CLOUD_CONNECT" className="flex items-start">
                   <div>
-                    <Text strong className="text-sm">{t('dashboard.createProject.form.step3.connectionType.cloudConnect')}</Text>
+                    <Text strong className="text-sm">
+                      {t('dashboard.createProject.form.step3.connectionType.cloudConnect')}
+                    </Text>
                     <Paragraph type="secondary" className="text-xs mb-0">
                       {t('dashboard.createProject.form.step3.connectionType.cloudConnectDesc')}
                     </Paragraph>
@@ -211,7 +218,9 @@ export const DatabaseConnectionStep = ({
                 </Radio>
                 <Radio value="PROXY" className="flex items-start">
                   <div>
-                    <Text strong className="text-sm">{t('dashboard.createProject.form.step3.connectionType.proxy')}</Text>
+                    <Text strong className="text-sm">
+                      {t('dashboard.createProject.form.step3.connectionType.proxy')}
+                    </Text>
                     <Paragraph type="secondary" className="text-xs mb-0">
                       {t('dashboard.createProject.form.step3.connectionType.proxyDesc')}
                     </Paragraph>
@@ -224,13 +233,17 @@ export const DatabaseConnectionStep = ({
 
         {connectionType === 'PROXY' && !isEditing && (
           <div className="bg-gray-50 rounded-lg p-4 mt-4">
-            <Text strong className="text-sm">{t('dashboard.createProject.form.step3.proxy.title')}</Text>
+            <Text strong className="text-sm">
+              {t('dashboard.createProject.form.step3.proxy.title')}
+            </Text>
             <Paragraph type="secondary" className="text-xs mt-1 mb-3">
               {t('dashboard.createProject.form.step3.proxy.description')}
             </Paragraph>
             <div className="bg-gray-900 text-green-400 rounded-md p-3 font-mono text-xs leading-relaxed">
               <div># 1. Install epsilon-proxy</div>
-              <div className="text-white">curl -fsSL https://raw.githubusercontent.com/Epsilon-Data/epsilon-proxy/main/scripts/install.sh | sh</div>
+              <div className="text-white">
+                curl -fsSL https://raw.githubusercontent.com/Epsilon-Data/epsilon-proxy/main/scripts/install.sh | sh
+              </div>
               <div className="mt-2"># 2. Register (token will be generated after project creation)</div>
               <div className="text-white">epsilon-proxy register --token &lt;TOKEN&gt;</div>
               <div className="mt-2"># 3. Start the proxy</div>

@@ -14,7 +14,6 @@ type Props = {
   projectStatus: string;
 };
 
-
 export const ProxySetupInline = ({ projectId, projectStatus }: Props) => {
   const [token, setToken] = useState<GenerateTokenResponse | null>(null);
   const [generating, setGenerating] = useState(false);
@@ -99,7 +98,9 @@ epsilon-proxy start`
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <Spin size="large" className="mb-6" />
-        <Tag color="processing" className="mb-4 text-sm px-3 py-0.5">Crawling schema...</Tag>
+        <Tag color="processing" className="mb-4 text-sm px-3 py-0.5">
+          Crawling schema...
+        </Tag>
         <div className="text-2xl font-semibold text-grey-9">Schema crawl in progress</div>
         <div className="mt-2 text-sm text-grey-7 font-light max-w-md">
           The proxy is crawling your database schema. This may take a few minutes.
@@ -124,7 +125,7 @@ epsilon-proxy start`
 
         <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3 mb-4">
           <Text strong className="text-yellow-800 text-xs">
-            Copy this command now — the token won't be shown again.
+            Copy this command now — the token won&apos;t be shown again.
           </Text>
         </div>
 
@@ -159,15 +160,13 @@ epsilon-proxy start`
         />
 
         <div className="flex justify-between items-center mt-8">
-          <Button
-            icon={<FiRefreshCw />}
-            size="small"
-            onClick={fetchStatus}
-          >
+          <Button icon={<FiRefreshCw />} size="small" onClick={fetchStatus}>
             Refresh status
           </Button>
           <Link to={`/project/settings?id=${projectId}`}>
-            <Button type="link" size="small">Advanced token management</Button>
+            <Button type="link" size="small">
+              Advanced token management
+            </Button>
           </Link>
         </div>
       </div>
@@ -179,7 +178,9 @@ epsilon-proxy start`
     <div className="flex flex-col items-center justify-center py-16 text-center">
       <HiOutlineServerStack className="text-blueDark/60 mb-5" size={90} />
       {isError && (
-        <Tag color="error" className="mb-4 text-sm px-3 py-0.5">Crawl failed</Tag>
+        <Tag color="error" className="mb-4 text-sm px-3 py-0.5">
+          Crawl failed
+        </Tag>
       )}
       <div className="text-2xl md:text-3xl font-semibold text-grey-9">
         {isError ? 'Schema crawl failed' : 'Connect your database'}
@@ -203,21 +204,15 @@ epsilon-proxy start`
         </Button>
       ) : isError && !isOnline ? (
         <div className="mt-6 flex flex-col items-center gap-3">
-          <Tag color="red" className="text-sm px-3 py-0.5">Proxy is offline</Tag>
+          <Tag color="red" className="text-sm px-3 py-0.5">
+            Proxy is offline
+          </Tag>
           <div className="text-xs text-grey-7">Start the proxy first, then retry</div>
           <div className="flex gap-3">
-            <Button
-              icon={<IoReload />}
-              onClick={handleRetry}
-              loading={retrying}
-            >
+            <Button icon={<IoReload />} onClick={handleRetry} loading={retrying}>
               Retry crawl
             </Button>
-            <Button
-              icon={<HiOutlineServerStack />}
-              onClick={handleGenerate}
-              loading={generating}
-            >
+            <Button icon={<HiOutlineServerStack />} onClick={handleGenerate} loading={generating}>
               Re-generate setup command
             </Button>
           </div>
@@ -237,16 +232,13 @@ epsilon-proxy start`
 
       {!isError && hasExistingTokens && (
         <Link to={`/project/settings?id=${projectId}`} className="mt-3">
-          <Button type="link" size="small">Manage existing tokens</Button>
+          <Button type="link" size="small">
+            Manage existing tokens
+          </Button>
         </Link>
       )}
 
-      <Button
-        icon={<FiRefreshCw />}
-        size="small"
-        onClick={fetchStatus}
-        className="mt-4"
-      >
+      <Button icon={<FiRefreshCw />} size="small" onClick={fetchStatus} className="mt-4">
         Refresh status
       </Button>
     </div>

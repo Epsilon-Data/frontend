@@ -1,5 +1,4 @@
 import { JOB_API_URL } from '@app/constants/job';
-import { Node, Edge } from '@xyflow/react';
 import { getCsrfHeader, httpClient } from './http.api';
 
 export type GraphNodePayload = {

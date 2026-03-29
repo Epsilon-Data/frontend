@@ -46,7 +46,11 @@ export const GridView: React.FC<GridViewProps> = ({ projects, mode, onProjectCli
                       <div className="text-xs font-normal font-inter">{project.name}</div>
                     </Col>
                     <Col className="flex items-center gap-2">
-                      <Tag className="text-xs font-normal font-inter py-1" variant="filled" color={project.status === 'ERROR' ? 'red' : '#000'}>
+                      <Tag
+                        className="text-xs font-normal font-inter py-1"
+                        variant="filled"
+                        color={project.status === 'ERROR' ? 'red' : '#000'}
+                      >
                         {project.status
                           .toLowerCase()
                           .split(' ')

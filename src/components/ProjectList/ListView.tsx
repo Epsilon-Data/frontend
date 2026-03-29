@@ -30,7 +30,11 @@ export const ListView: React.FC<ListViewProps> = ({ projects, mode, onProjectCli
 
                     {mode === 'dashboard' && (
                       <>
-                        <Tag className="text-xs font-normal font-inter py-1" variant="filled" color={project.status === 'ERROR' ? 'red' : '#000'}>
+                        <Tag
+                          className="text-xs font-normal font-inter py-1"
+                          variant="filled"
+                          color={project.status === 'ERROR' ? 'red' : '#000'}
+                        >
                           {project.status
                             .toLowerCase()
                             .split(' ')

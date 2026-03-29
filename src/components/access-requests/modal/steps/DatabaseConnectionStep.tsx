@@ -131,7 +131,12 @@ export const DatabaseConnectionStep = ({
         setDbUrl(dbUrl);
       } catch (err: any) {
         setConnected(false);
-        const message = err?.options?.message || err?.data?.message || err?.message || err?.response?.data?.message || 'Connection test failed';
+        const message =
+          err?.options?.message ||
+          err?.data?.message ||
+          err?.message ||
+          err?.response?.data?.message ||
+          'Connection test failed';
         setTestError(message);
       }
     } catch {

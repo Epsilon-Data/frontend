@@ -37,11 +37,17 @@ const DashboardPage: React.FC = () => {
     return () => controller.abort();
   }, [doFetch]);
 
-  // Reset pages when search or sort changes
-  useEffect(() => {
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch(value);
     setOwnedPage(1);
     setSharedPage(1);
-  }, [search, sortKey]);
+  }, []);
+
+  const handleSortChange = useCallback((value: SortKey) => {
+    setSortKey(value);
+    setOwnedPage(1);
+    setSharedPage(1);
+  }, []);
 
   return (
     <div className="py-3 px-4 md:py-5 md:px-9">
@@ -51,9 +57,9 @@ const DashboardPage: React.FC = () => {
           handleLayoutChange={setLayout}
           layout={layout}
           searchValue={search}
-          handleSearchChange={setSearch}
+          handleSearchChange={handleSearchChange}
           sortKey={sortKey}
-          handleSortChange={setSortKey}
+          handleSortChange={handleSortChange}
         />
         <MultiStepProjectModal fetchProjects={() => doFetch()} mask closable={false} width={'60%'} />
         <Projects

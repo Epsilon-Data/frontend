@@ -23,9 +23,7 @@ const StepList = ({ steps }: { steps: Step[] }) => (
         <div className="mb-6">
           <div className="font-semibold text-base mb-1">{step.title}</div>
           <p className="text-sm text-grey-5 mb-0">{step.description}</p>
-          {step.code && (
-            <code className="block mt-2 px-3 py-2 bg-grey-1 rounded text-xs font-mono">{step.code}</code>
-          )}
+          {step.code && <code className="block mt-2 px-3 py-2 bg-grey-1 rounded text-xs font-mono">{step.code}</code>}
           {step.link && (
             <a
               href={step.link.href}

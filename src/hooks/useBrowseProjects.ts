@@ -1,8 +1,4 @@
-import {
-  getAllProjects,
-  ProjectSummaryInfo,
-  BrowseProjectsQuery,
-} from '@app/api/projects.api';
+import { getAllProjects, ProjectSummaryInfo, BrowseProjectsQuery } from '@app/api/projects.api';
 import { useCallback, useState } from 'react';
 
 export const useBrowseProjects = () => {

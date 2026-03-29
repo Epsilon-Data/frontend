@@ -83,7 +83,10 @@ export const updateArchetype = async (
   return response.data;
 };
 
-export const deleteArchetype = async (projectId: string | undefined, archetypeId: string): Promise<{ jobId: string }> => {
+export const deleteArchetype = async (
+  projectId: string | undefined,
+  archetypeId: string,
+): Promise<{ jobId: string }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.delete(`${ARCHETYPE_API_URL}/${projectId}/${archetypeId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },

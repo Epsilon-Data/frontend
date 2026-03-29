@@ -31,9 +31,10 @@ const DatabaseMappingPage: React.FC = () => {
   const [pendingName, setPendingName] = useState<string | undefined>(locationState?.archetypeName);
 
   // Sync incoming location state (handles in-page navigation e.g. delete from detail view)
+
   useEffect(() => {
     if (locationState?.jobId) {
-      setPendingJobId(locationState.jobId);
+      setPendingJobId(locationState.jobId); // eslint-disable-line react-hooks/set-state-in-effect
       setPendingName(locationState.archetypeName);
       window.history.replaceState({}, '');
     }

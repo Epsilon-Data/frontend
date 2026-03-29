@@ -4,7 +4,6 @@ import { handleCascadeNodeChanges } from '@app/utils/reactflow/cascade';
 import { pruneDirectColumnChildren } from '@app/utils/reactflow/prune';
 import { Node, Edge, NodeChange, EdgeChange } from '@xyflow/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { CodebookUpload } from '@app/components/reactflow-components/GenerateArchetype/CodebookUpload';
 
 export type CreateTemplateStepProps = {
@@ -153,7 +152,6 @@ export const CreateTemplateStep = ({
           </div>
         ) : (
           <CodebookUpload
-            onBack={() => setShowCodebookUpload(false)}
             projectId={projectId}
             onGraphGenerated={onGraphGenerated}
             setShowCodebookUpload={setShowCodebookUpload}

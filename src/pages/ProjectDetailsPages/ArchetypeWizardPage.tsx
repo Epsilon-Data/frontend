@@ -4,12 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Edge, Node, useEdgesState, useNodesState } from '@xyflow/react';
-import {
-  ArchetypeInfo,
-  createArchetype,
-  getArchetypeDetails,
-  updateArchetype,
-} from '@app/api/archetypes.api';
+import { ArchetypeInfo, createArchetype, getArchetypeDetails, updateArchetype } from '@app/api/archetypes.api';
 import { ArchetypeNameStep } from '@app/components/database-mapping/modal/steps/ArchetypeNameStep';
 import { CreateTemplateStep } from '@app/components/database-mapping/modal/steps/CreateTemplateStep';
 import { ColumnMappingStep } from '@app/components/database-mapping/modal/steps/ColumnMappingStep';
@@ -67,7 +62,6 @@ const ArchetypeWizardContent = () => {
 
   const { childrenById, topKeys } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
   const archetypeRef = useRef<ArchetypeInfo | undefined>(undefined);
-  const draftIdRef = useRef<string | undefined>(archetypeId);
 
   // Fetch columns + tables on mount (via provider)
   useEffect(() => {
@@ -81,17 +75,21 @@ const ArchetypeWizardContent = () => {
     if (!isEditing || !projectId || !archetypeId) return;
     let cancelled = false;
 
-    getArchetypeDetails(projectId, archetypeId).then((a) => {
-      if (cancelled) return;
-      archetypeRef.current = a;
-      form.setFieldsValue({ name: a.name ?? '' });
-      setNodes((a.nodes && a.nodes.length > 0 ? a.nodes : initialNodes) as Node[]);
-      setEdges((a.edges ?? []) as Edge[]);
-      const { checkedByCol: restored } = permissionsToCheckedByCol(a.permissions || [], a.nodes, a.edges);
-      setCheckedByCol(restored);
-    }).catch(console.error);
+    getArchetypeDetails(projectId, archetypeId)
+      .then((a) => {
+        if (cancelled) return;
+        archetypeRef.current = a;
+        form.setFieldsValue({ name: a.name ?? '' });
+        setNodes((a.nodes && a.nodes.length > 0 ? a.nodes : initialNodes) as Node[]);
+        setEdges((a.edges ?? []) as Edge[]);
+        const { checkedByCol: restored } = permissionsToCheckedByCol(a.permissions || [], a.nodes, a.edges);
+        setCheckedByCol(restored);
+      })
+      .catch(console.error);
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [isEditing, projectId, archetypeId, form, setNodes, setEdges]);
 
   const clearPermissionsFor = (ids: Set<string>) => {
@@ -215,9 +213,7 @@ const ArchetypeWizardContent = () => {
         content: (
           <div className="flex flex-col gap-4 mt-2">
             {isEmptyRoot && (
-              <div className="text-sm">
-                {t('project.createTemplate.form.step3.validation.emptyRoot')}
-              </div>
+              <div className="text-sm">{t('project.createTemplate.form.step3.validation.emptyRoot')}</div>
             )}
             {emptyLabelIds.length > 0 && (
               <div className="text-sm">

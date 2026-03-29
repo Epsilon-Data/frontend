@@ -24,8 +24,7 @@ export const DatabaseStructurePanel: React.FC = () => {
     const query = search.toLowerCase();
     return uniqueTables.filter(
       (table) =>
-        table.name.toLowerCase().includes(query) ||
-        table.columns.some((col) => col.name.toLowerCase().includes(query)),
+        table.name.toLowerCase().includes(query) || table.columns.some((col) => col.name.toLowerCase().includes(query)),
     );
   }, [uniqueTables, search]);
 

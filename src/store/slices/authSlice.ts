@@ -29,9 +29,7 @@ const initialState: AuthSlice = {
 
 export const doLogin = createAsyncThunk('auth/doLogin', async () => {
   const previousUrl = readPreviousUrl();
-  const returnUrl = previousUrl
-    ? `${window.location.origin}${previousUrl}`
-    : window.location.href;
+  const returnUrl = previousUrl ? `${window.location.origin}${previousUrl}` : window.location.href;
   return login(returnUrl);
 });
 

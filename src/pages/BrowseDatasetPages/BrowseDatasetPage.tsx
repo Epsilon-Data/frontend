@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ExploreDatasetsSearch } from '@app/components/browse-projects/ExploreDatasetsSearch';
 import { SearchResultsHeader } from '@app/components/browse-projects/SearchResultsHeader';
@@ -77,11 +77,7 @@ const BrowseDatasetPage: React.FC = () => {
 
   return (
     <>
-      <ExploreDatasetsSearch
-        onSearch={handleSearch}
-        initialValue={searchValue}
-        initialField={selectedField}
-      />
+      <ExploreDatasetsSearch onSearch={handleSearch} initialValue={searchValue} initialField={selectedField} />
       <div className="py-0 px-4">
         <DismissibleBanner id="browse-hub" message={t('onboarding.browse.banner')} />
       </div>

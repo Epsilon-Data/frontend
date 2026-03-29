@@ -1,10 +1,4 @@
-import {
-  getUserOwnedProjects,
-  getUserSharedProjects,
-  PaginatedResponse,
-  ProjectSummaryInfo,
-  ProjectsQuery,
-} from '@app/api/projects.api';
+import { getUserOwnedProjects, getUserSharedProjects, ProjectSummaryInfo, ProjectsQuery } from '@app/api/projects.api';
 import { useCallback, useState } from 'react';
 
 type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };

@@ -63,8 +63,7 @@ export const Archetypes = ({ loading, archetypes, projectId, archetypeReadyById 
       title: t('project.main.dbMapping.table.createdDate'),
       dataIndex: 'created',
       key: 'created',
-      sorter: (a: { created: Date }, b: { created: Date }) =>
-        dayjs(a.created).valueOf() - dayjs(b.created).valueOf(),
+      sorter: (a: { created: Date }, b: { created: Date }) => dayjs(a.created).valueOf() - dayjs(b.created).valueOf(),
       sortDirections: ['ascend', 'descend'],
       render: (value: string | Date) => renderDate(value),
     },

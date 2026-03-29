@@ -1,23 +1,21 @@
-import { Button, Input, message, Upload, UploadFile } from 'antd';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Input, message } from 'antd';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Node, Edge } from '@xyflow/react';
 import { useDropzone } from 'react-dropzone';
 import { CloseOutlined, FileOutlined, InboxOutlined, UploadOutlined } from '@ant-design/icons';
 import { uploadArchetypeCodebook } from '@app/api/archetypes.api';
-import { getJobStatus, GraphEdgePayload, GraphNodePayload } from '@app/api/job.api';
+import { getJobStatus } from '@app/api/job.api';
 import { autoGenerateColumnsForLeafs, transformEdges, transformNodes } from '@app/utils/reactflow/helpers';
 import { usePolling } from '@app/hooks/usePolling';
 
 type CodebookUploadProps = {
-  onBack: () => void;
   projectId: string;
   onGraphGenerated: (nodes: Node[], edges: Edge[]) => void;
   setShowCodebookUpload: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const CodebookUpload: React.FC<CodebookUploadProps> = ({
-  onBack,
   projectId,
   onGraphGenerated,
   setShowCodebookUpload,
@@ -52,14 +50,10 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
     onDragLeave: () => setDragActive(false),
   });
 
-  const { data: jobStatus, error: jobError } = usePolling(() => getJobStatus(jobId!), {
+  usePolling(() => getJobStatus(jobId!), {
     interval: 3000,
     enabled: !!jobId && isProcessing,
-  });
-
-  // Handle job status updates
-  useEffect(() => {
-    if (jobStatus) {
+    onSuccess: (jobStatus) => {
       if (jobStatus.status === 'completed' && jobStatus.result) {
         setIsProcessing(false);
         message.success('Archetype structure generated from codebook!');
@@ -87,18 +81,14 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
       } else if (jobStatus.status === 'pending') {
         console.log('Job still processing...');
       }
-    }
-  }, [jobStatus, onGraphGenerated, setShowCodebookUpload]);
-
-  // polling errors
-  useEffect(() => {
-    if (jobError) {
+    },
+    onError: (jobError) => {
       setIsProcessing(false);
       console.error('Polling error:', jobError);
       message.error('Communication error while checking job status.');
       setJobId(null);
-    }
-  }, [jobError]);
+    },
+  });
 
   const handleCodebookSubmit = async () => {
     console.log('Codebook file:', selectedFile);

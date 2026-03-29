@@ -141,9 +141,7 @@ export const getUserSharedProjects = async (
   return response.data;
 };
 
-export const getAllProjects = async (
-  query?: BrowseProjectsQuery,
-): Promise<PaginatedResponse<ProjectSummaryInfo>> => {
+export const getAllProjects = async (query?: BrowseProjectsQuery): Promise<PaginatedResponse<ProjectSummaryInfo>> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.get(`${PROJECT_API_URL}/all`, {
     headers: { [csrfHeaderName]: `${csrf}` },
@@ -212,8 +210,12 @@ export const updateProject = async (data: Partial<ProjectInfo>, projectId: strin
 
 export const retryCrawl = async (projectId: string): Promise<{ jobId: string }> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(`${PROJECT_API_URL}/${projectId}/retry-crawl`, {}, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
+  const response = await httpClient.post(
+    `${PROJECT_API_URL}/${projectId}/retry-crawl`,
+    {},
+    {
+      headers: { [csrfHeaderName]: `${csrf}` },
+    },
+  );
   return response.data;
 };

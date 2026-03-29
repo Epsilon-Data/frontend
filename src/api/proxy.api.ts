@@ -29,9 +29,13 @@ export interface GenerateTokenResponse {
 
 export const generateProxyToken = async (projectId: string, name: string): Promise<GenerateTokenResponse> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
-  const response = await httpClient.post(`${PROXY_API_URL}/${projectId}/token`, { name }, {
-    headers: { [csrfHeaderName]: `${csrf}` },
-  });
+  const response = await httpClient.post(
+    `${PROXY_API_URL}/${projectId}/token`,
+    { name },
+    {
+      headers: { [csrfHeaderName]: `${csrf}` },
+    },
+  );
   return response.data;
 };
 

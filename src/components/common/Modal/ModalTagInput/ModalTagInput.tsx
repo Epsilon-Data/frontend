@@ -26,7 +26,7 @@ export const ModalTagInput: React.FC<{
   useEffect(() => {
     try {
       form.setFieldsValue({ [name]: value });
-    } catch (e) {
+    } catch {
       // ignore if form not ready
     }
   }, [value, name, form]);

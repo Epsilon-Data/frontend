@@ -1,5 +1,6 @@
 import { PROJECT_API_URL } from '@app/constants/projects';
 import { getCsrfHeader, httpClient } from './http.api';
+import type { AxiosProgressEvent } from 'axios';
 
 export type ProjectStatus = 'PENDING' | 'CRAWLING' | 'READY' | 'ERROR' | 'MAPPED';
 export type ConnectionType = 'CLOUD_CONNECT' | 'DIRECT_DB' | 'PROXY';
@@ -85,6 +86,14 @@ export interface ProjectInfo {
   connection: ConnectionInfo;
   connectionType?: ConnectionType;
   isPublic?: boolean;
+  syntheticDataUrl?: string | null;
+  syntheticDataFileName?: string | null;
+}
+
+export interface SyntheticDataInfo {
+  type: 'link' | 'file' | 'none';
+  url?: string | null;
+  fileName?: string | null;
 }
 
 export interface Member {
@@ -217,5 +226,53 @@ export const retryCrawl = async (projectId: string): Promise<{ jobId: string }> 
       headers: { [csrfHeaderName]: `${csrf}` },
     },
   );
+  return response.data;
+};
+
+// ---- Synthetic dataset (attached by the data owner after the archetype is published) ----
+
+export const getSyntheticData = async (projectId: string): Promise<SyntheticDataInfo> => {
+  const response = await httpClient.get(`${PROJECT_API_URL}/${projectId}/synthetic-data`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+export const setSyntheticDataLink = async (projectId: string, url: string): Promise<SyntheticDataInfo> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.put(
+    `${PROJECT_API_URL}/${projectId}/synthetic-data/link`,
+    { url },
+    {
+      headers: { [csrfHeaderName]: `${csrf}` },
+    },
+  );
+  return response.data;
+};
+
+export const uploadSyntheticData = async (
+  projectId: string,
+  file: File,
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
+): Promise<SyntheticDataInfo> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await httpClient.post(`${PROJECT_API_URL}/${projectId}/synthetic-data`, formData, {
+    headers: {
+      [csrfHeaderName]: `${csrf}`,
+      'Content-Type': 'multipart/form-data',
+    },
+    onUploadProgress,
+  });
+  return response.data;
+};
+
+export const removeSyntheticData = async (projectId: string): Promise<SyntheticDataInfo> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.delete(`${PROJECT_API_URL}/${projectId}/synthetic-data`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
   return response.data;
 };

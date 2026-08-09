@@ -427,6 +427,42 @@
         "delete": {
           "title": "Delete project",
           "description": "Are you sure you want to delete this project?"
+        },
+        "syntheticData": {
+          "title": "Synthetic dataset",
+          "description": "Attach a synthetic dataset so analysts can test their scripts locally before running on real data. Its columns must match this project's published archetype.",
+          "tabs": {
+            "link": "Link a URL",
+            "upload": "Upload a CSV"
+          },
+          "link": {
+            "label": "Public dataset URL",
+            "placeholder": "https://object-store.nectar.../individuals_codebook_p10000.csv",
+            "button": "Save link",
+            "invalid": "Please enter a valid URL"
+          },
+          "upload": {
+            "label": "Synthetic dataset CSV",
+            "instructions": "Drag and drop a CSV here, or click to browse",
+            "fileSize": "CSV only, up to 100MB",
+            "button": "Upload",
+            "onlyCsv": "You can only upload CSV files!"
+          },
+          "current": {
+            "linked": "Linked dataset",
+            "uploaded": "Uploaded file",
+            "none": "No synthetic dataset attached yet.",
+            "remove": "Remove"
+          },
+          "success": {
+            "saved": "Synthetic dataset saved",
+            "removed": "Synthetic dataset removed"
+          },
+          "failed": {
+            "load": "Failed to load synthetic dataset",
+            "save": "Failed to save synthetic dataset",
+            "remove": "Failed to remove synthetic dataset"
+          }
         }
       }
     },

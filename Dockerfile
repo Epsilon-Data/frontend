@@ -7,8 +7,11 @@ ARG GITHUB_NPM_TOKEN
 ENV GITHUB_NPM_TOKEN=${GITHUB_NPM_TOKEN}
 
 WORKDIR /app
-RUN npm install -g pnpm
+# pin to pnpm 10 (v11 changes lockfile/auth behavior)
+RUN npm install -g pnpm@10
 COPY [".", "/app/"]
+# pnpm ignores ${VAR} auth in a committed project .npmrc (security); write the token to the trusted user-level file
+RUN echo "//npm.pkg.github.com/:_authToken=${GITHUB_NPM_TOKEN}" > /root/.npmrc
 RUN pnpm install
 
 FROM workspace AS build

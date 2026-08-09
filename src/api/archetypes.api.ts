@@ -128,3 +128,21 @@ export const uploadArchetypeCodebook = async (
 
   return response.data;
 };
+
+export interface SyntheticDataPreview {
+  attached: boolean;
+  columns: string[];
+  rows: string[][];
+  rowCount: number;
+}
+
+// Read-only sample of a dataset's synthetic data for researchers with access.
+// The server returns a capped set of rows only — never the full CSV or its URL.
+export const getSyntheticDataPreview = async (projectId: string): Promise<SyntheticDataPreview> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.get(`/hub/analysis/datasets/${projectId}/synthetic-preview`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+
+  return response.data;
+};

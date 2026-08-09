@@ -657,6 +657,13 @@
         "dbPreview": {
           "title": "Database preview",
           "noArchetype": "No archetype found for this database."
+        },
+        "synthetic": {
+          "title": "Synthetic preview",
+          "tag": "Synthetic dataset",
+          "showing": "Showing first {{count}} rows",
+          "none": "No synthetic dataset attached to this project.",
+          "error": "Couldn't load the synthetic preview."
         }
       }
     },

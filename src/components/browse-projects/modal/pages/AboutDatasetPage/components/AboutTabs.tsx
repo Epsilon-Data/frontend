@@ -1,5 +1,6 @@
 import { Button, Tabs, TabsProps } from 'antd';
 import { DetailsRow } from './DetailsRow';
+import { SyntheticPreviewTab } from './SyntheticPreviewTab';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
 import { ProjectInfo } from '@app/api/projects.api';
 import { useTranslation } from 'react-i18next';
@@ -85,6 +86,11 @@ export const AboutTabs = ({ project }: AboutTabsProps) => {
           />
         </>
       ),
+    },
+    {
+      key: 'synthetic',
+      label: t('browse.main.details.synthetic.title'),
+      children: <SyntheticPreviewTab projectId={project.projectId} />,
     },
   ];
   return <Tabs className="details-tabs" defaultActiveKey="about" items={items} />;

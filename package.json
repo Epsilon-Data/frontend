@@ -70,7 +70,8 @@
     "lint:styles": "stylelint '*/**/*.{js,ts,tsx}'",
     "prepare": "husky install",
     "clean": "rm -rf node_modules/.vite node_modules/.cache && pnpm i && pnpm prune && pnpm store prune",
-    "cy:open": "cypress open"
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "browserslist": [
     ">0.2%",

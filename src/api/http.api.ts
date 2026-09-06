@@ -63,16 +63,19 @@ const { getLoginUrl, handlePageLoad, getUserInfo, getUserClaims, refreshToken, l
 );
 
 httpClient.interceptors.response.use(undefined, (error: AxiosError) => {
-  // Session is invalid — clear auth state and redirect to login
-  if (error.response?.status === 401) {
+  const suppress =
+    (error.config as AxiosRequestConfig & { suppressErrorRedirect?: boolean })?.suppressErrorRedirect === true;
+
+  // Session is invalid — clear auth state and redirect to login.
+  // Requests that opt out via suppressErrorRedirect (e.g. testing external
+  // database credentials) handle their own errors and must never log the
+  // user out, whatever status the server returns.
+  if (error.response?.status === 401 && !suppress) {
     deleteCsrf();
     deleteUser();
     window.location.href = '/auth/login';
     return new Promise(() => {}); // halt further processing
   }
-
-  const suppress =
-    (error.config as AxiosRequestConfig & { suppressErrorRedirect?: boolean })?.suppressErrorRedirect === true;
 
   const responseData = error.response?.data as ApiErrorData | undefined;
   const message = responseData?.message || error.message || 'Unknown error';

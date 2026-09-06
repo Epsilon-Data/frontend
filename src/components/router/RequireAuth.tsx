@@ -8,10 +8,10 @@ import { ApiErrorData } from '@app/api/ApiError';
 import { deletePreviousUrl, persistPreviousUrl } from '@app/services/localStorage.service';
 import { Spin } from 'antd';
 
-const AUTH_PARAM_KEYS = new Set(['code', 'state', 'session_state', 'error', 'iss', 'client_state']);
+export const AUTH_PARAM_KEYS = new Set(['code', 'state', 'session_state', 'error', 'iss', 'client_state']);
 
 // for removing AUTH variables from query
-function stripAuthParams(urlString: string): string {
+export function stripAuthParams(urlString: string): string {
   const url = new URL(urlString, window.location.origin);
   AUTH_PARAM_KEYS.forEach((k) => url.searchParams.delete(k));
   const qs = url.searchParams.toString();

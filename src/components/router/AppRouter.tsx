@@ -7,6 +7,7 @@ import DashboardPage from '@app/pages/DashboardPages/DashboardPage';
 import ProjectLayout from './ProjectLayout';
 import Logout from './Logout';
 import Login from './Login';
+import AuthCallback from './AuthCallback';
 import DatabaseMappingPage from '@app/pages/ProjectDetailsPages/DatabaseMappingPage';
 import BrowseDatasetPage from '@app/pages/BrowseDatasetPages/BrowseDatasetPage';
 import MetadataPage from '@app/pages/ProjectDetailsPages/MetadataPage';
@@ -31,6 +32,7 @@ const TrackRequests = withLoading(TrackRequestsPage);
 const AuthLayoutFallback = withLoading(AuthLayout);
 const LogoutFallback = withLoading(Logout);
 const LoginFallback = withLoading(Login);
+const AuthCallbackFallback = withLoading(AuthCallback);
 
 const ErrorFallback = withLoading(ErrorPage);
 
@@ -52,6 +54,7 @@ export const AppRouter: React.FC = () => {
         </Route>
         <Route path="/auth" element={<AuthLayoutFallback />}>
           <Route path="login" element={<LoginFallback />} />
+          <Route path="callback" element={<AuthCallbackFallback />} />
         </Route>
         <Route path="/logout" element={<LogoutFallback />} />
         <Route path="/error" element={<ProtectedLayout hideSider />}>

@@ -1,1 +1,7 @@
+# Secret scan on staged changes (install: brew install gitleaks). CI runs the same check.
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks git --pre-commit --staged --redact --no-banner
+else
+  echo "warning: gitleaks not installed (brew install gitleaks) - skipping local secret scan, CI will run it" >&2
+fi
 npm test

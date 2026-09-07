@@ -1,6 +1,6 @@
 import { Button, message, Modal } from 'antd';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Edge, Node, useEdgesState, useNodesState } from '@xyflow/react';
@@ -25,6 +25,7 @@ import {
 import { CheckedByCol, usePermissionTable } from '@app/hooks/usePermissionTable';
 import { useArchetypeModalContext } from '@app/hooks/useArchetypeModalContext';
 import { ArchetypeModalProvider } from '@app/providers/ArchetypeModalProvider';
+import { databaseColumnsFromSources } from '@app/utils/database/columns';
 
 const initialNodes: Node[] = [
   {
@@ -45,7 +46,7 @@ const ArchetypeWizardContent = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const { forms, columns, setColumns, fetchColumns, fetchTables } = useArchetypeModalContext();
+  const { forms, columns, setColumns, fetchColumns, tables, fetchTables } = useArchetypeModalContext();
   const [form] = forms;
 
   const [step, setStep] = useState(0);
@@ -62,6 +63,7 @@ const ArchetypeWizardContent = () => {
 
   const { childrenById, topKeys } = usePermissionTable(nodes, edges, checkedByCol, setCheckedByCol);
   const archetypeRef = useRef<ArchetypeInfo | undefined>(undefined);
+  const databaseColumns = useMemo(() => databaseColumnsFromSources(tables, columns), [tables, columns]);
 
   // Fetch columns + tables on mount (via provider)
   useEffect(() => {
@@ -125,7 +127,7 @@ const ArchetypeWizardContent = () => {
       name: form.getFieldValue('name'),
       nodes: nodes.map((node) => ({
         id: node.id,
-        data: { label: node.data.label, level: node.data.level },
+        data: { label: node.data.label, level: node.data.level, table: node.data.table },
         position: { x: node.position.x, y: node.position.y },
         type: node.type,
       })),
@@ -382,7 +384,7 @@ const ArchetypeWizardContent = () => {
             setEdges={setEdges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            columns={columns}
+            columns={databaseColumns}
             setColumns={setColumns}
             name={form.getFieldValue('name')}
             onNodesDeleted={clearPermissionsFor}
@@ -399,7 +401,7 @@ const ArchetypeWizardContent = () => {
             setEdges={setEdges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            columns={columns}
+            columns={databaseColumns}
             setColumns={setColumns}
             name={form.getFieldValue('name')}
             onNodesDeleted={clearPermissionsFor}

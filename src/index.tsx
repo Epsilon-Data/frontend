@@ -7,10 +7,6 @@ import { Provider } from 'react-redux';
 import { store } from '@app/store/store';
 import { createRoot } from 'react-dom/client';
 
-interface EventTarget {
-  state?: 'activated';
-}
-
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);
 
@@ -22,18 +18,8 @@ root.render(
   /* </React.StrictMode>, */
 );
 
-serviceWorkerRegistration.register({
-  onUpdate: (registration) => {
-    const waitingServiceWorker = registration.waiting;
-
-    if (waitingServiceWorker) {
-      waitingServiceWorker.addEventListener('statechange', (event) => {
-        if ((event.target as EventTarget).state === 'activated') window.location.reload();
-      });
-      waitingServiceWorker.postMessage({ type: 'SKIP_WAITING' });
-    }
-  },
-}); // app will reload if new version of app is available
+// No service worker is built for this app (CRA leftover); make sure stale ones are removed.
+serviceWorkerRegistration.unregister();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

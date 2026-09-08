@@ -28,6 +28,14 @@ const AuthCallback: React.FC = () => {
     if (handledRef.current) return;
     handledRef.current = true;
 
+    // Reached without an OAuth response (e.g. navigated here directly, or the
+    // token handler still redirects to `/` and RequireAuth already handled the
+    // exchange) — nothing to exchange, just go home.
+    if (!query.get('code') || !query.get('state')) {
+      navigate('/', { replace: true });
+      return;
+    }
+
     (async () => {
       try {
         const res = await dispatch(handleAuth(query)).unwrap();

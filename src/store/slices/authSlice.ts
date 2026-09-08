@@ -13,7 +13,7 @@ import {
   signOut,
 } from '@app/api/auth.api';
 import { setUser } from '@app/store/slices/userSlice';
-import { deleteCsrf, deleteUser, persistCsrf, readCsrf } from '@app/services/localStorage.service';
+import { deleteCsrf, deleteUser, persistCsrf, readCsrf, readPreviousUrl } from '@app/services/localStorage.service';
 import { getUserClaims } from '@app/api/http.api';
 import { UserDetails } from '@app/domain/UserDetails';
 
@@ -28,11 +28,12 @@ const initialState: AuthSlice = {
 };
 
 export const doLogin = createAsyncThunk('auth/doLogin', async () => {
-  // Always come back on the dedicated callback route so the code/state
-  // exchange never lands on content routes (and the route can be excluded
-  // from proxy access logs). The page to return to afterwards is persisted
-  // separately via persistPreviousUrl before redirecting to login.
-  return login(`${window.location.origin}/auth/callback`);
+  // The token handler stores this in the OAuth state and hands it back after
+  // login, so the user returns to the page they came from. The OAuth
+  // redirect_uri itself is fixed by the token handler (EPSILON_AUTH_REDIRECT_URI).
+  const previousUrl = readPreviousUrl();
+  const returnUrl = previousUrl ? `${window.location.origin}${previousUrl}` : window.location.href;
+  return login(returnUrl);
 });
 
 export const handleAuth = createAsyncThunk('auth/handleAuth', async (query: URLSearchParams) =>

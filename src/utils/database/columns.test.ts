@@ -22,13 +22,12 @@ describe('database column helpers', () => {
     ]);
   });
 
-  it('prefers nested table columns over the standalone column endpoint', () => {
-    const fallbackColumns: ColumnInfo[] = [{ id: 'legacy-id', name: 'legacy', table: 'legacy_table' }];
+  it('prefers standalone column endpoint over nested table columns', () => {
+    const fallbackColumns: ColumnInfo[] = [{ id: 'atlas-guid-1', name: 'id', table: 'public.users' }];
 
-    expect(databaseColumnsFromSources(tables, fallbackColumns)).toEqual([
-      { id: 'public.users.id', name: 'id', table: 'public.users' },
-      { id: 'public.users.email', name: 'email', table: 'public.users' },
-    ]);
+    // When standalone columns endpoint has data, it should be preferred (has real ATLAS GUIDs)
+    // This fixes the issue where synthetic IDs from table endpoint were used as fallback
+    expect(databaseColumnsFromSources(tables, fallbackColumns)).toEqual(fallbackColumns);
   });
 
   it('uses standalone columns when table metadata has no columns', () => {

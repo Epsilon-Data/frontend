@@ -16,6 +16,7 @@ import {
   findOrphanedNodes,
   findEmptyLabels,
   findColumnIntegrityIssues,
+  findMissingColumnReferences,
   findMixedChildrenNodes,
   findEmptyRoot,
   findDuplicateEdges,
@@ -171,6 +172,7 @@ const ArchetypeWizardContent = () => {
     let orphaned: string[] = [];
     let emptyLabelIds: string[] = [];
     let columnIssues: ReturnType<typeof findColumnIntegrityIssues> = [];
+    let missingColumnRefs: ReturnType<typeof findMissingColumnReferences> = [];
     let mixed: string[] = [];
     let isEmptyRoot = false;
     let dupEdges: ReturnType<typeof findDuplicateEdges> = [];
@@ -195,6 +197,7 @@ const ArchetypeWizardContent = () => {
     if (step === 2) {
       missingLeafs = findUnmappedLeafs(nodes, edges);
       columnIssues = findColumnIntegrityIssues(nodes, edges);
+      missingColumnRefs = findMissingColumnReferences(nodes);
     }
 
     const hasIssues =
@@ -203,6 +206,7 @@ const ArchetypeWizardContent = () => {
       orphaned.length > 0 ||
       emptyLabelIds.length > 0 ||
       columnIssues.length > 0 ||
+      missingColumnRefs.length > 0 ||
       mixed.length > 0 ||
       isEmptyRoot ||
       dupEdges.length > 0;
@@ -296,6 +300,18 @@ const ArchetypeWizardContent = () => {
                         count: issue.parentCount,
                       })}
                     </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {missingColumnRefs.length > 0 && (
+              <div>
+                <div className="text-sm font-medium mb-1">
+                  {t('project.createTemplate.form.step3.validation.missingColumnReferences')}
+                </div>
+                <ul className="pl-5 text-sm list-disc">
+                  {missingColumnRefs.map((issue) => (
+                    <li key={issue.columnId}>{issue.columnLabel}</li>
                   ))}
                 </ul>
               </div>

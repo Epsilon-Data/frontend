@@ -15,6 +15,7 @@ export const flattenTableColumns = (tables: DatabaseTableInfo[]): ColumnInfo[] =
   );
 
 export const databaseColumnsFromSources = (tables: DatabaseTableInfo[], columns: ColumnInfo[]): ColumnInfo[] => {
-  const tableColumns = flattenTableColumns(tables);
-  return tableColumns.length > 0 ? tableColumns : columns;
+  // Prioritize columns endpoint data (has actual column GUIDs from Atlas)
+  // Fall back to flattening tables only if columns endpoint returns no data
+  return columns.length > 0 ? columns : flattenTableColumns(tables);
 };

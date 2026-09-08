@@ -182,6 +182,25 @@ export function findColumnIntegrityIssues(
   return issues;
 }
 
+export function findMissingColumnReferences(nodes: Node[]): { columnId: string; columnLabel: string }[] {
+  const columnNodes = nodes.filter((n) => n.type === 'column');
+  const issues: { columnId: string; columnLabel: string }[] = [];
+
+  for (const col of columnNodes) {
+    // Check if the column node has required data properties
+    const colData = col.data as { label?: string; table?: string };
+    const label = colData?.label ?? col.id;
+    const table = colData?.table;
+
+    // Column must have a table reference to be valid
+    if (!table || table.trim().length === 0) {
+      issues.push({ columnId: col.id, columnLabel: label });
+    }
+  }
+
+  return issues;
+}
+
 export function findMixedChildrenNodes(nodes: Node[], edges: Edge[]): string[] {
   const byId = new Map(nodes.map((n) => [n.id, n]));
   const mixed: string[] = [];

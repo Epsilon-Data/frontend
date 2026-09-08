@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { useNavigate } from 'react-router-dom';
 import { getRequestByProject, RequestSummaryInfo } from '@app/api/analysisRequests.api';
+import { ImageWithPreview } from './components/ImageWithPreview';
 
 type AboutDatasetPageProps = {
   project: ProjectInfo;
@@ -123,13 +124,6 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
         </Col>
       </Row>
       <Row className="mt-8 mx-24 border-t border-t-grey-3 pt-8 flex flex-col mb-12">
-        {/* <div className="text-xs font-medium font-inter text-blueDark mb-4">
-          {t('browse.main.details.dbPreview.title')}
-        </div>
-        <div className="flex gap-6 mb-8">
-          <ImageWithPreview src="https://images.unsplash.com/photo-1569521588854-9b461abc92ac?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-          <ImageWithPreview src="https://images.unsplash.com/photo-1553949345-eb786bb3f7ba?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-        </div> */}
         <div className="text-xs font-medium font-inter text-blueDark mb-4">
           {t('browse.main.details.dbPreview.title')}
         </div>
@@ -148,6 +142,21 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
         ) : (
           <div className="text-xs font-medium font-inter mb-4">{t('browse.main.details.dbPreview.noArchetype')}</div>
         )}
+        {project.datasetImages?.length ? (
+          <div className="mt-8">
+            <div className="text-xs font-medium font-inter text-blueDark mb-4">
+              {t('browse.main.details.datasetImages.title')}
+            </div>
+            <div className="flex gap-6 flex-wrap">
+              {project.datasetImages
+                .slice()
+                .sort((a, b) => a.sortOrder - b.sortOrder)
+                .map((image) => (
+                  <ImageWithPreview key={image.id} src={image.url} alt={image.caption ?? project.name} />
+                ))}
+            </div>
+          </div>
+        ) : null}
       </Row>
     </div>
   );

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Node, Edge, NodeChange, EdgeChange, addEdge } from '@xyflow/react';
 import { ColumnInfo } from '@app/api/database.api';
 import { handleCascadeNodeChanges } from '@app/utils/reactflow/cascade';
+import { getColumnKey } from '@app/utils/database/columns';
 
 type ColumnMappingStepProps = {
   nodes: Node[];
@@ -38,9 +39,27 @@ export const ColumnMappingStep = ({
   const [toolbarOpen, setToolbarOpen] = useState(false);
   const lastSelectedIdRef = useRef<string | null>(null);
 
-  const mappedColumnIds = useMemo(() => new Set(nodes.filter((n) => n.type === 'column').map((n) => n.id)), [nodes]);
+  const mappedColumns = useMemo(() => {
+    const ids = new Set<string>();
+    const keys = new Set<string>();
 
-  const availableColumns = useMemo(() => columns.filter((c) => !mappedColumnIds.has(c.id)), [columns, mappedColumnIds]);
+    nodes
+      .filter((n) => n.type === 'column')
+      .forEach((n) => {
+        ids.add(n.id);
+
+        const label = typeof n.data?.label === 'string' ? n.data.label : '';
+        const table = typeof n.data?.table === 'string' ? n.data.table : '';
+        if (label && table) keys.add(getColumnKey({ name: label, table }));
+      });
+
+    return { ids, keys };
+  }, [nodes]);
+
+  const availableColumns = useMemo(
+    () => columns.filter((c) => !mappedColumns.ids.has(c.id) && !mappedColumns.keys.has(getColumnKey(c))),
+    [columns, mappedColumns],
+  );
 
   const connectedColumnCount = useMemo(() => {
     if (!anchor) return 0;
@@ -97,11 +116,9 @@ export const ColumnMappingStep = ({
         addEdge({ id: `edge_${nodeId}_${col.id}`, source: nodeId, target: col.id, type: 'default' }, eds),
       );
 
-      setColumns((prev) => prev.filter((c) => c.id !== col.id));
-
       setToolbarOpen(false);
     },
-    [anchor, toolbarDisabled, nodes, edges, setNodes, setEdges, setColumns],
+    [anchor, toolbarDisabled, nodes, edges, setNodes, setEdges],
   );
 
   const addBackColumn = useCallback(

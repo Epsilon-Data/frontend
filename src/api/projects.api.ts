@@ -88,12 +88,23 @@ export interface ProjectInfo {
   isPublic?: boolean;
   syntheticDataUrl?: string | null;
   syntheticDataFileName?: string | null;
+  datasetImages?: DatasetImage[];
 }
 
 export interface SyntheticDataInfo {
   type: 'link' | 'file' | 'none';
   url?: string | null;
   fileName?: string | null;
+}
+
+export interface DatasetImage {
+  id: string;
+  url: string;
+  fileName: string;
+  contentType: string;
+  caption?: string | null;
+  sortOrder: number;
+  createdAt: string;
 }
 
 export interface Member {
@@ -272,6 +283,56 @@ export const uploadSyntheticData = async (
 export const removeSyntheticData = async (projectId: string): Promise<SyntheticDataInfo> => {
   const { csrfHeaderName, csrf } = getCsrfHeader();
   const response = await httpClient.delete(`${PROJECT_API_URL}/${projectId}/synthetic-data`, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  return response.data;
+};
+
+// ---- Dataset images (uploaded by the data owner and displayed on public dataset details) ----
+
+export const getProjectImages = async (projectId: string): Promise<DatasetImage[]> => {
+  const response = await httpClient.get(`${PROJECT_API_URL}/${projectId}/images`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+export const uploadProjectImage = async (
+  projectId: string,
+  file: File,
+  caption?: string,
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
+): Promise<DatasetImage[]> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const formData = new FormData();
+  formData.append('file', file);
+  if (caption) formData.append('caption', caption);
+
+  const response = await httpClient.post(`${PROJECT_API_URL}/${projectId}/images`, formData, {
+    headers: {
+      [csrfHeaderName]: `${csrf}`,
+      'Content-Type': 'multipart/form-data',
+    },
+    onUploadProgress,
+  });
+  return response.data;
+};
+
+export const updateProjectImage = async (
+  projectId: string,
+  imageId: string,
+  data: Partial<Pick<DatasetImage, 'caption' | 'sortOrder'>>,
+): Promise<DatasetImage[]> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.patch(`${PROJECT_API_URL}/${projectId}/images/${imageId}`, data, {
+    headers: { [csrfHeaderName]: `${csrf}` },
+  });
+  return response.data;
+};
+
+export const removeProjectImage = async (projectId: string, imageId: string): Promise<DatasetImage[]> => {
+  const { csrfHeaderName, csrf } = getCsrfHeader();
+  const response = await httpClient.delete(`${PROJECT_API_URL}/${projectId}/images/${imageId}`, {
     headers: { [csrfHeaderName]: `${csrf}` },
   });
   return response.data;

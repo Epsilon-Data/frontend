@@ -10,6 +10,7 @@ import { AiFillDelete } from 'react-icons/ai';
 import { BsFillQuestionCircleFill } from 'react-icons/bs';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { MultiStepProjectModal } from '@app/components/create-project/modal/MultiStepProjectModal';
+import { ProjectImagesManager } from '@app/components/project-images/ProjectImagesManager';
 import { ProxyTokenManager } from '@app/components/proxy/ProxyTokenManager';
 import { SyntheticDataManager } from '@app/components/synthetic-data/SyntheticDataManager';
 
@@ -74,6 +75,8 @@ const SettingsPageContent: React.FC = () => {
           <ProxyTokenManager projectId={projectId} />
         </div>
       )}
+
+      {projectId && <ProjectImagesManager projectId={projectId} />}
 
       {projectId && <SyntheticDataManager projectId={projectId} />}
 

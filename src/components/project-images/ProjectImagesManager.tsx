@@ -140,7 +140,7 @@ export const ProjectImagesManager: React.FC<ProjectImagesManagerProps> = ({ proj
               .slice()
               .sort((a, b) => a.sortOrder - b.sortOrder)
               .map((image) => (
-                <div key={image.id} className="border border-gray-200 rounded-lg overflow-hidden bg-white">
+                <div key={image.imageId} className="border border-gray-200 rounded-lg overflow-hidden bg-white">
                   <div className="h-40 bg-grey-4 overflow-hidden">
                     <Image src={image.url} alt={image.caption ?? image.fileName} className="w-full h-40 object-cover" />
                   </div>
@@ -154,7 +154,7 @@ export const ProjectImagesManager: React.FC<ProjectImagesManagerProps> = ({ proj
                         danger
                         type="text"
                         icon={<DeleteOutlined />}
-                        onClick={() => handleRemove(image.id)}
+                        onClick={() => handleRemove(image.imageId)}
                         disabled={saving}
                         aria-label={t('project.main.settings.datasetImages.current.remove')}
                       />

@@ -152,7 +152,7 @@ export const AboutDatasetPage = ({ project, archetype, setModalStep }: AboutData
                 .slice()
                 .sort((a, b) => a.sortOrder - b.sortOrder)
                 .map((image) => (
-                  <ImageWithPreview key={image.id} src={image.url} alt={image.caption ?? project.name} />
+                  <ImageWithPreview key={image.imageId} src={image.url} alt={image.caption ?? project.name} />
                 ))}
             </div>
           </div>

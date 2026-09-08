@@ -98,7 +98,7 @@ export interface SyntheticDataInfo {
 }
 
 export interface DatasetImage {
-  id: string;
+  imageId: string;
   url: string;
   fileName: string;
   contentType: string;

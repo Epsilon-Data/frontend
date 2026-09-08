@@ -32,9 +32,9 @@ const ProjectAccessPage: React.FC = () => {
     try {
       await updateProject({ isPublic: checked, projectId }, projectId);
       updateProjectLocally((prev) => (prev ? { ...prev, isPublic: checked } : prev));
-      message.success(checked ? 'Project is now public' : 'Project is now private');
+      message.success(t(checked ? 'project.main.projectAccess.isPublic.success' : 'project.main.projectAccess.isPrivate.success'));
     } catch {
-      message.error('Failed to update project visibility');
+      message.error(t('project.main.projectAccess.isPublic.failed'));
     } finally {
       setIsPublicLoading(false);
     }

@@ -32,12 +32,12 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
       const file = acceptedFiles[0];
       const isPdf = file.type === 'application/pdf';
       if (!isPdf) {
-        message.error('You can only upload PDF files!');
+        message.error(t('project.createTemplate.generateFromCodebook.uploadError.onlyPdf'));
         return;
       }
       setSelectedFile(file);
     }
-  }, []);
+  }, [t]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -56,7 +56,7 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
     onSuccess: (jobStatus) => {
       if (jobStatus.status === 'completed' && jobStatus.result) {
         setIsProcessing(false);
-        message.success('Archetype structure generated from codebook!');
+        message.success(t('project.createTemplate.generateFromCodebook.success'));
         const nodes = jobStatus.result.nodes;
         const edges = jobStatus.result.edges;
 
@@ -85,7 +85,7 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
     onError: (jobError) => {
       setIsProcessing(false);
       console.error('Polling error:', jobError);
-      message.error('Communication error while checking job status.');
+      message.error(t('project.createTemplate.generateFromCodebook.pollingError'));
       setJobId(null);
     },
   });
@@ -108,7 +108,7 @@ export const CodebookUpload: React.FC<CodebookUploadProps> = ({
       // React Query will start polling automatically when jobId is set
     } catch (error) {
       console.error('Upload failed:', error);
-      message.error('Failed to upload codebook. Please try again.');
+      message.error(t('project.createTemplate.generateFromCodebook.uploadError.failed'));
       setIsProcessing(false);
     }
   };

@@ -231,10 +231,10 @@
           "allChecked": "All steps must be confirmed before starting a new project.",
           "emailRequired": "Email is required",
           "duplicateEmail": "Team member email already added"
-        },
-        "success": "Project created successfully",
-        "failed": "Failed to create project"
-      }
+        }
+      },
+      "success": "Project created successfully",
+      "failed": "Failed to create project"
     }
   },
   "project": {
@@ -377,6 +377,14 @@
       "projectAccess": {
         "title": "Project access",
         "subtitle": "Review requests and manage access",
+        "isPublic": {
+          "success": "Project is now public",
+          "failed": "Failed to update project visibility"
+        },
+        "isPrivate": {
+          "success": "Project is now private",
+          "failed": "Failed to update project visibility"
+        },
         "tabs": {
           "connection": "Connection requests",
           "analysis": "Analysis requests"
@@ -427,6 +435,32 @@
         "delete": {
           "title": "Delete project",
           "description": "Are you sure you want to delete this project?"
+        },
+        "proxy": {
+          "loadTokens": {
+            "failed": "Failed to load proxy tokens"
+          },
+          "generateToken": {
+            "failed": "Failed to generate token"
+          },
+          "generateSetupToken": {
+            "failed": "Failed to generate setup token"
+          },
+          "revokeToken": {
+            "success": "Token revoked",
+            "failed": "Failed to revoke token"
+          },
+          "unregister": {
+            "success": "Proxy unregistered",
+            "failed": "Failed to unregister proxy"
+          },
+          "retry": {
+            "success": "Retry triggered — proxy will re-crawl on next heartbeat",
+            "failed": "Failed to retry crawl"
+          },
+          "clipboard": {
+            "copy": "Command copied to clipboard"
+          }
         },
         "datasetImages": {
           "title": "Dataset images",
@@ -529,13 +563,19 @@
               "instructions": "Drag & drop a PDF file, or click to browse",
               "fileSize": "Maximum file size: 10MB"
             },
+            "uploadError": {
+              "onlyPdf": "You can only upload PDF files!",
+              "failed": "Failed to upload codebook. Please try again."
+            },
             "additionalContext": {
               "title": "Additional Context (optional)",
               "placeholder": "Provide any additional context about your codebook to help improve the generation accuracy."
             },
             "cancel": "Cancel",
             "submit": "Generate Archetype",
-            "processing": "Generating archetype structure..."
+            "processing": "Generating archetype structure...",
+            "success": "Archetype structure generated from codebook!",
+            "pollingError": "Communication error while checking job status."
           },
           "error": {
             "deleteRoot": "The root node cannot be deleted"

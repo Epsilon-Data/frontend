@@ -10,6 +10,7 @@ import {
 } from '@app/api/proxy.api';
 import { Button, Input, message, Modal, Popconfirm, Table, Tag, Typography } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FiCopy, FiPlus, FiTrash2 } from 'react-icons/fi';
 import { HiOutlineStatusOnline, HiOutlineStatusOffline } from 'react-icons/hi';
 import { AiOutlineDisconnect } from 'react-icons/ai';
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export const ProxyTokenManager = ({ projectId }: Props) => {
+  const { t } = useTranslation();
   const [tokens, setTokens] = useState<InstallTokenSummary[]>([]);
   const [proxyStatus, setProxyStatus] = useState<ProxyStatus | null>(null);
   const [loading, setLoading] = useState(true);
@@ -40,11 +42,11 @@ export const ProxyTokenManager = ({ projectId }: Props) => {
       setTokens(tokenList);
       setProxyStatus(status);
     } catch {
-      message.error('Failed to load proxy tokens');
+      message.error(t('project.settings.proxy.loadTokens.failed'));
     } finally {
       setLoading(false);
     }
-  }, [projectId]);
+  }, [projectId, t]);
 
   useEffect(() => {
     fetchData();
@@ -60,7 +62,7 @@ export const ProxyTokenManager = ({ projectId }: Props) => {
       setTokenName('');
       fetchData();
     } catch {
-      message.error('Failed to generate token');
+      message.error(t('project.settings.proxy.generateToken.failed'));
     } finally {
       setGenerating(false);
     }
@@ -69,10 +71,10 @@ export const ProxyTokenManager = ({ projectId }: Props) => {
   const handleRevoke = async (tokenId: string) => {
     try {
       await revokeProxyToken(projectId, tokenId);
-      message.success('Token revoked');
+      message.success(t('project.settings.proxy.revokeToken.success'));
       fetchData();
     } catch {
-      message.error('Failed to revoke token');
+      message.error(t('project.settings.proxy.revokeToken.failed'));
     }
   };
 
@@ -87,16 +89,16 @@ export const ProxyTokenManager = ({ projectId }: Props) => {
     if (!newToken) return;
     const cmd = `epsilon-proxy register --token ${newToken.installToken}`;
     navigator.clipboard.writeText(cmd);
-    message.success('Command copied to clipboard');
+    message.success(t('project.settings.proxy.clipboard.copy'));
   };
 
   const handleUnregister = async () => {
     try {
       await deleteProxy(projectId);
-      message.success('Proxy unregistered');
+      message.success(t('project.settings.proxy.unregister.success'));
       fetchData();
     } catch {
-      message.error('Failed to unregister proxy');
+      message.error(t('project.settings.proxy.unregister.failed'));
     }
   };
 

@@ -2,6 +2,7 @@ import { generateProxyToken, GenerateTokenResponse, getProxyStatus, listProxyTok
 import { retryCrawl } from '@app/api/projects.api';
 import { Button, message, Spin, Steps, Tag, Typography } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FiCopy, FiRefreshCw } from 'react-icons/fi';
 import { IoReload } from 'react-icons/io5';
 import { HiOutlineServerStack } from 'react-icons/hi2';
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export const ProxySetupInline = ({ projectId, projectStatus }: Props) => {
+  const { t } = useTranslation();
   const [token, setToken] = useState<GenerateTokenResponse | null>(null);
   const [generating, setGenerating] = useState(false);
   const [hasExistingTokens, setHasExistingTokens] = useState(false);
@@ -49,7 +51,7 @@ export const ProxySetupInline = ({ projectId, projectStatus }: Props) => {
       setToken(result);
       setHasExistingTokens(true);
     } catch {
-      message.error('Failed to generate setup token');
+      message.error(t('project.settings.proxy.generateSetupToken.failed'));
     } finally {
       setGenerating(false);
     }
@@ -65,10 +67,10 @@ epsilon-proxy start`
     setRetrying(true);
     try {
       await retryCrawl(projectId);
-      message.success('Retry triggered — proxy will re-crawl on next heartbeat');
+      message.success(t('project.settings.proxy.retry.success'));
       fetchStatus();
     } catch {
-      message.error('Failed to retry crawl');
+      message.error(t('project.settings.proxy.retry.failed'));
     } finally {
       setRetrying(false);
     }
@@ -77,7 +79,7 @@ epsilon-proxy start`
   const handleCopy = () => {
     navigator.clipboard.writeText(setupCommand);
     setCopied(true);
-    message.success('Command copied to clipboard');
+    message.success(t('project.settings.proxy.clipboard.copy'));
     setTimeout(() => setCopied(false), 2000);
   };
 
